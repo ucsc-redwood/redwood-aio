@@ -35,7 +35,7 @@ void run_dense(cifar_dense::AppData& appdata, const int n_threads) {
   }
 }
 
-int main(int argc, char** argv) {
+int main() {
   auto mr = std::pmr::new_delete_resource();
 
   for (int n_threads = 1; n_threads <= 6; ++n_threads) {
