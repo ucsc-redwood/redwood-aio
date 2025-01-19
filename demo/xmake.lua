@@ -10,7 +10,19 @@ add_repositories("local-repo ../local-repo")
 
 add_requires("builtin-apps")
 
+if not is_plat("android") then
+    add_requires("openmp")
+end
+
 target("demo")
     set_kind("binary")
     add_files("src/*.cpp")
     add_packages("builtin-apps")
+
+    -- Add openmp support
+    if is_plat("android") then
+        add_cxxflags("-fopenmp -static-openmp")
+        add_ldflags("-fopenmp -static-openmp")
+    else
+        add_packages("openmp")
+    end
