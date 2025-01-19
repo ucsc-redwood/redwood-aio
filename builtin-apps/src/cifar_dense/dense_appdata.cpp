@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include "resources_path.hpp"
+#include "../resources_path.hpp"
 
 void readDataFromFile(const std::string_view filename,
                       float *data,

@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-#include "resources_path.hpp"
+#include "../resources_path.hpp"
 
 void readDataFromFile(const char* filename, float* data, int maxSize) {
   const auto base_path = helpers::get_resource_base_path();

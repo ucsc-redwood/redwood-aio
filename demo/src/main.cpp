@@ -37,11 +37,13 @@ void run_dense(cifar_dense::AppData& appdata, const int n_threads) {
 
 int main(int argc, char** argv) {
   auto mr = std::pmr::new_delete_resource();
+
   for (int n_threads = 1; n_threads <= 6; ++n_threads) {
     std::cout << "\nRunning with " << n_threads << " threads:" << std::endl;
 
     {
       cifar_dense::AppData appdata(mr);
+
       const auto start = omp_get_wtime();
       run_dense(appdata, n_threads);
       const auto end = omp_get_wtime();
@@ -53,6 +55,7 @@ int main(int argc, char** argv) {
 
     {
       cifar_sparse::AppData appdata(mr);
+
       const auto start = omp_get_wtime();
       run_sparse(appdata, n_threads);
       const auto end = omp_get_wtime();
