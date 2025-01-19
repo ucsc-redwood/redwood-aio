@@ -14,6 +14,8 @@ if not is_plat("android") then
     add_requires("openmp")
 end
 
+includes("../android.lua")
+
 target("demo")
     set_kind("binary")
     add_files("src/*.cpp")
@@ -25,4 +27,8 @@ target("demo")
         add_ldflags("-fopenmp -static-openmp")
     else
         add_packages("openmp")
+    end
+
+    if is_plat("android") then
+      on_run(run_on_android)
     end
