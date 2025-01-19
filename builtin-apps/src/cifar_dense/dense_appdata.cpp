@@ -1,7 +1,5 @@
 #include "dense_appdata.hpp"
 
-#include <fmt/format.h>
-
 #include <algorithm>
 #include <fstream>
 
@@ -15,17 +13,17 @@ void readDataFromFile(const std::string_view filename,
 
   std::ifstream file(full_path, std::ios::binary);
   if (!file) {
-    throw std::runtime_error(
-        fmt::format("Could not open file '{}'", full_path.string()));
+    throw std::runtime_error("Could not open file '" + full_path.string() +
+                             "'");
   }
 
   // Read entire file at once for better performance
   std::vector<float> buffer(size);
   if (!file.read(reinterpret_cast<char *>(buffer.data()),
                  size * sizeof(float))) {
-    throw std::runtime_error(fmt::format("Failed to read {} bytes from '{}'",
-                                         size * sizeof(float),
-                                         full_path.string()));
+    throw std::runtime_error("Failed to read " +
+                             std::to_string(size * sizeof(float)) +
+                             " bytes from '" + full_path.string() + "'");
   }
 
   std::ranges::copy(buffer, data);

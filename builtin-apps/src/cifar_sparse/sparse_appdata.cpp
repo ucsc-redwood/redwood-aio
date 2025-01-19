@@ -1,18 +1,15 @@
 #include "sparse_appdata.hpp"
 
-#include <fmt/format.h>
-
 #include <fstream>
 
 #include "../resources_path.hpp"
 
 void readDataFromFile(const char* filename, float* data, int maxSize) {
   const auto base_path = helpers::get_resource_base_path();
-
   std::ifstream file(base_path / filename);
   if (!file.is_open()) {
-    throw std::runtime_error(
-        fmt::format("Could not open the file - '{}'", filename));
+    throw std::runtime_error("Could not open the file - '" +
+                             std::string(filename) + "'");
   }
 
   // Zero initialize the entire array
