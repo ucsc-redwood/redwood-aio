@@ -1,7 +1,6 @@
 package("builtin-apps")
     set_description("The builtin-apps package")
 
-    add_deps("openmp")
     add_deps("spdlog")
 
     add_configs("shared", {description = "Build shared library.", default = false, type = "boolean", readonly = true})
