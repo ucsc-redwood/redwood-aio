@@ -1,5 +1,6 @@
 #include <benchmark/benchmark.h>
 
+#include <affinity.hpp>
 #include <cifar_dense_kernel.hpp>
 #include <cifar_sparse_kernel.hpp>
 #include <memory>
@@ -65,6 +66,35 @@ BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
 }
 
 BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
+    ->DenseRange(1, 6)
+    ->Unit(benchmark::kMillisecond);
+
+// Define baseline runner and benchmark
+static void run_baseline_pinned(cifar_dense::AppData& app_data, int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    auto tid = omp_get_thread_num();
+    bind_thread_to_core(tid);
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
+
+BENCHMARK_DEFINE_F(OMP_CifarDense, BaselinePinned)(benchmark::State& state) {
+  auto n_threads = state.range(0);
+  for (auto _ : state) {
+    run_baseline_pinned(*app_data, n_threads);
+  }
+}
+
+BENCHMARK_REGISTER_F(OMP_CifarDense, BaselinePinned)
     ->DenseRange(1, 6)
     ->Unit(benchmark::kMillisecond);
 
