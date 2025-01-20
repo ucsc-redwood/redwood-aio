@@ -1,0 +1,76 @@
+#include <benchmark/benchmark.h>
+
+#include <cifar_dense_kernel.hpp>
+#include <cifar_sparse_kernel.hpp>
+#include <memory>
+
+class OMP_CifarDense : public benchmark::Fixture {
+ protected:
+  void SetUp(benchmark::State&) override {
+    app_data =
+        std::make_unique<cifar_dense::AppData>(std::pmr::new_delete_resource());
+  }
+
+  void TearDown(benchmark::State&) override { app_data.reset(); }
+
+  std::unique_ptr<cifar_dense::AppData> app_data;
+};
+
+// ------------------------------------------------------------
+// Helper macros for stage benchmarks
+// ------------------------------------------------------------
+
+#define DEFINE_STAGE_RUNNER(stage_num)                              \
+  static void run_stage_##stage_num(cifar_dense::AppData& app_data, \
+                                    int n_threads) {                \
+    _Pragma("omp parallel num_threads(n_threads)") {                \
+      cifar_dense::omp::process_stage_##stage_num(app_data);        \
+    }                                                               \
+  }
+
+#define DEFINE_STAGE_BENCHMARK(stage_num)                \
+  BENCHMARK_DEFINE_F(OMP_CifarDense, Stage##stage_num)   \
+  (benchmark::State & state) {                           \
+    auto n_threads = state.range(0);                     \
+    for (auto _ : state) {                               \
+      run_stage_##stage_num(*app_data, n_threads);       \
+    }                                                    \
+  }                                                      \
+                                                         \
+  BENCHMARK_REGISTER_F(OMP_CifarDense, Stage##stage_num) \
+      ->DenseRange(1, 6)                                 \
+      ->Unit(benchmark::kMillisecond);
+
+// Define baseline runner and benchmark
+static void run_baseline(cifar_dense::AppData& app_data, int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
+
+BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
+  auto n_threads = state.range(0);
+  for (auto _ : state) {
+    run_baseline(*app_data, n_threads);
+  }
+}
+
+BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
+    ->DenseRange(1, 6)
+    ->Unit(benchmark::kMillisecond);
+
+int main(int argc, char** argv) {
+  benchmark::Initialize(&argc, argv);
+  benchmark::RunSpecifiedBenchmarks();
+  benchmark::Shutdown();
+  return 0;
+}

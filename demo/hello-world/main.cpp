@@ -1,13 +1,22 @@
 #include <omp.h>
 
+#include <affinity.hpp>
+#include <array>
 #include <cifar_dense_kernel.hpp>
 #include <cifar_sparse_kernel.hpp>
 
 #include "arg_max.hpp"
 
+std::array<int, 6> core_ids = {0, 1, 2, 3, 4, 5};
+
 void run_sparse(cifar_sparse::AppData& appdata, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
+    auto tid = omp_get_thread_num();
+    auto core_id = core_ids[tid % core_ids.size()];
+
+    bind_thread_to_core(core_id);
+
     cifar_sparse::omp::process_stage_1(appdata);
     cifar_sparse::omp::process_stage_2(appdata);
     cifar_sparse::omp::process_stage_3(appdata);
