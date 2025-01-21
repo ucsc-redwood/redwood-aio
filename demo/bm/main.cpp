@@ -55,38 +55,38 @@ class OMP_CifarDense : public benchmark::Fixture {
 // Baseline 1: Unpinned using all cores default
 // ------------------------------------------------------------
 
-// static void run_baseline(cifar_dense::AppData& app_data, int n_threads) {
-// #pragma omp parallel num_threads(n_threads)
-//   {
-//     cifar_dense::omp::process_stage_1(app_data);
-//     cifar_dense::omp::process_stage_2(app_data);
-//     cifar_dense::omp::process_stage_3(app_data);
-//     cifar_dense::omp::process_stage_4(app_data);
-//     cifar_dense::omp::process_stage_5(app_data);
-//     cifar_dense::omp::process_stage_6(app_data);
-//     cifar_dense::omp::process_stage_7(app_data);
-//     cifar_dense::omp::process_stage_8(app_data);
-//     cifar_dense::omp::process_stage_9(app_data);
-//   }
-// }
+static void run_baseline(cifar_dense::AppData& app_data, int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
 
-// BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
-//   auto n_threads = state.range(0);
+BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
+  auto n_threads = state.range(0);
 
-//   auto little_cores = g_device.get_pinable_cores(kLittleCoreType);
-//   auto big_cores = g_device.get_pinable_cores(kBigCoreType);
+  auto little_cores = g_device.get_pinable_cores(kLittleCoreType);
+  auto big_cores = g_device.get_pinable_cores(kBigCoreType);
 
-//   auto all_cores = little_cores;
-//   all_cores.insert(all_cores.end(), big_cores.begin(), big_cores.end());
+  auto all_cores = little_cores;
+  all_cores.insert(all_cores.end(), big_cores.begin(), big_cores.end());
 
-//   for (auto _ : state) {
-//     run_baseline(*app_data, n_threads);
-//   }
-// }
+  for (auto _ : state) {
+    run_baseline(*app_data, n_threads);
+  }
+}
 
-// BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
-//     ->DenseRange(1, 6)
-//     ->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
+    ->DenseRange(1, 6)
+    ->Unit(benchmark::kMillisecond);
 
 // ------------------------------------------------------------
 // Baseline 2: Pinned using all cores default
@@ -138,10 +138,6 @@ void RegisterPinnedBenchmarkWithRange(int n_total_cores) {
         ->Unit(benchmark::kMillisecond);
   }
 }
-
-// BENCHMARK_REGISTER_F(OMP_CifarDense, BaselinePinned)
-//     ->DenseRange(1, 6)
-//     ->Unit(benchmark::kMillisecond);
 
 // ------------------------------------------------------------
 // Baseline 3: Little cores only
