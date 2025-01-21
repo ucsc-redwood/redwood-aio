@@ -109,9 +109,9 @@ BENCHMARK_DEFINE_F(OMP_CifarDense, BaselinePinned)(benchmark::State& state) {
   }
 }
 
-// BENCHMARK_REGISTER_F(OMP_CifarDense, BaselinePinned)
-//     ->DenseRange(1, 6)
-//     ->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(OMP_CifarDense, BaselinePinned)
+    ->DenseRange(1, 6)
+    ->Unit(benchmark::kMillisecond);
 
 // ------------------------------------------------------------
 // Baseline 3: Little cores only
@@ -150,7 +150,7 @@ void RegisterLittleBenchmarkWithRange(const int n_small_cores) {
     ::benchmark::internal::RegisterBenchmarkInternal(
         new OMP_CifarDense_BaselineLittle_Benchmark())
         ->Arg(i)
-        ->Name("OMP_CifarDense/BaselineLittle")
+        ->Name("OMP_CifarDense/BaselineLittleOnly")
         ->Unit(benchmark::kMillisecond);
   }
 }
@@ -192,7 +192,7 @@ void RegisterBigBenchmarkWithRange(const int n_big_cores) {
     ::benchmark::internal::RegisterBenchmarkInternal(
         new OMP_CifarDense_BaselineBig_Benchmark())
         ->Arg(i)
-        ->Name("OMP_CifarDense/BaselineBig")
+        ->Name("OMP_CifarDense/BaselineBigOnly")
         ->Unit(benchmark::kMillisecond);
   }
 }
