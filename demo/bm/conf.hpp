@@ -31,7 +31,7 @@ struct Device {
 
   [[nodiscard]] int get_core_count(const int core_type) const {
     if (core_type >= (int)cores.size()) {
-      throw std::runtime_error("Core type out of bounds");
+      return 0;
     }
     return cores[core_type].size();
   }
