@@ -52,7 +52,7 @@ struct Device {
   }
 };
 
-constexpr Device init_pc() {
+inline Device init_pc() {
   Device device;
   device.core_count = 8;
   device.core_type_count = 2;
@@ -66,7 +66,7 @@ constexpr Device init_pc() {
 
 // jetson has 6 cores, all are pinable
 // All cores are same type
-constexpr Device init_jetson() {
+inline Device init_jetson() {
   Device device;
   device.core_count = 6;
   device.core_type_count = 1;
@@ -80,7 +80,7 @@ constexpr Device init_jetson() {
 // CPU0–3 	0xd05 	Cortex‑A55 	Efficiency (“little”)
 // CPU4–5 	0xd41 	Cortex‑A78 	Big (performance)
 // CPU6–7 	0xd44 	Cortex‑X1 	Prime (top performance)
-constexpr Device init_3A021JEHN02756() {
+inline Device init_3A021JEHN02756() {
   Device device;
   device.core_count = 8;
   device.core_type_count = 3;
@@ -100,7 +100,7 @@ constexpr Device init_3A021JEHN02756() {
 //
 // but because a lot of them are very much similar,
 // let's just use
-constexpr Device init_9b034f1b() {
+inline Device init_9b034f1b() {
   Device device;
   device.core_count = 8;
   device.core_type_count = 3;
