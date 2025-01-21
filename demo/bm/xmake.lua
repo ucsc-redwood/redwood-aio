@@ -2,7 +2,7 @@
 add_requires("benchmark")
 add_requires("cli11")
 
-target("bm")
+target("bm-cifar-dense-baseline")
     set_kind("binary")
     add_files("cifar_dense_baseline.cpp")
     add_packages("builtin-apps")
@@ -21,7 +21,7 @@ target("bm")
     end
 target_end()
 
-target("bm-cifar-dense")
+target("bm-cifar-dense-stages")
     set_kind("binary")
     add_files("cifar_dense_stages.cpp")
     add_packages("builtin-apps")
