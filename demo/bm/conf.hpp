@@ -8,8 +8,8 @@
 
 // The order in the cores vector is the order of core types
 constexpr int kLittleCoreType = 0;
-constexpr int kBigCoreType = 1;
-constexpr int kPrimeCoreType = 2;
+constexpr int kMediumCoreType = 1;
+constexpr int kBigCoreType = 2;
 
 // define a mapping from std::string (device id) to table index
 // for example, "device_0" -> 0, "device_1" -> 1, etc.

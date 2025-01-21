@@ -73,20 +73,10 @@ static void run_baseline(cifar_dense::AppData& app_data, int n_threads) {
 BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
   auto n_threads = state.range(0);
 
-  auto little_cores = g_device.get_pinable_cores(kLittleCoreType);
-  auto big_cores = g_device.get_pinable_cores(kBigCoreType);
-
-  auto all_cores = little_cores;
-  all_cores.insert(all_cores.end(), big_cores.begin(), big_cores.end());
-
   for (auto _ : state) {
     run_baseline(*app_data, n_threads);
   }
 }
-
-// BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
-//     ->DenseRange(1, 6)
-//     ->Unit(benchmark::kMillisecond);
 
 // ------------------------------------------------------------
 // Baseline 2: Pinned using all cores default
@@ -121,8 +111,6 @@ BENCHMARK_DEFINE_F(OMP_CifarDense, BaselinePinned)(benchmark::State& state) {
 
   auto all_cores = little_cores;
   all_cores.insert(all_cores.end(), big_cores.begin(), big_cores.end());
-
-  // const auto n_cores = all_cores.size();
 
   for (auto _ : state) {
     run_baseline_pinned(*app_data, n_threads, all_cores);
@@ -182,7 +170,49 @@ void RegisterLittleBenchmarkWithRange(const int n_small_cores) {
 }
 
 // ------------------------------------------------------------
-// Baseline 4: Big cores only
+// Baseline 4: Medium cores only
+// ------------------------------------------------------------
+
+static void run_baseline_medium(cifar_dense::AppData& app_data,
+                                const std::vector<int>& cores,
+                                const int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    bind_thread_to_core(cores);
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
+
+BENCHMARK_DEFINE_F(OMP_CifarDense, BaselineMedium)
+(benchmark::State& state) {
+  auto cores = g_device.get_pinable_cores(kMediumCoreType);
+
+  const auto n_threads = state.range(0);
+  for (auto _ : state) {
+    run_baseline_medium(*app_data, cores, n_threads);
+  }
+}
+
+void RegisterMediumBenchmarkWithRange(const int n_medium_cores) {
+  for (int i = 1; i <= n_medium_cores; ++i) {
+    ::benchmark::internal::RegisterBenchmarkInternal(
+        new OMP_CifarDense_BaselineMedium_Benchmark())
+        ->Arg(i)
+        ->Name("OMP_CifarDense/BaselineMediumOnly")
+        ->Unit(benchmark::kMillisecond);
+  }
+}
+
+// ------------------------------------------------------------
+// Baseline 5: Big cores only
 // ------------------------------------------------------------
 
 static void run_baseline_big(cifar_dense::AppData& app_data,
@@ -223,6 +253,10 @@ void RegisterBigBenchmarkWithRange(const int n_big_cores) {
   }
 }
 
+// ------------------------------------------------------------
+// Main
+// ------------------------------------------------------------
+
 int main(int argc, char** argv) {
   std::string device_id;
 
@@ -245,10 +279,15 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
   }
 
-  RegisterPinnedBenchmarkWithRange(g_device.get_core_count(kLittleCoreType) +
-                                   g_device.get_core_count(kBigCoreType));
-  RegisterLittleBenchmarkWithRange(g_device.get_core_count(kLittleCoreType));
-  RegisterBigBenchmarkWithRange(g_device.get_core_count(kBigCoreType));
+  const auto n_little_cores = g_device.get_core_count(kLittleCoreType);
+  const auto n_medium_cores = g_device.get_core_count(kMediumCoreType);
+  const auto n_big_cores = g_device.get_core_count(kBigCoreType);
+
+  RegisterPinnedBenchmarkWithRange(n_little_cores + n_medium_cores +
+                                   n_big_cores);
+  RegisterLittleBenchmarkWithRange(n_little_cores);
+  RegisterMediumBenchmarkWithRange(n_medium_cores);
+  RegisterBigBenchmarkWithRange(n_big_cores);
 
   // Initialize and run benchmarks
   benchmark::Initialize(&argc, argv);
