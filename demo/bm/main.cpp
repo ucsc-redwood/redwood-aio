@@ -8,6 +8,12 @@
 
 #include "conf.hpp"
 
+// ------------------------------------------------------------
+// Global variables
+// ------------------------------------------------------------
+
+Device g_device;
+
 class OMP_CifarDense : public benchmark::Fixture {
  protected:
   void SetUp(benchmark::State&) override {
@@ -45,7 +51,10 @@ class OMP_CifarDense : public benchmark::Fixture {
       ->DenseRange(1, 6)                                 \
       ->Unit(benchmark::kMillisecond);
 
-// Define baseline runner and benchmark
+// ------------------------------------------------------------
+// Baseline 1: Unpinned using all cores default
+// ------------------------------------------------------------
+
 static void run_baseline(cifar_dense::AppData& app_data, int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
@@ -68,11 +77,14 @@ BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
-    ->DenseRange(1, 6)
-    ->Unit(benchmark::kMillisecond);
+// BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
+//     ->DenseRange(1, 6)
+//     ->Unit(benchmark::kMillisecond);
 
-// Define baseline runner and benchmark
+// ------------------------------------------------------------
+// Baseline 2: Pinned using all cores default
+// ------------------------------------------------------------
+
 static void run_baseline_pinned(cifar_dense::AppData& app_data, int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
@@ -97,9 +109,93 @@ BENCHMARK_DEFINE_F(OMP_CifarDense, BaselinePinned)(benchmark::State& state) {
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarDense, BaselinePinned)
-    ->DenseRange(1, 6)
-    ->Unit(benchmark::kMillisecond);
+// BENCHMARK_REGISTER_F(OMP_CifarDense, BaselinePinned)
+//     ->DenseRange(1, 6)
+//     ->Unit(benchmark::kMillisecond);
+
+// ------------------------------------------------------------
+// Baseline 3: Little cores only
+// ------------------------------------------------------------
+
+static void run_baseline_little(cifar_dense::AppData& app_data,
+                                const std::vector<int>& cores,
+                                const int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    bind_thread_to_core(cores);
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
+
+BENCHMARK_DEFINE_F(OMP_CifarDense, BaselineLittle)
+(benchmark::State& state) {
+  auto cores = g_device.get_pinable_cores(kLittleCoreType);
+
+  const auto n_threads = state.range(0);
+  for (auto _ : state) {
+    run_baseline_little(*app_data, cores, n_threads);
+  }
+}
+
+void RegisterLittleBenchmarkWithRange(const int n_small_cores) {
+  for (int i = 1; i <= n_small_cores; ++i) {
+    ::benchmark::internal::RegisterBenchmarkInternal(
+        new OMP_CifarDense_BaselineLittle_Benchmark())
+        ->Arg(i)
+        ->Name("OMP_CifarDense/BaselineLittle")
+        ->Unit(benchmark::kMillisecond);
+  }
+}
+
+// ------------------------------------------------------------
+// Baseline 4: Big cores only
+// ------------------------------------------------------------
+
+static void run_baseline_big(cifar_dense::AppData& app_data,
+                             const std::vector<int>& cores,
+                             const int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    bind_thread_to_core(cores);
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
+
+BENCHMARK_DEFINE_F(OMP_CifarDense, BaselineBig)
+(benchmark::State& state) {
+  auto cores = g_device.get_pinable_cores(kBigCoreType);
+
+  const auto n_threads = state.range(0);
+  for (auto _ : state) {
+    run_baseline_big(*app_data, cores, n_threads);
+  }
+}
+
+void RegisterBigBenchmarkWithRange(const int n_big_cores) {
+  for (int i = 1; i <= n_big_cores; ++i) {
+    ::benchmark::internal::RegisterBenchmarkInternal(
+        new OMP_CifarDense_BaselineBig_Benchmark())
+        ->Arg(i)
+        ->Name("OMP_CifarDense/BaselineBig")
+        ->Unit(benchmark::kMillisecond);
+  }
+}
 
 int main(int argc, char** argv) {
   std::string device_id;
@@ -112,10 +208,10 @@ int main(int argc, char** argv) {
 
   std::cout << "Device ID: " << device_id << std::endl;
 
-  Device device = get_device(device_id);
+  g_device = get_device(device_id);
 
-  for (auto core_type = 0u; core_type < device.core_type_count; ++core_type) {
-    auto pinable_cores = device.get_pinable_cores(core_type);
+  for (auto core_type = 0u; core_type < g_device.core_type_count; ++core_type) {
+    auto pinable_cores = g_device.get_pinable_cores(core_type);
     std::cout << "Core type " << core_type << " pinable cores: ";
     for (auto core : pinable_cores) {
       std::cout << core << " ";
@@ -123,9 +219,13 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
   }
 
+  RegisterLittleBenchmarkWithRange(g_device.get_core_count(kLittleCoreType));
+  RegisterBigBenchmarkWithRange(g_device.get_core_count(kBigCoreType));
+
   // Initialize and run benchmarks
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
+
   return 0;
 }

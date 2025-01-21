@@ -6,6 +6,11 @@
 #include <unordered_map>
 #include <vector>
 
+// The order in the cores vector is the order of core types
+constexpr int kLittleCoreType = 0;
+constexpr int kBigCoreType = 1;
+constexpr int kPrimeCoreType = 2;
+
 // define a mapping from std::string (device id) to table index
 // for example, "device_0" -> 0, "device_1" -> 1, etc.
 
@@ -24,8 +29,15 @@ struct Device {
   // cores[core_type] contains the list of cores of that type
   std::vector<std::vector<int>> cores;
 
+  [[nodiscard]] int get_core_count(const int core_type) const {
+    if (core_type >= (int)cores.size()) {
+      throw std::runtime_error("Core type out of bounds");
+    }
+    return cores[core_type].size();
+  }
+
   [[nodiscard]] std::vector<int> get_pinable_cores(int core_type) const {
-    if (core_type >= cores.size()) {
+    if (core_type >= (int)cores.size()) {
       return {};
     }
 
@@ -46,8 +58,8 @@ constexpr Device init_pc() {
   device.core_type_count = 2;
   device.pinable_mask.set();
 
-  device.cores.push_back({{1, 2, 3, 6}});    // medium cores
   device.cores.push_back({{8, 9, 10, 11}});  // little cores
+  device.cores.push_back({{1, 2, 3, 6}});    // medium cores
 
   return device;
 }
