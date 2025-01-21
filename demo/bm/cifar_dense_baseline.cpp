@@ -6,7 +6,7 @@
 #include <cifar_sparse_kernel.hpp>
 #include <memory>
 
-#include "conf.hpp"
+#include "../conf.hpp"
 
 // ------------------------------------------------------------
 // Global variables

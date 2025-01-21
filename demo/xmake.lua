@@ -18,3 +18,4 @@ includes("../android.lua")
 
 includes("hello-world")
 includes("bm")
+includes("cuda-pipe")
