@@ -84,9 +84,9 @@ BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)(benchmark::State& state) {
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
-    ->DenseRange(1, 6)
-    ->Unit(benchmark::kMillisecond);
+// BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
+//     ->DenseRange(1, 6)
+//     ->Unit(benchmark::kMillisecond);
 
 // ------------------------------------------------------------
 // Baseline 2: Pinned using all cores default
