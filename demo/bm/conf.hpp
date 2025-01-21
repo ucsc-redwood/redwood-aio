@@ -13,7 +13,6 @@ constexpr int kBigCoreType = 2;
 
 // define a mapping from std::string (device id) to table index
 // for example, "device_0" -> 0, "device_1" -> 1, etc.
-
 const static std::unordered_map<std::string, int> device_id_to_index = {
     {"pc", 0},
     {"jetson", 1},
@@ -49,6 +48,16 @@ struct Device {
       }
     }
     return pinable_cores;
+  }
+
+  [[nodiscard]] std::vector<int> get_pinable_cores() const {
+    std::vector<int> all_cores;
+    for (size_t core_type = 0; core_type < cores.size(); ++core_type) {
+      const auto pinable_cores = get_pinable_cores(core_type);
+      all_cores.insert(
+          all_cores.end(), pinable_cores.begin(), pinable_cores.end());
+    }
+    return all_cores;
   }
 };
 

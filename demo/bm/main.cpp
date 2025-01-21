@@ -82,49 +82,41 @@ class OMP_CifarDense : public benchmark::Fixture {
 // Baseline 2: Pinned using all cores default
 // ------------------------------------------------------------
 
-// static void run_baseline_pinned(cifar_dense::AppData& app_data,
-//                                 int n_threads,
-//                                 const std::vector<int>& all_cores) {
-// #pragma omp parallel num_threads(n_threads)
-//   {
-//     bind_thread_to_core(all_cores);
-//     cifar_dense::omp::process_stage_1(app_data);
-//     cifar_dense::omp::process_stage_2(app_data);
-//     cifar_dense::omp::process_stage_3(app_data);
-//     cifar_dense::omp::process_stage_4(app_data);
-//     cifar_dense::omp::process_stage_5(app_data);
-//     cifar_dense::omp::process_stage_6(app_data);
-//     cifar_dense::omp::process_stage_7(app_data);
-//     cifar_dense::omp::process_stage_8(app_data);
-//     cifar_dense::omp::process_stage_9(app_data);
-//   }
-// }
+static void run_baseline_pinned(cifar_dense::AppData& app_data,
+                                int n_threads,
+                                const std::vector<int>& all_cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    bind_thread_to_core(all_cores);
+    cifar_dense::omp::process_stage_1(app_data);
+    cifar_dense::omp::process_stage_2(app_data);
+    cifar_dense::omp::process_stage_3(app_data);
+    cifar_dense::omp::process_stage_4(app_data);
+    cifar_dense::omp::process_stage_5(app_data);
+    cifar_dense::omp::process_stage_6(app_data);
+    cifar_dense::omp::process_stage_7(app_data);
+    cifar_dense::omp::process_stage_8(app_data);
+    cifar_dense::omp::process_stage_9(app_data);
+  }
+}
 
-// BENCHMARK_DEFINE_F(OMP_CifarDense, BaselinePinned)(benchmark::State& state) {
-//   // auto n_threads = state.range(0);
+BENCHMARK_DEFINE_F(OMP_CifarDense, BaselinePinned)(benchmark::State& state) {
+  auto n_threads = state.range(0);
 
-//   // auto little_cores = g_device.get_pinable_cores(kLittleCoreType);
-//   // auto medium_cores = g_device.get_pinable_cores(kMediumCoreType);
-//   // auto big_cores = g_device.get_pinable_cores(kBigCoreType);
+  for (auto _ : state) {
+    run_baseline_pinned(*app_data, n_threads, g_device.get_pinable_cores());
+  }
+}
 
-//   // auto all_cores = little_cores;
-//   // all_cores.insert(all_cores.end(), medium_cores.begin(), medium_cores.end());
-//   // all_cores.insert(all_cores.end(), big_cores.begin(), big_cores.end());
-
-//   for (auto _ : state) {
-//     run_baseline_pinned(*app_data, n_threads, all_cores);
-//   }
-// }
-
-// void RegisterPinnedBenchmarkWithRange(const std::vector<int>& pinable_cores) {
-//   for (size_t i = 1; i <= pinable_cores.size(); ++i) {
-//     ::benchmark::internal::RegisterBenchmarkInternal(
-//         new OMP_CifarDense_BaselinePinned_Benchmark())
-//         ->Arg(i)
-//         ->Name("OMP_CifarDense/BaselinePinned")
-//         ->Unit(benchmark::kMillisecond);
-//   }
-// }
+void RegisterPinnedBenchmarkWithRange(const std::vector<int>& pinable_cores) {
+  for (size_t i = 1; i <= pinable_cores.size(); ++i) {
+    ::benchmark::internal::RegisterBenchmarkInternal(
+        new OMP_CifarDense_BaselinePinned_Benchmark())
+        ->Arg(i)
+        ->Name("OMP_CifarDense/BaselinePinned")
+        ->Unit(benchmark::kMillisecond);
+  }
+}
 
 // ------------------------------------------------------------
 // Baseline 3: Little cores only
@@ -280,21 +272,13 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
   }
 
-  // const auto n_little_cores = g_device.get_core_count(kLittleCoreType);
-  // const auto n_medium_cores = g_device.get_core_count(kMediumCoreType);
-  // const auto n_big_cores = g_device.get_core_count(kBigCoreType);
-
-  // RegisterPinnedBenchmarkWithRange(n_little_cores + n_medium_cores +
-  //                                  n_big_cores);
-  // RegisterLittleBenchmarkWithRange(n_little_cores);
-  // RegisterMediumBenchmarkWithRange(n_medium_cores);
-  // RegisterBigBenchmarkWithRange(n_big_cores);
-
   auto little_cores = g_device.get_pinable_cores(kLittleCoreType);
   auto medium_cores = g_device.get_pinable_cores(kMediumCoreType);
   auto big_cores = g_device.get_pinable_cores(kBigCoreType);
+  auto all_cores = g_device.get_pinable_cores();
 
   // RegisterPinnedBenchmarkWithRange(little_cores + medium_cores + big_cores);
+  RegisterPinnedBenchmarkWithRange(all_cores);
   RegisterLittleBenchmarkWithRange(little_cores);
   RegisterMediumBenchmarkWithRange(medium_cores);
   RegisterBigBenchmarkWithRange(big_cores);
