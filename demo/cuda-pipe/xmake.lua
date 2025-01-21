@@ -7,7 +7,7 @@ add_requires("concurrentqueue")
 if not is_plat("android") then
 target("cuda-pipe")
     set_kind("binary")
-    add_files("*.cpp")
+    add_files("2-stage.cpp")
     add_packages("builtin-apps")
     add_packages("benchmark")
 

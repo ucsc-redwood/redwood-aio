@@ -25,5 +25,9 @@ target("builtin-apps")
         add_packages("openmp")
     end
 
-    add_packages("spdlog")
+    add_files("src/cifar_dense/cuda/*.cu")
+    add_headerfiles("src/cifar_dense/cuda/*.cuh")
+    add_cugencodes("native")
 
+    add_packages("spdlog")
+target_end()
