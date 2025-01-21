@@ -1,12 +1,13 @@
 
 add_requires("benchmark")
+add_requires("cli11")
 
 target("bm")
     set_kind("binary")
     add_files("*.cpp")
     add_packages("builtin-apps")
     add_packages("benchmark")
-
+    add_packages("cli11")
     -- Add openmp support
     if is_plat("android") then
         add_cxxflags("-fopenmp -static-openmp")
