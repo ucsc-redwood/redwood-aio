@@ -131,13 +131,3 @@ target("test_sparse_cuda")
 target_end()
 
 end
-
-target("test_dense_vk")
-    set_kind("binary")
-    set_default(false)
-    add_files("cifar-dense/test_dense_vk.cpp")
-    add_deps("builtin-apps")
-    add_deps("vk-backend")
-
-    add_packages("spdlog")
-target_end()

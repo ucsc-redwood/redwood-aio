@@ -1,4 +1,6 @@
-target("vk")
+
+
+target("vk-pipe")
     set_kind("binary")
     add_files("main.cpp")
     add_files("../../builtin-apps/cifar-dense/vulkan/vk_dispatcher.cpp")
@@ -8,6 +10,8 @@ target("vk")
 
     add_packages("spdlog")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
+
+
     add_packages("concurrentqueue")
     add_packages("cli11")
 
