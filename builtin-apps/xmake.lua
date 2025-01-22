@@ -105,6 +105,9 @@ target("test_dense_cuda")
     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
 target_end()
 
+
+if not platform("android") then
+
 target("test_sparse_cuda")
     set_kind("binary")
     set_default(false)
@@ -120,6 +123,8 @@ target("test_sparse_cuda")
     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
 target_end()
+
+end
 
 target("test_dense_vk")
     set_kind("binary")

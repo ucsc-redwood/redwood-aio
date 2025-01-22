@@ -2,6 +2,9 @@ add_requires("cli11")
 
 add_requires("concurrentqueue")
 
+if not platform("android") then
+
+
 add_requires("openmp")
 
 target("usm")
@@ -11,3 +14,6 @@ target("usm")
     add_packages("concurrentqueue")
     add_packages("cli11")
     add_packages("openmp")
+target_end()
+
+end
