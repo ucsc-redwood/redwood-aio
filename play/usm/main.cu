@@ -82,14 +82,14 @@ void process_stage_1(Task task) {
 int main() {
   int deviceCount = 0;
   cudaGetDeviceCount(&deviceCount);
-  if (deviceId >= deviceCount || deviceId < 0) {
-    std::cerr << "Invalid device ID: " << deviceId << std::endl;
+  if (g_deviceId >= deviceCount || g_deviceId < 0) {
+    std::cerr << "Invalid device ID: " << g_deviceId << std::endl;
     return -1;
   }
-  cudaSetDevice(deviceId);
+  cudaSetDevice(g_deviceId);
 
   //   print device id
-  std::cout << "Using device ID: " << deviceId << std::endl;
+  std::cout << "Using device ID: " << g_deviceId << std::endl;
   exit(0);
 
   constexpr auto n = 1'000'000;
