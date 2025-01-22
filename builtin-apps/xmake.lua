@@ -35,6 +35,8 @@ target("builtin-apps-cuda")
         "common/cuda/cu_mem_resource.cu",
         "cifar-dense/cuda/cu_dense_kernel.cu",
         "cifar-dense/cuda/cu_kernels.cu",
+        "cifar-sparse/cuda/cu_dispatcher.cu",
+        "cifar-sparse/cuda/cu_sparse_kernel.cu",
     })
 
     add_cugencodes("native")

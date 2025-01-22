@@ -1,9 +1,9 @@
 #include <concurrentqueue.h>
 
+#include "../builtin-apps/cifar-dense/arg_max.hpp"
 #include "../builtin-apps/cifar-dense/cuda/cu_dense_kernel.cuh"
 #include "../builtin-apps/cifar-dense/omp/dense_kernel.hpp"
 #include "../builtin-apps/common/cuda/cu_mem_resource.cuh"
-#include "../builtin-apps/cifar-dense/arg_max.hpp"
 
 int main() {
   cuda::CudaMemoryResource mr;
@@ -19,7 +19,6 @@ int main() {
 
   auto arg_max_index = arg_max(appdata.u_linear_out.data());
   print_prediction(arg_max_index);
-
 
   return 0;
 }

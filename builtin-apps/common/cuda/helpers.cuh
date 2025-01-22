@@ -33,8 +33,7 @@ inline void cudaCheck(cudaError_t err, const char *file, int line) {
 // number for BLOCK_SIZE (e.g., 256)
 // ----------------------------------------------------------------------------
 
-#define SETUP_DEFAULT_LAUNCH_PARAMS(TOTAL_ITER, BLOCK_SIZE)         \
-  static constexpr auto block_dim = dim3{BLOCK_SIZE, 1, 1};         \
-  static constexpr auto grid_dim = div_up(TOTAL_ITER, block_dim.x); \
+#define SETUP_DEFAULT_LAUNCH_PARAMS(TOTAL_ITER, BLOCK_SIZE)     \
+  static constexpr auto block_dim = dim3{BLOCK_SIZE, 1, 1};     \
+  static const auto grid_dim = div_up(TOTAL_ITER, block_dim.x); \
   static constexpr auto shared_mem = 0;
-
