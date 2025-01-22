@@ -1,0 +1,27 @@
+#include "../common/cuda/cu_mem_resource.cuh"
+#include "arg_max.hpp"
+#include "cuda/cu_dense_kernel.cuh"
+#include "dense_appdata.hpp"
+
+int main() {
+  cuda::CudaMemoryResource mr;
+
+  cifar_dense::AppData appdata(&mr);
+
+  cifar_dense::cuda::process_stage_1(&appdata);
+  cifar_dense::cuda::process_stage_2(&appdata);
+  cifar_dense::cuda::process_stage_3(&appdata);
+  cifar_dense::cuda::process_stage_4(&appdata);
+  cifar_dense::cuda::process_stage_5(&appdata);
+  cifar_dense::cuda::process_stage_6(&appdata);
+  cifar_dense::cuda::process_stage_7(&appdata);
+  cifar_dense::cuda::process_stage_8(&appdata);
+  cifar_dense::cuda::process_stage_9(&appdata);
+
+  cifar_dense::cuda::device_sync();
+
+  auto arg_max_index = arg_max(appdata.u_linear_out.data());
+  print_prediction(arg_max_index);
+
+  return 0;
+}
