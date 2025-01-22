@@ -8,6 +8,8 @@
 #include <queue>
 #include <thread>
 
+int g_deviceId = 0;
+
 inline void checkCuda(cudaError_t result, const char* file, int line) {
   if (result != cudaSuccess) {
     std::cerr << "CUDA error at " << file << ":" << line
@@ -58,15 +60,19 @@ void process_stage_1(Task task) {
   constexpr auto threads_per_block = 256;
   const auto blocks = (task.n + threads_per_block - 1) / threads_per_block;
 
-//   CHECK_CUDA(cudaMemPrefetchAsync(task.input, task.n * sizeof(float), 0));
-//   CHECK_CUDA(cudaMemPrefetchAsync(task.output, task.n * sizeof(float), 0));
+  CHECK_CUDA(
+      cudaMemPrefetchAsync(task.input, task.n * sizeof(float), g_deviceId));
+  CHECK_CUDA(
+      cudaMemPrefetchAsync(task.output, task.n * sizeof(float), g_deviceId));
 
   kernel_process_stage_1<<<blocks, threads_per_block>>>(
       task.input, task.output, task.n);
 
   // prefetch to host
-  CHECK_CUDA(cudaMemPrefetchAsync(task.input, task.n * sizeof(float), cudaCpuDeviceId));
-  CHECK_CUDA(cudaMemPrefetchAsync(task.output, task.n * sizeof(float), cudaCpuDeviceId));
+  CHECK_CUDA(cudaMemPrefetchAsync(
+      task.input, task.n * sizeof(float), cudaCpuDeviceId));
+  CHECK_CUDA(cudaMemPrefetchAsync(
+      task.output, task.n * sizeof(float), cudaCpuDeviceId));
 
   CHECK_CUDA(cudaDeviceSynchronize());
 }
@@ -74,6 +80,18 @@ void process_stage_1(Task task) {
 }  // namespace cuda
 
 int main() {
+  int deviceCount = 0;
+  cudaGetDeviceCount(&deviceCount);
+  if (deviceId >= deviceCount || deviceId < 0) {
+    std::cerr << "Invalid device ID: " << deviceId << std::endl;
+    return -1;
+  }
+  cudaSetDevice(deviceId);
+
+  //   print device id
+  std::cout << "Using device ID: " << deviceId << std::endl;
+  exit(0);
+
   constexpr auto n = 1'000'000;
 
   std::queue<Task> q_A;
