@@ -5,6 +5,7 @@
 
 #include "../resources_path.hpp"
 
+namespace cifar_dense {
 void readDataFromFile(const std::string_view filename,
                       float *data,
                       const int size) {
@@ -29,7 +30,7 @@ void readDataFromFile(const std::string_view filename,
   std::ranges::copy(buffer, data);
 }
 
-cifar_dense::AppData::AppData(std::pmr::memory_resource *mr)
+AppData::AppData(std::pmr::memory_resource *mr)
     : BaseAppData(mr),
       u_image(kImageSize, mr),
       u_conv1_weights(kConv1WeightSize, mr),
@@ -54,16 +55,6 @@ cifar_dense::AppData::AppData(std::pmr::memory_resource *mr)
       u_linear_bias(kLinearBiasSize, mr),
       u_linear_out(kLinearOutSize, mr) {
   // Load input image
-  readDataFromFile(
-      "images/flattened_bird_bird_57.txt", u_image.data(), kImageSize);
-
-  // Load conv1 parameters
-  readDataFromFile(
-      "sparse/features_0_weight.txt", u_conv1_weights.data(), kConv1WeightSize);
-  readDataFromFile(
-      "sparse/features_0_bias.txt", u_conv1_bias.data(), kConv1BiasSize);
-
-  // Load conv2 parameters
   readDataFromFile(
       "sparse/features_3_weight.txt", u_conv2_weights.data(), kConv2WeightSize);
   readDataFromFile(
@@ -95,3 +86,5 @@ cifar_dense::AppData::AppData(std::pmr::memory_resource *mr)
   readDataFromFile(
       "sparse/classifier_bias.txt", u_linear_bias.data(), kLinearBiasSize);
 }
+
+}  // namespace cifar_dense

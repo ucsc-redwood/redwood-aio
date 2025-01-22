@@ -4,6 +4,8 @@
 
 #include "../resources_path.hpp"
 
+namespace cifar_sparse {
+
 void readDataFromFile(const char* filename, float* data, int maxSize) {
   const auto base_path = helpers::get_resource_base_path();
   std::ifstream file(base_path / filename);
@@ -50,7 +52,7 @@ void readCSRFromFiles(const char* values_file,
   col_file.close();
 }
 
-cifar_sparse::AppData::AppData(std::pmr::memory_resource* mr)
+AppData::AppData(std::pmr::memory_resource* mr)
     : BaseAppData(mr),
       // Image data
       u_image_data(3 * 32 * 32, mr),
@@ -208,3 +210,5 @@ cifar_sparse::AppData::AppData(std::pmr::memory_resource* mr)
                     4096,
                     MAX_NNZ_LINEAR};
 }
+
+}  // namespace cifar_sparse
