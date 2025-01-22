@@ -58,8 +58,16 @@ void process_stage_1(Task task) {
   constexpr auto threads_per_block = 256;
   const auto blocks = (task.n + threads_per_block - 1) / threads_per_block;
 
+//   CHECK_CUDA(cudaMemPrefetchAsync(task.input, task.n * sizeof(float), 0));
+//   CHECK_CUDA(cudaMemPrefetchAsync(task.output, task.n * sizeof(float), 0));
+
   kernel_process_stage_1<<<blocks, threads_per_block>>>(
       task.input, task.output, task.n);
+
+  // prefetch to host
+  CHECK_CUDA(cudaMemPrefetchAsync(task.input, task.n * sizeof(float), cudaCpuDeviceId));
+  CHECK_CUDA(cudaMemPrefetchAsync(task.output, task.n * sizeof(float), cudaCpuDeviceId));
+
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 
