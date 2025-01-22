@@ -36,7 +36,7 @@ target("builtin-apps-cuda")
         "cifar-dense/cuda/cu_dense_kernel.cu",
         "cifar-dense/cuda/cu_kernels.cu",
         "cifar-sparse/cuda/cu_dispatcher.cu",
-        "cifar-sparse/cuda/cu_sparse_kernel.cu",
+        "cifar-sparse/cuda/cu_kernels.cu",
     })
 
     add_cugencodes("native")
@@ -103,4 +103,20 @@ target("test_dense_cuda")
     add_tests("default")
     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: airplanes"})
     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
+target_end()
+
+target("test_sparse_cuda")
+    set_kind("binary")
+    set_default(false)
+    add_files("cifar-sparse/test_sparse_cuda.cu")
+    add_deps("builtin-apps")
+    add_deps("builtin-apps-cuda")
+
+    add_cugencodes("native")
+
+    add_packages("spdlog")
+
+    add_tests("default")
+    add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
+    add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
 target_end()
