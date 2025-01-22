@@ -1,7 +1,0 @@
-name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message
-"OMP_CifarDense/Baseline/1",5,116.898,116.863,ms,,,,,
-"OMP_CifarDense/Baseline/2",12,58.8706,57.6725,ms,,,,,
-"OMP_CifarDense/Baseline/3",18,39.698,38.1854,ms,,,,,
-"OMP_CifarDense/Baseline/4",23,30.9538,29.6061,ms,,,,,
-"OMP_CifarDense/Baseline/5",29,25.4805,24.1747,ms,,,,,
-"OMP_CifarDense/Baseline/6",35,21.1663,19.8128,ms,,,,,

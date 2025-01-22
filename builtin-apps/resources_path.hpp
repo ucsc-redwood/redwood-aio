@@ -23,7 +23,6 @@ namespace helpers {
              .parent_path()
              .parent_path()
              .parent_path()
-             .parent_path()
              .parent_path() /
          "resources";
 #endif

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base_appdata.hpp"
+#include "../base_appdata.hpp"
 
 namespace cifar_dense {
 
