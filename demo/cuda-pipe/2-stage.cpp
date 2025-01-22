@@ -102,12 +102,6 @@ int main(int argc, char** argv) {
   }
   q_A.push(new_sentinel_task());
 
-  // for (size_t i = 0; i < n_tasks; ++i) {
-  //   auto& data = app_data[i % app_data.size()];
-  //   q_A.enqueue(new_task(&data));
-  // }
-  // q_A.enqueue(new_sentinel_task());
-
   auto start = std::chrono::high_resolution_clock::now();
 
   std::thread stage_A_thread([&]() {
@@ -123,7 +117,6 @@ int main(int argc, char** argv) {
       process_stage_A(task);
 
       q_AB.enqueue(task);
-      // std::cout << "[thread A] processed task " << task.uid << std::endl;
     }
   });
 

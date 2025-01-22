@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
 
 if not is_plat("android") then
-    set_toolchains("clang")
+    -- set_toolchains("clang")
     add_requires("openmp")
 end
 
@@ -15,6 +15,7 @@ target("builtin-apps")
     add_includedirs("includes")
     add_headerfiles("includes/**/*.hpp")
     add_headerfiles("includes/*.hpp")
+    -- add_headerfiles("includes/*.cuh")
     add_files("src/**/*.cpp")
 
     -- Add openmp support
@@ -25,9 +26,8 @@ target("builtin-apps")
         add_packages("openmp")
     end
 
-    add_files("src/cifar_dense/cuda/*.cu")
-    add_headerfiles("src/cifar_dense/cuda/*.cuh")
-    add_cugencodes("native")
+    -- add_files("src/cifar_dense/cuda/*.cu")
+    -- add_cugencodes("native")
 
     add_packages("spdlog")
 target_end()
