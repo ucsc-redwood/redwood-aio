@@ -18,5 +18,18 @@ int main() {
 
   auto seq = engine.sequence();
 
+  dispatcher.run_stage1(seq.get());
+  dispatcher.run_stage2(seq.get());
+  dispatcher.run_stage3(seq.get());
+  dispatcher.run_stage4(seq.get());
+  dispatcher.run_stage5(seq.get());
+  dispatcher.run_stage6(seq.get());
+  dispatcher.run_stage7(seq.get());
+  dispatcher.run_stage8(seq.get());
+  dispatcher.run_stage9(seq.get());
+
+  auto arg_max_index = arg_max(appdata.u_linear_out.data());
+  print_prediction(arg_max_index);
+
   return 0;
 }
