@@ -26,6 +26,8 @@ target("builtin-apps")
     add_packages("spdlog")
 target_end()
 
+if not is_plat("android") then
+
 target("builtin-apps-cuda")
     set_kind("static")
 
@@ -44,6 +46,7 @@ target("builtin-apps-cuda")
     add_packages("spdlog")
 target_end()
 
+end
 
 target("test_dense")
     set_kind("binary")
@@ -87,6 +90,8 @@ target("test_sparse")
     add_tests("with_omp", {trim_output = true, runargs = {"true"}, pass_outputs = "Predicted Image: deer"})
 target_end()
 
+if not is_plat("android") then
+
 set_policy("build.cuda.devlink", true)
 
 target("test_dense_cuda")
@@ -105,8 +110,9 @@ target("test_dense_cuda")
     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
 target_end()
 
+end
 
-if not platform("android") then
+if not is_plat("android") then
 
 target("test_sparse_cuda")
     set_kind("binary")

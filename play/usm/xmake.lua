@@ -2,8 +2,7 @@ add_requires("cli11")
 
 add_requires("concurrentqueue")
 
-if not platform("android") then
-
+if not is_plat("android") then
 
 add_requires("openmp")
 
