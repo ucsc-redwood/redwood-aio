@@ -120,3 +120,13 @@ target("test_sparse_cuda")
     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
 target_end()
+
+target("test_dense_vk")
+    set_kind("binary")
+    set_default(false)
+    add_files("cifar-dense/test_dense_vk.cpp")
+    add_deps("builtin-apps")
+    add_deps("vk-backend")
+
+    add_packages("spdlog")
+target_end()

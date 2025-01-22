@@ -10,3 +10,4 @@ includes("play")
 includes("pipe")
 
 includes("play/usm")
+includes("builtin-apps/common/vulkan")
