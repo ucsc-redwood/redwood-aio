@@ -99,6 +99,8 @@ int main() {
       {
         std::lock_guard<std::mutex> lock(m);
         std::cout << "[A] starting task " << task.uid << std::endl;
+        std::cout << "\tAdress of input: " << task.input << std::endl;
+        std::cout << "\tAdress of output: " << task.output << std::endl;
       }
 
       omp::process_stage_1(task);
@@ -118,6 +120,8 @@ int main() {
         {
           std::lock_guard<std::mutex> lock(m);
           std::cout << "[B] starting task " << task.uid << std::endl;
+          std::cout << "\tAdress of input: " << task.input << std::endl;
+          std::cout << "\tAdress of output: " << task.output << std::endl;
         }
 
         cuda::process_stage_1(task);
