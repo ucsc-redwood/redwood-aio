@@ -3,6 +3,7 @@
 #include <omp.h>
 
 #include <iostream>
+#include <thread>
 
 inline void checkCuda(cudaError_t result, const char* file, int line) {
   if (result != cudaSuccess) {
@@ -36,14 +37,17 @@ __global__ void kernel_process_stage_1(float* a, int n) {
 }
 
 void process_stage_1(float* a, int n) {
-  kernel_process_stage_1<<<1, 1024>>>(a, n);
+  constexpr auto threads_per_block = 256;
+  const auto blocks = (n + threads_per_block - 1) / threads_per_block;
+
+  kernel_process_stage_1<<<blocks, threads_per_block>>>(a, n);
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 
 }  // namespace cuda
 
 int main() {
-  constexpr auto n = 100;
+  constexpr auto n = 1'000'000;
 
   float* u_input;
   CHECK_CUDA(cudaMallocManaged(&u_input, n * sizeof(float)));
@@ -53,8 +57,11 @@ int main() {
 
   std::fill_n(u_input, n, 1.0f);
 
-  omp::process_stage_1(u_input, n);
-  cuda::process_stage_1(u_input, n);
+  std::thread t_omp([&]() { omp::process_stage_1(u_input, n); });
+  std::thread t_cuda([&]() { cuda::process_stage_1(u_input, n); });
+
+  t_omp.join();
+  t_cuda.join();
 
   // Verify results
   bool correct = true;
