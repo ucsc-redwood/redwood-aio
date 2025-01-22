@@ -90,7 +90,6 @@ int main() {
 
   //   print device id
   std::cout << "Using device ID: " << g_deviceId << std::endl;
-  exit(0);
 
   constexpr auto n = 1'000'000;
 
