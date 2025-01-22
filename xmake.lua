@@ -8,3 +8,5 @@ set_warnings("allextra")
 includes("builtin-apps")
 includes("play")
 includes("pipe")
+
+includes("play/usm")
