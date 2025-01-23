@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
   parse_args(argc, argv);
   spdlog::set_level(spdlog::level::trace);
 
-//   run_2_cpu_gpu_stage();
+  run_2_cpu_gpu_stage();
 
   return 0;
 }
