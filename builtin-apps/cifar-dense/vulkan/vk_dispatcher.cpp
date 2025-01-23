@@ -117,7 +117,8 @@ void Singleton::process_stage_1(cifar_dense::AppData &app_data) {
 
   seq->launch_kernel_async();
 
-  //   seq->sync();
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
@@ -145,6 +146,9 @@ void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
@@ -180,6 +184,9 @@ void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
@@ -207,6 +214,9 @@ void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
@@ -242,6 +252,9 @@ void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
@@ -277,6 +290,9 @@ void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
@@ -312,6 +328,9 @@ void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
@@ -339,6 +358,9 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
@@ -361,6 +383,9 @@ void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  // tmp
+  seq->sync();
 }
 
 }  // namespace vulkan
