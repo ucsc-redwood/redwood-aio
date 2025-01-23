@@ -51,8 +51,8 @@ inline void bucket_sort(
   int local_index;        // [0 : n_buckets)
   int real_bucket_index;  // [0 : n_buckets * num_threads)
   int my_id = omp_get_thread_num();
-  int workload = dim / num_threads;
-  int prevoius_index;
+  // int workload = dim / num_threads;
+  // int prevoius_index;
 
 #pragma omp for private(local_index)
   for (int i = 0; i < dim; i++) {

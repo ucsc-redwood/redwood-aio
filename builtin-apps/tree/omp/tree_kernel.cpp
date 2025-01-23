@@ -43,6 +43,8 @@ void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage) {
                   app_data.get_n_input(),
                   num_threads,
                   num_threads);
+
+#pragma omp barrier
 }
 }  // namespace v2
 
