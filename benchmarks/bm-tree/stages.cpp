@@ -19,13 +19,19 @@ class OMP_Tree : public benchmark::Fixture {
 
     // need to run the first
 
-    tree::omp::process_stage_1(*app_data);
-    std::sort(app_data->u_morton_keys.begin(), app_data->u_morton_keys.end());
-    tree::omp::process_stage_3(*app_data);
-    tree::omp::process_stage_4(*app_data);
-    tree::omp::process_stage_5(*app_data);
-    tree::omp::process_stage_6(*app_data);
-    tree::omp::process_stage_7(*app_data);
+#pragma omp parallel
+    {
+      tree::omp::process_stage_1(*app_data);
+
+#pragma omp single
+      { std::ranges::sort(app_data->u_morton_keys); }
+
+      tree::omp::process_stage_3(*app_data);
+      tree::omp::process_stage_4(*app_data);
+      tree::omp::process_stage_5(*app_data);
+      tree::omp::process_stage_6(*app_data);
+      tree::omp::process_stage_7(*app_data);
+    }
   }
 
   void TearDown(benchmark::State&) override { app_data.reset(); }
@@ -49,28 +55,6 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage1little)
     run_stage_1_little(*app_data, g_little_cores, n_threads);
   }
 }
-
-// Add stages 2-7
-// static void run_stage_2_little(tree::AppData& app_data,
-//                                const std::vector<int>& cores,
-//                                const int n_threads) {
-//   _Pragma("omp parallel num_threads(n_threads)") {
-//     bind_thread_to_core(cores);
-//     tree::omp::v2::process_stage_2(app_data);
-//   }
-// }
-
-// BENCHMARK_DEFINE_F(OMP_Tree, Stage2little)
-// (benchmark::State& state) {
-
-//   const auto n_threads = state.range(0);
-
-//   tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-
-//   for (auto _ : state) {
-//     run_stage_2_little(*app_data, g_little_cores, n_threads);
-//   }
-// }
 
 static void run_stage_3_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
