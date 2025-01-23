@@ -13,3 +13,6 @@ includes("play/safe-pipe")
 includes("play/test-tree")
 
 includes("builtin-apps/common/vulkan")
+
+
+includes("benchmarks")
