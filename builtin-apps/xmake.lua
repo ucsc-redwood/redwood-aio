@@ -23,24 +23,26 @@ target("builtin-apps")
     add_packages("glm")
 target_end()
 
-if not is_plat("android") then
 
-target("builtin-apps-cuda")
-    set_kind("static")
 
-    add_files(source_files)
+-- if not is_plat("android") then
 
-    add_files({
-        "common/cuda/cu_mem_resource.cu",
-        "cifar-dense/cuda/cu_dense_kernel.cu",
-        "cifar-dense/cuda/cu_kernels.cu",
-        "cifar-sparse/cuda/cu_dispatcher.cu",
-        "cifar-sparse/cuda/cu_kernels.cu",
-    })
+-- target("builtin-apps-cuda")
+--     set_kind("static")
 
-    add_cugencodes("native")
+--     add_files(source_files)
 
-    add_packages("spdlog")
-target_end()
+--     add_files({
+--         "common/cuda/cu_mem_resource.cu",
+--         "cifar-dense/cuda/cu_dense_kernel.cu",
+--         "cifar-dense/cuda/cu_kernels.cu",
+--         "cifar-sparse/cuda/cu_dispatcher.cu",
+--         "cifar-sparse/cuda/cu_kernels.cu",
+--     })
 
-end
+--     add_cugencodes("native")
+
+--     add_packages("spdlog")
+-- target_end()
+
+-- end
