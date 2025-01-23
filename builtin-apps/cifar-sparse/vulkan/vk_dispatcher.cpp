@@ -139,6 +139,8 @@ void Singleton::process_stage_1(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -168,6 +170,8 @@ void Singleton::process_stage_2(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -204,6 +208,8 @@ void Singleton::process_stage_3(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 //----------------------------------------------------------------------------
@@ -238,6 +244,8 @@ void Singleton::process_stage_4(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -274,6 +282,8 @@ void Singleton::process_stage_5(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -310,6 +320,8 @@ void Singleton::process_stage_6(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -346,6 +358,8 @@ void Singleton::process_stage_7(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -380,6 +394,8 @@ void Singleton::process_stage_8(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -408,6 +424,8 @@ void Singleton::process_stage_9(cifar_sparse::AppData &app_data) {
   seq->record_commands(algo, total_iterations);
 
   seq->launch_kernel_async();
+
+  seq->sync();
 }
 
 }  // namespace vulkan
