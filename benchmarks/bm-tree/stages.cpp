@@ -1,24 +1,36 @@
 #include <benchmark/benchmark.h>
 
 #include <CLI/CLI.hpp>
+#include <cassert>
+#include <memory>
+#include <ranges>
+#include <thread>
+#include <vector>
 
+// Your includes
 #include "affinity.hpp"
 #include "app.hpp"
 #include "tree/omp/func_sort.hpp"
 #include "tree/omp/tree_kernel.hpp"
 #include "tree/tree_appdata.hpp"
 
-// ------------------------------------------------------------
-// Global variables
-// ------------------------------------------------------------
-
-class OMP_Tree : public benchmark::Fixture {
- protected:
-  void SetUp(benchmark::State&) override {
+//
+// ----------------------------------------------------------------------
+// 1) "Fixture-like" class that replicates your old SetUp/TearDown logic
+// ----------------------------------------------------------------------
+//
+// We'll allocate AppData in the constructor, then run the "SetUp" steps
+// you had before. Then the destructor does "TearDown" if needed.
+//
+class OMP_Tree_Fixture {
+ public:
+  OMP_Tree_Fixture() {
     app_data = std::make_unique<tree::AppData>(std::pmr::new_delete_resource());
 
-    // need to run the first
-
+    // Simulate your old "SetUp" code:
+    //   - 1) Stage1 in parallel
+    //   - 2) Single-thread sort
+    //   - 3..7 in parallel
 #pragma omp parallel
     {
       tree::omp::process_stage_1(*app_data);
@@ -32,691 +44,239 @@ class OMP_Tree : public benchmark::Fixture {
     }
   }
 
-  void TearDown(benchmark::State&) override { app_data.reset(); }
+  ~OMP_Tree_Fixture() {
+    // If you had a TearDown, put that logic here.
+    // For now, we just reset the pointer:
+    app_data.reset();
+  }
 
   std::unique_ptr<tree::AppData> app_data;
 };
 
-static void run_stage_1_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+//
+// ----------------------------------------------------------------------
+// 2) Shared "runner" functions for each stage
+// ----------------------------------------------------------------------
+//
+// We define one pinned function for each stage except Stage2 (which is
+// special). Each function runs the stage in an OMP region, binding threads to
+// 'cores'.
+//
+
+// For stages that do NOT require TempStorage:
+using StageFuncNoTemp = void (*)(tree::AppData&,
+                                 int n_threads,
+                                 const std::vector<int>& cores);
+
+// Example: Stage1
+static void run_stage_1(tree::AppData& app_data,
+                        int n_threads,
+                        const std::vector<int>& cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_1(app_data);
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage1little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_1_little(*app_data, g_little_cores, n_threads);
-  }
-}
-
-static void run_stage_3_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+static void run_stage_3(tree::AppData& app_data,
+                        int n_threads,
+                        const std::vector<int>& cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_3(app_data);
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage3little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_3_little(*app_data, g_little_cores, n_threads);
-  }
-}
-
-static void run_stage_4_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+static void run_stage_4(tree::AppData& app_data,
+                        int n_threads,
+                        const std::vector<int>& cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_4(app_data);
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage4little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_4_little(*app_data, g_little_cores, n_threads);
-  }
-}
-
-static void run_stage_5_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+static void run_stage_5(tree::AppData& app_data,
+                        int n_threads,
+                        const std::vector<int>& cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_5(app_data);
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage5little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_5_little(*app_data, g_little_cores, n_threads);
-  }
-}
-
-static void run_stage_6_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+static void run_stage_6(tree::AppData& app_data,
+                        int n_threads,
+                        const std::vector<int>& cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_6(app_data);
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage6little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_6_little(*app_data, g_little_cores, n_threads);
-  }
-}
-
-static void run_stage_7_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+static void run_stage_7(tree::AppData& app_data,
+                        int n_threads,
+                        const std::vector<int>& cores) {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_7(app_data);
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage7little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_7_little(*app_data, g_little_cores, n_threads);
-  }
-}
+// For Stage2, we need a different signature that includes TempStorage.
+using StageFuncWithTemp = void (*)(tree::AppData&,
+                                   int n_threads,
+                                   const std::vector<int>& cores);
 
-// Then define the registration functions for each stage
-void RegisterStage1LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage1little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage1_little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
+static void run_stage_2_likewise(tree::AppData& app_data,
+                                 int n_threads,
+                                 const std::vector<int>& cores) {
+  // We typically want to create a fresh TempStorage *inside each iteration*
+  // of the benchmark. So do that at the last moment:
+  tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
 
-// void RegisterStage2LittleBenchmarkWithRange(
-//     const std::vector<int>& pinable_little_cores) {
-//   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-//     ::benchmark::internal::RegisterBenchmarkInternal(
-//         new OMP_Tree_Stage2little_Benchmark())
-//         ->Arg(i)
-//         ->Name("OMP_Tree/Stage2_little")
-//         ->Unit(benchmark::kMillisecond);
-//   }
-// }
-
-void RegisterStage3LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage3little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage3_little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage4LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage4little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage4_little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage5LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage5little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage5_little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage6LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage6little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage6_little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage7LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage7little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage7_little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-static void run_stage_1_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_1(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage1medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_1_medium(*app_data, g_medium_cores, n_threads);
-  }
-}
-
-static void run_stage_3_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_3(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage3medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_3_medium(*app_data, g_medium_cores, n_threads);
-  }
-}
-
-static void run_stage_4_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_4(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage4medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_4_medium(*app_data, g_medium_cores, n_threads);
-  }
-}
-
-static void run_stage_5_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_5(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage5medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_5_medium(*app_data, g_medium_cores, n_threads);
-  }
-}
-
-static void run_stage_6_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_6(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage6medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_6_medium(*app_data, g_medium_cores, n_threads);
-  }
-}
-
-static void run_stage_7_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_7(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage7medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_7_medium(*app_data, g_medium_cores, n_threads);
-  }
-}
-
-static void run_stage_1_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_1(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage1big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_1_big(*app_data, g_big_cores, n_threads);
-  }
-}
-
-static void run_stage_3_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_3(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage3big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_3_big(*app_data, g_big_cores, n_threads);
-  }
-}
-
-static void run_stage_4_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_4(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage4big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_4_big(*app_data, g_big_cores, n_threads);
-  }
-}
-
-static void run_stage_5_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_5(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage5big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_5_big(*app_data, g_big_cores, n_threads);
-  }
-}
-
-static void run_stage_6_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_6(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage6big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_6_big(*app_data, g_big_cores, n_threads);
-  }
-}
-
-static void run_stage_7_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::process_stage_7(app_data);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage7big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-  for (auto _ : state) {
-    run_stage_7_big(*app_data, g_big_cores, n_threads);
-  }
-}
-
-void RegisterStage1MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage1medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage1_medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage3MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage3medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage3_medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage4MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage4medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage4_medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage5MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage5medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage5_medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage6MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage6medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage6_medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage7MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage7medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage7_medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage1BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage1big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage1_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage3BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage3big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage3_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage4BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage4big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage4_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage5BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage5big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage5_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage6BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage6big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage6_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterStage7BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage7big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage7_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-// ------------------------------------------------------------
-// Special case for stage 2
-// ------------------------------------------------------------
-
-static void run_stage_2_little(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads,
-                               tree::omp::v2::TempStorage& temp_storage) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
+
+  // If you want to assert sorted after stage2:
+  assert(std::ranges::is_sorted(app_data.u_morton_keys));
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Stage2little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-
-  for (auto _ : state) {
-    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-    run_stage_2_little(*app_data, g_little_cores, n_threads, temp_storage);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
+// If you also want to benchmark "Stage2_std" (just sorting):
+static void run_stage_2_std(tree::AppData& app_data) {
+  std::ranges::sort(app_data.u_morton_keys);
+  assert(std::ranges::is_sorted(app_data.u_morton_keys));
 }
 
-void RegisterStage2LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
-  for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage2little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage2_little")
+//
+// ----------------------------------------------------------------------
+// 3) Single function to register a "pinned stage" benchmark
+// ----------------------------------------------------------------------
+//
+// This function creates a Google Benchmark that, for each iteration,
+// constructs (and destructs) an OMP_Tree_Fixture and calls the desired stage.
+//
+static void RegisterPinnedStageBenchmark(const std::string& benchmarkName,
+                                         const std::vector<int>& cores,
+                                         StageFuncNoTemp stageFunc) {
+  // We'll do one Benchmark for each #threads from 1.. cores.size()
+  const int maxThreads = static_cast<int>(cores.size());
+  for (int t = 1; t <= maxThreads; t++) {
+    // We capture [=] so that 't' and 'cores' are copied into the lambda
+    benchmark::RegisterBenchmark(
+        (benchmarkName + "/" + std::to_string(t)).c_str(),
+        [=](benchmark::State& st) {
+          for (auto _ : st) {
+            // Construct the fixture for each iteration (like old SetUp)
+            OMP_Tree_Fixture fixture;
+            // Run the pinned stage
+            stageFunc(*fixture.app_data, t, cores);
+            // fixture destructor => old TearDown
+          }
+        })
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-static void run_stage_2_medium(tree::AppData& app_data,
-                               const std::vector<int>& cores,
-                               const int n_threads,
-                               tree::omp::v2::TempStorage& temp_storage) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::v2::process_stage_2(app_data, temp_storage);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage2medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-
-  for (auto _ : state) {
-    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-    run_stage_2_medium(*app_data, g_medium_cores, n_threads, temp_storage);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
-}
-
-void RegisterStage2MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
-  for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage2medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage2_medium")
+//
+// For Stage2, we do the same idea but pass a StageFuncWithTemp if we like
+// (In practice, we can unify with StageFuncNoTemp if we allocate TempStorage
+// inside the function. It's your choice.)
+//
+static void RegisterPinnedStage2Benchmark(const std::string& benchmarkName,
+                                          const std::vector<int>& cores,
+                                          StageFuncWithTemp stageFunc) {
+  const int maxThreads = static_cast<int>(cores.size());
+  for (int t = 1; t <= maxThreads; t++) {
+    benchmark::RegisterBenchmark(
+        (benchmarkName + "/" + std::to_string(t)).c_str(),
+        [=](benchmark::State& st) {
+          for (auto _ : st) {
+            OMP_Tree_Fixture fixture;
+            stageFunc(*fixture.app_data, t, cores);
+          }
+        })
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-static void run_stage_2_big(tree::AppData& app_data,
-                            const std::vector<int>& cores,
-                            const int n_threads,
-                            tree::omp::v2::TempStorage& temp_storage) {
-  _Pragma("omp parallel num_threads(n_threads)") {
-    bind_thread_to_core(cores);
-    tree::omp::v2::process_stage_2(app_data, temp_storage);
-  }
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage2big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-
-  for (auto _ : state) {
-    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-    run_stage_2_big(*app_data, g_big_cores, n_threads, temp_storage);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
-}
-
-void RegisterStage2BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
-  for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage2big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Stage2_big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-// ------------------------------------------------------------
-// std::sort
-// ------------------------------------------------------------
-
-BENCHMARK_DEFINE_F(OMP_Tree, Stage2std)
-(benchmark::State& state) {
-  for (auto _ : state) {
-    std::ranges::sort(app_data->u_morton_keys);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
-}
-
-void RegisterStage2stdBenchmark() {
-  ::benchmark::internal::RegisterBenchmarkInternal(
-      new OMP_Tree_Stage2std_Benchmark())
-      ->Name("OMP_Tree/Stage2_std")
+// If you want a "Stage2_std" that doesn't do pinned threads at all:
+static void RegisterStage2StdBenchmark(const std::string& benchmarkName) {
+  benchmark::RegisterBenchmark(benchmarkName.c_str(),
+                               [=](benchmark::State& st) {
+                                 for (auto _ : st) {
+                                   OMP_Tree_Fixture fixture;
+                                   run_stage_2_std(*fixture.app_data);
+                                 }
+                               })
       ->Unit(benchmark::kMillisecond);
 }
 
-// ------------------------------------------------------------
-// Main
-// ------------------------------------------------------------
-
+//
+// ----------------------------------------------------------------------
+// 4) "Main": parse args, then dynamically register all the combos
+// ----------------------------------------------------------------------
 int main(int argc, char** argv) {
-  parse_args(argc, argv);
+  parse_args(argc, argv);  // presumably populates g_little_cores, etc.
 
-  RegisterStage1LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage1MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage1BigBenchmarkWithRange(g_big_cores);
+  //
+  // Stage1
+  //
+  RegisterPinnedStageBenchmark("Stage1_little", g_little_cores, run_stage_1);
+  RegisterPinnedStageBenchmark("Stage1_medium", g_medium_cores, run_stage_1);
+  RegisterPinnedStageBenchmark("Stage1_big", g_big_cores, run_stage_1);
 
-  RegisterStage2LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage2MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage2BigBenchmarkWithRange(g_big_cores);
+  //
+  // Stage2
+  //
+  RegisterPinnedStage2Benchmark(
+      "Stage2_little", g_little_cores, run_stage_2_likewise);
+  RegisterPinnedStage2Benchmark(
+      "Stage2_medium", g_medium_cores, run_stage_2_likewise);
+  RegisterPinnedStage2Benchmark(
+      "Stage2_big", g_big_cores, run_stage_2_likewise);
 
-  RegisterStage2stdBenchmark();
+  // Also the std::sort version
+  RegisterStage2StdBenchmark("Stage2_std");
 
-  RegisterStage3LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage3MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage3BigBenchmarkWithRange(g_big_cores);
+  //
+  // Stage3
+  //
+  RegisterPinnedStageBenchmark("Stage3_little", g_little_cores, run_stage_3);
+  RegisterPinnedStageBenchmark("Stage3_medium", g_medium_cores, run_stage_3);
+  RegisterPinnedStageBenchmark("Stage3_big", g_big_cores, run_stage_3);
 
-  RegisterStage4LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage4MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage4BigBenchmarkWithRange(g_big_cores);
+  // Repeat for stages 4..7
+  RegisterPinnedStageBenchmark("Stage4_little", g_little_cores, run_stage_4);
+  RegisterPinnedStageBenchmark("Stage4_medium", g_medium_cores, run_stage_4);
+  RegisterPinnedStageBenchmark("Stage4_big", g_big_cores, run_stage_4);
 
-  RegisterStage5LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage5MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage5BigBenchmarkWithRange(g_big_cores);
+  RegisterPinnedStageBenchmark("Stage5_little", g_little_cores, run_stage_5);
+  RegisterPinnedStageBenchmark("Stage5_medium", g_medium_cores, run_stage_5);
+  RegisterPinnedStageBenchmark("Stage5_big", g_big_cores, run_stage_5);
 
-  RegisterStage6LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage6MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage6BigBenchmarkWithRange(g_big_cores);
+  RegisterPinnedStageBenchmark("Stage6_little", g_little_cores, run_stage_6);
+  RegisterPinnedStageBenchmark("Stage6_medium", g_medium_cores, run_stage_6);
+  RegisterPinnedStageBenchmark("Stage6_big", g_big_cores, run_stage_6);
 
-  RegisterStage7LittleBenchmarkWithRange(g_little_cores);
-  RegisterStage7MediumBenchmarkWithRange(g_medium_cores);
-  RegisterStage7BigBenchmarkWithRange(g_big_cores);
+  RegisterPinnedStageBenchmark("Stage7_little", g_little_cores, run_stage_7);
+  RegisterPinnedStageBenchmark("Stage7_medium", g_medium_cores, run_stage_7);
+  RegisterPinnedStageBenchmark("Stage7_big", g_big_cores, run_stage_7);
 
-  // Initialize and run benchmarks
+  //
+  // Finally, run all benchmarks
+  //
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
-
   return 0;
 }
