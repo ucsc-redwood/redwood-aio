@@ -82,7 +82,7 @@ struct Task {
 };
 
 void run_2_stage_queue() {
-  auto mr = vulkan::Singleton::getInstance().get_mr();
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
 
   std::queue<Task> q_A;
   moodycamel::ConcurrentQueue<Task> q_AB;
@@ -141,11 +141,15 @@ void run_2_stage_queue() {
           break;
         }
 
-        vulkan::Singleton::getInstance().process_stage_6(*t.app_data);
-        vulkan::Singleton::getInstance().process_stage_7(*t.app_data);
-        vulkan::Singleton::getInstance().process_stage_8(*t.app_data);
-        vulkan::Singleton::getInstance().process_stage_9(*t.app_data);
-        vulkan::Singleton::getInstance().sync();
+        cifar_sparse::vulkan::Singleton::getInstance().process_stage_6(
+            *t.app_data);
+        cifar_sparse::vulkan::Singleton::getInstance().process_stage_7(
+            *t.app_data);
+        cifar_sparse::vulkan::Singleton::getInstance().process_stage_8(
+            *t.app_data);
+        cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(
+            *t.app_data);
+        cifar_sparse::vulkan::Singleton::getInstance().sync();
 
         q_B.push(std::move(t));
 
@@ -172,7 +176,7 @@ void run_2_stage_queue() {
 }
 
 void run_queue() {
-  auto mr = vulkan::Singleton::getInstance().get_mr();
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
 
   std::queue<Task> q_A;
   std::queue<Task> q_B;
@@ -207,16 +211,17 @@ void run_queue() {
 
 #pragma omp parallel num_threads(4)
     {
+      bind_thread_to_core<1, 2, 3, 4>();
       cifar_sparse::omp::process_stage_1(*t.app_data);
       cifar_sparse::omp::process_stage_2(*t.app_data);
       cifar_sparse::omp::process_stage_3(*t.app_data);
       cifar_sparse::omp::process_stage_4(*t.app_data);
     }
-    vulkan::Singleton::getInstance().process_stage_6(*t.app_data);
-    vulkan::Singleton::getInstance().process_stage_7(*t.app_data);
-    vulkan::Singleton::getInstance().process_stage_8(*t.app_data);
-    vulkan::Singleton::getInstance().process_stage_9(*t.app_data);
-    vulkan::Singleton::getInstance().sync();
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_6(*t.app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_7(*t.app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_8(*t.app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(*t.app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().sync();
 
     q_B.push(std::move(t));
   }
@@ -231,20 +236,20 @@ void run_queue() {
 }
 
 void run_normal() {
-  auto mr = vulkan::Singleton::getInstance().get_mr();
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
 
   cifar_sparse::AppData app_data(mr);
 
-  vulkan::Singleton::getInstance().process_stage_1(app_data);
-  vulkan::Singleton::getInstance().process_stage_2(app_data);
-  vulkan::Singleton::getInstance().process_stage_3(app_data);
-  vulkan::Singleton::getInstance().process_stage_4(app_data);
-  vulkan::Singleton::getInstance().process_stage_5(app_data);
-  vulkan::Singleton::getInstance().process_stage_6(app_data);
-  vulkan::Singleton::getInstance().process_stage_7(app_data);
-  vulkan::Singleton::getInstance().process_stage_8(app_data);
-  vulkan::Singleton::getInstance().process_stage_9(app_data);
-  vulkan::Singleton::getInstance().sync();
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_1(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_2(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_3(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_4(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_5(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_6(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_7(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_8(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(app_data);
+  cifar_sparse::vulkan::Singleton::getInstance().sync();
 
   auto arg_max_index = cifar_sparse::arg_max(app_data.u_linear_output.data());
   cifar_sparse::print_prediction(arg_max_index);

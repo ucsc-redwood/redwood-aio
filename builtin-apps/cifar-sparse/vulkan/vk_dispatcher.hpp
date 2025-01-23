@@ -2,6 +2,8 @@
 #include "../../common/vulkan/engine.hpp"
 #include "../sparse_appdata.hpp"
 
+namespace cifar_sparse {
+
 namespace vulkan {
 
 class Singleton {
@@ -15,7 +17,9 @@ class Singleton {
     return instance;
   }
 
-  VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
+  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() {
+    return engine.get_mr();
+  }
 
   void sync() { seq->sync(); }
 
@@ -33,9 +37,10 @@ class Singleton {
   Singleton();
   ~Singleton() { spdlog::info("Singleton instance destroyed."); }
 
-  Engine engine;
-  std::shared_ptr<Sequence> seq;
-  std::unordered_map<std::string, std::shared_ptr<Algorithm>> algorithms;
+  ::vulkan::Engine engine;
+  std::shared_ptr<::vulkan::Sequence> seq;
+  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>>
+      algorithms;
 
   struct Conv2dPushConstants {
     uint32_t input_height;
@@ -65,3 +70,5 @@ class Singleton {
 };
 
 }  // namespace vulkan
+
+}  // namespace cifar_sparse

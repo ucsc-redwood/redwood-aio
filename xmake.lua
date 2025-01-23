@@ -7,11 +7,8 @@ includes("android.lua")
 
 includes("pipe")
 includes("builtin-apps")
--- includes("pipe")
 
 includes("play/usm")
-includes("play/vk")
-includes("play/vk-pipe")
 includes("play/safe-pipe")
 
 includes("builtin-apps/common/vulkan")

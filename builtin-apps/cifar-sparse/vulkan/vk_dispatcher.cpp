@@ -1,6 +1,8 @@
 
 #include "vk_dispatcher.hpp"
 
+namespace cifar_sparse {
+
 namespace vulkan {
 
 // Input Image dimensions
@@ -23,7 +25,7 @@ constexpr bool kRelu = true;
 // Singleton Constructor
 // ----------------------------------------------------------------------------
 
-Singleton::Singleton() : engine(Engine()), seq(engine.sequence()) {
+Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
   spdlog::info("Singleton instance created.");
 
   // tmp
@@ -409,3 +411,5 @@ void Singleton::process_stage_9(cifar_sparse::AppData &app_data) {
 }
 
 }  // namespace vulkan
+
+}  // namespace cifar_sparse
