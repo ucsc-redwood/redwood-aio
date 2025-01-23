@@ -41,7 +41,10 @@ inline void bucket_sort(
     const int num_threads
 
 ) {
-  uint32_t limit = 100000;
+  //   uint32_t limit = 100000;
+
+  // I got this number from running my program
+  uint32_t limit = 1'073'741'600;
   uint32_t w = limit / n_buckets;
 
   int j, k;
