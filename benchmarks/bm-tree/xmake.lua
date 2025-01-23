@@ -1,8 +1,3 @@
-
-if not is_plat("android") then
-    add_requires("openmp")
-end
-
 target("bm-tree-stages")
     set_kind("binary")
     set_group("benchmarks")

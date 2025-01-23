@@ -4,6 +4,19 @@ set_languages("c++20")
 set_warnings("allextra")
 
 
+add_requires("benchmark")
+add_requires("cli11")
+
+add_requires("concurrentqueue")
+
+if not is_plat("android") then
+    add_requires("openmp")
+end
+
+add_requires("spdlog")
+add_requires("glm")
+
+
 -- local has_cuda = true
 
 -- if has_cuda then
@@ -12,7 +25,7 @@ set_warnings("allextra")
 
 includes("android.lua")
 
--- includes("pipe")
+includes("pipe")
 includes("builtin-apps")
 
 -- includes("play/safe-pipe")
