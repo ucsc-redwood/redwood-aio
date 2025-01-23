@@ -14,64 +14,6 @@
 #include "../../pipe/app.hpp"
 #include "../../pipe/conf.hpp"
 
-// void run_2_stage() {
-//   auto mr = vulkan::Singleton::getInstance().get_mr();
-
-//   std::vector double_buffer = {
-//       cifar_sparse::AppData(mr),
-//       cifar_sparse::AppData(mr),
-//   };
-
-//   constexpr auto n_iterations = 10;
-
-//   for (auto i = 0; i < n_iterations; ++i) {
-//     auto cur = i % 2;
-//     auto next = (i + 1) % 2;
-
-//     if (cur == 0) {
-//       // process first half of the buffer
-//       vulkan::Singleton::getInstance().process_stage_1(double_buffer[cur]);
-//       vulkan::Singleton::getInstance().process_stage_2(double_buffer[cur]);
-//       vulkan::Singleton::getInstance().process_stage_3(double_buffer[cur]);
-//       vulkan::Singleton::getInstance().process_stage_4(double_buffer[cur]);
-//       vulkan::Singleton::getInstance().sync();
-
-// //       // process first half of the buffer
-// // #pragma omp parallel num_threads(4)
-// //       {
-// //         bind_thread_to_core<4, 5, 6, 7>();
-// //         cifar_sparse::omp::process_stage_1(double_buffer[next]);
-// //         cifar_sparse::omp::process_stage_2(double_buffer[next]);
-// //         cifar_sparse::omp::process_stage_3(double_buffer[next]);
-// //         cifar_sparse::omp::process_stage_4(double_buffer[next]);
-// //       }
-
-//     } else {
-//       // process first half of the buffer
-//       vulkan::Singleton::getInstance().process_stage_1(double_buffer[next]);
-//       vulkan::Singleton::getInstance().process_stage_2(double_buffer[next]);
-//       vulkan::Singleton::getInstance().process_stage_3(double_buffer[next]);
-//       vulkan::Singleton::getInstance().process_stage_4(double_buffer[next]);
-//       vulkan::Singleton::getInstance().sync();
-
-// // #pragma omp parallel num_threads(4)
-// //       {
-// //         bind_thread_to_core<4, 5, 6, 7>();
-// //         cifar_sparse::omp::process_stage_1(double_buffer[cur]);
-// //         cifar_sparse::omp::process_stage_2(double_buffer[cur]);
-// //         cifar_sparse::omp::process_stage_3(double_buffer[cur]);
-// //         cifar_sparse::omp::process_stage_4(double_buffer[cur]);
-// //       }
-//     }
-//   }
-
-//   for (auto i = 0; i < 2; ++i) {
-//     auto arg_max_index =
-//         cifar_sparse::arg_max(double_buffer[i].u_linear_output.data());
-//     cifar_sparse::print_prediction(arg_max_index);
-//   }
-// }
-
 struct Task {
   int uid;
 
@@ -202,12 +144,6 @@ void run_queue() {
     if (t.is_done) {
       break;
     }
-
-    // vulkan::Singleton::getInstance().process_stage_1(*t.app_data);
-    // vulkan::Singleton::getInstance().process_stage_2(*t.app_data);
-    // vulkan::Singleton::getInstance().process_stage_3(*t.app_data);
-    // vulkan::Singleton::getInstance().process_stage_4(*t.app_data);
-    // vulkan::Singleton::getInstance().process_stage_5(*t.app_data);
 
 #pragma omp parallel num_threads(4)
     {
