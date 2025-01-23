@@ -1,7 +1,9 @@
 #include <benchmark/benchmark.h>
 
 #include <CLI/CLI.hpp>
+#include <memory>
 #include <thread>
+#include <vector>
 
 #include "affinity.hpp"
 #include "app.hpp"
@@ -9,18 +11,9 @@
 #include "tree/omp/tree_kernel.hpp"
 #include "tree/tree_appdata.hpp"
 
-// Add this fixture class definition before the benchmark
-class OMP_Tree : public benchmark::Fixture {
- protected:
-  void SetUp(benchmark::State&) override {
-    app_data = std::make_unique<tree::AppData>(std::pmr::new_delete_resource());
-  }
-
-  void TearDown(benchmark::State&) override { app_data.reset(); }
-
-  std::unique_ptr<tree::AppData> app_data;
-};
-
+// ----------------------------------------------------------------
+// 1) The underlying run functions for pinned/unrestricted
+// ----------------------------------------------------------------
 static void run_baseline_pinned(tree::AppData& app_data,
                                 const std::vector<int>& cores,
                                 const int n_threads,
@@ -39,79 +32,6 @@ static void run_baseline_pinned(tree::AppData& app_data,
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Baseline_Pinned_Little)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-
-  for (auto _ : state) {
-    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-    run_baseline_pinned(*app_data, g_little_cores, n_threads, temp_storage);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Baseline_Pinned_Medium)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-
-  for (auto _ : state) {
-    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-    run_baseline_pinned(*app_data, g_medium_cores, n_threads, temp_storage);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
-}
-
-BENCHMARK_DEFINE_F(OMP_Tree, Baseline_Pinned_Big)
-(benchmark::State& state) {
-  const auto n_threads = state.range(0);
-
-  for (auto _ : state) {
-    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-    run_baseline_pinned(*app_data, g_big_cores, n_threads, temp_storage);
-  }
-
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
-}
-
-void RegisterBaselinePinnedLittleBenchmarkWithRange(
-    const std::vector<int>& pinable_cores) {
-  for (size_t i = 1; i <= pinable_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Baseline_Pinned_Little_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Baseline_Pinned_Little")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterBaselinePinnedMediumBenchmarkWithRange(
-    const std::vector<int>& pinable_cores) {
-  for (size_t i = 1; i <= pinable_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Baseline_Pinned_Medium_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Baseline_Pinned_Medium")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-void RegisterBaselinePinnedBigBenchmarkWithRange(
-    const std::vector<int>& pinable_cores) {
-  for (size_t i = 1; i <= pinable_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Baseline_Pinned_Big_Benchmark())
-        ->Arg(i)
-        ->Name("OMP_Tree/Baseline_Pinned_Big")
-        ->Unit(benchmark::kMillisecond);
-  }
-}
-
-// ------------------------------------------------------------
-// Baseline unrestricted
-// ------------------------------------------------------------
-
 static void run_baseline_unrestricted(
     tree::AppData& app_data,
     const int n_threads,
@@ -128,7 +48,58 @@ static void run_baseline_unrestricted(
   }
 }
 
-BENCHMARK_DEFINE_F(OMP_Tree, Baseline_Unrestricted)
+// ----------------------------------------------------------------
+// 2) Free-function benchmark for pinned. We'll dynamically register it.
+// ----------------------------------------------------------------
+static void OMP_BaselinePinned_Benchmark(benchmark::State& state,
+                                         const std::vector<int>& pinnedCores) {
+  // Equivalent to "SetUp"
+  tree::AppData app_data{std::pmr::new_delete_resource()};
+
+  const auto n_threads = state.range(0);
+  for (auto _ : state) {
+    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
+    run_baseline_pinned(app_data, pinnedCores, n_threads, temp_storage);
+  }
+
+  // Optional check
+  assert(std::ranges::is_sorted(app_data.u_morton_keys));
+}
+
+// ----------------------------------------------------------------
+// 3) Helper function to register pinned benchmarks for 1..N threads
+// ----------------------------------------------------------------
+static void RegisterPinnedBenchmark(const std::vector<int>& cores,
+                                    const std::string& baseName) {
+  // We'll use the size of `cores` as the max thread count in these benchmarks
+  const auto size = static_cast<int>(cores.size());
+  for (int i = 1; i <= size; ++i) {
+    // We capture `cores` by copy or ref in the lambda:
+    benchmark::RegisterBenchmark(
+        // The name might include the thread count or just "baseName"
+        baseName.c_str(),
+        // (baseName + "/" + std::to_string(i)).c_str(),
+        [=](benchmark::State& st) { OMP_BaselinePinned_Benchmark(st, cores); })
+        ->Arg(i)
+        ->Unit(benchmark::kMillisecond);
+  }
+}
+
+// ----------------------------------------------------------------
+// 4) For the unrestricted case, we *can* either do a fixture, or
+//    simply do another free function. If we do want a fixture:
+// ----------------------------------------------------------------
+class OMP_Tree_Unrestricted : public benchmark::Fixture {
+ protected:
+  void SetUp(benchmark::State&) override {
+    app_data = std::make_unique<tree::AppData>(std::pmr::new_delete_resource());
+  }
+  void TearDown(benchmark::State&) override { app_data.reset(); }
+
+  std::unique_ptr<tree::AppData> app_data;
+};
+
+BENCHMARK_DEFINE_F(OMP_Tree_Unrestricted, Baseline_Unrestricted)
 (benchmark::State& state) {
   const auto n_threads = state.range(0);
   for (auto _ : state) {
@@ -137,25 +108,26 @@ BENCHMARK_DEFINE_F(OMP_Tree, Baseline_Unrestricted)
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_Tree, Baseline_Unrestricted)
+BENCHMARK_REGISTER_F(OMP_Tree_Unrestricted, Baseline_Unrestricted)
     ->DenseRange(1, std::thread::hardware_concurrency())
     ->Unit(benchmark::kMillisecond);
 
-// ------------------------------------------------------------
-// Main
-// ------------------------------------------------------------
-
+// ----------------------------------------------------------------
+// 5) The main
+// ----------------------------------------------------------------
 int main(int argc, char** argv) {
+  // parse_args(...) presumably loads g_little_cores, g_medium_cores,
+  // g_big_cores
   parse_args(argc, argv);
 
-  RegisterBaselinePinnedLittleBenchmarkWithRange(g_little_cores);
-  RegisterBaselinePinnedMediumBenchmarkWithRange(g_medium_cores);
-  RegisterBaselinePinnedBigBenchmarkWithRange(g_big_cores);
+  // Dynamically register pinned benchmarks for each type of core
+  RegisterPinnedBenchmark(g_little_cores, "Baseline_Pinned_Little");
+  RegisterPinnedBenchmark(g_medium_cores, "Baseline_Pinned_Medium");
+  RegisterPinnedBenchmark(g_big_cores, "Baseline_Pinned_Big");
 
-  // Initialize and run benchmarks
+  // Then run the normal Google Benchmark suite
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
-
   return 0;
 }

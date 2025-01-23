@@ -11,17 +11,17 @@
 #include <string>
 #include <vector>
 
-// Function to pin the current thread to a given core
-inline void bind_thread_to_core(int core_id) {
-  cpu_set_t cpuset;
-  CPU_ZERO(&cpuset);
-  CPU_SET(core_id, &cpuset);
+// // Function to pin the current thread to a given core
+// inline void bind_thread_to_core(int core_id) {
+//   cpu_set_t cpuset;
+//   CPU_ZERO(&cpuset);
+//   CPU_SET(core_id, &cpuset);
 
-  if (sched_setaffinity(0, sizeof(cpu_set_t), &cpuset) != 0) {
-    throw std::runtime_error("Failed to pin thread to core " +
-                             std::to_string(core_id));
-  }
-}
+//   if (sched_setaffinity(0, sizeof(cpu_set_t), &cpuset) != 0) {
+//     throw std::runtime_error("Failed to pin thread to core " +
+//                              std::to_string(core_id));
+//   }
+// }
 
 // Function to pin the current thread to a given core
 inline void bind_thread_to_core(const std::vector<int>& core_ids) {
