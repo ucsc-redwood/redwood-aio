@@ -10,5 +10,6 @@ includes("builtin-apps")
 
 includes("play/usm")
 includes("play/safe-pipe")
+includes("play/test-tree")
 
 includes("builtin-apps/common/vulkan")

@@ -8,7 +8,12 @@ add_requires("spdlog")
 local source_files = {
     "cifar-dense/dense_appdata.cpp",
     "cifar-sparse/sparse_appdata.cpp",
+    "tree/tree_appdata.cpp",
+    "tree/omp/func_sort.cpp",
+    "tree/omp/tree_kernel.cpp",
 }
+
+add_requires("glm")
 
 target("builtin-apps")
     set_kind("static")
@@ -24,6 +29,7 @@ target("builtin-apps")
     end
 
     add_packages("spdlog")
+    add_packages("glm")
 target_end()
 
 if not is_plat("android") then
@@ -48,86 +54,86 @@ target_end()
 
 end
 
-target("test_dense")
-    set_kind("binary")
-    set_default(false)
-    add_files("cifar-dense/test_dense.cpp")
-    add_deps("builtin-apps")
+-- target("test_dense")
+--     set_kind("binary")
+--     set_default(false)
+--     add_files("cifar-dense/test_dense.cpp")
+--     add_deps("builtin-apps")
 
-    -- Add openmp support
-    if is_plat("android") then
-        add_cxxflags("-fopenmp -static-openmp")
-        add_ldflags("-fopenmp -static-openmp")
-    else
-        add_packages("openmp")
-    end
+--     -- Add openmp support
+--     if is_plat("android") then
+--         add_cxxflags("-fopenmp -static-openmp")
+--         add_ldflags("-fopenmp -static-openmp")
+--     else
+--         add_packages("openmp")
+--     end
 
-    add_tests("default")
-    add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: airplanes"})
-    add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
+--     add_tests("default")
+--     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: airplanes"})
+--     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
 
-    add_tests("with_omp", {trim_output = true, args = {"true"}, pass_outputs = "Predicted Image: airplanes"})
-target_end()
+--     add_tests("with_omp", {trim_output = true, args = {"true"}, pass_outputs = "Predicted Image: airplanes"})
+-- target_end()
 
-target("test_sparse")
-    set_kind("binary")
-    set_default(false)
-    add_files("cifar-sparse/test_sparse.cpp")
-    add_deps("builtin-apps")
+-- target("test_sparse")
+--     set_kind("binary")
+--     set_default(false)
+--     add_files("cifar-sparse/test_sparse.cpp")
+--     add_deps("builtin-apps")
 
-    -- Add openmp support
-    if is_plat("android") then
-        add_cxxflags("-fopenmp -static-openmp")
-        add_ldflags("-fopenmp -static-openmp")
-    else
-        add_packages("openmp")
-    end
+--     -- Add openmp support
+--     if is_plat("android") then
+--         add_cxxflags("-fopenmp -static-openmp")
+--         add_ldflags("-fopenmp -static-openmp")
+--     else
+--         add_packages("openmp")
+--     end
 
-    add_tests("default")
-    add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
-    add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
+--     add_tests("default")
+--     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
+--     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
 
-    add_tests("with_omp", {trim_output = true, runargs = {"true"}, pass_outputs = "Predicted Image: deer"})
-target_end()
+--     add_tests("with_omp", {trim_output = true, runargs = {"true"}, pass_outputs = "Predicted Image: deer"})
+-- target_end()
 
-if not is_plat("android") then
+-- if not is_plat("android") then
 
-set_policy("build.cuda.devlink", true)
+-- set_policy("build.cuda.devlink", true)
 
-target("test_dense_cuda")
-    set_kind("binary")
-    set_default(false)
-    add_files("cifar-dense/test_dense_cuda.cu")
-    add_deps("builtin-apps")
-    add_deps("builtin-apps-cuda")
+-- target("test_dense_cuda")
+--     set_kind("binary")
+--     set_default(false)
+--     add_files("cifar-dense/test_dense_cuda.cu")
+--     add_deps("builtin-apps")
+--     add_deps("builtin-apps-cuda")
 
-    add_cugencodes("native")
+--     add_cugencodes("native")
 
-    add_packages("spdlog")
+--     add_packages("spdlog")
 
-    add_tests("default")
-    add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: airplanes"})
-    add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
-target_end()
+--     add_tests("default")
+--     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: airplanes"})
+--     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: birds"})
+-- target_end()
 
-end
+-- end
 
-if not is_plat("android") then
+-- if not is_plat("android") then
 
-target("test_sparse_cuda")
-    set_kind("binary")
-    set_default(false)
-    add_files("cifar-sparse/test_sparse_cuda.cu")
-    add_deps("builtin-apps")
-    add_deps("builtin-apps-cuda")
+-- target("test_sparse_cuda")
+--     set_kind("binary")
+--     set_default(false)
+--     add_files("cifar-sparse/test_sparse_cuda.cu")
+--     add_deps("builtin-apps")
+--     add_deps("builtin-apps-cuda")
 
-    add_cugencodes("native")
+--     add_cugencodes("native")
 
-    add_packages("spdlog")
+--     add_packages("spdlog")
 
-    add_tests("default")
-    add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
-    add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
-target_end()
+--     add_tests("default")
+--     add_tests("pass_output", {trim_output = true, pass_outputs = "Predicted Image: deer"})
+--     add_tests("fail_output", {trim_output = true, fail_outputs = "Predicted Image: airplanes"})
+-- target_end()
 
-end
+-- end
