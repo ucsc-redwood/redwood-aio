@@ -1,1 +1,2 @@
-includes("tree-vk")
+includes("cifar-dense-vk")
+includes("cifar-sparse-vk")
