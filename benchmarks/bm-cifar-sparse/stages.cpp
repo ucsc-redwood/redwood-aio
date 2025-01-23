@@ -102,33 +102,39 @@ int main(int argc, char** argv) {
   parse_args(argc, argv);
 
   RegisterStage1littleBenchmarkWithRange();
-  RegisterStage2littleBenchmarkWithRange();
-  RegisterStage3littleBenchmarkWithRange();
-  RegisterStage4littleBenchmarkWithRange();
-  RegisterStage5littleBenchmarkWithRange();
-  RegisterStage6littleBenchmarkWithRange();
-  RegisterStage7littleBenchmarkWithRange();
-  RegisterStage8littleBenchmarkWithRange();
-  RegisterStage9littleBenchmarkWithRange();
-
   RegisterStage1mediumBenchmarkWithRange();
-  RegisterStage2mediumBenchmarkWithRange();
-  RegisterStage3mediumBenchmarkWithRange();
-  RegisterStage4mediumBenchmarkWithRange();
-  RegisterStage5mediumBenchmarkWithRange();
-  RegisterStage6mediumBenchmarkWithRange();
-  RegisterStage7mediumBenchmarkWithRange();
-  RegisterStage8mediumBenchmarkWithRange();
-  RegisterStage9mediumBenchmarkWithRange();
-
   RegisterStage1bigBenchmarkWithRange();
+
+  RegisterStage2littleBenchmarkWithRange();
+  RegisterStage2mediumBenchmarkWithRange();
   RegisterStage2bigBenchmarkWithRange();
+
+  RegisterStage3littleBenchmarkWithRange();
+  RegisterStage3mediumBenchmarkWithRange();
   RegisterStage3bigBenchmarkWithRange();
+
+  RegisterStage4littleBenchmarkWithRange();
+  RegisterStage4mediumBenchmarkWithRange();
   RegisterStage4bigBenchmarkWithRange();
+
+  RegisterStage5littleBenchmarkWithRange();
+  RegisterStage5mediumBenchmarkWithRange();
   RegisterStage5bigBenchmarkWithRange();
+
+  RegisterStage6littleBenchmarkWithRange();
+  RegisterStage6mediumBenchmarkWithRange();
   RegisterStage6bigBenchmarkWithRange();
+
+  RegisterStage7littleBenchmarkWithRange();
+  RegisterStage7mediumBenchmarkWithRange();
   RegisterStage7bigBenchmarkWithRange();
+
+  RegisterStage8littleBenchmarkWithRange();
+  RegisterStage8mediumBenchmarkWithRange();
   RegisterStage8bigBenchmarkWithRange();
+
+  RegisterStage9littleBenchmarkWithRange();
+  RegisterStage9mediumBenchmarkWithRange();
   RegisterStage9bigBenchmarkWithRange();
 
   // Initialize and run benchmarks
