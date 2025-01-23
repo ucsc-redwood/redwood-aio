@@ -31,9 +31,20 @@ void process_stage_1(tree::AppData &app_data) {
 // Stage 2 (morton -> sorted morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_2(tree::AppData &app_data) {
-  bucket_sort(app_data.u_morton_keys.data(), app_data.get_n_input());
+namespace v2 {
+void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage) {
+  const auto num_threads = omp_get_num_threads();
+
+  v2::bucket_sort(app_data.u_morton_keys.data(),
+                  app_data.u_morton_keys_alt.data(),
+                  temp_storage.global_n_elem,
+                  temp_storage.global_starting_position,
+                  temp_storage.buckets,
+                  app_data.get_n_input(),
+                  num_threads,
+                  num_threads);
 }
+}  // namespace v2
 
 // ----------------------------------------------------------------------------
 // Stage 3 (sorted morton -> unique morton)

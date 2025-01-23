@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../tree_appdata.hpp"
+#include "func_sort.hpp"
 
 namespace tree {
 
@@ -10,7 +11,9 @@ namespace omp {
 void process_stage_1(tree::AppData &app_data);
 
 // morton -> sorted morton
-void process_stage_2(tree::AppData &app_data);
+namespace v2 {
+void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage);
+}
 
 // sorted morton -> unique morton
 void process_stage_3(tree::AppData &app_data);

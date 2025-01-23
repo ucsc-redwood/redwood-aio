@@ -9,7 +9,7 @@ local source_files = {
     "cifar-dense/dense_appdata.cpp",
     "cifar-sparse/sparse_appdata.cpp",
     "tree/tree_appdata.cpp",
-    "tree/omp/func_sort.cpp",
+    -- "tree/omp/func_sort.cpp",
     "tree/omp/tree_kernel.cpp",
 }
 
