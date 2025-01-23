@@ -12,12 +12,12 @@ set_warnings("allextra")
 
 includes("android.lua")
 
-includes("pipe")
+-- includes("pipe")
 includes("builtin-apps")
 
-includes("play/usm")
-includes("play/safe-pipe")
-includes("play/test-tree")
+-- includes("play/safe-pipe")
+-- includes("play/usm")
+-- includes("play/test-tree")
 
 includes("builtin-apps/common/vulkan")
 
