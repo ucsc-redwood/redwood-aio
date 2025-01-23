@@ -22,10 +22,8 @@ class OMP_Tree : public benchmark::Fixture {
 #pragma omp parallel
     {
       tree::omp::process_stage_1(*app_data);
-
 #pragma omp single
       { std::ranges::sort(app_data->u_morton_keys); }
-
       tree::omp::process_stage_3(*app_data);
       tree::omp::process_stage_4(*app_data);
       tree::omp::process_stage_5(*app_data);
