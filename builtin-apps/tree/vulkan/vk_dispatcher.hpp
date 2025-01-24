@@ -23,13 +23,14 @@ class Singleton {
 
   void sync() { seq->sync(); }
 
-  void process_stage_1(tree::AppData &app_data);
-  void process_stage_2(tree::AppData &app_data);
-  void process_stage_3(tree::AppData &app_data);
-  void process_stage_4(tree::AppData &app_data);
-  void process_stage_5(tree::AppData &app_data);
-  void process_stage_6(tree::AppData &app_data);
-  void process_stage_7(tree::AppData &app_data);
+  void process_stage_1(tree::AppData &app_data_ref);
+  void process_stage_2(tree::AppData &app_data_ref);
+  void process_stage_3(tree::AppData &app_data_ref,
+                       ::vulkan::TmpStorage &tmp_storage);
+  void process_stage_4(tree::AppData &app_data_ref);
+  void process_stage_5(tree::AppData &app_data_ref);
+  void process_stage_6(tree::AppData &app_data_ref);
+  void process_stage_7(tree::AppData &app_data_ref);
 
  private:
   Singleton();
