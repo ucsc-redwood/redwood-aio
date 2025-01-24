@@ -162,6 +162,6 @@ inline void process_link_leaf(const int i /*brt node index*/,
   }
 }
 
-}  // namespace kernels
+}  // namespace omp
 
-}  // namespace cpu
+}  // namespace tree
