@@ -3,7 +3,7 @@ target("pipe-tree-vk")
     add_files("main.cpp")
 
     add_deps("builtin-apps")
-    add_deps("vk-backend")
+    -- add_deps("vk-backend")
 
     add_packages("spdlog")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")

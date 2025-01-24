@@ -19,6 +19,22 @@ target("builtin-apps")
         add_packages("openmp")
     end
 
+-- vukan 
+
+    add_deps("vk-backend")
+
+    add_files({
+        "cifar-sparse/vulkan/vk_dispatcher.cpp",
+        "cifar-dense/vulkan/vk_dispatcher.cpp",
+        "tree/vulkan/vk_dispatcher.cpp",
+    })
+
+    add_packages("vulkan-hpp", "vulkan-memory-allocator")
+
+
+---
+
+
     add_packages("spdlog")
     add_packages("glm")
 target_end()

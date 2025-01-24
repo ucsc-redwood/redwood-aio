@@ -66,11 +66,11 @@ target("bm-cifar-dense-vk")
 
     add_includedirs("$(projectdir)/builtin-apps/")
     add_files("vk.cpp")
-    add_files("../../builtin-apps/cifar-dense/vulkan/vk_dispatcher.cpp")
+    -- add_files("../../builtin-apps/cifar-dense/vulkan/vk_dispatcher.cpp")
 
 
     add_deps("builtin-apps")
-    add_deps("vk-backend")
+    -- add_deps("vk-backend")
 
 
     add_packages("benchmark")
