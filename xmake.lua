@@ -31,6 +31,7 @@ includes("builtin-apps")
 -- includes("play/safe-pipe")
 -- includes("play/usm")
 -- includes("play/test-tree")
+includes("play/threads")
 
 includes("builtin-apps/common/vulkan")
 
