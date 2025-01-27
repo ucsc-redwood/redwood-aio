@@ -8,5 +8,6 @@ set-jetson:
 set-default:
     xmake f -p linux -a x86_64 -c
 
-
+push-all-resources:
+    xmake push-all-resources
 
