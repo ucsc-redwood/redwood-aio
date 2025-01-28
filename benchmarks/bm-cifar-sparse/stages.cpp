@@ -59,7 +59,6 @@ class OMP_CifarSparse : public benchmark::Fixture {
           new OMP_CifarSparse_Stage##stage##core_type##_Benchmark())           \
           ->Arg(i)                                                             \
           ->Name("OMP_CifarSparse/Stage" #stage "_" #core_type)                \
-          ->Iterations(100)                                                    \
           ->Unit(benchmark::kMillisecond);                                     \
     }                                                                          \
   }
