@@ -30,7 +30,7 @@ struct Task {
 
 // Global atomic flag to control threads
 std::atomic<bool> done(false);
-// std::mutex mtx;
+std::mutex mtx;
 
 // ---------------------------------------------------------------------
 // Producer
@@ -155,7 +155,10 @@ void consumer(moodycamel::ConcurrentQueue<Task>& queue, cudaStream_t stream) {
       //     stream, task.u_data, 0, cudaMemAttachGlobal));
 
       CUDA_CHECK(cudaStreamAttachMemAsync(stream,
-                                       dense
+                                          task.appdata_ptr->u_conv3_out.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+      CUDA_CHECK(
           cudaStreamAttachMemAsync(stream,
                                    task.appdata_ptr->u_conv4_weights.data(),
                                    0,
