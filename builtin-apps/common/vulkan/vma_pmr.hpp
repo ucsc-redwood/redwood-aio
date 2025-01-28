@@ -56,16 +56,12 @@ class VulkanMemoryResource : public std::pmr::memory_resource {
 
   ~VulkanMemoryResource();
 
-  [[nodiscard]]
-  vk::Device get_device() const {
-    return device_;
-  }
+  [[nodiscard]] vk::Device get_device() const { return device_; }
 
-  [[nodiscard]]
-  vk::Buffer get_buffer_from_pointer(void *p);
+  [[nodiscard]] vk::Buffer get_buffer_from_pointer(void *p);
 
-  [[nodiscard]]
-  vk::DescriptorBufferInfo make_descriptor_buffer_info(vk::Buffer buffer) const;
+  [[nodiscard]] vk::DescriptorBufferInfo make_descriptor_buffer_info(
+      vk::Buffer buffer) const;
 
  protected:
   void *do_allocate(std::size_t bytes, std::size_t alignment) override;

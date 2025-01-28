@@ -32,6 +32,8 @@ includes("builtin-apps")
 -- includes("play/usm")
 -- includes("play/test-tree")
 includes("play/threads")
+includes("play/cuda-pipe")
+includes("play/cuda-graph")
 
 includes("builtin-apps/common/vulkan")
 
