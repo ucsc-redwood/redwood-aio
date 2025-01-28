@@ -48,6 +48,15 @@ target("builtin-apps-cuda")
         "cifar-dense/cuda/cu_kernels.cu",
         "cifar-sparse/cuda/cu_dispatcher.cu",
         "cifar-sparse/cuda/cu_kernels.cu",
+
+        "tree/cuda/01_morton.cu",
+        "tree/cuda/02_sort.cu",
+        "tree/cuda/03_unique.cu",
+        "tree/cuda/04_radix_tree.cu",
+        "tree/cuda/05_edge_count.cu",
+        "tree/cuda/06_prefix_sum.cu",
+        "tree/cuda/07_octree.cu",
+        "tree/cuda/im_storage.cu",
     })
 
 
