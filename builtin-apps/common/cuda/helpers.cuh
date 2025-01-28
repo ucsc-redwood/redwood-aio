@@ -2,8 +2,9 @@
 
 #include <cuda_runtime_api.h>
 
-#include <stdexcept>
-#include <string>
+// #include <stdexcept>
+// #include <string>
+#include <iostream>
 
 // ----------------------------------------------------------------------------
 // Math
@@ -17,15 +18,25 @@ constexpr size_t div_up(const size_t a, const size_t b) {
 // Helper function to handle CUDA errors
 // ----------------------------------------------------------------------------
 
-inline void cudaCheck(cudaError_t err, const char *file, int line) {
-  if (err != cudaSuccess) {
-    throw ::std::runtime_error(::std::string("CUDA Error: ") +
-                               cudaGetErrorString(err) + " at " + file + ":" +
-                               ::std::to_string(line));
-  }
-}
+#define CUDA_CHECK(call)                                                   \
+  do {                                                                     \
+    cudaError_t _status = call;                                            \
+    if (_status != cudaSuccess) {                                          \
+      std::cerr << "Error: " << cudaGetErrorString(_status) << " at line " \
+                << __LINE__ << std::endl;                                  \
+      exit(EXIT_FAILURE);                                                  \
+    }                                                                      \
+  } while (0)
 
-#define CUDA_CHECK(call) cuda::cudaCheck((call), __FILE__, __LINE__)
+// inline void cudaCheck(cudaError_t err, const char *file, int line) {
+//   if (err != cudaSuccess) {
+//     throw ::std::runtime_error(::std::string("CUDA Error: ") +
+//                                cudaGetErrorString(err) + " at " + file + ":" +
+//                                ::std::to_string(line));
+//   }
+// }
+
+// #define CUDA_CHECK(call) cuda::cudaCheck((call), __FILE__, __LINE__)
 
 // ----------------------------------------------------------------------------
 // Simplify launch parameters

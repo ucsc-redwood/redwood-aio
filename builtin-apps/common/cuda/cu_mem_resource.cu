@@ -11,14 +11,13 @@ void* CudaMemoryResource::do_allocate(std::size_t bytes, std::size_t) {
       "{}(): Allocating {} bytes at address {}", __func__, bytes, (void*)ptr);
 
   void* ptr = nullptr;
-  cudaCheck(cudaMallocManaged(&ptr, bytes), __FILE__, __LINE__);
+  CUDA_CHECK(cudaMallocManaged(&ptr, bytes));
   return ptr;
 }
 
 void CudaMemoryResource::do_deallocate(void* p, std::size_t, std::size_t) {
   SPDLOG_TRACE("{}(): Deallocating address {}", __func__, (void*)p);
-
-  cudaCheck(cudaFree(p), __FILE__, __LINE__);
+  CUDA_CHECK(cudaFree(p));
 }
 
 bool CudaMemoryResource::do_is_equal(

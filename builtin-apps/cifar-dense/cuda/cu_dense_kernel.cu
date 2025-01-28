@@ -6,7 +6,7 @@
 
 namespace cifar_dense::cuda {
 
-void device_sync() { cudaCheck(cudaDeviceSynchronize(), __FILE__, __LINE__); }
+void device_sync() { CUDA_CHECK(cudaDeviceSynchronize()); }
 
 // -----------------------------------------------------------------------------
 // Stage 1 (first conv2d)

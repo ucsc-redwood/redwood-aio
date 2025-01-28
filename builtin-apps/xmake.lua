@@ -30,35 +30,28 @@ target("builtin-apps")
     })
 
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
-
-
 ---
-
-
     add_packages("spdlog")
     add_packages("glm")
 target_end()
 
+if not is_plat("android") then
+
+target("builtin-apps-cuda")
+    set_kind("static")
+
+    add_files(source_files)
+
+    add_files({
+        -- "common/cuda/cu_mem_resource.cu",
+        "cifar-dense/cuda/cu_dense_kernel.cu",
+        "cifar-dense/cuda/cu_kernels.cu",
+        "cifar-sparse/cuda/cu_dispatcher.cu",
+        "cifar-sparse/cuda/cu_kernels.cu",
+    })
 
 
--- if not is_plat("android") then
+    add_cugencodes("native")
+target_end()
 
--- target("builtin-apps-cuda")
---     set_kind("static")
-
---     add_files(source_files)
-
---     add_files({
---         "common/cuda/cu_mem_resource.cu",
---         "cifar-dense/cuda/cu_dense_kernel.cu",
---         "cifar-dense/cuda/cu_kernels.cu",
---         "cifar-sparse/cuda/cu_dispatcher.cu",
---         "cifar-sparse/cuda/cu_kernels.cu",
---     })
-
---     add_cugencodes("native")
-
---     add_packages("spdlog")
--- target_end()
-
--- end
+end
