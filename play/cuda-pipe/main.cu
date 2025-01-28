@@ -4,9 +4,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <mutex>
 #include <thread>
 #include <vector>
-#include <mutex>
 
 #include "concurrentqueue.h"  // Moodycamel's ConcurrentQueue
 
@@ -81,8 +81,9 @@ static void kernelC_CPU(void* userData) {
 
 struct Task {
   int uid;
-  int* h_data;  // pinned host memory
-  int* d_data;  // device pointer (mapped to pinned host memory)
+  // int* h_data;  // pinned host memory
+  // int* d_data;  // device pointer (mapped to pinned host memory)
+  int* u_data;
 };
 
 // Global atomic flag to control threads
@@ -102,8 +103,13 @@ void producer(moodycamel::ConcurrentQueue<Task>& queue,
   for (int i = 0; i < num_tasks; ++i) {
     // "Initialize" each preallocated task in host memory
     HostKernelParams hostParams;
-    hostParams.data = tasks[i].h_data;
-    hostParams.N    = N;
+    hostParams.data = tasks[i].u_data;
+    hostParams.N = N;
+
+    CHECK_CUDA(cudaStreamAttachMemAsync(
+        nullptr, tasks[i].u_data, 0, cudaMemAttachHost));
+    cudaDeviceSynchronize();
+
     kernelA_CPU(&hostParams);
 
     // Enqueue task
@@ -124,9 +130,14 @@ void consumer(moodycamel::ConcurrentQueue<Task>& queue) {
   while (!done) {
     Task task;
     if (queue.try_dequeue(task)) {
+      CHECK_CUDA(cudaStreamAttachMemAsync(
+          nullptr, task.u_data, 0, cudaMemAttachGlobal));
+      // CHECK_CUDA(cudaStreamSynchronize(nullptr));
+      cudaDeviceSynchronize();
+
       // Process the task on GPU
-      kernelB_GPU<<<1, 256>>>(task.d_data, N);
-      kernelC_GPU<<<1, 256>>>(task.d_data, N);
+      kernelB_GPU<<<1, 256>>>(task.u_data, N);
+      kernelC_GPU<<<1, 256>>>(task.u_data, N);
       cudaDeviceSynchronize();
 
       // IMPORTANT: We do NOT free pinned memory here anymore.
@@ -146,22 +157,28 @@ int main(int argc, char* argv[]) {
   moodycamel::ConcurrentQueue<Task> queue;
   const int num_tasks = 20;
 
+
   // 1. Preallocate all tasks (along with pinned memory) at the beginning
   std::vector<Task> tasks(num_tasks);
   for (int i = 0; i < num_tasks; ++i) {
-    int* h_data = nullptr;
-    CHECK_CUDA(cudaHostAlloc(&h_data, N * sizeof(int), cudaHostAllocMapped));
+    // int* h_data = nullptr;
+    // CHECK_CUDA(cudaHostAlloc(&h_data, N * sizeof(int), cudaHostAllocMapped));
 
-    int* d_data = nullptr;
-    CHECK_CUDA(cudaHostGetDevicePointer(&d_data, h_data, 0));
+    // int* d_data = nullptr;
+    // CHECK_CUDA(cudaHostGetDevicePointer(&d_data, h_data, 0));
 
-    tasks[i].uid    = i;
-    tasks[i].h_data = h_data;
-    tasks[i].d_data = d_data;
+    int* u_data = nullptr;
+    CHECK_CUDA(cudaMallocManaged(&u_data, N * sizeof(int)));
+    CHECK_CUDA(
+        cudaStreamAttachMemAsync(nullptr, u_data, 0, cudaMemAttachGlobal));
+
+    tasks[i].uid = i;
+    tasks[i].u_data = u_data;
   }
 
   // 2. Start producer and consumer threads
-  std::thread producer_thread(producer, std::ref(queue), num_tasks, std::ref(tasks));
+  std::thread producer_thread(
+      producer, std::ref(queue), num_tasks, std::ref(tasks));
   std::thread consumer_thread(consumer, std::ref(queue));
 
   // 3. Join threads
@@ -170,7 +187,7 @@ int main(int argc, char* argv[]) {
 
   // 4. Free all pinned memory at the end
   for (int i = 0; i < num_tasks; ++i) {
-    CHECK_CUDA(cudaFreeHost(tasks[i].h_data));
+    CHECK_CUDA(cudaFree(tasks[i].u_data));
   }
 
   std::cout << "All tasks processed and memory freed." << std::endl;
