@@ -12,7 +12,17 @@
 #include "07_octree.cuh"
 #include "kernel.cuh"
 
+// #include "common/cuda/helpers.cuh"
+
 namespace tree::cuda {
+
+__host__ __device__ __forceinline__ int div_up(int a, int b) {
+  return (a + b - 1) / b;
+}
+
+void device_sync() {
+  //   CUDA_CHECK(cudaDeviceSynchronize());
+}
 
 // ----------------------------------------------------------------------------
 // Stage 1 (input -> morton code)
@@ -24,12 +34,10 @@ void process_stage_1(AppData &app_data) {
   constexpr auto s_mem = 0;
 
   spdlog::debug(
-      "CUDA kernel 'compute_morton_code', n = {}, threads = {}, blocks = {}, "
-      "stream: {}",
+      "CUDA kernel 'compute_morton_code', n = {}, threads = {}, blocks = {}",
       app_data.get_n_input(),
       block_size,
-      grid_size,
-      reinterpret_cast<void *>(stream));
+      grid_size);
 
   ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
       app_data.u_input_points.data(),

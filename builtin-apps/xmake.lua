@@ -57,10 +57,16 @@ target("builtin-apps-cuda")
         "tree/cuda/06_prefix_sum.cu",
         "tree/cuda/07_octree.cu",
         "tree/cuda/im_storage.cu",
+        "tree/cuda/kernel.cu",
     })
 
+    add_packages("spdlog")
+    add_packages("glm")
+    add_packages("cub")
 
     add_cugencodes("native")
+
+
 target_end()
 
 end

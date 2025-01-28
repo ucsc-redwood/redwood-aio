@@ -29,7 +29,7 @@ int main() {
 
   tree::cuda::process_stage_1(*appdata);
 
-  tree::cuda::sync();
+  CUDA_CHECK(cudaDeviceSynchronize());
 
   spdlog::info("Done");
 
