@@ -23,7 +23,7 @@ static void run_baseline_pinned(cifar_sparse::AppData& app_data) {
   cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(app_data);
 }
 
-static void OMP_BaselinePinned_Benchmark(benchmark::State& state) {
+static void VK_CifarSparse_Baseline(benchmark::State& state) {
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
   cifar_sparse::AppData app_data(mr);
 
@@ -32,13 +32,11 @@ static void OMP_BaselinePinned_Benchmark(benchmark::State& state) {
   }
 }
 
-BENCHMARK(OMP_BaselinePinned_Benchmark)->Unit(benchmark::kMillisecond);
+BENCHMARK(VK_CifarSparse_Baseline)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
-// ----------------------------------------------------------------
-// Individual stages
-// ----------------------------------------------------------------
-
-class OMP_CifarSparse : public benchmark::Fixture {
+class VK_CifarSparse : public benchmark::Fixture {
  protected:
   void SetUp(benchmark::State&) override {
     auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -58,135 +56,143 @@ class OMP_CifarSparse : public benchmark::Fixture {
 // Stage 1
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage1)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage1)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_1(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage1)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage1)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 2
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage2)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage2)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_2(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage2)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage2)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 3
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage3)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage3)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_3(*app_data);
   }
 }
 
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage3)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
+
 // ----------------------------------------------------------------
 // Stage 4
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage4)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage4)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_4(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage4)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage4)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 5
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage5)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage5)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_5(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage5)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage5)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 6
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage6)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage6)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_6(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage6)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage6)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 7
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage7)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage7)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_7(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage7)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage7)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 8
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage8)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage8)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_8(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage8)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage8)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
 // ----------------------------------------------------------------
 // Stage 9
 // ----------------------------------------------------------------
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse, Stage9)
+BENCHMARK_DEFINE_F(VK_CifarSparse, Stage9)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(*app_data);
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse, Stage9)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage9)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(100);
 
+// ----------------------------------------------------------------
+// Main
+// ----------------------------------------------------------------
 int main(int argc, char** argv) {
   parse_args(argc, argv);
   spdlog::set_level(spdlog::level::off);
-
-  // spdlog::set_level(spdlog::level::trace);
-
-  // auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // cifar_sparse::AppData app_data(mr);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_1(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_2(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_3(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_4(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_5(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_6(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_7(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_8(app_data);
-  // cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(app_data);
 
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
