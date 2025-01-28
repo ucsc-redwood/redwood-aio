@@ -65,15 +65,11 @@ static void OMP_BaselinePinned_Benchmark(benchmark::State& state,
 // 3) Helper function to register pinned benchmarks for 1..N threads
 // ----------------------------------------------------------------
 static void RegisterPinnedBenchmark(const std::vector<int>& cores,
-                                    const std::string& baseName) {
-  // We'll use the size of `cores` as the max thread count in these benchmarks
+                                    const std::string& coreType) {
   const auto size = static_cast<int>(cores.size());
   for (int i = 1; i <= size; ++i) {
-    // We capture `cores` by copy or ref in the lambda:
     benchmark::RegisterBenchmark(
-        // The name might include the thread count or just "baseName"
-        baseName.c_str(),
-        // (baseName + "/" + std::to_string(i)).c_str(),
+        ("OMP_CifarDense/Baseline_Pinned_" + coreType).c_str(),
         [=](benchmark::State& st) { OMP_BaselinePinned_Benchmark(st, cores); })
         ->Arg(i)
         ->Unit(benchmark::kMillisecond);
@@ -84,7 +80,7 @@ static void RegisterPinnedBenchmark(const std::vector<int>& cores,
 // 4) For the unrestricted case, we *can* either do a fixture, or
 //    simply do another free function. If we do want a fixture:
 // ----------------------------------------------------------------
-class OMP_CifarSparse_Unrestricted : public benchmark::Fixture {
+class OMP_CifarDense : public benchmark::Fixture {
  protected:
   void SetUp(benchmark::State&) override {
     app_data =
@@ -95,7 +91,7 @@ class OMP_CifarSparse_Unrestricted : public benchmark::Fixture {
   std::unique_ptr<cifar_dense::AppData> app_data;
 };
 
-BENCHMARK_DEFINE_F(OMP_CifarSparse_Unrestricted, Baseline_Unrestricted)
+BENCHMARK_DEFINE_F(OMP_CifarDense, Baseline)
 (benchmark::State& state) {
   const auto n_threads = state.range(0);
   for (auto _ : state) {
@@ -103,7 +99,7 @@ BENCHMARK_DEFINE_F(OMP_CifarSparse_Unrestricted, Baseline_Unrestricted)
   }
 }
 
-BENCHMARK_REGISTER_F(OMP_CifarSparse_Unrestricted, Baseline_Unrestricted)
+BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
     ->DenseRange(1, std::thread::hardware_concurrency())
     ->Unit(benchmark::kMillisecond);
 
@@ -115,10 +111,9 @@ int main(int argc, char** argv) {
   // g_big_cores
   parse_args(argc, argv);
 
-  // Dynamically register pinned benchmarks for each type of core
-  RegisterPinnedBenchmark(g_little_cores, "Baseline_Pinned_Little");
-  RegisterPinnedBenchmark(g_medium_cores, "Baseline_Pinned_Medium");
-  RegisterPinnedBenchmark(g_big_cores, "Baseline_Pinned_Big");
+  RegisterPinnedBenchmark(g_little_cores, "Little");
+  RegisterPinnedBenchmark(g_medium_cores, "Medium");
+  RegisterPinnedBenchmark(g_big_cores, "Big");
 
   // Then run the normal Google Benchmark suite
   benchmark::Initialize(&argc, argv);
