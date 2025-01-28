@@ -1,7 +1,7 @@
 if not is_plat("android") then
 
 
-target("cuda-graph")
+target("cuda-pipe")
 
     set_kind("binary")
     add_files("main.cu")
