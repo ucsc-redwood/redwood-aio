@@ -59,6 +59,7 @@ class OMP_CifarDense : public benchmark::Fixture {
           new OMP_CifarDense_Stage##stage##core_type##_Benchmark())           \
           ->Arg(i)                                                            \
           ->Name("OMP_CifarDense/Stage" #stage "_" #core_type)                \
+          ->Iterations(100)                                                   \
           ->Unit(benchmark::kMillisecond);                                    \
     }                                                                         \
   }
