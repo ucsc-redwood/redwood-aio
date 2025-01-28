@@ -10,6 +10,7 @@ target("pipe-cifar-dense-cu")
     })
 
     add_deps("builtin-apps")
+    add_deps("builtin-apps-cuda")
     add_includedirs("../../builtin-apps")
 
     add_packages("spdlog")
