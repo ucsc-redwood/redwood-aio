@@ -45,6 +45,77 @@ void producer(moodycamel::ConcurrentQueue<Task>& queue,
     // CUDA_CHECK(cudaStreamAttachMemAsync(
     //     stream, tasks[i].u_data, 0, cudaMemAttachHost));
 
+    // u_image
+    // u_conv1_weights
+    // u_conv1_bias
+    // u_conv1_out
+    // u_pool1_out
+    // u_conv2_weights
+    // u_conv2_bias
+    // u_conv2_out
+    // u_pool2_out
+    // u_conv3_weights
+    // u_conv3_bias
+    // u_conv3_out
+
+    CUDA_CHECK(cudaStreamAttachMemAsync(
+        stream, tasks[i].appdata_ptr->u_image.data(), 0, cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv1_weights.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv1_bias.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv1_out.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_pool1_out.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv2_weights.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv2_bias.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv2_out.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_pool2_out.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv3_weights.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv3_bias.data(),
+                                 0,
+                                 cudaMemAttachHost));
+    CUDA_CHECK(
+        cudaStreamAttachMemAsync(stream,
+                                 tasks[i].appdata_ptr->u_conv3_out.data(),
+                                 0,
+                                 cudaMemAttachHost));
+
     CUDA_CHECK(cudaStreamSynchronize(stream));
 
     // kernelA_CPU(&hostParams);
@@ -76,6 +147,59 @@ void consumer(moodycamel::ConcurrentQueue<Task>& queue, cudaStream_t stream) {
     if (queue.try_dequeue(task)) {
       // CUDA_CHECK(cudaStreamAttachMemAsync(
       //     stream, task.u_data, 0, cudaMemAttachGlobal));
+
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_conv3_out.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+      CUDA_CHECK(
+          cudaStreamAttachMemAsync(stream,
+                                   task.appdata_ptr->u_conv4_weights.data(),
+                                   0,
+                                   cudaMemAttachGlobal));
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_conv4_bias.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_conv4_out.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+
+      CUDA_CHECK(
+          cudaStreamAttachMemAsync(stream,
+                                   task.appdata_ptr->u_conv5_weights.data(),
+                                   0,
+                                   cudaMemAttachGlobal));
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_conv5_bias.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_conv5_out.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_pool3_out.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+      CUDA_CHECK(
+          cudaStreamAttachMemAsync(stream,
+                                   task.appdata_ptr->u_linear_weights.data(),
+                                   0,
+                                   cudaMemAttachGlobal));
+
+      CUDA_CHECK(
+          cudaStreamAttachMemAsync(stream,
+                                   task.appdata_ptr->u_linear_bias.data(),
+                                   0,
+                                   cudaMemAttachGlobal));
+      CUDA_CHECK(cudaStreamAttachMemAsync(stream,
+                                          task.appdata_ptr->u_linear_out.data(),
+                                          0,
+                                          cudaMemAttachGlobal));
+
       CUDA_CHECK(cudaStreamSynchronize(stream));
 
       // // Process the task on GPU
