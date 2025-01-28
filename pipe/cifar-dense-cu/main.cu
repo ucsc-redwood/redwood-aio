@@ -11,6 +11,7 @@
 #include <thread>
 #include <vector>
 
+#include "app.hpp"
 #include "cifar-dense/cuda/cu_dense_kernel.cuh"
 #include "cifar-dense/dense_appdata.hpp"
 #include "cifar-dense/omp/dense_kernel.hpp"
@@ -30,8 +31,6 @@ struct Task {
 // Global atomic flag to control threads
 std::atomic<bool> done(false);
 std::mutex mtx;
-
-constexpr int N = 640 * 480;
 
 // ---------------------------------------------------------------------
 // Producer
@@ -120,8 +119,15 @@ void producer(moodycamel::ConcurrentQueue<Task>& queue,
 
     // kernelA_CPU(&hostParams);
 
-#pragma omp parallel
+    auto g_little_core_size = g_little_cores.size();
+
+#pragma omp parallel num_threads(g_little_core_size)
     {
+      //       int thread_id = omp_get_thread_num();
+
+      // #pragma omp critical
+      //       printf("[OMP] Thread ID: %d\n", thread_id);
+
       cifar_dense::omp::process_stage_1(*tasks[i].appdata_ptr);
       cifar_dense::omp::process_stage_2(*tasks[i].appdata_ptr);
       cifar_dense::omp::process_stage_3(*tasks[i].appdata_ptr);
@@ -270,7 +276,7 @@ void run_2_stage() {
 // ---------------------------------------------------------------------
 
 int main(int argc, char* argv[]) {
-  // spdlog::set_level(spdlog::level::trace);
+  parse_args(argc, argv);
 
   run_2_stage();
 

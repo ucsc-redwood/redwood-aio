@@ -14,7 +14,10 @@ target("pipe-cifar-dense-cu")
     add_includedirs("../../builtin-apps")
 
     add_packages("spdlog")
-
+    
+    -- Add CUDA flags
+    add_cuflags("-Xcompiler", "-fopenmp", {force = true})  -- Enable OpenMP for the CUDA compiler
+    add_ldflags("-fopenmp", {force = true})  -- Link against OpenMP library
 
     add_packages("concurrentqueue")
     add_packages("cli11")
