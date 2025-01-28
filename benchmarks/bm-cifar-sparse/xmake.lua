@@ -91,3 +91,30 @@ target("bm-cifar-sparse-vk")
       on_run(run_on_android)
     end
 target_end()
+
+
+if not is_plat("android") then
+
+    target("bm-cifar-sparse-cu")
+        set_kind("binary")
+        set_group("benchmarks")
+    
+        add_deps("builtin-apps")
+        add_deps("builtin-apps-cuda")
+        add_includedirs("$(projectdir)/builtin-apps/")
+    
+        add_files({
+            "cuda.cu",
+            "../../builtin-apps/common/cuda/cu_mem_resource.cu",
+        })
+    
+        add_packages("spdlog")
+        add_packages("benchmark")
+        add_packages("cli11")
+    
+        add_cugencodes("native")
+    
+    
+    target_end()
+    
+    end 
