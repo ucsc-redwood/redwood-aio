@@ -28,8 +28,18 @@ int main() {
   //   }
 
   tree::cuda::process_stage_1(*appdata);
-
+  tree::cuda::process_stage_2(*appdata);
+  tree::cuda::process_stage_3(*appdata);
   CUDA_CHECK(cudaDeviceSynchronize());
+
+  // assert();
+  auto is_sorted = std::ranges::is_sorted(appdata->u_morton_keys_alt);
+  spdlog::info("is_sorted: {}", (is_sorted ? "true" : "false"));
+
+  // print first 10 elements
+  for (int i = 0; i < 10; ++i) {
+    spdlog::info("{}", appdata->u_morton_keys[i]);
+  }
 
   spdlog::info("Done");
 
