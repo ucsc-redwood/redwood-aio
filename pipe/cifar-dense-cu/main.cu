@@ -30,7 +30,7 @@ struct Task {
 
 // Global atomic flag to control threads
 std::atomic<bool> done(false);
-std::mutex mtx;
+// std::mutex mtx;
 
 // ---------------------------------------------------------------------
 // Producer
