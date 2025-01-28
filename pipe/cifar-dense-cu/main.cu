@@ -155,10 +155,7 @@ void consumer(moodycamel::ConcurrentQueue<Task>& queue, cudaStream_t stream) {
       //     stream, task.u_data, 0, cudaMemAttachGlobal));
 
       CUDA_CHECK(cudaStreamAttachMemAsync(stream,
-                                          task.appdata_ptr->u_conv3_out.data(),
-                                          0,
-                                          cudaMemAttachGlobal));
-      CUDA_CHECK(
+                                       dense
           cudaStreamAttachMemAsync(stream,
                                    task.appdata_ptr->u_conv4_weights.data(),
                                    0,
