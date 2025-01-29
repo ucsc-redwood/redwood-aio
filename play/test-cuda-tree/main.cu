@@ -13,15 +13,17 @@ int main() {
   auto mr = cuda::CudaMemoryResource();
   tree::AppData appdata(&mr);
 
-  tree::cuda::process_stage_1(appdata);
-  tree::cuda::process_stage_2(appdata);
-  tree::cuda::process_stage_3(appdata);
-  tree::cuda::process_stage_4(appdata);
-  tree::cuda::process_stage_5(appdata);
-  tree::cuda::process_stage_6(appdata);
-  tree::cuda::process_stage_7(appdata);
+  for (int i = 0; i < 10; ++i) {
+    tree::cuda::process_stage_1(appdata);
+    tree::cuda::process_stage_2(appdata);
+    tree::cuda::process_stage_3(appdata);
+    tree::cuda::process_stage_4(appdata);
+    tree::cuda::process_stage_5(appdata);
+    tree::cuda::process_stage_6(appdata);
+    tree::cuda::process_stage_7(appdata);
 
-  CUDA_CHECK(cudaDeviceSynchronize());
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 
   // assert();
   auto is_sorted = std::ranges::is_sorted(appdata.u_morton_keys_alt);
@@ -37,6 +39,8 @@ int main() {
   spdlog::info("n_octree_nodes: {}", appdata.get_n_octree_nodes());
 
   spdlog::info("Done");
+
+  tree::cuda::cleanup();
 
   return 0;
 }
