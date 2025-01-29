@@ -16,6 +16,10 @@ int main() {
   tree::cuda::process_stage_1(appdata);
   tree::cuda::process_stage_2(appdata);
   tree::cuda::process_stage_3(appdata);
+  tree::cuda::process_stage_4(appdata);
+  tree::cuda::process_stage_5(appdata);
+  tree::cuda::process_stage_6(appdata);
+  tree::cuda::process_stage_7(appdata);
 
   CUDA_CHECK(cudaDeviceSynchronize());
 
@@ -29,8 +33,8 @@ int main() {
   }
 
   spdlog::info("n_unique: {}", appdata.get_n_unique());
-  // spdlog::info("n_brt_nodes: {}", appdata->get_n_brt_nodes());
-  // spdlog::info("n_octree_nodes: {}", appdata->get_n_octree_nodes());
+  spdlog::info("n_brt_nodes: {}", appdata.get_n_brt_nodes());
+  spdlog::info("n_octree_nodes: {}", appdata.get_n_octree_nodes());
 
   spdlog::info("Done");
 

@@ -2,23 +2,22 @@
 
 #include <cub/cub.cuh>
 #include <cub/util_math.cuh>
-#include <numeric>
 
 #include "../../common/cuda/helpers.cuh"
 #include "01_morton.cuh"
-#include "02_sort.cuh"
-#include "03_unique.cuh"
 #include "04_radix_tree.cuh"
 #include "05_edge_count.cuh"
-#include "06_prefix_sum.cuh"
 #include "07_octree.cuh"
 #include "kernel.cuh"
 
 namespace tree::cuda {
 
-// __host__ __device__ __forceinline__ int div_up(int a, int b) {
-//   return (a + b - 1) / b;
-// }
+//---------------------------------------------------------------------
+// Globals, constants and aliases
+//---------------------------------------------------------------------
+
+// Caching allocator for device memory
+cub::CachingDeviceAllocator g_allocator(true);
 
 // ----------------------------------------------------------------------------
 // Stage 1 (input -> morton code)
@@ -43,30 +42,23 @@ void process_stage_1(AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_2(AppData &app_data) {
-  //   app_data.u_morton_keys.data(),
-  //   app_data.u_morton_keys_alt.data(),
+  uint32_t *d_keys_in = app_data.u_morton_keys.data();
+  uint32_t *d_keys_out = app_data.u_morton_keys_alt.data();
+  uint32_t num_items = app_data.get_n_input();
 
   void *d_temp_storage = nullptr;
   size_t temp_storage_bytes = 0;
 
   // Get temporary storage size
-  cub::DeviceRadixSort::SortKeys(d_temp_storage,
-                                 temp_storage_bytes,
-                                 app_data.u_morton_keys.data(),
-                                 app_data.u_morton_keys_alt.data(),
-                                 app_data.get_n_input());
-  cudaMalloc(&d_temp_storage, temp_storage_bytes);
+  cub::DeviceRadixSort::SortKeys(
+      d_temp_storage, temp_storage_bytes, d_keys_in, d_keys_out, num_items);
+  CubDebugExit(g_allocator.DeviceAllocate(&d_temp_storage, temp_storage_bytes));
 
   // Sort data
-  cub::DeviceRadixSort::SortKeys(d_temp_storage,
-                                 temp_storage_bytes,
-                                 app_data.u_morton_keys.data(),
-                                 app_data.u_morton_keys_alt.data(),
-                                 app_data.get_n_input());
+  cub::DeviceRadixSort::SortKeys(
+      d_temp_storage, temp_storage_bytes, d_keys_in, d_keys_out, num_items);
 
-  CUDA_CHECK(cudaDeviceSynchronize());
-
-  cudaFree(d_temp_storage);
+  CubDebugExit(g_allocator.DeviceFree(d_temp_storage));
 }
 
 // ----------------------------------------------------------------------------
@@ -74,38 +66,40 @@ void process_stage_2(AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_3(AppData &app_data) {
-  // Temporary storage for CUB
+  uint32_t *d_in = app_data.u_morton_keys_alt.data();
+  uint32_t *d_out = app_data.u_morton_keys.data();
+  uint32_t num_items = app_data.get_n_input();
+
+  uint32_t *u_num_selected_out = nullptr;
+  CUDA_CHECK(cudaMallocManaged(&u_num_selected_out, sizeof(uint32_t)));
+
+  // Allocate temporary storage
   void *d_temp_storage = nullptr;
   size_t temp_storage_bytes = 0;
-  int *d_num_selected_out;
-  CUDA_CHECK(cudaMalloc(&d_num_selected_out, sizeof(int)));
+  CubDebugExit(cub::DeviceSelect::Unique(d_temp_storage,
+                                         temp_storage_bytes,
+                                         d_in,
+                                         d_out,
+                                         u_num_selected_out,
+                                         num_items));
+  CubDebugExit(g_allocator.DeviceAllocate(&d_temp_storage, temp_storage_bytes));
 
-  // Determine temporary storage size
-  cub::DeviceSelect::Unique(d_temp_storage,
-                            temp_storage_bytes,
-                            app_data.u_morton_keys_alt.data(),
-                            app_data.u_morton_keys.data(),
-                            d_num_selected_out,
-                            app_data.get_n_input());
-  CUDA_CHECK(cudaMalloc(&d_temp_storage, temp_storage_bytes));
-
-  // Remove duplicates
-  cub::DeviceSelect::Unique(d_temp_storage,
-                            temp_storage_bytes,
-                            app_data.u_morton_keys_alt.data(),
-                            app_data.u_morton_keys.data(),
-                            d_num_selected_out,
-                            app_data.get_n_input());
+  // Run
+  CubDebugExit(cub::DeviceSelect::Unique(d_temp_storage,
+                                         temp_storage_bytes,
+                                         d_in,
+                                         d_out,
+                                         u_num_selected_out,
+                                         num_items));
 
   CUDA_CHECK(cudaDeviceSynchronize());
 
-  const auto n_unique = d_num_selected_out[0];
+  const auto n_unique = u_num_selected_out[0];
   app_data.set_n_unique(n_unique);
   app_data.set_n_brt_nodes(n_unique - 1);
 
-  // Clean up
-  CUDA_CHECK(cudaFree(d_temp_storage));
-  CUDA_CHECK(cudaFree(d_num_selected_out));
+  CUDA_CHECK(cudaFree(u_num_selected_out));
+  CubDebugExit(g_allocator.DeviceFree(d_temp_storage));
 }
 
 // ----------------------------------------------------------------------------
@@ -141,12 +135,6 @@ void process_stage_5(AppData &app_data) {
       app_data.brt.u_parents.data(),
       app_data.u_edge_count.data(),
       app_data.get_n_brt_nodes());
-
-  CUDA_CHECK(cudaDeviceSynchronize());
-
-  // num oct is the result of last of prefix sum
-  app_data.set_n_octree_nodes(
-      app_data.u_edge_offset[app_data.get_n_brt_nodes() - 1]);
 }
 
 // ----------------------------------------------------------------------------
@@ -164,7 +152,7 @@ void process_stage_6(AppData &app_data) {
                                 app_data.u_edge_count.data(),
                                 app_data.u_edge_offset.data(),
                                 app_data.get_n_brt_nodes());
-  cudaMalloc(&d_temp_storage, temp_storage_bytes);
+  CubDebugExit(g_allocator.DeviceAllocate(&d_temp_storage, temp_storage_bytes));
 
   // Perform prefix sum (inclusive scan)
   cub::DeviceScan::InclusiveSum(d_temp_storage,
@@ -173,13 +161,14 @@ void process_stage_6(AppData &app_data) {
                                 app_data.u_edge_offset.data(),
                                 app_data.get_n_brt_nodes());
 
+  // Sync
   CUDA_CHECK(cudaDeviceSynchronize());
-
-  cudaFree(d_temp_storage);
 
   // num oct is the result of last of prefix sum
   app_data.set_n_octree_nodes(
       app_data.u_edge_offset[app_data.get_n_brt_nodes() - 1]);
+
+  CubDebugExit(g_allocator.DeviceFree(d_temp_storage));
 }
 
 // ----------------------------------------------------------------------------
