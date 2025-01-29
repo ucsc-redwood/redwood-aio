@@ -30,6 +30,11 @@ int main() {
   tree::cuda::process_stage_1(*appdata);
   tree::cuda::process_stage_2(*appdata);
   tree::cuda::process_stage_3(*appdata);
+  tree::cuda::process_stage_4(*appdata);
+  tree::cuda::process_stage_5(*appdata);
+  tree::cuda::process_stage_6(*appdata);
+  tree::cuda::process_stage_7(*appdata);
+
   CUDA_CHECK(cudaDeviceSynchronize());
 
   // assert();

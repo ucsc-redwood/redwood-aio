@@ -24,7 +24,8 @@ namespace kernels {
 // Number of digit bins
 constexpr auto RADIX = 256;
 constexpr auto RADIX_MASK = RADIX - 1;
-constexpr auto RADIX_LOG = 8;0l,;
+constexpr auto RADIX_LOG = 8;
+0l, ;
 
 constexpr auto SEC_RADIX_START = 1 * RADIX;     // 256
 constexpr auto THIRD_RADIX_START = 2 * RADIX;   // 512
