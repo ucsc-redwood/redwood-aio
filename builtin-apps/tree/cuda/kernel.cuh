@@ -12,6 +12,4 @@ void process_stage_5(AppData &app_data);
 void process_stage_6(AppData &app_data);
 void process_stage_7(AppData &app_data);
 
-void device_sync();
-
 }  // namespace tree::cuda

@@ -16,28 +16,19 @@
 
 namespace tree::cuda {
 
-__host__ __device__ __forceinline__ int div_up(int a, int b) {
-  return (a + b - 1) / b;
-}
-
-void device_sync() {
-  //   CUDA_CHECK(cudaDeviceSynchronize());
-}
+// __host__ __device__ __forceinline__ int div_up(int a, int b) {
+//   return (a + b - 1) / b;
+// }
 
 // ----------------------------------------------------------------------------
 // Stage 1 (input -> morton code)
 // ----------------------------------------------------------------------------
 
 void process_stage_1(AppData &app_data) {
-  static constexpr auto block_size = 256;
-  const auto grid_size = div_up(app_data.get_n_input(), block_size);
+  constexpr auto block_size = 256;
+  const auto grid_size =
+      cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
   constexpr auto s_mem = 0;
-
-  spdlog::debug(
-      "CUDA kernel 'compute_morton_code', n = {}, threads = {}, blocks = {}",
-      app_data.get_n_input(),
-      block_size,
-      grid_size);
 
   ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
       app_data.u_input_points.data(),
@@ -107,6 +98,10 @@ void process_stage_3(AppData &app_data) {
                             app_data.get_n_input());
 
   CUDA_CHECK(cudaDeviceSynchronize());
+
+  const auto n_unique = d_num_selected_out[0];
+  app_data.set_n_unique(n_unique);
+  app_data.set_n_brt_nodes(n_unique - 1);
 
   // Clean up
   CUDA_CHECK(cudaFree(d_temp_storage));

@@ -11,43 +11,28 @@
 
 int main() {
   auto mr = cuda::CudaMemoryResource();
-  auto appdata = new tree::AppData(&mr);
+  tree::AppData appdata(&mr);
 
-  //   const auto n_threads = std::thread::hardware_concurrency();
-  //   tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
-
-  // #pragma omp parallel
-  //   {
-  //     tree::omp::process_stage_1(*appdata);
-  //     tree::omp::v2::process_stage_2(*appdata, temp_storage);
-  //     tree::omp::process_stage_3(*appdata);
-  //     tree::omp::process_stage_4(*appdata);
-  //     tree::omp::process_stage_5(*appdata);
-  //     tree::omp::process_stage_6(*appdata);
-  //     tree::omp::process_stage_7(*appdata);
-  //   }
-
-  tree::cuda::process_stage_1(*appdata);
-  tree::cuda::process_stage_2(*appdata);
-  tree::cuda::process_stage_3(*appdata);
-  tree::cuda::process_stage_4(*appdata);
-  tree::cuda::process_stage_5(*appdata);
-  tree::cuda::process_stage_6(*appdata);
-  tree::cuda::process_stage_7(*appdata);
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  tree::cuda::process_stage_3(appdata);
 
   CUDA_CHECK(cudaDeviceSynchronize());
 
   // assert();
-  auto is_sorted = std::ranges::is_sorted(appdata->u_morton_keys_alt);
+  auto is_sorted = std::ranges::is_sorted(appdata.u_morton_keys_alt);
   spdlog::info("is_sorted: {}", (is_sorted ? "true" : "false"));
 
   // print first 10 elements
   for (int i = 0; i < 10; ++i) {
-    spdlog::info("{}", appdata->u_morton_keys[i]);
+    spdlog::info("{}", appdata.u_morton_keys[i]);
   }
+
+  spdlog::info("n_unique: {}", appdata.get_n_unique());
+  // spdlog::info("n_brt_nodes: {}", appdata->get_n_brt_nodes());
+  // spdlog::info("n_octree_nodes: {}", appdata->get_n_octree_nodes());
 
   spdlog::info("Done");
 
-  delete appdata;
   return 0;
 }
