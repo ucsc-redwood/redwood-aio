@@ -1,100 +1,72 @@
 import sqlite3
+import argparse
 
+DB_NAME = "benchmark_results.db"
 
-def compare_custom_pipeline_to_baseline_verbose(
-    machine_name, application, db_name="benchmark_results.db"
-):
+def query_database(machine_name=None, application=None, backend=None, stage=None, core_type=None, num_threads=None):
     """
-    Compares the total time of a custom pipeline to the baseline (stage=0),
-    but also prints individual stage rows that sum to the final pipeline time.
-
-    Custom Pipeline (example):
-      - stages 1-2 => OMP (little cores, 2 threads)
-      - stages 3-4 => OMP (big cores, 2 threads)
-      - stages 5-6 => OMP (little cores, 2 threads)
-      - stage 7    => CUDA (stage=7, no core_type, no num_threads)
+    Query the database with optional filters and display the results.
     """
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    # 1) Query all relevant rows for the pipeline
-    custom_pipeline_query = """
-        SELECT stage, backend, core_type, num_threads, time_ms
-        FROM benchmark_result
-        WHERE machine_name = :machine
-          AND application = :app
-          AND (
-               (backend='OMP'
-                AND core_type='little'
-                AND num_threads=2
-                AND stage IN (1,2))
-            OR (backend='OMP'
-                AND core_type='big'
-                AND num_threads=2
-                AND stage IN (3,4))
-            OR (backend='OMP'
-                AND core_type='little'
-                AND num_threads=2
-                AND stage IN (5,6))
-            OR (backend='CUDA'
-                AND stage=7)
-          )
-        ORDER BY stage
-    """
-    cursor.execute(custom_pipeline_query, {"machine": machine_name, "app": application})
-    pipeline_rows = cursor.fetchall()
+    # Base query
+    query = "SELECT * FROM benchmark_result WHERE 1=1"
+    params = []
 
-    # 2) Query the baseline time (assuming baseline is stage=0)
-    baseline_query = """
-        SELECT time_ms
-        FROM benchmark_result
-        WHERE machine_name = :machine
-          AND application = :app
-          AND stage = 0
-        LIMIT 1
-    """
-    cursor.execute(baseline_query, {"machine": machine_name, "app": application})
-    baseline_result = cursor.fetchone()
-    baseline_time = baseline_result[0] if baseline_result else 0.0
+    # Apply filters if provided
+    if machine_name:
+        query += " AND machine_name = ?"
+        params.append(machine_name)
+    if application:
+        query += " AND application = ?"
+        params.append(application)
+    if backend:
+        query += " AND backend = ?"
+        params.append(backend)
+    if stage is not None:
+        query += " AND stage = ?"
+        params.append(stage)
+    if core_type:
+        query += " AND core_type = ?"
+        params.append(core_type)
+    if num_threads is not None:
+        query += " AND num_threads = ?"
+        params.append(num_threads)
+
+    cursor.execute(query, params)
+    rows = cursor.fetchall()
+
+    # Get column names
+    column_names = [description[0] for description in cursor.description]
+
+    # Print the results
+    if rows:
+        print(f"{' | '.join(column_names)}")
+        print("-" * 100)
+        for row in rows:
+            print(" | ".join(str(item) for item in row))
+    else:
+        print("No matching records found.")
 
     conn.close()
 
-    # 3) Print baseline info (check if baseline is missing)
-    print(f"Machine: {machine_name}, Application: {application}")
-    if baseline_time <= 0:
-        print("  (No baseline found or baseline time=0. Can't compute ratio.)")
-        print(f"  Baseline time: {baseline_time} ms")
-    else:
-        print(f"  Baseline time (stage=0): {baseline_time} ms")
-
-    # 4) Print each pipeline stage row, sum up the total
-    total_custom_time = 0.0
-    if pipeline_rows:
-        print("\nCustom Pipeline Stages:")
-        for stage, backend, core_type, num_threads, time_ms in pipeline_rows:
-            total_custom_time += time_ms
-            print(
-                f"  Stage={stage}, Backend={backend}, core_type={core_type}, "
-                f"threads={num_threads}, time={time_ms} ms"
-            )
-
-    else:
-        print("\nNo rows found for the specified pipeline.")
-
-    # 5) Print the total pipeline time and compare to baseline
-    print(f"\nTotal Custom Pipeline Time: {total_custom_time} ms")
-
-    if baseline_time > 0:
-        difference = total_custom_time - baseline_time
-        ratio = total_custom_time / baseline_time
-        print(f"Difference vs baseline: {difference:.2f} ms")
-        print(f"Ratio (custom / baseline): {ratio:.2f}x")
-
-
-# Example usage:
 if __name__ == "__main__":
-    # benchmark_results.db
+    parser = argparse.ArgumentParser(description="Query benchmark database with optional filters.")
+    parser.add_argument("--machine_name", type=str, help="Filter by machine name")
+    parser.add_argument("--application", type=str, help="Filter by application name")
+    parser.add_argument("--backend", type=str, help="Filter by backend type (e.g., OMP, CUDA, Vulkan)")
+    parser.add_argument("--stage", type=int, help="Filter by stage number")
+    parser.add_argument("--core_type", type=str, help="Filter by core type (e.g., little, medium, big)")
+    parser.add_argument("--num_threads", type=int, help="Filter by number of threads")
 
-    compare_custom_pipeline_to_baseline_verbose(
-        machine_name="machine-01", application="Tree", db_name="benchmark_results.db"
+    args = parser.parse_args()
+
+    query_database(
+        machine_name=args.machine_name,
+        application=args.application,
+        backend=args.backend,
+        stage=args.stage,
+        core_type=args.core_type,
+        num_threads=args.num_threads
     )

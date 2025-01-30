@@ -44,6 +44,24 @@ VK_CifarSparse/Stage7        0.998 ms        0.306 ms         2606
 VK_CifarSparse/Stage8        0.847 ms        0.290 ms         2451
 VK_CifarSparse/Stage9        0.848 ms        0.296 ms         2344
 
+doremy@ucsc-android-devel ~/D/r/scripts (main)> adb -s 9b034f1b shell /data/local/tmp/bm-tree-vk --device=9b034f1b
+Little cores: 0 1 2
+Mid cores: 3 4
+Big cores:
+2025-01-30T14:11:25-08:00
+Running /data/local/tmp/bm-tree-vk
+Run on (8 X 2016 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+----------------------------------------------------------------------
+Benchmark                            Time             CPU   Iterations
+----------------------------------------------------------------------
+VK_Tree/Baseline                   497 ms         10.3 ms           10
+VK_Tree/Stage1                    1.25 ms        0.298 ms         2427
+VK_Tree/Stage2                     261 ms         7.42 ms           10
+VK_Tree/Stage3                    79.7 ms         1.24 ms          100
+VK_Tree/Stage4                    2.18 ms        0.303 ms         2242
+VK_Tree/Stage5                   0.979 ms        0.278 ms         2709
+
 [2/2] Running bm-tree-vk on device: 9b034f1b
 build/android/arm64-v8a/release/bm-tree-vk: 1 file pushed, 0 skipped. 534.5 MB/s (8254224 bytes in 0.015s)
 Little cores: 0 1 2
