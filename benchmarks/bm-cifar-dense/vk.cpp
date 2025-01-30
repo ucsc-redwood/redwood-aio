@@ -39,7 +39,7 @@ class VK_CifarDense : public benchmark::Fixture {
   std::unique_ptr<cifar_dense::AppData> app_data;
 };
 
-BENCHMARK_DEFINE_F(VK_CifarDense, Stage1)
+BENCHMARK_DEFINE_F(VK_CifarDense, Baseline)
 (benchmark::State& state) {
   for (auto _ : state) {
     cifar_dense::vulkan::Singleton::getInstance().process_stage_1(*app_data);
@@ -54,7 +54,7 @@ BENCHMARK_DEFINE_F(VK_CifarDense, Stage1)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarDense, Stage1)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_CifarDense, Baseline)->Unit(benchmark::kMillisecond);
 
 // static void VK_CifarDense_Baseline(benchmark::State& state) {
 //   auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
