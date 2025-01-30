@@ -155,7 +155,10 @@ BENCHMARK_DEFINE_F(VK_Tree, Stage6)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_Tree, Stage6)->Unit(benchmark::kMillisecond);
+// will cause a crash
+BENCHMARK_REGISTER_F(VK_Tree, Stage6)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(1);
 
 // ----------------------------------------------------------------
 // Stage 7
@@ -179,7 +182,9 @@ BENCHMARK_DEFINE_F(VK_Tree, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_Tree, Stage7)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(VK_Tree, Stage7)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(1);
 
 int main(int argc, char** argv) {
   parse_args(argc, argv);
