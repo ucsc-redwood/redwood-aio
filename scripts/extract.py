@@ -180,7 +180,10 @@ def print_all_data(db_name="benchmark_results.db"):
 
 # import sqlite3
 
-def compare_custom_pipeline_to_baseline(machine_name, application, db_name="benchmark_results.db"):
+
+def compare_custom_pipeline_to_baseline(
+    machine_name, application, db_name="benchmark_results.db"
+):
     """
     Compares the total time of a custom pipeline:
       - stages 1-2 => OMP (little cores, 2 threads)
@@ -188,12 +191,12 @@ def compare_custom_pipeline_to_baseline(machine_name, application, db_name="benc
       - stages 5-6 => OMP (little cores, 2 threads)
       - stage 7    => CUDA (stage=7, no core_type, no num_threads)
     to a baseline time (stage=0) for the same machine/application.
-    
+
     Prints out the total pipeline time, the baseline time, and the ratio.
     """
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
-    
+
     # 1) Query the custom pipeline times in a single SUM:
     #    We sum time_ms for each specific combination of (backend, core_type, num_threads, stage).
     #    Stages 1-2 => OMP + little + 2 threads
@@ -222,13 +225,15 @@ def compare_custom_pipeline_to_baseline(machine_name, application, db_name="benc
                 AND stage=7)
           )
     """
-    
+
     cursor.execute(custom_pipeline_query, {"machine": machine_name, "app": application})
     custom_time_result = cursor.fetchone()
-    custom_time = custom_time_result[0] if custom_time_result and custom_time_result[0] else 0.0
-    
+    custom_time = (
+        custom_time_result[0] if custom_time_result and custom_time_result[0] else 0.0
+    )
+
     # 2) Query the baseline time:
-    #    We'll assume that your baseline is stored as stage=0. 
+    #    We'll assume that your baseline is stored as stage=0.
     #    If you want to specify a particular backend for baseline, do it here.
     baseline_query = """
         SELECT time_ms
@@ -242,17 +247,19 @@ def compare_custom_pipeline_to_baseline(machine_name, application, db_name="benc
     cursor.execute(baseline_query, {"machine": machine_name, "app": application})
     baseline_result = cursor.fetchone()
     baseline_time = baseline_result[0] if baseline_result else 0.0
-    
+
     conn.close()
-    
+
     if baseline_time == 0:
-        print(f"No baseline found for machine={machine_name}, application={application}")
+        print(
+            f"No baseline found for machine={machine_name}, application={application}"
+        )
         return
-    
+
     # 3) Compute difference / ratio
     difference = custom_time - baseline_time
     ratio = custom_time / baseline_time if baseline_time != 0 else 0
-    
+
     # 4) Print summary
     print(f"Machine: {machine_name}, Application: {application}")
     print(f"  Baseline Time (stage=0): {baseline_time} ms")
@@ -266,10 +273,10 @@ if __name__ == "__main__":
     create_database()
 
     # 2. Populate with fake data
-    populate_fake_data()
+    # populate_fake_data()
 
     # 3. Print everything to verify
     # print_all_data()
 
     # 4. Compare custom pipeline to baseline
-    compare_custom_pipeline_to_baseline("machine-01", "Tree")
+    # compare_custom_pipeline_to_baseline("machine-01", "Tree")
