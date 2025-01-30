@@ -18,3 +18,5 @@ compile_commands.json
 .clangd/
 
 *.nsys-rep
+
+__pycache__/
