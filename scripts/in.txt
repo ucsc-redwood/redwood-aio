@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------------
+Benchmark                                       Time             CPU   Iterations
+---------------------------------------------------------------------------------
+CUDA_Baseline_Benchmark/iterations:100       82.3 ms         1.21 ms          100
+CUDA_CifarDense/Stage1/iterations:100        1.31 ms        0.498 ms          100
+CUDA_CifarDense/Stage2/iterations:100       0.341 ms        0.338 ms          100
+CUDA_CifarDense/Stage3/iterations:100        11.6 ms        0.506 ms          100
+CUDA_CifarDense/Stage4/iterations:100       0.276 ms        0.275 ms          100
+CUDA_CifarDense/Stage5/iterations:100        19.9 ms        0.539 ms          100
+CUDA_CifarDense/Stage6/iterations:100        26.5 ms        0.529 ms          100
+CUDA_CifarDense/Stage7/iterations:100        17.8 ms        0.527 ms          100
+CUDA_CifarDense/Stage8/iterations:100       0.259 ms        0.259 ms          100
+CUDA_CifarDense/Stage9/iterations:100        7.71 ms        0.505 ms          100
+yanwen@duck-naughty ~/D/redwood-aio-redo (try-new-vk-pipe)> xmake r bm-cifar-sparse-cu bm-tree-cuda
+2025-01-29T13:42:50-08:00
+Running /home/yanwen/Desktop/redwood-aio-redo/build/linux/arm64/debug/bm-cifar-sparse-cu
+Run on (6 X 1510.4 MHz CPU s)
+CPU Caches:
+  L1 Data 64 KiB (x6)
+  L1 Instruction 64 KiB (x6)
+  L2 Unified 256 KiB (x6)
+  L3 Unified 2048 KiB (x1)
+Load Average: 0.08, 0.09, 0.09
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+---------------------------------------------------------------------------------
+Benchmark                                       Time             CPU   Iterations
+---------------------------------------------------------------------------------
+CUDA_Baseline_Benchmark/iterations:100       7.71 ms         1.09 ms          100
+CUDA_CifarSparse/Stage1/iterations:100       6.44 ms        0.799 ms          100
+CUDA_CifarSparse/Stage2/iterations:100      0.512 ms        0.443 ms          100
+CUDA_CifarSparse/Stage3/iterations:100       2.51 ms        0.755 ms          100
+CUDA_CifarSparse/Stage4/iterations:100      0.546 ms        0.448 ms          100
+CUDA_CifarSparse/Stage5/iterations:100      0.928 ms        0.522 ms          100
+CUDA_CifarSparse/Stage6/iterations:100      0.929 ms        0.523 ms          100
+CUDA_CifarSparse/Stage7/iterations:100      0.953 ms        0.537 ms          100
+CUDA_CifarSparse/Stage8/iterations:100      0.492 ms        0.443 ms          100
+CUDA_CifarSparse/Stage9/iterations:100      0.397 ms        0.396 ms          100
+yanwen@duck-naughty ~/D/redwood-aio-redo (try-new-vk-pipe)> xmake r bm-tree-cuda
+2025-01-29T13:43:01-08:00
+Running /home/yanwen/Desktop/redwood-aio-redo/build/linux/arm64/debug/bm-tree-cuda
+Run on (6 X 1510.4 MHz CPU s)
+CPU Caches:
+  L1 Data 64 KiB (x6)
+  L1 Instruction 64 KiB (x6)
+  L2 Unified 256 KiB (x6)
+  L3 Unified 2048 KiB (x1)
+Load Average: 0.28, 0.13, 0.11
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+---------------------------------------------------------------------------------
+Benchmark                                       Time             CPU   Iterations
+---------------------------------------------------------------------------------
+CUDA_Baseline_Benchmark/iterations:100       32.6 ms         2.35 ms          100
+CUDA_Tree/Stage1/iterations:100              1.17 ms        0.640 ms          100
+CUDA_Tree/Stage2/iterations:100              42.8 ms         1.09 ms          100
+CUDA_Tree/Stage3/iterations:100              11.3 ms        0.958 ms          100
+CUDA_Tree/Stage4/iterations:100              10.3 ms        0.920 ms          100
+CUDA_Tree/Stage5/iterations:100              1.24 ms        0.919 ms          100
+CUDA_Tree/Stage6/iterations:100              10.0 ms        0.975 ms          100
+CUDA_Tree/Stage7/iterations:100             0.003 ms        0.003 ms          100

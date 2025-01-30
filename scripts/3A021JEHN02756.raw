@@ -1,0 +1,358 @@
+----------------------------------------------------------------------------------
+Benchmark                                        Time             CPU   Iterations
+----------------------------------------------------------------------------------
+OMP_CifarDense/Baseline/1                      223 ms          221 ms            3
+OMP_CifarDense/Baseline/2                      120 ms          119 ms            6
+OMP_CifarDense/Baseline/3                     86.5 ms         85.9 ms            8
+OMP_CifarDense/Baseline/4                     72.5 ms         72.0 ms           10
+OMP_CifarDense/Baseline/5                      277 ms          275 ms            3
+OMP_CifarDense/Baseline/6                      247 ms          244 ms            3
+OMP_CifarDense/Baseline/7                      218 ms          215 ms            3
+OMP_CifarDense/Baseline/8                      219 ms          215 ms            3
+OMP_CifarDense/Baseline_Pinned_Little/1       1354 ms         1320 ms            1
+OMP_CifarDense/Baseline_Pinned_Little/2        659 ms          653 ms            1
+OMP_CifarDense/Baseline_Pinned_Little/3        446 ms          440 ms            2
+OMP_CifarDense/Baseline_Pinned_Little/4        333 ms          326 ms            2
+OMP_CifarDense/Baseline_Pinned_Medium/1        269 ms          268 ms            3
+OMP_CifarDense/Baseline_Pinned_Medium/2        131 ms          129 ms            5
+OMP_CifarDense/Baseline_Pinned_Big/1           236 ms          234 ms            3
+OMP_CifarDense/Baseline_Pinned_Big/2           126 ms          125 ms            6
+
+----------------------------------------------------------------------------------------
+Benchmark                                              Time             CPU   Iterations
+----------------------------------------------------------------------------------------
+OMP_CifarDense/Stage1_little/1/iterations:100       17.1 ms         16.5 ms          100
+OMP_CifarDense/Stage1_little/2/iterations:100       8.43 ms         8.31 ms          100
+OMP_CifarDense/Stage1_little/3/iterations:100       5.72 ms         5.62 ms          100
+OMP_CifarDense/Stage1_little/4/iterations:100       4.64 ms         4.43 ms          100
+OMP_CifarDense/Stage1_medium/1/iterations:100       3.19 ms         2.94 ms          100
+OMP_CifarDense/Stage1_medium/2/iterations:100       1.78 ms         1.75 ms          100
+OMP_CifarDense/Stage1_big/1/iterations:100          3.64 ms         3.43 ms          100
+OMP_CifarDense/Stage1_big/2/iterations:100          2.71 ms         2.26 ms          100
+OMP_CifarDense/Stage2_little/1/iterations:100       1.14 ms         1.11 ms          100
+OMP_CifarDense/Stage2_little/2/iterations:100      0.905 ms        0.893 ms          100
+OMP_CifarDense/Stage2_little/3/iterations:100      0.465 ms        0.456 ms          100
+OMP_CifarDense/Stage2_little/4/iterations:100      0.306 ms        0.299 ms          100
+OMP_CifarDense/Stage2_medium/1/iterations:100      0.318 ms        0.301 ms          100
+OMP_CifarDense/Stage2_medium/2/iterations:100      0.323 ms        0.160 ms          100
+OMP_CifarDense/Stage2_big/1/iterations:100         0.704 ms        0.415 ms          100
+OMP_CifarDense/Stage2_big/2/iterations:100         0.371 ms        0.366 ms          100
+OMP_CifarDense/Stage3_little/1/iterations:100        238 ms          234 ms          100
+OMP_CifarDense/Stage3_little/2/iterations:100        116 ms          115 ms          100
+OMP_CifarDense/Stage3_little/3/iterations:100       78.0 ms         77.1 ms          100
+OMP_CifarDense/Stage3_little/4/iterations:100       59.6 ms         58.7 ms          100
+OMP_CifarDense/Stage3_medium/1/iterations:100       41.9 ms         41.4 ms          100
+OMP_CifarDense/Stage3_medium/2/iterations:100       21.3 ms         21.1 ms          100
+OMP_CifarDense/Stage3_big/1/iterations:100          40.5 ms         39.9 ms          100
+OMP_CifarDense/Stage3_big/2/iterations:100          23.2 ms         22.5 ms          100
+OMP_CifarDense/Stage4_little/1/iterations:100      0.843 ms        0.828 ms          100
+OMP_CifarDense/Stage4_little/2/iterations:100      0.564 ms        0.555 ms          100
+OMP_CifarDense/Stage4_little/3/iterations:100      0.349 ms        0.334 ms          100
+OMP_CifarDense/Stage4_little/4/iterations:100      0.236 ms        0.230 ms          100
+OMP_CifarDense/Stage4_medium/1/iterations:100      0.400 ms        0.237 ms          100
+OMP_CifarDense/Stage4_medium/2/iterations:100      0.257 ms        0.128 ms          100
+OMP_CifarDense/Stage4_big/1/iterations:100         0.606 ms        0.323 ms          100
+OMP_CifarDense/Stage4_big/2/iterations:100         0.300 ms        0.174 ms          100
+OMP_CifarDense/Stage5_little/1/iterations:100        332 ms          328 ms          100
+OMP_CifarDense/Stage5_little/2/iterations:100        164 ms          163 ms          100
+OMP_CifarDense/Stage5_little/3/iterations:100        110 ms          108 ms          100
+OMP_CifarDense/Stage5_little/4/iterations:100       83.5 ms         82.2 ms          100
+OMP_CifarDense/Stage5_medium/1/iterations:100       63.0 ms         62.6 ms          100
+OMP_CifarDense/Stage5_medium/2/iterations:100       31.7 ms         31.4 ms          100
+OMP_CifarDense/Stage5_big/1/iterations:100          61.9 ms         61.2 ms          100
+OMP_CifarDense/Stage5_big/2/iterations:100          32.8 ms         32.6 ms          100
+OMP_CifarDense/Stage6_little/1/iterations:100        436 ms          431 ms          100
+OMP_CifarDense/Stage6_little/2/iterations:100        219 ms          216 ms          100
+OMP_CifarDense/Stage6_little/3/iterations:100        146 ms          144 ms          100
+OMP_CifarDense/Stage6_little/4/iterations:100        111 ms          110 ms          100
+OMP_CifarDense/Stage6_medium/1/iterations:100       85.5 ms         85.0 ms          100
+OMP_CifarDense/Stage6_medium/2/iterations:100       41.8 ms         41.5 ms          100
+OMP_CifarDense/Stage6_big/1/iterations:100          80.8 ms         80.1 ms          100
+OMP_CifarDense/Stage6_big/2/iterations:100          45.3 ms         45.0 ms          100
+OMP_CifarDense/Stage7_little/1/iterations:100        292 ms          289 ms          100
+OMP_CifarDense/Stage7_little/2/iterations:100        146 ms          145 ms          100
+OMP_CifarDense/Stage7_little/3/iterations:100       97.6 ms         96.6 ms          100
+OMP_CifarDense/Stage7_little/4/iterations:100       74.1 ms         73.1 ms          100
+OMP_CifarDense/Stage7_medium/1/iterations:100       56.3 ms         55.8 ms          100
+OMP_CifarDense/Stage7_medium/2/iterations:100       27.8 ms         27.6 ms          100
+OMP_CifarDense/Stage7_big/1/iterations:100          55.4 ms         54.4 ms          100
+OMP_CifarDense/Stage7_big/2/iterations:100          30.0 ms         29.7 ms          100
+OMP_CifarDense/Stage8_little/1/iterations:100      0.537 ms        0.294 ms          100
+OMP_CifarDense/Stage8_little/2/iterations:100      0.157 ms        0.154 ms          100
+OMP_CifarDense/Stage8_little/3/iterations:100      0.122 ms        0.120 ms          100
+OMP_CifarDense/Stage8_little/4/iterations:100      0.095 ms        0.093 ms          100
+OMP_CifarDense/Stage8_medium/1/iterations:100      0.077 ms        0.076 ms          100
+OMP_CifarDense/Stage8_medium/2/iterations:100      0.095 ms        0.048 ms          100
+OMP_CifarDense/Stage8_big/1/iterations:100         0.111 ms        0.109 ms          100
+OMP_CifarDense/Stage8_big/2/iterations:100         0.058 ms        0.057 ms          100
+OMP_CifarDense/Stage9_little/1/iterations:100      0.168 ms        0.166 ms          100
+OMP_CifarDense/Stage9_little/2/iterations:100      0.085 ms        0.084 ms          100
+OMP_CifarDense/Stage9_little/3/iterations:100      0.070 ms        0.068 ms          100
+OMP_CifarDense/Stage9_little/4/iterations:100      0.058 ms        0.057 ms          100
+OMP_CifarDense/Stage9_medium/1/iterations:100      0.050 ms        0.040 ms          100
+OMP_CifarDense/Stage9_medium/2/iterations:100      0.024 ms        0.023 ms          100
+OMP_CifarDense/Stage9_big/1/iterations:100         0.097 ms        0.060 ms          100
+OMP_CifarDense/Stage9_big/2/iterations:100         0.033 ms        0.033 ms          100
+
+--------------------------------------------------------------------------------
+Benchmark                                      Time             CPU   Iterations
+--------------------------------------------------------------------------------
+VK_CifarDense_Baseline/iterations:100       52.0 ms         3.37 ms          100
+VK_CifarDense/Stage1/iterations:100        0.865 ms        0.186 ms          100
+VK_CifarDense/Stage2/iterations:100        0.558 ms        0.191 ms          100
+VK_CifarDense/Stage3/iterations:100         8.04 ms        0.486 ms          100
+VK_CifarDense/Stage4/iterations:100        0.747 ms        0.334 ms          100
+VK_CifarDense/Stage5/iterations:100         11.4 ms        0.439 ms          100
+VK_CifarDense/Stage6/iterations:100         8.21 ms        0.329 ms          100
+VK_CifarDense/Stage7/iterations:100         8.58 ms        0.484 ms          100
+VK_CifarDense/Stage8/iterations:100        0.474 ms        0.171 ms          100
+VK_CifarDense/Stage9/iterations:100         13.7 ms        0.432 ms          100
+
+
+-----------------------------------------------------------------------------------
+Benchmark                                         Time             CPU   Iterations
+-----------------------------------------------------------------------------------
+OMP_CifarSparse/Baseline/1                    0.697 ms        0.693 ms          999
+OMP_CifarSparse/Baseline/2                    0.370 ms        0.368 ms         1922
+OMP_CifarSparse/Baseline/3                    0.291 ms        0.289 ms         2415
+OMP_CifarSparse/Baseline/4                    0.235 ms        0.232 ms         2984
+OMP_CifarSparse/Baseline/5                    0.848 ms        0.840 ms          848
+OMP_CifarSparse/Baseline/6                    0.750 ms        0.744 ms         1001
+OMP_CifarSparse/Baseline/7                    0.624 ms        0.616 ms         1021
+OMP_CifarSparse/Baseline/8                    0.734 ms        0.582 ms         1296
+OMP_CifarSparse/Baseline_Pinned_Little/1       4.01 ms         3.97 ms          177
+OMP_CifarSparse/Baseline_Pinned_Little/2       2.02 ms         2.00 ms          348
+OMP_CifarSparse/Baseline_Pinned_Little/3       1.37 ms         1.35 ms          509
+OMP_CifarSparse/Baseline_Pinned_Little/4       1.05 ms         1.03 ms          672
+OMP_CifarSparse/Baseline_Pinned_Medium/1      0.867 ms        0.862 ms          826
+OMP_CifarSparse/Baseline_Pinned_Medium/2      0.438 ms        0.435 ms         1605
+OMP_CifarSparse/Baseline_Pinned_Big/1         0.724 ms        0.720 ms          966
+OMP_CifarSparse/Baseline_Pinned_Big/2         0.389 ms        0.387 ms         1809
+
+[1/2] Running bm-cifar-sparse-stages on device: 3A021JEHN02756
+build/android/arm64-v8a/release/bm-cifar-sparse-stages: 1 file pushed, 0 skipped. 442.7 MB/s (2002304 bytes in 0.004s)
+Little cores: 0 1 2 3
+Mid cores: 4 5
+Big cores: 6 7
+2025-01-29T18:10:00-08:00
+Running /data/local/tmp/bm-cifar-sparse-stages
+Run on (8 X 1803 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+-----------------------------------------------------------------------------------------
+Benchmark                                               Time             CPU   Iterations
+-----------------------------------------------------------------------------------------
+OMP_CifarSparse/Stage1_little/1/iterations:100      0.735 ms        0.691 ms          100
+OMP_CifarSparse/Stage1_little/2/iterations:100      0.357 ms        0.350 ms          100
+OMP_CifarSparse/Stage1_little/3/iterations:100      0.248 ms        0.246 ms          100
+OMP_CifarSparse/Stage1_little/4/iterations:100      0.256 ms        0.253 ms          100
+OMP_CifarSparse/Stage1_medium/1/iterations:100      0.151 ms        0.098 ms          100
+OMP_CifarSparse/Stage1_medium/2/iterations:100      0.051 ms        0.050 ms          100
+OMP_CifarSparse/Stage1_big/1/iterations:100         0.125 ms        0.076 ms          100
+OMP_CifarSparse/Stage1_big/2/iterations:100         0.068 ms        0.067 ms          100
+OMP_CifarSparse/Stage2_little/1/iterations:100       1.04 ms         1.03 ms          100
+OMP_CifarSparse/Stage2_little/2/iterations:100      0.815 ms        0.801 ms          100
+OMP_CifarSparse/Stage2_little/3/iterations:100      0.421 ms        0.396 ms          100
+OMP_CifarSparse/Stage2_little/4/iterations:100      0.299 ms        0.282 ms          100
+OMP_CifarSparse/Stage2_medium/1/iterations:100      0.477 ms        0.299 ms          100
+OMP_CifarSparse/Stage2_medium/2/iterations:100      0.258 ms        0.254 ms          100
+OMP_CifarSparse/Stage2_big/1/iterations:100         0.519 ms        0.277 ms          100
+OMP_CifarSparse/Stage2_big/2/iterations:100         0.277 ms        0.275 ms          100
+OMP_CifarSparse/Stage3_little/1/iterations:100      0.558 ms        0.552 ms          100
+OMP_CifarSparse/Stage3_little/2/iterations:100      0.279 ms        0.274 ms          100
+OMP_CifarSparse/Stage3_little/3/iterations:100      0.192 ms        0.184 ms          100
+OMP_CifarSparse/Stage3_little/4/iterations:100      0.193 ms        0.187 ms          100
+OMP_CifarSparse/Stage3_medium/1/iterations:100      0.159 ms        0.077 ms          100
+OMP_CifarSparse/Stage3_medium/2/iterations:100      0.043 ms        0.043 ms          100
+OMP_CifarSparse/Stage3_big/1/iterations:100         0.107 ms        0.066 ms          100
+OMP_CifarSparse/Stage3_big/2/iterations:100         0.036 ms        0.036 ms          100
+OMP_CifarSparse/Stage4_little/1/iterations:100      0.810 ms        0.801 ms          100
+OMP_CifarSparse/Stage4_little/2/iterations:100      0.445 ms        0.427 ms          100
+OMP_CifarSparse/Stage4_little/3/iterations:100      0.392 ms        0.384 ms          100
+OMP_CifarSparse/Stage4_little/4/iterations:100      0.229 ms        0.208 ms          100
+OMP_CifarSparse/Stage4_medium/1/iterations:100      0.391 ms        0.226 ms          100
+OMP_CifarSparse/Stage4_medium/2/iterations:100      0.194 ms        0.193 ms          100
+OMP_CifarSparse/Stage4_big/1/iterations:100         0.358 ms        0.217 ms          100
+OMP_CifarSparse/Stage4_big/2/iterations:100         0.192 ms        0.191 ms          100
+OMP_CifarSparse/Stage5_little/1/iterations:100      0.312 ms        0.308 ms          100
+OMP_CifarSparse/Stage5_little/2/iterations:100      0.194 ms        0.190 ms          100
+OMP_CifarSparse/Stage5_little/3/iterations:100      0.126 ms        0.115 ms          100
+OMP_CifarSparse/Stage5_little/4/iterations:100      0.093 ms        0.079 ms          100
+OMP_CifarSparse/Stage5_medium/1/iterations:100      0.048 ms        0.046 ms          100
+OMP_CifarSparse/Stage5_medium/2/iterations:100      0.025 ms        0.025 ms          100
+OMP_CifarSparse/Stage5_big/1/iterations:100         0.038 ms        0.037 ms          100
+OMP_CifarSparse/Stage5_big/2/iterations:100         0.022 ms        0.021 ms          100
+OMP_CifarSparse/Stage6_little/1/iterations:100      0.242 ms        0.195 ms          100
+OMP_CifarSparse/Stage6_little/2/iterations:100      0.239 ms        0.236 ms          100
+OMP_CifarSparse/Stage6_little/3/iterations:100      0.084 ms        0.071 ms          100
+OMP_CifarSparse/Stage6_little/4/iterations:100      0.068 ms        0.064 ms          100
+OMP_CifarSparse/Stage6_medium/1/iterations:100      0.034 ms        0.032 ms          100
+OMP_CifarSparse/Stage6_medium/2/iterations:100      0.017 ms        0.017 ms          100
+OMP_CifarSparse/Stage6_big/1/iterations:100         0.025 ms        0.025 ms          100
+OMP_CifarSparse/Stage6_big/2/iterations:100         0.016 ms        0.016 ms          100
+OMP_CifarSparse/Stage7_little/1/iterations:100      0.214 ms        0.195 ms          100
+OMP_CifarSparse/Stage7_little/2/iterations:100      0.115 ms        0.113 ms          100
+OMP_CifarSparse/Stage7_little/3/iterations:100      0.076 ms        0.070 ms          100
+OMP_CifarSparse/Stage7_little/4/iterations:100      0.061 ms        0.061 ms          100
+OMP_CifarSparse/Stage7_medium/1/iterations:100      0.039 ms        0.033 ms          100
+OMP_CifarSparse/Stage7_medium/2/iterations:100      0.019 ms        0.018 ms          100
+OMP_CifarSparse/Stage7_big/1/iterations:100         0.024 ms        0.023 ms          100
+OMP_CifarSparse/Stage7_big/2/iterations:100         0.016 ms        0.015 ms          100
+OMP_CifarSparse/Stage8_little/1/iterations:100      0.264 ms        0.262 ms          100
+OMP_CifarSparse/Stage8_little/2/iterations:100      0.226 ms        0.218 ms          100
+OMP_CifarSparse/Stage8_little/3/iterations:100      0.117 ms        0.096 ms          100
+OMP_CifarSparse/Stage8_little/4/iterations:100      0.082 ms        0.080 ms          100
+OMP_CifarSparse/Stage8_medium/1/iterations:100      0.149 ms        0.084 ms          100
+OMP_CifarSparse/Stage8_medium/2/iterations:100      0.045 ms        0.045 ms          100
+OMP_CifarSparse/Stage8_big/1/iterations:100         0.089 ms        0.078 ms          100
+OMP_CifarSparse/Stage8_big/2/iterations:100         0.045 ms        0.044 ms          100
+OMP_CifarSparse/Stage9_little/1/iterations:100      0.003 ms        0.003 ms          100
+OMP_CifarSparse/Stage9_little/2/iterations:100      0.005 ms        0.005 ms          100
+OMP_CifarSparse/Stage9_little/3/iterations:100      0.005 ms        0.005 ms          100
+OMP_CifarSparse/Stage9_little/4/iterations:100      0.006 ms        0.005 ms          100
+OMP_CifarSparse/Stage9_medium/1/iterations:100      0.003 ms        0.002 ms          100
+OMP_CifarSparse/Stage9_medium/2/iterations:100      0.003 ms        0.003 ms          100
+OMP_CifarSparse/Stage9_big/1/iterations:100         0.002 ms        0.001 ms          100
+OMP_CifarSparse/Stage9_big/2/iterations:100         0.002 ms        0.002 ms          100
+
+[1/2] Running bm-cifar-sparse-vk on device: 3A021JEHN02756
+build/android/arm64-v8a/release/bm-cifar-sparse-vk: 1 file pushed, 0 skipped. 537.2 MB/s (8249336 bytes in 0.015s)
+Little cores: 0 1 2 3
+Mid cores: 4 5
+Big cores: 6 7
+2025-01-29T18:10:58-08:00
+Running /data/local/tmp/bm-cifar-sparse-vk
+Run on (8 X 1803 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+---------------------------------------------------------------------------------
+Benchmark                                       Time             CPU   Iterations
+---------------------------------------------------------------------------------
+VK_CifarSparse_Baseline/iterations:100       6.30 ms         1.16 ms          100
+VK_CifarSparse/Stage1/iterations:100         1.70 ms        0.138 ms          100
+VK_CifarSparse/Stage2/iterations:100        0.283 ms        0.041 ms          100
+VK_CifarSparse/Stage3/iterations:100        0.745 ms        0.058 ms          100
+VK_CifarSparse/Stage4/iterations:100        0.320 ms        0.055 ms          100
+VK_CifarSparse/Stage5/iterations:100        0.427 ms        0.062 ms          100
+VK_CifarSparse/Stage6/iterations:100        0.449 ms        0.070 ms          100
+VK_CifarSparse/Stage7/iterations:100        0.456 ms        0.064 ms          100
+VK_CifarSparse/Stage8/iterations:100        0.348 ms        0.082 ms          100
+VK_CifarSparse/Stage9/iterations:100        0.233 ms        0.037 ms          100
+
+[1/2] Running bm-tree-baselines on device: 3A021JEHN02756
+build/android/arm64-v8a/release/bm-tree-baselines: 1 file pushed, 0 skipped. 453.8 MB/s (1974400 bytes in 0.004s)
+Little cores: 0 1 2 3
+Mid cores: 4 5
+Big cores: 6 7
+2025-01-29T18:11:07-08:00
+Running /data/local/tmp/bm-tree-baselines
+Run on (8 X 1803 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+----------------------------------------------------------------------------------------
+Benchmark                                              Time             CPU   Iterations
+----------------------------------------------------------------------------------------
+OMP_Tree_Unrestricted/Baseline_Unrestricted/1       46.0 ms         45.5 ms           11
+OMP_Tree_Unrestricted/Baseline_Unrestricted/2       24.5 ms         24.3 ms           29
+OMP_Tree_Unrestricted/Baseline_Unrestricted/3       19.2 ms         19.1 ms           35
+OMP_Tree_Unrestricted/Baseline_Unrestricted/4       15.4 ms         15.3 ms           47
+OMP_Tree_Unrestricted/Baseline_Unrestricted/5       32.8 ms         32.5 ms           22
+OMP_Tree_Unrestricted/Baseline_Unrestricted/6       30.2 ms         30.0 ms           24
+OMP_Tree_Unrestricted/Baseline_Unrestricted/7       29.2 ms         28.9 ms           26
+OMP_Tree_Unrestricted/Baseline_Unrestricted/8       25.1 ms         24.8 ms           25
+Baseline_Pinned_Little/1                             155 ms          151 ms            4
+Baseline_Pinned_Little/2                            82.6 ms         80.6 ms            9
+Baseline_Pinned_Little/3                            54.8 ms         53.9 ms           13
+Baseline_Pinned_Little/4                            44.5 ms         43.3 ms           16
+Baseline_Pinned_Medium/1                            58.1 ms         57.0 ms           12
+Baseline_Pinned_Medium/2                            30.3 ms         30.1 ms           24
+Baseline_Pinned_Big/1                               48.7 ms         47.9 ms           15
+Baseline_Pinned_Big/2                               26.9 ms         26.8 ms           28
+
+[1/2] Running bm-tree-stages on device: 3A021JEHN02756
+build/android/arm64-v8a/release/bm-tree-stages: 1 file pushed, 0 skipped. 417.6 MB/s (2057600 bytes in 0.005s)
+Little cores: 0 1 2 3
+Mid cores: 4 5
+Big cores: 6 7
+2025-01-29T18:11:39-08:00
+Running /data/local/tmp/bm-tree-stages
+Run on (8 X 1803 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+-------------------------------------------------------------------
+Benchmark                         Time             CPU   Iterations
+-------------------------------------------------------------------
+OMP_Tree/Stage1_little/1       17.1 ms         16.5 ms           42
+OMP_Tree/Stage1_little/2       8.67 ms         8.40 ms           85
+OMP_Tree/Stage1_little/3       6.05 ms         5.73 ms          125
+OMP_Tree/Stage1_little/4       4.54 ms         4.36 ms          158
+OMP_Tree/Stage1_medium/1       2.65 ms         2.63 ms          266
+OMP_Tree/Stage1_medium/2       1.33 ms         1.32 ms          525
+OMP_Tree/Stage1_big/1          2.93 ms         2.91 ms          228
+OMP_Tree/Stage1_big/2          1.51 ms         1.51 ms          490
+OMP_Tree/Stage2_little/1       18.5 ms         18.2 ms           36
+OMP_Tree/Stage2_little/2       9.52 ms         9.35 ms           76
+OMP_Tree/Stage2_little/3       6.59 ms         6.45 ms          108
+OMP_Tree/Stage2_little/4       4.99 ms         4.89 ms          142
+OMP_Tree/Stage2_medium/1       5.23 ms         5.17 ms          135
+OMP_Tree/Stage2_medium/2       2.96 ms         2.89 ms          253
+OMP_Tree/Stage2_big/1          5.62 ms         5.57 ms          124
+OMP_Tree/Stage2_big/2          2.99 ms         2.97 ms          234
+OMP_Tree/Stage2_std           0.403 ms        0.400 ms         1617
+OMP_Tree/Stage3_little/1       1.40 ms         1.38 ms          506
+OMP_Tree/Stage3_little/2       1.53 ms         1.48 ms          494
+OMP_Tree/Stage3_little/3       1.64 ms         1.61 ms          414
+OMP_Tree/Stage3_little/4       1.66 ms         1.63 ms          402
+OMP_Tree/Stage3_medium/1      0.471 ms        0.466 ms         1498
+OMP_Tree/Stage3_medium/2      0.476 ms        0.471 ms         1485
+OMP_Tree/Stage3_big/1         0.514 ms        0.510 ms         1410
+OMP_Tree/Stage3_big/2         0.516 ms        0.512 ms         1364
+OMP_Tree/Stage4_little/1       50.3 ms         49.5 ms           13
+OMP_Tree/Stage4_little/2       27.6 ms         26.8 ms           26
+OMP_Tree/Stage4_little/3       16.6 ms         16.4 ms           44
+OMP_Tree/Stage4_little/4       14.9 ms         14.7 ms           54
+OMP_Tree/Stage4_medium/1       16.1 ms         16.0 ms           44
+OMP_Tree/Stage4_medium/2       8.07 ms         8.03 ms           87
+OMP_Tree/Stage4_big/1          16.2 ms         16.2 ms           43
+OMP_Tree/Stage4_big/2          8.16 ms         8.08 ms           85
+OMP_Tree/Stage5_little/1       3.24 ms         3.17 ms          220
+OMP_Tree/Stage5_little/2       3.59 ms         3.51 ms          194
+OMP_Tree/Stage5_little/3       3.63 ms         3.55 ms          196
+OMP_Tree/Stage5_little/4       3.72 ms         3.54 ms          184
+OMP_Tree/Stage5_medium/1       2.52 ms         2.49 ms          281
+OMP_Tree/Stage5_medium/2       2.53 ms         2.51 ms          275
+OMP_Tree/Stage5_big/1          3.38 ms         3.35 ms          209
+OMP_Tree/Stage5_big/2          3.40 ms         3.37 ms          209
+OMP_Tree/Stage6_little/1       1.09 ms         1.07 ms          665
+OMP_Tree/Stage6_little/2       1.09 ms         1.07 ms          630
+OMP_Tree/Stage6_little/3      1.000 ms        0.975 ms          684
+OMP_Tree/Stage6_little/4       1.03 ms         1.00 ms          697
+OMP_Tree/Stage6_medium/1      0.337 ms        0.332 ms         2090
+OMP_Tree/Stage6_medium/2      0.336 ms        0.334 ms         2071
+OMP_Tree/Stage6_big/1         0.425 ms        0.421 ms         1491
+OMP_Tree/Stage6_big/2         0.427 ms        0.424 ms         1658
+OMP_Tree/Stage7_little/1       20.9 ms         20.3 ms           36
+OMP_Tree/Stage7_little/2       10.4 ms         10.1 ms           69
+OMP_Tree/Stage7_little/3       6.90 ms         6.72 ms          103
+OMP_Tree/Stage7_little/4       5.02 ms         4.79 ms          122
+OMP_Tree/Stage7_medium/1       4.41 ms         4.38 ms          160
+OMP_Tree/Stage7_medium/2       2.23 ms         2.21 ms          319
+OMP_Tree/Stage7_big/1          5.98 ms         5.92 ms          117
+OMP_Tree/Stage7_big/2          2.99 ms         2.97 ms          236
+
+[1/2] Running bm-tree-vk on device: 3A021JEHN02756
+build/android/arm64-v8a/release/bm-tree-vk: 1 file pushed, 0 skipped. 525.3 MB/s (8253264 bytes in 0.015s)
+Little cores: 0 1 2 3
+Mid cores: 4 5
+Big cores: 6 7
+2025-01-29T18:13:43-08:00
+Running /data/local/tmp/bm-tree-vk
+Run on (8 X 1803 MHz CPU s)
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+-----------------------------------------------------------------------
+Benchmark                             Time             CPU   Iterations
+-----------------------------------------------------------------------
+VK_Baseline_Benchmark               711 ms         9.31 ms           10
+VK_Tree/Stage1/iterations:10      0.410 ms        0.062 ms           10
+VK_Tree/Stage2/iterations:10        418 ms         6.05 ms           10
+VK_Tree/Stage3/iterations:10        100 ms        0.990 ms           10
+VK_Tree/Stage4/iterations:10      0.175 ms        0.096 ms           10
+VK_Tree/Stage5/iterations:10      0.323 ms        0.094 ms           10
+VK_Tree/Stage6/iterations:10       98.1 ms        0.459 ms           10
+VK_Tree/Stage7/iterations:10      0.737 ms        0.363 ms           10
