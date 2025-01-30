@@ -12,6 +12,8 @@
 // Baseline
 // ----------------------------------------------------------------
 
+class CUDA_CifarSparse : public benchmark::Fixture {};
+
 static void run_baseline(cifar_sparse::AppData& app_data) {
   cifar_sparse::cuda::process_stage_1(app_data);
   cifar_sparse::cuda::process_stage_2(app_data);
@@ -25,24 +27,34 @@ static void run_baseline(cifar_sparse::AppData& app_data) {
   CUDA_CHECK(cudaDeviceSynchronize());
 }
 
-static void CUDA_Baseline_Benchmark(benchmark::State& state) {
+// static void CUDA_Baseline_Benchmark(benchmark::State& state) {
+//   auto mr = cuda::CudaMemoryResource();
+//   cifar_sparse::AppData app_data(&mr);
+
+//   for (auto _ : state) {
+//     run_baseline(app_data);
+//   }
+// }
+
+// BENCHMARK(CUDA_Baseline_Benchmark)
+//     ->Unit(benchmark::kMillisecond)
+//     ->Iterations(100);
+
+BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
+(benchmark::State& state) {
   auto mr = cuda::CudaMemoryResource();
   cifar_sparse::AppData app_data(&mr);
-
   for (auto _ : state) {
     run_baseline(app_data);
   }
 }
 
-BENCHMARK(CUDA_Baseline_Benchmark)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Baseline)->Unit(benchmark::kMillisecond);
 
+// ----------------------------------------------------------------
 // ----------------------------------------------------------------
 // Individual stages
 // ----------------------------------------------------------------
-
-class CUDA_CifarSparse : public benchmark::Fixture {};
 
 // ----------------------------------------------------------------
 // Stage 1

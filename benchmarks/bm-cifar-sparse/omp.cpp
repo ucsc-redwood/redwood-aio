@@ -85,7 +85,6 @@ BENCHMARK_REGISTER_F(OMP_CifarSparse, Baseline)
           new OMP_CifarSparse_Stage##stage##core_type##_Benchmark())           \
           ->Arg(i)                                                             \
           ->Name("OMP_CifarSparse/Stage" #stage "_" #core_type)                \
-          ->Iterations(100)                                                    \
           ->Unit(benchmark::kMillisecond);                                     \
     }                                                                          \
   }

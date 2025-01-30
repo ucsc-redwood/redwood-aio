@@ -23,19 +23,6 @@ static void run_baseline_pinned(cifar_sparse::AppData& app_data) {
   cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(app_data);
 }
 
-static void VK_CifarSparse_Baseline(benchmark::State& state) {
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-  cifar_sparse::AppData app_data(mr);
-
-  for (auto _ : state) {
-    run_baseline_pinned(app_data);
-  }
-}
-
-BENCHMARK(VK_CifarSparse_Baseline)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
-
 class VK_CifarSparse : public benchmark::Fixture {
  protected:
   void SetUp(benchmark::State&) override {
@@ -52,6 +39,23 @@ class VK_CifarSparse : public benchmark::Fixture {
   std::unique_ptr<cifar_sparse::AppData> app_data;
 };
 
+BENCHMARK_DEFINE_F(VK_CifarSparse, Baseline)
+(benchmark::State& state) {
+  for (auto _ : state) {
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_1(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_2(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_3(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_4(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_5(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_6(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_7(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_8(*app_data);
+    cifar_sparse::vulkan::Singleton::getInstance().process_stage_9(*app_data);
+  }
+}
+
+BENCHMARK_REGISTER_F(VK_CifarSparse, Baseline)->Unit(benchmark::kMillisecond);
+
 // ----------------------------------------------------------------
 // Stage 1
 // ----------------------------------------------------------------
@@ -63,9 +67,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage1)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage1)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage1)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 2
@@ -78,9 +80,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage2)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage2)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage2)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 3
@@ -93,9 +93,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage3)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage3)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage3)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 4
@@ -108,9 +106,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage4)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage4)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage4)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 5
@@ -123,9 +119,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage5)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage5)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage5)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 6
@@ -138,9 +132,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage6)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage6)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage6)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 7
@@ -153,9 +145,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage7)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage7)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 8
@@ -168,9 +158,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage8)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage8)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage8)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 9
@@ -183,9 +171,7 @@ BENCHMARK_DEFINE_F(VK_CifarSparse, Stage9)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_CifarSparse, Stage9)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(VK_CifarSparse, Stage9)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Main
