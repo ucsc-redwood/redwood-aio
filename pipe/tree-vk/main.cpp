@@ -6,7 +6,7 @@
 #include "tree/vulkan/vk_dispatcher.hpp"
 
 int main() {
-  spdlog::set_level(spdlog::level::trace);
+  spdlog::set_level(spdlog::level::info);
 
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
 
@@ -15,13 +15,16 @@ int main() {
 
   auto& vk = tree::vulkan::Singleton::getInstance();
 
-  vk.process_stage_1(*app_data);
-  vk.process_stage_2(*app_data);
-  vk.process_stage_3(*app_data, tmp_storage);
-  vk.process_stage_4(*app_data);
-  vk.process_stage_5(*app_data);
-  vk.process_stage_6(*app_data);
-  vk.process_stage_7(*app_data);
+  for (int i = 0; i < 20; i++) {
+    spdlog::info("Iteration {}", i);
+    vk.process_stage_1(*app_data);
+    vk.process_stage_2(*app_data);
+    vk.process_stage_3(*app_data, tmp_storage);
+    vk.process_stage_4(*app_data);
+    vk.process_stage_5(*app_data);
+    vk.process_stage_6(*app_data);
+    vk.process_stage_7(*app_data);
+  }
 
   spdlog::info("Done");
   return 0;
