@@ -18,6 +18,10 @@ inline int parse_args(int argc, char **argv) {
 
   CLI11_PARSE(app, argc, argv);
 
+  if (device_id.empty()) {
+    throw std::runtime_error("Device ID is required");
+  }
+
   auto device = get_device(device_id);
   g_little_cores = device.get_pinable_cores(kLittleCoreType);
   g_medium_cores = device.get_pinable_cores(kMediumCoreType);
