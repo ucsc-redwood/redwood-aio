@@ -11,3 +11,13 @@ set-default:
 push-all-resources:
     xmake push-all-resources
 
+run-bm-cu:
+    xmake run bm-cifar-dense-cu
+    xmake run bm-cifar-sparse-cu
+    xmake run bm-tree-cu
+
+run-bm-vk:
+    xmake run bm-cifar-dense-vk
+    xmake run bm-cifar-sparse-vk
+    xmake run bm-tree-vk
+
