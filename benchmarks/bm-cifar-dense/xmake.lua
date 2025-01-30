@@ -1,5 +1,7 @@
 
-
+-- ------------------------------------------------------------
+-- OMP benchmarks
+-- ------------------------------------------------------------
 
 target("bm-cifar-dense-omp")
     set_kind("binary")
@@ -31,13 +33,16 @@ target("bm-cifar-dense-omp")
 target_end()
 
 
+-- ------------------------------------------------------------
+-- VK benchmarks
+-- ------------------------------------------------------------
+
 target("bm-cifar-dense-vk")
     set_kind("binary")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
     add_files("vk.cpp")
-    -- add_files("../../builtin-apps/cifar-dense/vulkan/vk_dispatcher.cpp")
 
 
     add_deps("builtin-apps")
@@ -64,6 +69,10 @@ target("bm-cifar-dense-vk")
     end
 target_end()
 
+
+-- ------------------------------------------------------------
+-- CUDA benchmarks
+-- ------------------------------------------------------------
 
 if not is_plat("android") then
 
