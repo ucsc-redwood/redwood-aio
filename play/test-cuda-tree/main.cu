@@ -13,6 +13,8 @@ int main() {
   auto mr = cuda::CudaMemoryResource();
   tree::AppData appdata(&mr);
 
+  auto start = std::chrono::high_resolution_clock::now();
+
   for (int i = 0; i < 10; ++i) {
     tree::cuda::process_stage_1(appdata);
     tree::cuda::process_stage_2(appdata);
@@ -24,6 +26,12 @@ int main() {
 
     CUDA_CHECK(cudaDeviceSynchronize());
   }
+
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  auto avg_duration = duration.count() / 10.0;
+  spdlog::info("Average duration per iteration: {}ms", avg_duration);
 
   // assert();
   auto is_sorted = std::ranges::is_sorted(appdata.u_morton_keys_alt);

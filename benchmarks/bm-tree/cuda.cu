@@ -18,6 +18,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
 (benchmark::State& state) {
   auto mr = cuda::CudaMemoryResource();
   tree::AppData app_data(&mr);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::process_stage_1(app_data);
@@ -31,7 +32,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Baseline)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(CUDA_Tree, Baseline)->Unit(benchmark::kMillisecond)->Iterations(10);
 
 // ----------------------------------------------------------------
 // Stage 1
@@ -183,7 +184,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond)->Iterations(10);
 
 int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::off);
@@ -191,6 +192,8 @@ int main(int argc, char** argv) {
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
+
+  tree::cuda::cleanup();
 
   return 0;
 }
