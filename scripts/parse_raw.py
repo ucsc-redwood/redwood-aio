@@ -10,8 +10,9 @@ line_pattern = re.compile(
     \s+ms\s+
     (?P<iterations>\d+)
     """,
-    re.VERBOSE
+    re.VERBOSE,
 )
+
 
 def parse_benchmark_name(benchmark_name):
     """
@@ -29,18 +30,18 @@ def parse_benchmark_name(benchmark_name):
     num_threads = None
 
     # 1) Split on '/'
-    parts = benchmark_name.split('/')
+    parts = benchmark_name.split("/")
     # e.g. ["OMP_CifarDense", "Baseline_Pinned_Little", "4", "iterations:100"]
 
     # 2) Parse the first part to get backend, application, maybe "Baseline"/"Stage"
     first_part = parts[0]  # e.g. "OMP_CifarDense" or "VK_CifarSparse_Baseline"
-    
+
     # We'll find the backend by splitting on '_'
     # e.g. "OMP_CifarDense" => ["OMP", "CifarDense"]
     # or   "VK_CifarSparse_Baseline" => ["VK", "CifarSparse", "Baseline"]
-    subparts = first_part.split('_')
+    subparts = first_part.split("_")
     backend = subparts[0]  # "OMP", "VK", or "CUDA"
-    
+
     # We’ll accumulate the rest for figuring out the application and possibly "Baseline"
     # e.g. subparts[1:] => ["CifarDense"] or ["CifarSparse","Baseline"] etc.
     # A simple approach is to join them back and see if "Baseline" or "Stage" is in there.
@@ -59,7 +60,7 @@ def parse_benchmark_name(benchmark_name):
         application = found_app
         # remove that from remainder
         # e.g. remainder="CifarDense_Baseline"
-        remainder = remainder[len(found_app):]  # => "_Baseline"
+        remainder = remainder[len(found_app) :]  # => "_Baseline"
         if remainder.startswith("_"):
             remainder = remainder[1:]  # => "Baseline"
     else:
@@ -83,6 +84,7 @@ def parse_benchmark_name(benchmark_name):
     # Alternatively, if "Stage" is in remainder, parse stage number
     # e.g. remainder="Stage1_little"
     import re
+
     stage_match = re.search(r"Stage(\d+)", remainder)
     if stage_match:
         stage = int(stage_match.group(1))
@@ -129,6 +131,7 @@ def parse_benchmark_name(benchmark_name):
 
     return backend, application, stage, core_type, num_threads
 
+
 def parse_raw_benchmark_lines(lines, machine_name="GooglePixel"):
     """
     Parse the raw lines from the logs, returning a list of dict with:
@@ -147,7 +150,9 @@ def parse_raw_benchmark_lines(lines, machine_name="GooglePixel"):
             # cpu_time = float(match.group("cpu_time"))  # if needed
             # iters = int(match.group("iters"))          # if needed
 
-            backend, application, stage, core_type, num_threads = parse_benchmark_name(benchmark_name)
+            backend, application, stage, core_type, num_threads = parse_benchmark_name(
+                benchmark_name
+            )
 
             record = {
                 "machine_name": machine_name,
@@ -156,7 +161,7 @@ def parse_raw_benchmark_lines(lines, machine_name="GooglePixel"):
                 "stage": stage,
                 "core_type": core_type,
                 "num_threads": num_threads,
-                "time_ms": real_time
+                "time_ms": real_time,
             }
             results.append(record)
         else:
