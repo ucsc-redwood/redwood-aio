@@ -1,10 +1,13 @@
+-- ----------------------------------------------------------------
+-- Omp
+-- ----------------------------------------------------------------
 
-target("bm-cifar-sparse-stages")
+target("bm-cifar-sparse-omp")
     set_kind("binary")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
-    add_files("stages.cpp")
+    add_files("omp.cpp")
 
     add_deps("builtin-apps")
 
@@ -28,36 +31,9 @@ target("bm-cifar-sparse-stages")
     end
 target_end()
 
-
--- target("bm-cifar-sparse-baselines")
---     set_kind("binary")
---     set_group("benchmarks")
-
---     add_includedirs("$(projectdir)/builtin-apps/")
---     add_files("baselines.cpp")
-
---     add_deps("builtin-apps")
-
-
---     add_packages("benchmark")
---     add_packages("cli11")
-
---     add_packages("glm")
-
---     -- Add openmp support
---     if is_plat("android") then
---         add_cxxflags("-fopenmp -static-openmp")
---         add_ldflags("-fopenmp -static-openmp")
---     else
---         add_packages("openmp")
---     end
-
-
---     if is_plat("android") then
---       on_run(run_on_android)
---     end
--- target_end()
-
+-- ----------------------------------------------------------------
+-- Vulkan
+-- ----------------------------------------------------------------
 
 target("bm-cifar-sparse-vk")
     set_kind("binary")
@@ -92,6 +68,9 @@ target("bm-cifar-sparse-vk")
     end
 target_end()
 
+-- ----------------------------------------------------------------
+-- CUDA
+-- ----------------------------------------------------------------
 
 if not is_plat("android") then
 

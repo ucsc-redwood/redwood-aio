@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
 #include <CLI/CLI.hpp>
+#include <thread>
 
 #include "affinity.hpp"
 #include "app.hpp"
@@ -10,29 +11,54 @@
 // Global variables
 // ------------------------------------------------------------
 
+static void run_baseline_unrestricted(cifar_sparse::AppData& app_data,
+                                      const int n_threads) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    cifar_sparse::omp::process_stage_1(app_data);
+    cifar_sparse::omp::process_stage_2(app_data);
+    cifar_sparse::omp::process_stage_3(app_data);
+    cifar_sparse::omp::process_stage_4(app_data);
+    cifar_sparse::omp::process_stage_5(app_data);
+    cifar_sparse::omp::process_stage_6(app_data);
+    cifar_sparse::omp::process_stage_7(app_data);
+    cifar_sparse::omp::process_stage_8(app_data);
+    cifar_sparse::omp::process_stage_9(app_data);
+  }
+}
+
 class OMP_CifarSparse : public benchmark::Fixture {
  protected:
   void SetUp(benchmark::State&) override {
     app_data = std::make_unique<cifar_sparse::AppData>(
         std::pmr::new_delete_resource());
 
-#pragma omp parallel
-    {
-      cifar_sparse::omp::process_stage_1(*app_data);
-      cifar_sparse::omp::process_stage_2(*app_data);
-      cifar_sparse::omp::process_stage_3(*app_data);
-      cifar_sparse::omp::process_stage_4(*app_data);
-      cifar_sparse::omp::process_stage_5(*app_data);
-      cifar_sparse::omp::process_stage_6(*app_data);
-      cifar_sparse::omp::process_stage_7(*app_data);
-      cifar_sparse::omp::process_stage_8(*app_data);
-      cifar_sparse::omp::process_stage_9(*app_data);
-    }
+    run_baseline_unrestricted(*app_data, std::thread::hardware_concurrency());
   }
   void TearDown(benchmark::State&) override { app_data.reset(); }
 
   std::unique_ptr<cifar_sparse::AppData> app_data;
 };
+
+// ------------------------------------------------------------
+// Baseline benchmarks
+// ------------------------------------------------------------
+
+BENCHMARK_DEFINE_F(OMP_CifarSparse, Baseline)
+(benchmark::State& state) {
+  const auto n_threads = state.range(0);
+  for (auto _ : state) {
+    run_baseline_unrestricted(*app_data, n_threads);
+  }
+}
+
+BENCHMARK_REGISTER_F(OMP_CifarSparse, Baseline)
+    ->DenseRange(1, std::thread::hardware_concurrency())
+    ->Unit(benchmark::kMillisecond);
+
+// ------------------------------------------------------------
+// Stage benchmarks
+// ------------------------------------------------------------
 
 #define DEFINE_STAGE_BENCHMARK(stage, core_type)                               \
   static void run_stage_##stage##_##core_type(cifar_sparse::AppData& app_data, \
