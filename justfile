@@ -21,3 +21,12 @@ run-bm-vk:
     xmake run bm-cifar-sparse-vk
     xmake run bm-tree-vk
 
+run-bm-omp-android:
+    xmake run bm-cifar-dense-omp
+    xmake run bm-cifar-sparse-omp
+    xmake run bm-tree-omp
+
+run-bm-omp-jetson:
+    xmake run bm-cifar-dense-omp -d jetson
+    xmake run bm-cifar-sparse-omp -d jetson
+    xmake run bm-tree-omp -d jetson
