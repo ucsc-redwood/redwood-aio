@@ -43,6 +43,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
   auto mr = cuda::CudaMemoryResource();
   tree::AppData app_data(&mr);
 
+  // warmup
+  tree::cuda::process_stage_1(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
   for (auto _ : state) {
     tree::cuda::process_stage_1(app_data);
     CUDA_CHECK(cudaDeviceSynchronize());
@@ -61,6 +65,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
   tree::AppData app_data(&mr);
 
   tree::cuda::process_stage_1(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
+  // warmup
+  tree::cuda::process_stage_2(app_data);
   CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
@@ -82,6 +90,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
 
   tree::cuda::process_stage_1(app_data);
   tree::cuda::process_stage_2(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
+  // warmup
+  tree::cuda::process_stage_3(app_data);
   CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
@@ -106,6 +118,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
   tree::cuda::process_stage_3(app_data);
   CUDA_CHECK(cudaDeviceSynchronize());
 
+  // warmup
+  tree::cuda::process_stage_4(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
   for (auto _ : state) {
     tree::cuda::process_stage_4(app_data);
     CUDA_CHECK(cudaDeviceSynchronize());
@@ -127,6 +143,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
   tree::cuda::process_stage_2(app_data);
   tree::cuda::process_stage_3(app_data);
   tree::cuda::process_stage_4(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
+  // warmup
+  tree::cuda::process_stage_5(app_data);
   CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
@@ -153,6 +173,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
   tree::cuda::process_stage_5(app_data);
   CUDA_CHECK(cudaDeviceSynchronize());
 
+  // warmup
+  tree::cuda::process_stage_6(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
   for (auto _ : state) {
     tree::cuda::process_stage_6(app_data);
     CUDA_CHECK(cudaDeviceSynchronize());
@@ -176,6 +200,10 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   tree::cuda::process_stage_4(app_data);
   tree::cuda::process_stage_5(app_data);
   tree::cuda::process_stage_6(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
+
+  // warmup
+  tree::cuda::process_stage_7(app_data);
   CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
