@@ -75,7 +75,7 @@ target_end()
 
 if not is_plat("android") then
 
-    target("bm-tree-cuda")
+    target("bm-tree-cu")
         set_kind("binary")
         set_group("benchmarks")
     

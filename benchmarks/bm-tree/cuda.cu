@@ -12,35 +12,26 @@
 // Baseline
 // ----------------------------------------------------------------
 
-static void run_baseline(tree::AppData& app_data) {
-  tree::cuda::process_stage_1(app_data);
-  tree::cuda::process_stage_2(app_data);
-  tree::cuda::process_stage_3(app_data);
-  tree::cuda::process_stage_4(app_data);
-  tree::cuda::process_stage_5(app_data);
-  tree::cuda::process_stage_6(app_data);
-  tree::cuda::process_stage_7(app_data);
-  CUDA_CHECK(cudaDeviceSynchronize());
-}
+class CUDA_Tree : public benchmark::Fixture {};
 
-static void CUDA_Baseline_Benchmark(benchmark::State& state) {
+BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
+(benchmark::State& state) {
   auto mr = cuda::CudaMemoryResource();
   tree::AppData app_data(&mr);
 
   for (auto _ : state) {
-    run_baseline(app_data);
+    tree::cuda::process_stage_1(app_data);
+    tree::cuda::process_stage_2(app_data);
+    tree::cuda::process_stage_3(app_data);
+    tree::cuda::process_stage_4(app_data);
+    tree::cuda::process_stage_5(app_data);
+    tree::cuda::process_stage_6(app_data);
+    tree::cuda::process_stage_7(app_data);
+    CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
-BENCHMARK(CUDA_Baseline_Benchmark)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
-
-// ----------------------------------------------------------------
-// Individual stages
-// ----------------------------------------------------------------
-
-class CUDA_Tree : public benchmark::Fixture {};
+BENCHMARK_REGISTER_F(CUDA_Tree, Baseline)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 1
@@ -57,9 +48,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage1)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage1)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 2
@@ -79,9 +68,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage2)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage2)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 3
@@ -102,9 +89,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage3)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage3)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 4
@@ -126,9 +111,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage4)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage4)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 5
@@ -151,9 +134,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage5)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage5)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 6
@@ -177,9 +158,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage6)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage6)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 7
@@ -204,9 +183,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond);
 
 int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::off);

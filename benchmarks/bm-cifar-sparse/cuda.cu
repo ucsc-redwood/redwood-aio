@@ -38,7 +38,7 @@ static void run_baseline(cifar_sparse::AppData& app_data) {
 
 // BENCHMARK(CUDA_Baseline_Benchmark)
 //     ->Unit(benchmark::kMillisecond)
-//     ->Iterations(100);
+//     ;
 
 BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
 (benchmark::State& state) {
@@ -71,9 +71,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage1)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage1)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage1)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 2
@@ -93,9 +91,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage2)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage2)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage2)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 3
@@ -116,9 +112,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage3)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage3)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage3)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 4
@@ -140,9 +134,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage4)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage4)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage4)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 5
@@ -165,9 +157,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage5)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage5)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage5)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 6
@@ -191,9 +181,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage6)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage6)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage6)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 7
@@ -218,9 +206,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage7)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage7)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 8
@@ -246,9 +232,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage8)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage8)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage8)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 9
@@ -275,9 +259,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage9)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage9)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(100);
+BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage9)->Unit(benchmark::kMillisecond);
 
 int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::off);
