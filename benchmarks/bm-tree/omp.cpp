@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
 #include <CLI/CLI.hpp>
+#include <thread>
 
 #include "affinity.hpp"
 #include "app.hpp"
@@ -23,7 +24,9 @@ class OMP_Tree : public benchmark::Fixture {
     {
       tree::omp::process_stage_1(*app_data);
 #pragma omp single
-      { std::ranges::sort(app_data->u_morton_keys); }
+      {
+        std::ranges::sort(app_data->u_morton_keys);
+      }
       tree::omp::process_stage_3(*app_data);
       tree::omp::process_stage_4(*app_data);
       tree::omp::process_stage_5(*app_data);
@@ -36,6 +39,43 @@ class OMP_Tree : public benchmark::Fixture {
 
   std::unique_ptr<tree::AppData> app_data;
 };
+
+// ----------------------------------------------------------------
+// Baseline
+// ----------------------------------------------------------------
+
+static void run_baseline_unrestricted(
+    tree::AppData& app_data,
+    const int n_threads,
+    tree::omp::v2::TempStorage& temp_storage) {
+#pragma omp parallel num_threads(n_threads)
+  {
+    tree::omp::process_stage_1(app_data);
+    tree::omp::v2::process_stage_2(app_data, temp_storage);
+    tree::omp::process_stage_3(app_data);
+    tree::omp::process_stage_4(app_data);
+    tree::omp::process_stage_5(app_data);
+    tree::omp::process_stage_6(app_data);
+    tree::omp::process_stage_7(app_data);
+  }
+}
+
+BENCHMARK_DEFINE_F(OMP_Tree, Baseline)
+(benchmark::State& state) {
+  const auto n_threads = state.range(0);
+  for (auto _ : state) {
+    tree::omp::v2::TempStorage temp_storage(n_threads, n_threads);
+    run_baseline_unrestricted(*app_data, n_threads, temp_storage);
+  }
+}
+
+BENCHMARK_REGISTER_F(OMP_Tree, Baseline)
+    ->DenseRange(1, std::thread::hardware_concurrency())
+    ->Unit(benchmark::kMillisecond);
+
+// ----------------------------------------------------------------
+// Stages
+// ----------------------------------------------------------------
 
 static void run_stage_1_little(tree::AppData& app_data,
                                const std::vector<int>& cores,

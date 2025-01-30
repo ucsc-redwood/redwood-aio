@@ -1,12 +1,14 @@
 
+-- ------------------------------------------------------------
+-- OMP benchmarks
+-- ------------------------------------------------------------
 
-
-target("bm-cifar-dense-stages")
+target("bm-cifar-dense-omp")
     set_kind("binary")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
-    add_files("stages.cpp")
+    add_files("omp.cpp")
 
     add_deps("builtin-apps")
 
@@ -31,34 +33,9 @@ target("bm-cifar-dense-stages")
 target_end()
 
 
-target("bm-cifar-dense-baselines")
-    set_kind("binary")
-    set_group("benchmarks")
-
-    add_includedirs("$(projectdir)/builtin-apps/")
-    add_files("baselines.cpp")
-
-    add_deps("builtin-apps")
-
-
-    add_packages("benchmark")
-    add_packages("cli11")
-
-    add_packages("glm")
-
-    -- Add openmp support
-    if is_plat("android") then
-        add_cxxflags("-fopenmp -static-openmp")
-        add_ldflags("-fopenmp -static-openmp")
-    else
-        add_packages("openmp")
-    end
-
-
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
-target_end()
+-- ------------------------------------------------------------
+-- VK benchmarks
+-- ------------------------------------------------------------
 
 target("bm-cifar-dense-vk")
     set_kind("binary")
@@ -66,7 +43,6 @@ target("bm-cifar-dense-vk")
 
     add_includedirs("$(projectdir)/builtin-apps/")
     add_files("vk.cpp")
-    -- add_files("../../builtin-apps/cifar-dense/vulkan/vk_dispatcher.cpp")
 
 
     add_deps("builtin-apps")
@@ -93,6 +69,10 @@ target("bm-cifar-dense-vk")
     end
 target_end()
 
+
+-- ------------------------------------------------------------
+-- CUDA benchmarks
+-- ------------------------------------------------------------
 
 if not is_plat("android") then
 
