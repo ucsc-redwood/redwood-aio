@@ -32,7 +32,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Baseline)->Unit(benchmark::kMillisecond)->Iterations(10);
+BENCHMARK_REGISTER_F(CUDA_Tree, Baseline)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(10);
 
 // ----------------------------------------------------------------
 // Stage 1
@@ -212,7 +214,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond)->Iterations(10);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(10);
 
 int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::off);
