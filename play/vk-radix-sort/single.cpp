@@ -1,6 +1,7 @@
 
 #include <CLI/CLI.hpp>
 #include <algorithm>
+#include <cstdint>
 #include <iostream>
 #include <numeric>
 #include <random>
@@ -56,6 +57,9 @@ int main(int argc, char** argv) {
   std::mt19937 rng(42);
   std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
+  std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
+                                       u_elements_in.end());
+
   // Peek at first 10 elements before sorting
   std::cout << "First 10 elements before sorting:\n";
   for (auto i = 0u; i < std::min(10u, g_num_elements); i++) {
@@ -101,6 +105,10 @@ int main(int argc, char** argv) {
 
   bool is_sorted = std::ranges::is_sorted(u_elements_out);
   std::cout << "Is sorted: " << (is_sorted ? "true" : "false") << "\n";
+
+  std::ranges::sort(h_cpu_elements);
+  bool is_equal = std::ranges::equal(h_cpu_elements, u_elements_out);
+  std::cout << "Matches CPU sort: " << (is_equal ? "true" : "false") << "\n";
 
   return 0;
 }
