@@ -39,6 +39,8 @@ includes("play/test-cuda-tree")
 includes("play/test-tree-vk")
 includes("play/vk-radix-sort")
 
+includes("utility")
+
 includes("builtin-apps/common/vulkan")
 
 
