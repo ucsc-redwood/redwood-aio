@@ -92,9 +92,21 @@ int main(int argc, char** argv) {
 
   auto seq = engine.sequence();
 
-  seq->record_commands_with_blocks(algo.get(), 1);
-  seq->launch_kernel_async();
-  seq->sync();
+  auto start = std::chrono::high_resolution_clock::now();
+
+  constexpr auto n_iterations = 100;
+
+  for (auto i = 0u; i < n_iterations; i++) {
+    seq->record_commands_with_blocks(algo.get(), 1);
+    seq->launch_kernel_async();
+    seq->sync();
+  }
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  std::cout << "Average time per iteration: "
+            << (duration.count() / static_cast<float>(n_iterations))
+            << " milliseconds" << std::endl;
 
   // Peek at first 10 elements after sorting
   std::cout << "First 10 elements after sorting:\n";
