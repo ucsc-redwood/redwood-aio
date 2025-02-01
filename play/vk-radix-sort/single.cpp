@@ -1,11 +1,13 @@
 
+#include <CLI/CLI.hpp>
 #include <algorithm>
 #include <iostream>
 #include <numeric>
 #include <random>
 
-#include "../../builtin-apps/base_appdata.hpp"
-#include "../../builtin-apps/common/vulkan/engine.hpp"
+#include "base_appdata.hpp"
+#include "common/vulkan/engine.hpp"
+// #include "conf.hpp"
 
 // layout (push_constant, std430) uniform PushConstants {
 //     uint g_num_elements;
@@ -24,10 +26,22 @@ struct PushConstants {
 };
 
 int main(int argc, char** argv) {
-  uint32_t g_num_elements = 640 * 480;
-  if (argc > 1) {
-    g_num_elements = std::stoul(argv[1]);
+  std::string device_id;
+  uint32_t g_num_elements;
+
+  CLI::App app{"default"};
+  app.add_option("-d,--device", device_id, "Device ID")->required();
+  app.add_option("-n,--num-elements", g_num_elements, "Number of elements")
+      ->default_val(640 * 480);
+  app.allow_extras();
+
+  CLI11_PARSE(app, argc, argv);
+
+  if (device_id.empty()) {
+    throw std::runtime_error("Device ID is required");
   }
+
+  printf("Device ID: %s\n", device_id.c_str());
 
   std::cout << "Number of elements: " << g_num_elements << "\n";
 
@@ -49,8 +63,20 @@ int main(int argc, char** argv) {
   }
   std::cout << "\n";
 
+  std::string shader_name;
+
+  if (device_id == "3A021JEHN02756") {
+    shader_name = "tmp_single_radixsort_warp16.comp";
+  } else if (device_id == "9b034f1b") {
+    shader_name = "tmp_single_radixsort_warp64.comp";
+  } else {
+    throw std::runtime_error("Invalid device ID");
+  }
+
+  printf("Shader name: %s\n", shader_name.c_str());
+
   auto algo = engine
-                  .algorithm("tmp_single_radixsort_warp32.comp",
+                  .algorithm(shader_name,
                              {
                                  engine.get_buffer(u_elements_in.data()),
                                  engine.get_buffer(u_elements_out.data()),
