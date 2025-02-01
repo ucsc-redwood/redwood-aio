@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 
   auto seq = engine.sequence();
 
-  seq->record_commands(algo.get(), g_num_elements);
+  seq->record_commands_with_blocks(algo.get(), 1);
   seq->launch_kernel_async();
   seq->sync();
 
