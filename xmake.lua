@@ -38,6 +38,7 @@ includes("play/test-usm")
 includes("play/test-cuda-tree")
 includes("play/test-tree-vk")
 includes("play/vk-radix-sort")
+includes("play/vk-prefix-sum")
 
 includes("utility")
 
