@@ -36,6 +36,10 @@ class Singleton {
   vulkan::Engine engine;
 };
 
+struct PushConstants {
+  uint32_t g_num_elements;
+};
+
 // ----------------------------------------------------------------------------
 // Test Fixtures and Helpers
 // ----------------------------------------------------------------------------
@@ -56,26 +60,50 @@ class VulkanTestFixture : public ::testing::Test {
   }
 };
 
-// ----------------------------------------------------------------------------
-// Basic Sort Tests
-// ----------------------------------------------------------------------------
+class VulkanSortTest : public VulkanTestFixture,
+                       public testing::WithParamInterface<unsigned int> {
+ protected:
+  void verify_sort(unsigned int n) {
+    auto mr = engine.get_mr();
 
-TEST(BasicSortTest, SortsSmallVectorInAscendingOrder) {
-  std::vector<int> data = {5, 3, 8, 1, 2};
-  std::vector<int> expected = {1, 2, 3, 5, 8};
+    UsmVector<uint32_t> u_elements_in(n, mr);
+    UsmVector<uint32_t> u_elements_out(n, mr);
 
-  std::sort(data.begin(), data.end());
+    // Initialize with shuffled sequence
+    std::iota(u_elements_in.begin(), u_elements_in.end(), 0);
+    std::mt19937 rng(42);
+    std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
-  EXPECT_EQ(data, expected);
-}
+    // Keep CPU copy for verification
+    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
+                                         u_elements_in.end());
+
+    auto algo = engine
+                    .algorithm(get_shader_name(),
+                               {
+                                   engine.get_buffer(u_elements_in.data()),
+                                   engine.get_buffer(u_elements_out.data()),
+                               })
+                    ->set_push_constants<PushConstants>({
+                        .g_num_elements = n,
+                    })
+                    ->build();
+
+    auto seq = engine.sequence();
+    seq->record_commands_with_blocks(algo.get(), 1);
+    seq->launch_kernel_async();
+    seq->sync();
+
+    // Verify results
+    EXPECT_TRUE(std::ranges::is_sorted(u_elements_out));
+    std::ranges::sort(h_cpu_elements);
+    EXPECT_TRUE(std::ranges::equal(h_cpu_elements, u_elements_out));
+  }
+};
 
 // ----------------------------------------------------------------------------
 // Vulkan Sort Tests
 // ----------------------------------------------------------------------------
-
-struct PushConstants {
-  uint32_t g_num_elements;
-};
 
 TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
   constexpr unsigned int n = 640 * 480;
@@ -114,6 +142,23 @@ TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
   std::ranges::sort(h_cpu_elements);
   EXPECT_TRUE(std::ranges::equal(h_cpu_elements, u_elements_out));
 }
+
+// Test with different input sizes
+TEST_P(VulkanSortTest, SortsCorrectlyWithDifferentSizes) {
+  verify_sort(GetParam());
+}
+
+INSTANTIATE_TEST_SUITE_P(VaryingSizes,
+                         VulkanSortTest,
+                         testing::Values(1024,         // Small dataset
+                                         64 * 1024,    // Medium dataset
+                                         640 * 480,    // Original test size
+                                         1920 * 1080,  // Full HD size
+                                         2048 * 2048  // Large power of 2
+                                         ),
+                         [](const testing::TestParamInfo<unsigned int> &info) {
+                           return "Size" + std::to_string(info.param);
+                         });
 
 // Main function for running tests
 int main(int argc, char **argv) {
