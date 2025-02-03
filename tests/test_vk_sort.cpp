@@ -147,6 +147,41 @@ class VulkanSortIterationTest : public VulkanTestFixture,
   }
 };
 
+class VulkanSortEdgeCasesTest : public VulkanTestFixture {
+ protected:
+  void verify_sort_with_data(const std::vector<uint32_t> &input_data) {
+    auto mr = engine.get_mr();
+    const size_t n = input_data.size();
+
+    UsmVector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
+    UsmVector<uint32_t> u_elements_out(n, mr);
+
+    // Keep CPU copy for verification
+    std::vector<uint32_t> h_cpu_elements = input_data;
+
+    auto algo = engine
+                    .algorithm(get_shader_name(),
+                               {
+                                   engine.get_buffer(u_elements_in.data()),
+                                   engine.get_buffer(u_elements_out.data()),
+                               })
+                    ->set_push_constants<PushConstants>({
+                        .g_num_elements = static_cast<uint32_t>(n),
+                    })
+                    ->build();
+
+    auto seq = engine.sequence();
+    seq->record_commands_with_blocks(algo.get(), 1);
+    seq->launch_kernel_async();
+    seq->sync();
+
+    // Verify results
+    EXPECT_TRUE(std::ranges::is_sorted(u_elements_out));
+    std::ranges::sort(h_cpu_elements);
+    EXPECT_TRUE(std::ranges::equal(h_cpu_elements, u_elements_out));
+  }
+};
+
 // ----------------------------------------------------------------------------
 // Vulkan Sort Tests
 // ----------------------------------------------------------------------------
@@ -223,6 +258,68 @@ INSTANTIATE_TEST_SUITE_P(
       return "Size" + std::to_string(std::get<0>(info.param)) + "_Iterations" +
              std::to_string(std::get<1>(info.param));
     });
+
+// Test edge cases
+TEST_F(VulkanSortEdgeCasesTest, HandlesAllZeros) {
+  std::vector<uint32_t> all_zeros(1024, 0);
+  verify_sort_with_data(all_zeros);
+}
+
+TEST_F(VulkanSortEdgeCasesTest, HandlesAllSameValue) {
+  std::vector<uint32_t> all_same(1024, 42);
+  verify_sort_with_data(all_same);
+}
+
+TEST_F(VulkanSortEdgeCasesTest, HandlesAlreadySorted) {
+  std::vector<uint32_t> sorted(1024);
+  std::iota(sorted.begin(), sorted.end(), 0);
+  verify_sort_with_data(sorted);
+}
+
+TEST_F(VulkanSortEdgeCasesTest, HandlesReverseSorted) {
+  std::vector<uint32_t> reverse_sorted(1024);
+  std::iota(reverse_sorted.rbegin(), reverse_sorted.rend(), 0);
+  verify_sort_with_data(reverse_sorted);
+}
+
+TEST_F(VulkanSortEdgeCasesTest, HandlesAlternatingValues) {
+  std::vector<uint32_t> alternating(1024);
+  for (size_t i = 0; i < alternating.size(); i++) {
+    alternating[i] = (i % 2) ? 1 : 0;
+  }
+  verify_sort_with_data(alternating);
+}
+
+// TEST_F(VulkanSortEdgeCasesTest, HandlesMaxValues) {
+//   std::vector<uint32_t> with_max_values{
+//       0, UINT32_MAX, 1, UINT32_MAX - 1, UINT32_MAX / 2, UINT32_MAX};
+//   verify_sort_with_data(with_max_values);
+// }
+
+// // Add stress test for memory patterns
+// TEST_F(VulkanSortEdgeCasesTest, StressTestWithBitPatterns) {
+//   std::vector<uint32_t> data(1024);
+
+//   // Test various bit patterns
+//   std::vector<uint32_t> patterns = {
+//       0xAAAAAAAA,  // Alternating bits
+//       0x55555555,  // Alternating bits (inverse)
+//       0xFF00FF00,  // Alternating bytes
+//       0x00FF00FF,  // Alternating bytes (inverse)
+//       0xFFFF0000,  // Half and half
+//       0x0000FFFF   // Half and half (inverse)
+//   };
+
+//   for (auto pattern : patterns) {
+//     std::fill(data.begin(), data.end(), pattern);
+//     // Add some random variations
+//     std::mt19937 rng(42);
+//     for (size_t i = 0; i < data.size(); i += 4) {
+//       data[i] ^= rng() & 0xFF;
+//     }
+//     verify_sort_with_data(data);
+//   }
+// }
 
 // Main function for running tests
 int main(int argc, char **argv) {
