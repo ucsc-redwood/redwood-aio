@@ -40,6 +40,8 @@ includes("play/test-tree-vk")
 includes("play/vk-radix-sort")
 includes("play/vk-prefix-sum")
 
+includes("tests")
+
 includes("utility")
 
 includes("builtin-apps/common/vulkan")
