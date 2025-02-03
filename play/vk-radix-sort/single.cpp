@@ -73,6 +73,8 @@ int main(int argc, char** argv) {
     shader_name = "tmp_single_radixsort_warp16.comp";
   } else if (device_id == "9b034f1b") {
     shader_name = "tmp_single_radixsort_warp64.comp";
+  } else if (device_id == "pc" || device_id == "jetson") {
+    shader_name = "tmp_single_radixsort_warp32.comp";
   } else {
     throw std::runtime_error("Invalid device ID");
   }
@@ -101,6 +103,7 @@ int main(int argc, char** argv) {
     seq->launch_kernel_async();
     seq->sync();
   }
+
   auto end = std::chrono::high_resolution_clock::now();
   auto duration =
       std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
