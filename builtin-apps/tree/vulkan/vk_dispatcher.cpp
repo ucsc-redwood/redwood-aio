@@ -9,6 +9,50 @@ namespace vulkan {
 // Singleton Constructor
 // ----------------------------------------------------------------------------
 
+// //
+// --------------------------------------------------------------------------
+// // Stage 3
+// //
+// --------------------------------------------------------------------------
+
+// struct FindDupsPushConstants {
+//   int32_t n;
+// };
+
+// struct MoveDupsPushConstants {
+//   uint32_t n;
+// };
+
+// //
+// --------------------------------------------------------------------------
+// // Stage 4
+// //
+// --------------------------------------------------------------------------
+
+// struct BuildTreePushConstants {
+//   int32_t n;
+// };
+
+// //
+// --------------------------------------------------------------------------
+// // Stage 5
+// //
+// --------------------------------------------------------------------------
+
+// struct EdgeCountPushConstants {
+//   int32_t n_brt_nodes;
+// };
+
+// //
+// --------------------------------------------------------------------------
+// // Stage 6
+// //
+// --------------------------------------------------------------------------
+
+// struct PrefixSumPushConstants {
+//   uint32_t inputSize;
+// };
+
 Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
   spdlog::info("Singleton instance created.");
 
@@ -26,37 +70,39 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
           .algorithm("tree_morton.comp",
                      {
                          engine.get_buffer(app_data.u_input_points.data()),
-                         engine.get_buffer(app_data.u_morton_keys.data()),
+                         engine.get_buffer(app_data.get_unsorted_morton_keys()),
                      })
           ->set_push_constants<MortonPushConstants>({
               .n = static_cast<uint32_t>(app_data.get_n_input()),
-              .min_coord = app_data.min_coord,
-              .range = app_data.range,
+              .min_coord = tree::kMinCoord,
+              .range = tree::kRange,
           })
           ->build();
 
   cached_algorithms.try_emplace("morton", std::move(morton_algo));
 
   // --------------------------------------------------------------------------
-  // Merge Sort
+  // Radix Sort
   // --------------------------------------------------------------------------
 
-  auto merge_sort_algo =
+  std::string shader_name =
+      "tmp_single_radixsort_warp" + std::to_string(get_warp_size()) + ".comp";
+
+  auto radix_sort_algo =
       engine
-          .algorithm("tree_merge_sort.comp",
+          .algorithm(shader_name,
                      {
-                         engine.get_buffer(app_data.u_morton_keys.data()),
-                         engine.get_buffer(app_data.u_morton_keys_alt.data()),
+                         // In
+                         engine.get_buffer(app_data.get_unsorted_morton_keys()),
+                         // Out
+                         engine.get_buffer(app_data.get_sorted_morton_keys()),
                      })
-          ->set_push_constants<MergeSortPushConstants>({
-              .n_logical_blocks = 16,
+          ->set_push_constants<InputSizePushConstantsUnsigned>({
               .n = static_cast<uint32_t>(app_data.get_n_input()),
-              .width = 16,
-              .num_pairs = 8,
           })
           ->build();
 
-  cached_algorithms.try_emplace("merge_sort", std::move(merge_sort_algo));
+  cached_algorithms.try_emplace("radix_sort", std::move(radix_sort_algo));
 
   // --------------------------------------------------------------------------
   // Find Dups
@@ -66,10 +112,12 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
       engine
           .algorithm("tree_find_dups.comp",
                      {
+                         // In
                          engine.get_buffer(app_data.get_sorted_morton_keys()),
+                         // Out
                          engine.get_buffer(tmp_storage.u_contributes.data()),
                      })
-          ->set_push_constants<FindDupsPushConstants>({
+          ->set_push_constants<InputSizePushConstantsSigned>({
               .n = static_cast<int32_t>(app_data.get_n_input()),
           })
           ->build();
@@ -82,13 +130,20 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
 
   auto move_dups_algo =
       engine
-          .algorithm("tree_move_dups.comp",
-                     {
-                         engine.get_buffer(tmp_storage.u_out_idx.data()),
-                         engine.get_buffer(app_data.get_sorted_morton_keys()),
-                         engine.get_buffer(app_data.get_unique_morton_keys()),
-                     })
-          ->set_push_constants<MoveDupsPushConstants>({
+          .algorithm(
+              "tree_move_dups.comp",
+              {
+
+                  // OutIdx
+                  engine.get_buffer(tmp_storage.u_out_idx.data()),
+
+                  // InKeys
+                  engine.get_buffer(app_data.get_sorted_morton_keys()),
+
+                  // OutKeys
+                  engine.get_buffer(app_data.get_sorted_unique_morton_keys()),
+              })
+          ->set_push_constants<InputSizePushConstantsUnsigned>({
               .n = static_cast<uint32_t>(app_data.get_n_input()),
           })
           ->build();
@@ -104,14 +159,14 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
           .algorithm(
               "tree_build_radix_tree.comp",
               {
-                  engine.get_buffer(app_data.get_unique_morton_keys()),
-                  engine.get_buffer(app_data.brt.u_prefix_n.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_left.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_right.data()),
-                  engine.get_buffer(app_data.brt.u_left_child.data()),
-                  engine.get_buffer(app_data.brt.u_parents.data()),
+                  engine.get_buffer(app_data.get_sorted_unique_morton_keys()),
+                  engine.get_buffer(app_data.u_brt_prefix_n.data()),
+                  engine.get_buffer(app_data.u_brt_has_leaf_left.data()),
+                  engine.get_buffer(app_data.u_brt_has_leaf_right.data()),
+                  engine.get_buffer(app_data.u_brt_left_child.data()),
+                  engine.get_buffer(app_data.u_brt_parents.data()),
               })
-          ->place_holder_push_constants<BuildTreePushConstants>()
+          ->place_holder_push_constants<InputSizePushConstantsSigned>()
           ->build();
 
   cached_algorithms.try_emplace("build_radix_tree",
@@ -125,11 +180,11 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
       engine
           .algorithm("tree_edge_count.comp",
                      {
-                         engine.get_buffer(app_data.brt.u_prefix_n.data()),
-                         engine.get_buffer(app_data.brt.u_parents.data()),
+                         engine.get_buffer(app_data.u_brt_prefix_n.data()),
+                         engine.get_buffer(app_data.u_brt_parents.data()),
                          engine.get_buffer(app_data.u_edge_count.data()),
                      })
-          ->place_holder_push_constants<EdgeCountPushConstants>()
+          ->place_holder_push_constants<InputSizePushConstantsSigned>()
           ->build();
 
   cached_algorithms.try_emplace("edge_count", std::move(edge_count_algo));
@@ -145,7 +200,7 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
                          engine.get_buffer(app_data.u_edge_count.data()),
                          engine.get_buffer(app_data.u_edge_offset.data()),
                      })
-          ->place_holder_push_constants<PrefixSumPushConstants>()
+          ->place_holder_push_constants<InputSizePushConstantsUnsigned>()
           ->build();
 
   cached_algorithms.try_emplace("prefix_sum", std::move(prefix_sum_algo));
@@ -159,19 +214,19 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
           .algorithm(
               "tree_build_octree.comp",
               {
-                  engine.get_buffer(app_data.oct.u_children.data()),
-                  engine.get_buffer(app_data.oct.u_corner.data()),
-                  engine.get_buffer(app_data.oct.u_cell_size.data()),
-                  engine.get_buffer(app_data.oct.u_child_node_mask.data()),
-                  engine.get_buffer(app_data.oct.u_child_leaf_mask.data()),
+                  engine.get_buffer(app_data.u_oct_children.data()),
+                  engine.get_buffer(app_data.u_oct_corner.data()),
+                  engine.get_buffer(app_data.u_oct_cell_size.data()),
+                  engine.get_buffer(app_data.u_oct_child_node_mask.data()),
+                  engine.get_buffer(app_data.u_oct_child_leaf_mask.data()),
                   engine.get_buffer(app_data.u_edge_offset.data()),
                   engine.get_buffer(app_data.u_edge_count.data()),
-                  engine.get_buffer(app_data.get_unique_morton_keys()),
-                  engine.get_buffer(app_data.brt.u_prefix_n.data()),
-                  engine.get_buffer(app_data.brt.u_parents.data()),
-                  engine.get_buffer(app_data.brt.u_left_child.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_left.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_right.data()),
+                  engine.get_buffer(app_data.get_sorted_unique_morton_keys()),
+                  engine.get_buffer(app_data.u_brt_prefix_n.data()),
+                  engine.get_buffer(app_data.u_brt_parents.data()),
+                  engine.get_buffer(app_data.u_brt_left_child.data()),
+                  engine.get_buffer(app_data.u_brt_has_leaf_left.data()),
+                  engine.get_buffer(app_data.u_brt_has_leaf_right.data()),
               })
           ->place_holder_push_constants<OctreePushConstants>()
           ->build();
@@ -189,7 +244,6 @@ void Singleton::process_stage_1(tree::AppData &app_data_ref) {
   auto algo = cached_algorithms.at("morton").get();
 
   seq->record_commands(algo, total_iterations);
-
   seq->launch_kernel_async();
   seq->sync();
 }
@@ -201,48 +255,15 @@ void Singleton::process_stage_1(tree::AppData &app_data_ref) {
 void Singleton::process_stage_2(tree::AppData &app_data_ref) {
   const uint32_t n = app_data_ref.get_n_input();
 
-  auto algo = cached_algorithms.at("merge_sort").get();
+  auto algo = cached_algorithms.at("radix_sort").get();
 
-  constexpr auto threads_per_block = 256;
+  algo->update_push_constants(InputSizePushConstantsUnsigned{
+      .n = n,
+  });
 
-  // Make copies of the input and output buffers
-  auto iterations = 0;
-  for (uint32_t width = 1; width < n; width *= 2, ++iterations) {
-    uint32_t num_pairs = (n + 2 * width - 1) / (2 * width);
-    uint32_t total_threads = num_pairs;
-    uint32_t logical_blocks =
-        (total_threads + threads_per_block - 1) / threads_per_block;
-
-    algo->set_push_constants(MergeSortPushConstants{
-        .n_logical_blocks = logical_blocks,
-        .n = n,
-        .width = width,
-        .num_pairs = num_pairs,
-    });
-
-    if (iterations % 2 == 0) {
-      algo->update_descriptor_sets({
-          engine.get_buffer(app_data_ref.u_morton_keys.data()),
-          engine.get_buffer(app_data_ref.u_morton_keys_alt.data()),
-      });
-    } else {
-      algo->update_descriptor_sets({
-          engine.get_buffer(app_data_ref.u_morton_keys_alt.data()),
-          engine.get_buffer(app_data_ref.u_morton_keys.data()),
-      });
-    }
-
-    seq->record_commands(algo, n);
-    seq->launch_kernel_async();
-    seq->sync();
-
-    // std::swap(elements_in_copy, elements_out_copy);
-  }
-
-  // If the number of iterations is odd, swap the input and output buffers
-  if (iterations % 2 == 0) {
-    std::swap(app_data_ref.u_morton_keys, app_data_ref.u_morton_keys_alt);
-  }
+  seq->record_commands_with_blocks(algo, 1);
+  seq->launch_kernel_async();
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -259,19 +280,19 @@ void Singleton::process_stage_3(tree::AppData &app_data_ref,
 
   auto move_dups = cached_algorithms.at("move_dups").get();
 
-  find_dups->update_push_constants(FindDupsPushConstants{
+  find_dups->update_push_constants(InputSizePushConstantsSigned{
       .n = static_cast<int32_t>(n),
   });
 
-  prefix_sum->update_push_constants(PrefixSumPushConstants{
-      .inputSize = n,
+  prefix_sum->update_push_constants(InputSizePushConstantsUnsigned{
+      .n = n,
   });
   prefix_sum->update_descriptor_sets({
       engine.get_buffer(tmp_storage.u_contributes.data()),
       engine.get_buffer(tmp_storage.u_out_idx.data()),
   });
 
-  move_dups->update_push_constants(MoveDupsPushConstants{
+  move_dups->update_push_constants(InputSizePushConstantsUnsigned{
       .n = n,
   });
 
@@ -316,7 +337,7 @@ void Singleton::process_stage_4(tree::AppData &app_data_ref) {
 
   auto build_radix_tree = cached_algorithms.at("build_radix_tree").get();
 
-  build_radix_tree->update_push_constants(BuildTreePushConstants{
+  build_radix_tree->update_push_constants(InputSizePushConstantsSigned{
       .n = n,
   });
 
@@ -334,8 +355,8 @@ void Singleton::process_stage_5(tree::AppData &app_data_ref) {
 
   const int32_t n = app_data_ref.get_n_brt_nodes();
 
-  edge_count->update_push_constants(EdgeCountPushConstants{
-      .n_brt_nodes = n,
+  edge_count->update_push_constants(InputSizePushConstantsSigned{
+      .n = n,
   });
 
   seq->record_commands(edge_count, n);
@@ -357,8 +378,8 @@ void Singleton::process_stage_6(tree::AppData &app_data_ref) {
       engine.get_buffer(app_data_ref.u_edge_offset.data()),
   });
 
-  prefix_sum->update_push_constants(PrefixSumPushConstants{
-      .inputSize = n,
+  prefix_sum->update_push_constants(InputSizePushConstantsUnsigned{
+      .n = n,
   });
 
   seq->record_commands_with_blocks(prefix_sum, 1);
@@ -385,8 +406,8 @@ void Singleton::process_stage_7(tree::AppData &app_data_ref) {
   const int32_t n = app_data_ref.get_n_brt_nodes();
 
   build_octree->update_push_constants(OctreePushConstants{
-      .min_coord = app_data_ref.min_coord,
-      .range = app_data_ref.range,
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
       .n_brt_nodes = n,
   });
 

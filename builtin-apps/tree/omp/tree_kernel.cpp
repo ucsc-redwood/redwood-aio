@@ -23,7 +23,7 @@ void process_stage_1(tree::AppData &app_data) {
 #pragma omp for
   for (int i = start; i < end; ++i) {
     app_data.u_morton_keys[i] = xyz_to_morton32(
-        app_data.u_input_points[i], app_data.min_coord, app_data.range);
+        app_data.u_input_points[i], tree::kMinCoord, tree::kRange);
   }
 }
 
@@ -45,6 +45,8 @@ void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage) {
                   num_threads);
 
 #pragma omp barrier
+
+  // by this point, 'u_morton_keys_alt' is sorted
 }
 }  // namespace v2
 

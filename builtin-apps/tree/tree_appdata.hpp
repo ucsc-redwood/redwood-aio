@@ -86,6 +86,18 @@ struct AppData final : BaseAppData {
   void set_n_octree_nodes(const uint32_t n_octree_nodes) {
     this->n_octree_nodes = n_octree_nodes;
   }
+
+  [[nodiscard]] uint32_t* get_unsorted_morton_keys() {
+    return u_morton_keys.data();
+  }
+
+  [[nodiscard]] uint32_t* get_sorted_morton_keys() {
+    return u_morton_keys_alt.data();
+  }
+
+  [[nodiscard]] uint32_t* get_sorted_unique_morton_keys() {
+    return u_morton_keys.data();
+  }
 };
 
 }  // namespace tree

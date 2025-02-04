@@ -107,8 +107,9 @@ inline void bucket_sort(
           sizeof(uint32_t),
           cmpfunc);
 
-#pragma omp master
-  memcpy(A, B, sizeof(uint32_t) * dim);
+  // // I am not going to copy this back. (02/04/2025)
+  // #pragma omp master
+  //   memcpy(A, B, sizeof(uint32_t) * dim);
 }
 
 struct TempStorage {
