@@ -169,9 +169,7 @@ BENCHMARK_DEFINE_F(VK_Tree, Stage6)
 }
 
 // will cause a crash
-BENCHMARK_REGISTER_F(VK_Tree, Stage6)
-    ->Unit(benchmark::kMillisecond)
-    ->Iterations(1);
+BENCHMARK_REGISTER_F(VK_Tree, Stage6)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Stage 7
