@@ -74,7 +74,7 @@ target("test-vk-prefix-sum-v2")
     set_group("play")
 
     add_includedirs("$(projectdir)/builtin-apps/")
-    add_files("test_vk_prefix_sum.cpp")
+    add_files("test_vk_prefix_sum_v2.cpp")
 
     add_deps("builtin-apps")
 

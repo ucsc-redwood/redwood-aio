@@ -54,6 +54,21 @@ void prefix_sum_v2_32(vulkan::Engine &engine,
                       UsmVector<uint32_t> &prefix_sums,
                       uint32_t numElements,
                       uint32_t numWorkgroups) {
+  std::string pass_1_name = "tmp_local_inclusive_scan_v2_32.comp";
+  std::string pass_2_name = "tmp_global_exclusive_scan_v2_32.comp";
+  std::string pass_3_name = "tmp_add_base_v2_32.comp";
+
+  if (device_id == "3A021JEHN02756") {
+    pass_1_name = "tmp_local_inclusive_scan_v2_16.comp";
+    pass_2_name = "tmp_global_exclusive_scan_v2_16.comp";
+    pass_3_name = "tmp_add_base_v2_16.comp";
+  } else if (device_id == "9b034f1b") {
+    pass_1_name = "tmp_local_inclusive_scan_v2_64.comp";
+    pass_2_name = "tmp_global_exclusive_scan_v2_64.comp";
+    pass_3_name = "tmp_add_base_v2_64.comp";
+  }
+
+  // uint numElements = 640*480;
   // uint numElements = 640*480;
   // uint numWorkgroups = (numElements + 255) / 256;
   // dispatchCompute(numWorkgroups, 1, 1);
@@ -70,7 +85,7 @@ void prefix_sum_v2_32(vulkan::Engine &engine,
 
   auto local_inclusive_scan =
       engine
-          .algorithm("tmp_local_inclusive_scan_v2_32.comp",
+          .algorithm(pass_1_name,
                      {
                          engine.get_buffer(input.data()),
                          engine.get_buffer(output.data()),
@@ -83,7 +98,7 @@ void prefix_sum_v2_32(vulkan::Engine &engine,
 
   auto global_exclusive_scan =
       engine
-          .algorithm("tmp_global_exclusive_scan_v2_32.comp",
+          .algorithm(pass_2_name,
                      {
                          engine.get_buffer(sums.data()),
                          engine.get_buffer(prefix_sums.data()),
@@ -94,7 +109,7 @@ void prefix_sum_v2_32(vulkan::Engine &engine,
           ->build();
 
   auto add_base = engine
-                      .algorithm("tmp_add_base_v2_32.comp",
+                      .algorithm(pass_3_name,
                                  {
                                      engine.get_buffer(output.data()),
                                      engine.get_buffer(prefix_sums.data()),
