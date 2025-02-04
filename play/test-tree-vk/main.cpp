@@ -2,12 +2,15 @@
 
 #include <CLI/CLI.hpp>
 
+#include "app.hpp"
 #include "spdlog/common.h"
 #include "tree/tree_appdata.hpp"
 #include "tree/vulkan/vk_dispatcher.hpp"
 
-int main() {
-  spdlog::set_level(spdlog::level::trace);
+int main(int argc, char** argv) {
+  parse_args(argc, argv);
+
+  spdlog::set_level(spdlog::level::info);
 
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
   auto app_data = std::make_unique<tree::AppData>(mr);

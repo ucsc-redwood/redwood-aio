@@ -5,24 +5,34 @@
 
 #include "conf.hpp"
 
+inline std::string g_device_id;
 inline std::vector<int> g_little_cores;
 inline std::vector<int> g_medium_cores;
 inline std::vector<int> g_big_cores;
 
-inline int parse_args(int argc, char **argv) {
-  std::string device_id;
+[[nodiscard]] inline size_t get_vulkan_warp_size() {
+  if (g_device_id == "3A021JEHN02756") {
+    return 16;
+  } else if (g_device_id == "9b034f1b") {
+    return 64;
+  } else if (g_device_id == "pc" || g_device_id == "jetson") {
+    return 32;
+  }
+  throw std::runtime_error("Invalid device ID");
+}
 
+inline int parse_args(int argc, char **argv) {
   CLI::App app{"default"};
-  app.add_option("-d,--device", device_id, "Device ID")->required();
+  app.add_option("-d,--device", g_device_id, "Device ID")->required();
   app.allow_extras();
 
   CLI11_PARSE(app, argc, argv);
 
-  if (device_id.empty()) {
+  if (g_device_id.empty()) {
     throw std::runtime_error("Device ID is required");
   }
 
-  auto device = get_device(device_id);
+  auto device = get_device(g_device_id);
   g_little_cores = device.get_pinable_cores(kLittleCoreType);
   g_medium_cores = device.get_pinable_cores(kMediumCoreType);
   g_big_cores = device.get_pinable_cores(kBigCoreType);

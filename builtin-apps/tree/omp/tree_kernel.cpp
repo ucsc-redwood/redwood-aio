@@ -35,8 +35,8 @@ namespace v2 {
 void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage) {
   const auto num_threads = omp_get_num_threads();
 
-  v2::bucket_sort(app_data.u_morton_keys.data(),
-                  app_data.u_morton_keys_alt.data(),
+  v2::bucket_sort(app_data.get_unsorted_morton_keys(),
+                  app_data.get_sorted_morton_keys(),
                   temp_storage.global_n_elem,
                   temp_storage.global_starting_position,
                   temp_storage.buckets,
@@ -55,11 +55,12 @@ void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage) {
 // ----------------------------------------------------------------------------
 
 void process_stage_3(tree::AppData &app_data) {
-  const auto last =
-      std::unique_copy(app_data.u_morton_keys.data(),
-                       app_data.u_morton_keys.data() + app_data.get_n_input(),
-                       app_data.u_morton_keys_alt.data());
-  const auto n_unique = std::distance(app_data.u_morton_keys_alt.data(), last);
+  const auto last = std::unique_copy(
+      app_data.get_sorted_morton_keys(),
+      app_data.get_sorted_morton_keys() + app_data.get_n_input(),
+      app_data.get_sorted_unique_morton_keys());
+  const auto n_unique =
+      std::distance(app_data.get_sorted_unique_morton_keys(), last);
 
   app_data.set_n_unique(n_unique);
   app_data.set_n_brt_nodes(n_unique - 1);
@@ -77,12 +78,12 @@ void process_stage_4(tree::AppData &app_data) {
   for (int i = start; i < end; ++i) {
     process_radix_tree_i(i,
                          app_data.get_n_brt_nodes(),
-                         app_data.get_unique_morton_keys(),
-                         app_data.brt.u_prefix_n.data(),
-                         app_data.brt.u_has_leaf_left.data(),
-                         app_data.brt.u_has_leaf_right.data(),
-                         app_data.brt.u_left_child.data(),
-                         app_data.brt.u_parents.data());
+                         app_data.get_sorted_unique_morton_keys(),
+                         app_data.u_brt_prefix_n.data(),
+                         app_data.u_brt_has_leaf_left.data(),
+                         app_data.u_brt_has_leaf_right.data(),
+                         app_data.u_brt_left_child.data(),
+                         app_data.u_brt_parents.data());
   }
 }
 
@@ -96,8 +97,8 @@ void process_stage_5(tree::AppData &app_data) {
 
   for (int i = start; i < end; ++i) {
     process_edge_count_i(i,
-                         app_data.brt.u_prefix_n.data(),
-                         app_data.brt.u_parents.data(),
+                         app_data.u_brt_prefix_n.data(),
+                         app_data.u_brt_parents.data(),
                          app_data.u_edge_count.data());
   }
 }
@@ -132,17 +133,17 @@ void process_stage_7(tree::AppData &app_data) {
   for (int i = start; i < end; ++i) {
     process_oct_node(
         i,
-        reinterpret_cast<int(*)[8]>(app_data.oct.u_children.data()),
-        app_data.oct.u_corner.data(),
-        app_data.oct.u_cell_size.data(),
-        app_data.oct.u_child_node_mask.data(),
+        reinterpret_cast<int(*)[8]>(app_data.u_oct_children.data()),
+        app_data.u_oct_corner.data(),
+        app_data.u_oct_cell_size.data(),
+        app_data.u_oct_child_node_mask.data(),
         app_data.u_edge_offset.data(),
         app_data.u_edge_count.data(),
-        app_data.get_unique_morton_keys(),
-        app_data.brt.u_prefix_n.data(),
-        app_data.brt.u_parents.data(),
-        app_data.min_coord,
-        app_data.range);
+        app_data.get_sorted_unique_morton_keys(),
+        app_data.u_brt_prefix_n.data(),
+        app_data.u_brt_parents.data(),
+        tree::kMinCoord,
+        tree::kRange);
   }
 }
 

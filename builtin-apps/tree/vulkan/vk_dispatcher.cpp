@@ -1,57 +1,11 @@
 
 #include "vk_dispatcher.hpp"
 
+#include "../../app.hpp"
+
 namespace tree {
 
 namespace vulkan {
-
-// ----------------------------------------------------------------------------
-// Singleton Constructor
-// ----------------------------------------------------------------------------
-
-// //
-// --------------------------------------------------------------------------
-// // Stage 3
-// //
-// --------------------------------------------------------------------------
-
-// struct FindDupsPushConstants {
-//   int32_t n;
-// };
-
-// struct MoveDupsPushConstants {
-//   uint32_t n;
-// };
-
-// //
-// --------------------------------------------------------------------------
-// // Stage 4
-// //
-// --------------------------------------------------------------------------
-
-// struct BuildTreePushConstants {
-//   int32_t n;
-// };
-
-// //
-// --------------------------------------------------------------------------
-// // Stage 5
-// //
-// --------------------------------------------------------------------------
-
-// struct EdgeCountPushConstants {
-//   int32_t n_brt_nodes;
-// };
-
-// //
-// --------------------------------------------------------------------------
-// // Stage 6
-// //
-// --------------------------------------------------------------------------
-
-// struct PrefixSumPushConstants {
-//   uint32_t inputSize;
-// };
 
 Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
   spdlog::info("Singleton instance created.");
@@ -85,8 +39,8 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
   // Radix Sort
   // --------------------------------------------------------------------------
 
-  std::string shader_name =
-      "tmp_single_radixsort_warp" + std::to_string(get_warp_size()) + ".comp";
+  std::string shader_name = "tmp_single_radixsort_warp" +
+                            std::to_string(get_vulkan_warp_size()) + ".comp";
 
   auto radix_sort_algo =
       engine

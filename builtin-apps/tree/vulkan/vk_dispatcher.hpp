@@ -17,13 +17,13 @@ class Singleton {
     return instance;
   }
 
-  void set_warp_size(uint32_t warp_size) { this->warp_size = warp_size; }
-  uint32_t get_warp_size() const {
-    if (warp_size == 0) {
-      throw std::runtime_error("Warp size is not set");
-    }
-    return warp_size;
-  }
+  // void set_warp_size(size_t warp_size) { this->warp_size = warp_size; }
+  // size_t get_warp_size() const {
+  //   if (warp_size == 0) {
+  //     throw std::runtime_error("Warp size is not set");
+  //   }
+  //   return warp_size;
+  // }
 
   ::vulkan::VulkanMemoryResource::memory_resource *get_mr() {
     return engine.get_mr();
@@ -49,7 +49,7 @@ class Singleton {
   std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>>
       cached_algorithms;
 
-  uint32_t warp_size;
+  // uint32_t warp_size;
 
   // --------------------------------------------------------------------------
   // Stage 1
