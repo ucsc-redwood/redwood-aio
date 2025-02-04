@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <cstdint>
 #include <numeric>
-#include <random>
 
 #include "base_appdata.hpp"
 #include "common/vulkan/engine.hpp"
