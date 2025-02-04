@@ -22,6 +22,10 @@ struct AppData final : BaseAppData {
   // --------------------------------------------------------------------------
   // Essential data
   // --------------------------------------------------------------------------
+  const uint32_t n_input;
+  uint32_t n_unique = std::numeric_limits<uint32_t>::max();
+  uint32_t n_brt_nodes = std::numeric_limits<uint32_t>::max();
+  uint32_t n_octree_nodes = std::numeric_limits<uint32_t>::max();
 
   // n_input
   UsmVector<glm::vec4> u_input_points;
@@ -30,26 +34,22 @@ struct AppData final : BaseAppData {
   UsmVector<int32_t> u_edge_count;
   UsmVector<int32_t> u_edge_offset;
 
-  struct {
-    UsmVector<uint8_t> u_prefix_n;
-    UsmVector<uint8_t> u_has_leaf_left;
-    UsmVector<uint8_t> u_has_leaf_right;
-    UsmVector<int32_t> u_left_child;
-    UsmVector<int32_t> u_parents;
-  } brt;
+  UsmVector<uint8_t> u_brt_prefix_n;
+  UsmVector<uint8_t> u_brt_has_leaf_left;
+  UsmVector<uint8_t> u_brt_has_leaf_right;
+  UsmVector<int32_t> u_brt_left_child;
+  UsmVector<int32_t> u_brt_parents;
 
-  struct {
-    // int (*u_children)[8]; note, this is 8x more
-    UsmVector<int32_t> u_children;
+  // int (*u_children)[8]; note, this is 8x more
+  UsmVector<int32_t> u_oct_children;
 
-    // everything else is size of 'n_octree_nodes'
-    // but for simplicity, we allocate the 0.6 times of input size
-    // 60% memory is an empirical value
-    UsmVector<glm::vec4> u_corner;
-    UsmVector<float> u_cell_size;
-    UsmVector<int32_t> u_child_node_mask;
-    UsmVector<int32_t> u_child_leaf_mask;
-  } oct;
+  // everything else is size of 'n_octree_nodes'
+  // but for simplicity, we allocate the 0.6 times of input size
+  // 60% memory is an empirical value
+  UsmVector<glm::vec4> u_oct_corner;
+  UsmVector<float> u_oct_cell_size;
+  UsmVector<int32_t> u_oct_child_node_mask;
+  UsmVector<int32_t> u_oct_child_leaf_mask;
 
   // --------------------------------------------------------------------------
   // Getters
@@ -86,12 +86,6 @@ struct AppData final : BaseAppData {
   void set_n_octree_nodes(const uint32_t n_octree_nodes) {
     this->n_octree_nodes = n_octree_nodes;
   }
-
- private:
-  const uint32_t n_input;
-  uint32_t n_unique = std::numeric_limits<uint32_t>::max();
-  uint32_t n_brt_nodes = std::numeric_limits<uint32_t>::max();
-  uint32_t n_octree_nodes = std::numeric_limits<uint32_t>::max();
 };
 
 }  // namespace tree
