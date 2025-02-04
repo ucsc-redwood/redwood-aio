@@ -54,10 +54,10 @@ void process_stage_1(AppData &app_data) {
 
   ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
       app_data.u_input_points.data(),
-      app_data.u_morton_keys.data(),
+      app_data.get_unsorted_morton_keys(),
       app_data.get_n_input(),
-      app_data.min_coord,
-      app_data.range);
+      tree::kMinCoord,
+      tree::kRange);
 }
 
 // ----------------------------------------------------------------------------
@@ -65,8 +65,8 @@ void process_stage_1(AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_2(AppData &app_data) {
-  uint32_t *d_keys_in = app_data.u_morton_keys.data();
-  uint32_t *d_keys_out = app_data.u_morton_keys_alt.data();
+  uint32_t *d_keys_in = app_data.get_unsorted_morton_keys();
+  uint32_t *d_keys_out = app_data.get_sorted_morton_keys();
   uint32_t num_items = app_data.get_n_input();
 
   // Get temporary storage size
@@ -89,8 +89,8 @@ void process_stage_2(AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_3(AppData &app_data) {
-  uint32_t *d_in = app_data.u_morton_keys_alt.data();
-  uint32_t *d_out = app_data.u_morton_keys.data();
+  uint32_t *d_in = app_data.get_sorted_morton_keys();
+  uint32_t *d_out = app_data.get_sorted_unique_morton_keys();
   uint32_t num_items = app_data.get_n_input();
 
   if (g_num_selected_out == nullptr) {
@@ -132,12 +132,12 @@ void process_stage_4(AppData &app_data) {
 
   ::cuda::kernels::k_BuildRadixTree<<<gridDim, blockDim, sharedMem>>>(
       app_data.get_n_unique(),
-      app_data.get_unique_morton_keys(),
-      app_data.brt.u_prefix_n.data(),
-      app_data.brt.u_has_leaf_left.data(),
-      app_data.brt.u_has_leaf_right.data(),
-      app_data.brt.u_left_child.data(),
-      app_data.brt.u_parents.data());
+      app_data.get_sorted_unique_morton_keys(),
+      app_data.u_brt_prefix_n.data(),
+      app_data.u_brt_has_leaf_left.data(),
+      app_data.u_brt_has_leaf_right.data(),
+      app_data.u_brt_left_child.data(),
+      app_data.u_brt_parents.data());
 }
 
 // ----------------------------------------------------------------------------
@@ -150,8 +150,8 @@ void process_stage_5(AppData &app_data) {
   constexpr auto sharedMem = 0;
 
   ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(
-      app_data.brt.u_prefix_n.data(),
-      app_data.brt.u_parents.data(),
+      app_data.u_brt_prefix_n.data(),
+      app_data.u_brt_parents.data(),
       app_data.u_edge_count.data(),
       app_data.get_n_brt_nodes());
 }
@@ -193,17 +193,17 @@ void process_stage_7(AppData &app_data) {
   constexpr auto sharedMem = 0;
 
   ::cuda::kernels::k_MakeOctNodes<<<gridDim, blockDim, sharedMem>>>(
-      reinterpret_cast<int(*)[8]>(app_data.oct.u_children.data()),
-      app_data.oct.u_corner.data(),
-      app_data.oct.u_cell_size.data(),
-      app_data.oct.u_child_node_mask.data(),
+      reinterpret_cast<int(*)[8]>(app_data.u_oct_children.data()),
+      app_data.u_oct_corner.data(),
+      app_data.u_oct_cell_size.data(),
+      app_data.u_oct_child_node_mask.data(),
       app_data.u_edge_offset.data(),
       app_data.u_edge_count.data(),
-      app_data.get_unique_morton_keys(),
-      app_data.brt.u_prefix_n.data(),
-      app_data.brt.u_parents.data(),
-      app_data.min_coord,
-      app_data.range,
+      app_data.get_sorted_unique_morton_keys(),
+      app_data.u_brt_prefix_n.data(),
+      app_data.u_brt_parents.data(),
+      tree::kMinCoord,
+      tree::kRange,
       app_data.get_n_brt_nodes());
 }
 
