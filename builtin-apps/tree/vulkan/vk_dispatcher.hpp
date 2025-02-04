@@ -49,6 +49,22 @@ class Singleton {
   std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>>
       cached_algorithms;
 
+  // --------------------------------------------------------------------------
+  // Temporary storages
+  // --------------------------------------------------------------------------
+
+  // (n + 255) / 256;
+  UsmVector<uint32_t> tmp_u_sums;
+  UsmVector<uint32_t> tmp_u_prefix_sums;
+
+  struct LocalPushConstants {
+    uint32_t n_elements;
+  };
+
+  struct GlobalPushConstants {
+    uint32_t n_blocks;
+  };
+
   // uint32_t warp_size;
 
   // --------------------------------------------------------------------------

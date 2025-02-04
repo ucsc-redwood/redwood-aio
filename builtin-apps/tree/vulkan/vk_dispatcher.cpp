@@ -1,6 +1,8 @@
 
 #include "vk_dispatcher.hpp"
 
+#include <cstdint>
+
 #include "../../app.hpp"
 
 namespace tree {
@@ -159,6 +161,50 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
 
   cached_algorithms.try_emplace("prefix_sum", std::move(prefix_sum_algo));
 
+  //   const uint32_t n = app_data.get_n_input();
+  //   const uint32_t n_blocks = (n + 255) / 256;
+
+  //   tmp_u_sums.resize(n_blocks);
+  //   tmp_u_prefix_sums.resize(n_blocks);
+
+  // new version
+  auto local_inclusive_scan =
+      engine
+          .algorithm("tmp_local_inclusive_scan.comp",
+                     {
+                         engine.get_buffer(app_data.u_edge_count.data()),
+                         engine.get_buffer(app_data.u_edge_offset.data()),
+                         engine.get_buffer(tmp_storage.u_sums.data()),
+                     })
+          ->place_holder_push_constants<LocalPushConstants>()
+          ->build();
+
+  auto global_exclusive_scan =
+      engine
+          .algorithm("tmp_global_exclusive_scan.comp",
+                     {
+                         engine.get_buffer(tmp_storage.u_sums.data()),
+                         engine.get_buffer(tmp_storage.u_prefix_sums.data()),
+                     })
+          ->place_holder_push_constants<GlobalPushConstants>()
+          ->build();
+
+  auto add_base =
+      engine
+          .algorithm("tmp_add_base.comp",
+                     {
+                         engine.get_buffer(app_data.u_edge_offset.data()),
+                         engine.get_buffer(tmp_storage.u_prefix_sums.data()),
+                     })
+          ->place_holder_push_constants<LocalPushConstants>()
+          ->build();
+
+  cached_algorithms.try_emplace("local_inclusive_scan",
+                                std::move(local_inclusive_scan));
+  cached_algorithms.try_emplace("global_exclusive_scan",
+                                std::move(global_exclusive_scan));
+  cached_algorithms.try_emplace("add_base", std::move(add_base));
+
   // --------------------------------------------------------------------------
   // Build Octree
   // --------------------------------------------------------------------------
@@ -189,7 +235,7 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
 }
 
 // ----------------------------------------------------------------------------
-// Stage 1
+// Stage 1 (Input -> Morton)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_1(tree::AppData &app_data_ref) {
@@ -203,7 +249,7 @@ void Singleton::process_stage_1(tree::AppData &app_data_ref) {
 }
 
 // ----------------------------------------------------------------------------
-// Stage 2
+// Stage 2 (Morton -> Sorted Morton)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_2(tree::AppData &app_data_ref) {
@@ -221,7 +267,7 @@ void Singleton::process_stage_2(tree::AppData &app_data_ref) {
 }
 
 // ----------------------------------------------------------------------------
-// Stage 3
+// Stage 3 (Sorted Morton -> Unique Sorted Morton)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_3(tree::AppData &app_data_ref,
@@ -283,7 +329,7 @@ void Singleton::process_stage_3(tree::AppData &app_data_ref,
 }
 
 // ----------------------------------------------------------------------------
-// Stage 4
+// Stage 4 (Unique Sorted Morton -> Radix Tree)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_4(tree::AppData &app_data_ref) {
@@ -301,7 +347,7 @@ void Singleton::process_stage_4(tree::AppData &app_data_ref) {
 }
 
 // ----------------------------------------------------------------------------
-// Stage 5
+// Stage 5 (Radix Tree -> Edge Count)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_5(tree::AppData &app_data_ref) {
@@ -319,26 +365,59 @@ void Singleton::process_stage_5(tree::AppData &app_data_ref) {
 }
 
 // ----------------------------------------------------------------------------
-// Stage 6
+// Stage 6 (Edge Count -> Edge Offset, prefix sum)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_6(tree::AppData &app_data_ref) {
-  auto prefix_sum = cached_algorithms.at("prefix_sum").get();
+  auto local_inclusive_scan =
+      cached_algorithms.at("local_inclusive_scan").get();
+  auto global_exclusive_scan =
+      cached_algorithms.at("global_exclusive_scan").get();
+  auto add_base = cached_algorithms.at("add_base").get();
 
   const uint32_t n = app_data_ref.get_n_brt_nodes();
+  const uint32_t n_blocks = (n + 255) / 256;
 
-  prefix_sum->update_descriptor_sets({
-      engine.get_buffer(app_data_ref.u_edge_count.data()),
-      engine.get_buffer(app_data_ref.u_edge_offset.data()),
+  local_inclusive_scan->update_push_constants(LocalPushConstants{
+      .n_elements = n,
   });
 
-  prefix_sum->update_push_constants(InputSizePushConstantsUnsigned{
-      .n = n,
+  global_exclusive_scan->update_push_constants(GlobalPushConstants{
+      .n_blocks = n_blocks,
   });
 
-  seq->record_commands_with_blocks(prefix_sum, 1);
+  add_base->update_push_constants(LocalPushConstants{
+      .n_elements = n,
+  });
+
+  seq->record_commands_with_blocks(local_inclusive_scan, n_blocks);
   seq->launch_kernel_async();
   seq->sync();
+
+  seq->record_commands_with_blocks(global_exclusive_scan, 1);
+  seq->launch_kernel_async();
+  seq->sync();
+
+  seq->record_commands_with_blocks(add_base, n_blocks);
+  seq->launch_kernel_async();
+  seq->sync();
+
+  //   auto prefix_sum = cached_algorithms.at("prefix_sum").get();
+
+  //   const uint32_t n = app_data_ref.get_n_brt_nodes();
+
+  //   prefix_sum->update_descriptor_sets({
+  //       engine.get_buffer(app_data_ref.u_edge_count.data()),
+  //       engine.get_buffer(app_data_ref.u_edge_offset.data()),
+  //   });
+
+  //   prefix_sum->update_push_constants(InputSizePushConstantsUnsigned{
+  //       .n = n,
+  //   });
+
+  //   seq->record_commands_with_blocks(prefix_sum, 1);
+  //   seq->launch_kernel_async();
+  //   seq->sync();
 
   //   const auto n_octree_nodes =
   //   data.u_edge_offset->at(data.get_n_brt_nodes());
@@ -351,7 +430,7 @@ void Singleton::process_stage_6(tree::AppData &app_data_ref) {
 }
 
 // ----------------------------------------------------------------------------
-// Stage 7
+// Stage 7 (Edge Offset -> Octree)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_7(tree::AppData &app_data_ref) {
