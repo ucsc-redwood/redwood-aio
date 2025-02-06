@@ -141,6 +141,10 @@ class VulkanSortIterationTest : public VulkanTestFixture,
     }
 
     // Verify results
+    bool all_zeros =
+        std::ranges::all_of(u_elements_out, [](uint32_t x) { return x == 0; });
+    EXPECT_FALSE(all_zeros);
+
     EXPECT_TRUE(std::ranges::is_sorted(u_elements_out));
     std::ranges::sort(h_cpu_elements);
     EXPECT_TRUE(std::ranges::equal(h_cpu_elements, u_elements_out));

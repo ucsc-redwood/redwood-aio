@@ -243,6 +243,11 @@ void Singleton::process_stage_1(tree::AppData &app_data_ref) {
 
   auto algo = cached_algorithms.at("morton").get();
 
+  algo->update_descriptor_sets({
+      engine.get_buffer(app_data_ref.u_input_points.data()),
+      engine.get_buffer(app_data_ref.get_unsorted_morton_keys()),
+  });
+
   seq->record_commands(algo, total_iterations);
   seq->launch_kernel_async();
   seq->sync();
@@ -261,9 +266,40 @@ void Singleton::process_stage_2(tree::AppData &app_data_ref) {
       .n = n,
   });
 
+  algo->update_descriptor_sets({
+      engine.get_buffer(app_data_ref.u_morton_keys.data()),
+      engine.get_buffer(app_data_ref.u_morton_keys_alt.data()),
+  });
+
   seq->record_commands_with_blocks(algo, 1);
+
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+
   seq->launch_kernel_async();
+
+
   seq->sync();
+
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+
+
+  auto u_elements_out = app_data_ref.u_morton_keys_alt.data();
+  auto is_sorted = std::ranges::is_sorted(u_elements_out, u_elements_out + n);
+  if (!is_sorted) {
+    spdlog::error("Sorted Morton keys are not sorted");
+  }
+
+  bool all_zeros = std::all_of(
+      u_elements_out, u_elements_out + n, [](uint32_t x) { return x == 0; });
+  if (all_zeros) {
+    spdlog::error("Sorted Morton keys are all zeros");
+  }
+
+  //   std::ranges::sort(app_data_ref.get_unsorted_morton_keys(),
+  //                     app_data_ref.get_unsorted_morton_keys() + n);
+  //   std::copy(app_data_ref.get_unsorted_morton_keys(),
+  //             app_data_ref.get_unsorted_morton_keys() + n,
+  //             app_data_ref.get_sorted_morton_keys());
 }
 
 // ----------------------------------------------------------------------------
@@ -274,58 +310,69 @@ void Singleton::process_stage_3(tree::AppData &app_data_ref,
                                 ::vulkan::TmpStorage &tmp_storage) {
   const uint32_t n = app_data_ref.get_n_input();
 
-  auto find_dups = cached_algorithms.at("find_dups").get();
+  //   auto find_dups = cached_algorithms.at("find_dups").get();
 
-  auto prefix_sum = cached_algorithms.at("prefix_sum").get();
+  //   auto prefix_sum = cached_algorithms.at("prefix_sum").get();
 
-  auto move_dups = cached_algorithms.at("move_dups").get();
+  //   auto move_dups = cached_algorithms.at("move_dups").get();
 
-  find_dups->update_push_constants(InputSizePushConstantsSigned{
-      .n = static_cast<int32_t>(n),
-  });
+  //   find_dups->update_push_constants(InputSizePushConstantsSigned{
+  //       .n = static_cast<int32_t>(n),
+  //   });
 
-  prefix_sum->update_push_constants(InputSizePushConstantsUnsigned{
-      .n = n,
-  });
-  prefix_sum->update_descriptor_sets({
-      engine.get_buffer(tmp_storage.u_contributes.data()),
-      engine.get_buffer(tmp_storage.u_out_idx.data()),
-  });
+  //   prefix_sum->update_push_constants(InputSizePushConstantsUnsigned{
+  //       .n = n,
+  //   });
+  //   prefix_sum->update_descriptor_sets({
+  //       engine.get_buffer(tmp_storage.u_contributes.data()),
+  //       engine.get_buffer(tmp_storage.u_out_idx.data()),
+  //   });
 
-  move_dups->update_push_constants(InputSizePushConstantsUnsigned{
-      .n = n,
-  });
+  //   move_dups->update_push_constants(InputSizePushConstantsUnsigned{
+  //       .n = n,
+  //   });
 
-  seq->record_commands(find_dups, n);
-  seq->launch_kernel_async();
-  seq->sync();
+  //   seq->record_commands(find_dups, n);
+  //   seq->launch_kernel_async();
+  //   seq->sync();
 
-  // print 10 u_contributes
-  for (auto i = 0; i < 10; ++i) {
-    spdlog::trace("u_contributes[{}] = {}", i, tmp_storage.u_contributes[i]);
-  }
+  //   // print 10 u_contributes
+  //   for (auto i = 0; i < 10; ++i) {
+  //     spdlog::trace("u_contributes[{}] = {}", i,
+  //     tmp_storage.u_contributes[i]);
+  //   }
 
-  seq->record_commands_with_blocks(prefix_sum, 1);
-  seq->launch_kernel_async();
-  seq->sync();
+  //   seq->record_commands_with_blocks(prefix_sum, 1);
+  //   seq->launch_kernel_async();
+  //   seq->sync();
 
-  // print 10 u_out_idx
-  for (auto i = 0; i < 10; ++i) {
-    spdlog::trace("u_out_idx[{}] = {}", i, tmp_storage.u_out_idx[i]);
-  }
+  //   // print 10 u_out_idx
+  //   for (auto i = 0; i < 10; ++i) {
+  //     spdlog::trace("u_out_idx[{}] = {}", i, tmp_storage.u_out_idx[i]);
+  //   }
 
-  seq->record_commands(move_dups, n);
-  seq->launch_kernel_async();
-  seq->sync();
+  //   seq->record_commands(move_dups, n);
+  //   seq->launch_kernel_async();
+  //   seq->sync();
 
-  const auto n_unique = tmp_storage.u_out_idx[n - 1] + 1;
+  //   const auto n_unique = tmp_storage.u_out_idx[n - 1] + 1;
+  //   app_data_ref.set_n_unique(n_unique);
+  //   app_data_ref.set_n_brt_nodes(n_unique - 1);
+
+  //   // print 10 u_out_idx
+  //   for (auto i = 0; i < 10; ++i) {
+  //     spdlog::trace("u_out_idx[{}] = {}", i, tmp_storage.u_out_idx[i]);
+  //   }
+
+  const auto last = std::unique_copy(
+      app_data_ref.get_sorted_morton_keys(),
+      app_data_ref.get_sorted_morton_keys() + app_data_ref.get_n_input(),
+      app_data_ref.get_sorted_unique_morton_keys());
+  const auto n_unique =
+      std::distance(app_data_ref.get_sorted_unique_morton_keys(), last);
+
   app_data_ref.set_n_unique(n_unique);
   app_data_ref.set_n_brt_nodes(n_unique - 1);
-
-  // print 10 u_out_idx
-  for (auto i = 0; i < 10; ++i) {
-    spdlog::trace("u_out_idx[{}] = {}", i, tmp_storage.u_out_idx[i]);
-  }
 }
 
 // ----------------------------------------------------------------------------

@@ -32,6 +32,7 @@ target("builtin-apps")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
 ---
     add_packages("spdlog")
+    add_packages("cli11")
     add_packages("glm")
 target_end()
 
