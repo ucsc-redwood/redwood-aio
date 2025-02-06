@@ -34,6 +34,7 @@ target("builtin-apps")
     add_packages("spdlog")
     add_packages("cli11")
     add_packages("glm")
+    add_packages("cli11")
 target_end()
 
 if not is_plat("android") then
