@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
 #include <CLI/CLI.hpp>
+#include <algorithm>
 #include <thread>
 
 #include "affinity.hpp"
@@ -24,7 +25,11 @@ class OMP_Tree : public benchmark::Fixture {
     {
       tree::omp::process_stage_1(*app_data);
 #pragma omp single
-      { std::ranges::sort(app_data->u_morton_keys_s1); }
+      {
+        std::ranges::sort(app_data->u_morton_keys_s1);
+        std::ranges::copy(app_data->u_morton_keys_s1,
+                          app_data->u_morton_keys_sorted_s2.begin());
+      }
       tree::omp::process_stage_3(*app_data);
       tree::omp::process_stage_4(*app_data);
       tree::omp::process_stage_5(*app_data);
@@ -78,7 +83,8 @@ BENCHMARK_REGISTER_F(OMP_Tree, Baseline)
 static void run_stage_1_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_1(app_data);
   }
@@ -95,7 +101,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage1little)
 static void run_stage_3_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_3(app_data);
   }
@@ -112,7 +119,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage3little)
 static void run_stage_4_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_4(app_data);
   }
@@ -129,7 +137,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage4little)
 static void run_stage_5_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_5(app_data);
   }
@@ -146,7 +155,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage5little)
 static void run_stage_6_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_6(app_data);
   }
@@ -163,7 +173,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage6little)
 static void run_stage_7_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_7(app_data);
   }
@@ -258,7 +269,8 @@ void RegisterStage7LittleBenchmarkWithRange(
 static void run_stage_1_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_1(app_data);
   }
@@ -275,7 +287,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage1medium)
 static void run_stage_3_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_3(app_data);
   }
@@ -292,7 +305,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage3medium)
 static void run_stage_4_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_4(app_data);
   }
@@ -309,7 +323,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage4medium)
 static void run_stage_5_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_5(app_data);
   }
@@ -326,7 +341,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage5medium)
 static void run_stage_6_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_6(app_data);
   }
@@ -343,7 +359,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage6medium)
 static void run_stage_7_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_7(app_data);
   }
@@ -360,7 +377,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage7medium)
 static void run_stage_1_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_1(app_data);
   }
@@ -377,7 +395,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage1big)
 static void run_stage_3_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_3(app_data);
   }
@@ -394,7 +413,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage3big)
 static void run_stage_4_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_4(app_data);
   }
@@ -411,7 +431,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage4big)
 static void run_stage_5_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_5(app_data);
   }
@@ -428,7 +449,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage5big)
 static void run_stage_6_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_6(app_data);
   }
@@ -445,7 +467,8 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage6big)
 static void run_stage_7_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::process_stage_7(app_data);
   }
@@ -599,7 +622,8 @@ static void run_stage_2_little(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads,
                                tree::omp::v2::TempStorage& temp_storage) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
@@ -632,7 +656,8 @@ static void run_stage_2_medium(tree::AppData& app_data,
                                const std::vector<int>& cores,
                                const int n_threads,
                                tree::omp::v2::TempStorage& temp_storage) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
@@ -665,7 +690,8 @@ static void run_stage_2_big(tree::AppData& app_data,
                             const std::vector<int>& cores,
                             const int n_threads,
                             tree::omp::v2::TempStorage& temp_storage) {
-  _Pragma("omp parallel num_threads(n_threads)") {
+#pragma omp parallel num_threads(n_threads)
+  {
     bind_thread_to_core(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
