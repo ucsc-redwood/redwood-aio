@@ -14,8 +14,7 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
 
   // tmp
   tree::AppData app_data(engine.get_mr());
-  auto tmp_storage =
-      ::vulkan::TmpStorage(engine.get_mr(), app_data.get_n_input());
+  auto tmp_storage = TmpStorage(engine.get_mr(), app_data.get_n_input());
 
   // --------------------------------------------------------------------------
   // Morton
@@ -307,7 +306,7 @@ void Singleton::process_stage_2(tree::AppData &app_data_ref) {
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_3(tree::AppData &app_data_ref,
-                                ::vulkan::TmpStorage &tmp_storage) {
+                                TmpStorage &tmp_storage) {
   const uint32_t n = app_data_ref.get_n_input();
 
   //   auto find_dups = cached_algorithms.at("find_dups").get();

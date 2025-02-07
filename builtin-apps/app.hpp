@@ -18,7 +18,8 @@ inline std::vector<int> g_big_cores;
   } else if (g_device_id == "pc" || g_device_id == "jetson") {
     return 32;
   }
-  throw std::runtime_error("Invalid device ID");
+  throw std::runtime_error("Invalid device ID" + std::string(__FILE__) + ":" +
+                           std::to_string(__LINE__));
 }
 
 inline int parse_args(int argc, char **argv) {

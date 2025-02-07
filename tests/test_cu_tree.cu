@@ -27,7 +27,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_1(appdata);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 morton codes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
         spdlog::debug("\tmorton[{}] = {}", i, appdata.u_morton_keys_s1[i]);
@@ -37,7 +37,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_2(appdata, tmp);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 sorted morton codes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
         spdlog::debug(
@@ -48,7 +48,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_3(appdata, tmp);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 unique morton codes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_unique()); i++) {
         spdlog::debug(
@@ -59,7 +59,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_4(appdata);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 BRT node parents:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
         spdlog::debug("\tbrt_parent[{}] = {}", i, appdata.u_brt_parents_s4[i]);
@@ -69,7 +69,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_5(appdata);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 edge counts:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
         spdlog::debug("\tedge_count[{}] = {}", i, appdata.u_edge_count_s5[i]);
@@ -79,7 +79,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_6(appdata, tmp);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 edge offsets:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
         spdlog::debug("\tedge_offset[{}] = {}", i, appdata.u_edge_offset_s6[i]);
@@ -89,7 +89,7 @@ static void manual_visualized_test(size_t n_input) {
     tree::cuda::process_stage_7(appdata);
     CUDA_CHECK(cudaDeviceSynchronize());
 
-    if (i == 0) {
+    if (i == n_iter - 1) {
       spdlog::debug("First 10 octree nodes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_octree_nodes()); i++) {
         spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}",

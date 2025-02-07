@@ -59,6 +59,36 @@ target("test-cu-tree")
 target_end()
 end
 
+target("test-vk-tree")
+    set_kind("binary")
+    set_group("test")
+
+    add_includedirs("$(projectdir)/builtin-apps/")
+    add_files("test_vk_tree.cpp")
+
+    add_deps("builtin-apps")
+
+    add_packages("gtest")
+
+    add_packages("cli11")
+    add_packages("spdlog")
+    add_packages("glm")
+
+    -- Add openmp support
+    if is_plat("android") then
+        add_cxxflags("-fopenmp -static-openmp")
+        add_ldflags("-fopenmp -static-openmp")
+    else
+        add_packages("openmp")
+    end
+
+    add_packages("vulkan-hpp", "vulkan-memory-allocator")
+
+    if is_plat("android") then
+      on_run(run_on_android)
+    end
+target_end()
+
 -- ----------------------------------------------------------------
 -- VK
 -- ----------------------------------------------------------------

@@ -2,6 +2,8 @@
 
 #include "../../base_appdata.hpp"
 
+namespace tree {
+
 namespace vulkan {
 
 struct TmpStorage : BaseAppData {
@@ -22,3 +24,5 @@ struct TmpStorage : BaseAppData {
 };
 
 }  // namespace vulkan
+
+}  // namespace tree
