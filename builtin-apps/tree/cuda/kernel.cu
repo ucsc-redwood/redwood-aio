@@ -39,12 +39,12 @@ cub::CachingDeviceAllocator g_allocator(
 // } tmp;
 
 TempStorage::TempStorage() {
-  CubDebugExit(cudaMallocManaged(&g_num_selected_out, sizeof(uint32_t)));
+  CubDebugExit(cudaMallocManaged(&u_num_selected_out, sizeof(uint32_t)));
 }
 
 TempStorage::~TempStorage() {
-  if (g_num_selected_out) {
-    CubDebugExit(cudaFree(g_num_selected_out));
+  if (u_num_selected_out) {
+    CubDebugExit(cudaFree(u_num_selected_out));
   }
 
   if (sort.d_temp_storage) {

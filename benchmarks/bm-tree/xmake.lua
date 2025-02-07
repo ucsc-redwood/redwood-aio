@@ -85,7 +85,7 @@ if not is_plat("android") then
     
         add_files({
             "cuda.cu",
-            "../../builtin-apps/common/cuda/cu_mem_resource.cu",
+            -- "../../builtin-apps/common/cuda/cu_mem_resource.cu",
         })
     
         add_packages("spdlog")

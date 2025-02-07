@@ -6,7 +6,7 @@ target("pipe-cifar-dense-cu")
     set_kind("binary")
     add_files({
         "main.cu",
-        "../../builtin-apps/common/cuda/cu_mem_resource.cu",
+        -- "../../builtin-apps/common/cuda/cu_mem_resource.cu",
     })
 
     add_deps("builtin-apps")
