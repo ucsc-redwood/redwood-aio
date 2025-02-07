@@ -17,14 +17,6 @@ class Singleton {
     return instance;
   }
 
-  // void set_warp_size(size_t warp_size) { this->warp_size = warp_size; }
-  // size_t get_warp_size() const {
-  //   if (warp_size == 0) {
-  //     throw std::runtime_error("Warp size is not set");
-  //   }
-  //   return warp_size;
-  // }
-
   ::vulkan::VulkanMemoryResource::memory_resource *get_mr() {
     return engine.get_mr();
   }
@@ -88,57 +80,6 @@ class Singleton {
   struct InputSizePushConstantsSigned {
     int32_t n;
   };
-
-  // // struct MergeSortPushConstants {
-  // //   uint32_t n_logical_blocks;
-  // //   uint32_t n;
-  // //   uint32_t width;
-  // //   uint32_t num_pairs;
-  // // };
-
-  // //
-  // --------------------------------------------------------------------------
-  // // Stage 3
-  // //
-  // --------------------------------------------------------------------------
-
-  // struct FindDupsPushConstants {
-  //   int32_t n;
-  // };
-
-  // struct MoveDupsPushConstants {
-  //   uint32_t n;
-  // };
-
-  // //
-  // --------------------------------------------------------------------------
-  // // Stage 4
-  // //
-  // --------------------------------------------------------------------------
-
-  // struct BuildTreePushConstants {
-  //   int32_t n;
-  // };
-
-  // //
-  // --------------------------------------------------------------------------
-  // // Stage 5
-  // //
-  // --------------------------------------------------------------------------
-
-  // struct EdgeCountPushConstants {
-  //   int32_t n_brt_nodes;
-  // };
-
-  // //
-  // --------------------------------------------------------------------------
-  // // Stage 6
-  // //
-  // --------------------------------------------------------------------------
-
-  // struct PrefixSumPushConstants {
-  //   uint32_t inputSize;
-  // };
 
   // --------------------------------------------------------------------------
   // Stage 7
