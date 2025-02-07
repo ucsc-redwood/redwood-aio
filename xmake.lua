@@ -16,35 +16,12 @@ end
 add_requires("spdlog", {system = false})
 add_requires("glm", {system = false})
 
-
--- local has_cuda = true
-
--- if has_cuda then
---     os.exec("echo '======================cuda======================'")
--- end
-
 includes("android.lua")
 
 includes("pipe")
 includes("builtin-apps")
-
--- includes("play/safe-pipe")
--- includes("play/usm")
--- includes("play/test-tree")
--- includes("play/threads")
--- includes("play/cuda-pipe")
--- includes("play/cuda-graph")
--- includes("play/test-usm")
--- includes("play/test-cuda-tree")
--- includes("play/test-tree-vk")
--- includes("play/vk-radix-sort")
--- includes("play/vk-prefix-sum")
-
 includes("tests")
-
 includes("utility")
-
 includes("builtin-apps/common/vulkan")
-
 
 includes("benchmarks")
