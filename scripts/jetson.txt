@@ -154,11 +154,11 @@ OMP_CifarSparse/Stage9_little/4      0.007 ms        0.007 ms       119008
 OMP_CifarSparse/Stage9_little/5      0.009 ms        0.009 ms        79540
 OMP_CifarSparse/Stage9_little/6      0.010 ms        0.010 ms        70114
 
-yanwen@duck-naughty ~/D/redwood-aio (dev-v3)> xmake r bm-tree-omp -d jetson
+yanwen@duck-naughty ~/D/redwood-aio (dev-v3) [SIGINT]> xmake r bm-tree-omp -d jetson
 Little cores: 0 1 2 3 4 5
 Mid cores:
 Big cores:
-2025-02-06T22:13:16-08:00
+2025-02-06T23:57:25-08:00
 Running /home/yanwen/Desktop/redwood-aio/build/linux/arm64/release/bm-tree-omp
 Run on (6 X 1510.4 MHz CPU s)
 CPU Caches:
@@ -166,60 +166,60 @@ CPU Caches:
   L1 Instruction 64 KiB (x6)
   L2 Unified 256 KiB (x6)
   L3 Unified 2048 KiB (x1)
-Load Average: 0.48, 1.17, 1.19
+Load Average: 0.16, 0.11, 0.04
 ***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
 -------------------------------------------------------------------
 Benchmark                         Time             CPU   Iterations
 -------------------------------------------------------------------
-OMP_Tree/Baseline/1            69.9 ms         69.8 ms            8
-OMP_Tree/Baseline/2            35.1 ms         34.9 ms           20
-OMP_Tree/Baseline/3            24.0 ms         23.8 ms           28
-OMP_Tree/Baseline/4            18.3 ms         18.0 ms           35
-OMP_Tree/Baseline/5            14.9 ms         14.7 ms           40
-OMP_Tree/Baseline/6            13.0 ms         12.6 ms           54
-OMP_Tree/Stage1_little/1       1.83 ms         1.83 ms          376
-OMP_Tree/Stage1_little/2      0.961 ms        0.957 ms          562
-OMP_Tree/Stage1_little/3      0.617 ms        0.615 ms         1077
-OMP_Tree/Stage1_little/4      0.488 ms        0.485 ms         1041
-OMP_Tree/Stage1_little/5      0.382 ms        0.380 ms         1768
-OMP_Tree/Stage1_little/6      0.345 ms        0.329 ms         2046
-OMP_Tree/Stage2_little/1       11.9 ms         11.9 ms           58
-OMP_Tree/Stage2_little/2       6.44 ms         6.36 ms          102
-OMP_Tree/Stage2_little/3       4.34 ms         4.21 ms          127
-OMP_Tree/Stage2_little/4       3.07 ms         3.06 ms          230
-OMP_Tree/Stage2_little/5       2.30 ms         2.29 ms          305
-OMP_Tree/Stage2_little/6       1.95 ms         1.92 ms          357
-OMP_Tree/Stage2_std            5.32 ms         5.30 ms          124
-OMP_Tree/Stage3_little/1      0.410 ms        0.410 ms         1634
-OMP_Tree/Stage3_little/2      0.412 ms        0.412 ms         1589
-OMP_Tree/Stage3_little/3      0.415 ms        0.414 ms         1500
-OMP_Tree/Stage3_little/4      0.422 ms        0.420 ms         1643
-OMP_Tree/Stage3_little/5      0.423 ms        0.422 ms         1608
-OMP_Tree/Stage3_little/6      0.438 ms        0.429 ms         1636
-OMP_Tree/Stage4_little/1      0.002 ms        0.002 ms       324139
-OMP_Tree/Stage4_little/2      0.004 ms        0.004 ms       161417
-OMP_Tree/Stage4_little/3      0.006 ms        0.006 ms       115704
-OMP_Tree/Stage4_little/4      0.007 ms        0.007 ms        79703
-OMP_Tree/Stage4_little/5      0.008 ms        0.008 ms        86399
-OMP_Tree/Stage4_little/6      0.010 ms        0.010 ms        55819
-OMP_Tree/Stage5_little/1      0.001 ms        0.001 ms       427078
-OMP_Tree/Stage5_little/2      0.004 ms        0.004 ms       192295
-OMP_Tree/Stage5_little/3      0.005 ms        0.005 ms       117993
-OMP_Tree/Stage5_little/4      0.006 ms        0.006 ms       119954
-OMP_Tree/Stage5_little/5      0.007 ms        0.007 ms        98308
-OMP_Tree/Stage5_little/6      0.008 ms        0.008 ms        86157
-OMP_Tree/Stage6_little/1      0.002 ms        0.002 ms       379855
-OMP_Tree/Stage6_little/2      0.004 ms        0.004 ms       177957
-OMP_Tree/Stage6_little/3      0.005 ms        0.005 ms       127643
-OMP_Tree/Stage6_little/4      0.006 ms        0.006 ms        86028
-OMP_Tree/Stage6_little/5      0.007 ms        0.007 ms        93030
-OMP_Tree/Stage6_little/6      0.009 ms        0.009 ms        67732
-OMP_Tree/Stage7_little/1      0.002 ms        0.002 ms       323289
-OMP_Tree/Stage7_little/2      0.004 ms        0.004 ms       165339
-OMP_Tree/Stage7_little/3      0.006 ms        0.006 ms       128890
-OMP_Tree/Stage7_little/4      0.007 ms        0.007 ms        98520
-OMP_Tree/Stage7_little/5      0.008 ms        0.008 ms        67803
-OMP_Tree/Stage7_little/6      0.009 ms        0.009 ms        63486
+OMP_Tree/Baseline/1            70.5 ms         70.3 ms           10
+OMP_Tree/Baseline/2            35.3 ms         35.1 ms           19
+OMP_Tree/Baseline/3            23.7 ms         23.6 ms           29
+OMP_Tree/Baseline/4            18.5 ms         18.2 ms           37
+OMP_Tree/Baseline/5            15.5 ms         14.9 ms           43
+OMP_Tree/Baseline/6            13.1 ms         12.7 ms           51
+OMP_Tree/Stage1_little/1       1.87 ms         1.87 ms          359
+OMP_Tree/Stage1_little/2      0.932 ms        0.930 ms          757
+OMP_Tree/Stage1_little/3      0.667 ms        0.663 ms          800
+OMP_Tree/Stage1_little/4      0.472 ms        0.471 ms         1428
+OMP_Tree/Stage1_little/5      0.382 ms        0.381 ms         1773
+OMP_Tree/Stage1_little/6      0.331 ms        0.326 ms         1877
+OMP_Tree/Stage2_little/1       11.9 ms         11.9 ms           59
+OMP_Tree/Stage2_little/2       6.43 ms         6.37 ms          105
+OMP_Tree/Stage2_little/3       4.26 ms         4.24 ms          126
+OMP_Tree/Stage2_little/4       3.27 ms         3.23 ms          216
+OMP_Tree/Stage2_little/5       2.31 ms         2.30 ms          288
+OMP_Tree/Stage2_little/6       1.92 ms         1.91 ms          362
+OMP_Tree/Stage2_std            5.33 ms         5.32 ms          131
+OMP_Tree/Stage3_little/1      0.299 ms        0.299 ms         2260
+OMP_Tree/Stage3_little/2      0.638 ms        0.581 ms         1039
+OMP_Tree/Stage3_little/3      0.643 ms        0.597 ms         1107
+OMP_Tree/Stage3_little/4      0.749 ms        0.669 ms          794
+OMP_Tree/Stage3_little/5      0.686 ms        0.633 ms         1092
+OMP_Tree/Stage3_little/6      0.706 ms        0.661 ms          941
+OMP_Tree/Stage4_little/1       16.4 ms         16.4 ms           43
+OMP_Tree/Stage4_little/2       8.73 ms         8.58 ms           61
+OMP_Tree/Stage4_little/3       5.65 ms         5.63 ms           96
+OMP_Tree/Stage4_little/4       4.13 ms         4.13 ms          169
+OMP_Tree/Stage4_little/5       3.33 ms         3.32 ms          206
+OMP_Tree/Stage4_little/6       2.82 ms         2.78 ms          247
+OMP_Tree/Stage5_little/1      0.521 ms        0.518 ms         1367
+OMP_Tree/Stage5_little/2      0.519 ms        0.517 ms         1310
+OMP_Tree/Stage5_little/3      0.533 ms        0.529 ms         1000
+OMP_Tree/Stage5_little/4      0.527 ms        0.524 ms         1329
+OMP_Tree/Stage5_little/5      0.521 ms        0.519 ms         1311
+OMP_Tree/Stage5_little/6      0.533 ms        0.526 ms         1006
+OMP_Tree/Stage6_little/1      0.270 ms        0.268 ms         2523
+OMP_Tree/Stage6_little/2      0.268 ms        0.267 ms         2444
+OMP_Tree/Stage6_little/3      0.270 ms        0.269 ms         2435
+OMP_Tree/Stage6_little/4      0.272 ms        0.271 ms         2419
+OMP_Tree/Stage6_little/5      0.275 ms        0.275 ms         2399
+OMP_Tree/Stage6_little/6      0.288 ms        0.282 ms         2422
+OMP_Tree/Stage7_little/1       2.20 ms         2.20 ms          305
+OMP_Tree/Stage7_little/2       1.11 ms         1.11 ms          497
+OMP_Tree/Stage7_little/3      0.742 ms        0.740 ms          925
+OMP_Tree/Stage7_little/4      0.560 ms        0.559 ms         1068
+OMP_Tree/Stage7_little/5      0.460 ms        0.457 ms         1195
+OMP_Tree/Stage7_little/6      0.386 ms        0.381 ms         1796
 
 yanwen@duck-naughty ~/D/redwood-aio (dev-v3)> xmake r bm-cifar-dense-cu -d jetson
 2025-02-06T22:14:52-08:00
