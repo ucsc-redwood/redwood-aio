@@ -50,6 +50,7 @@ void warmup(AppData &app_data) {
   process_stage_5(app_data);
   process_stage_6(app_data);
   process_stage_7(app_data);
+  CUDA_CHECK(cudaDeviceSynchronize());
 }
 
 // ----------------------------------------------------------------------------
