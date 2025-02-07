@@ -20,38 +20,38 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_1(tree::AppData &app_data_ref) {
-  // struct PushConstants {
-  //   uint32_t n;
-  //   float min_coord;
-  //   float range;
-  // };
+  struct PushConstants {
+    uint32_t n;
+    float min_coord;
+    float range;
+  };
 
-  // static auto morton_algo =
-  //     engine
-  //         .algorithm(
-  //             "tree_morton.comp",
-  //             {
-  //                 engine.get_buffer(app_data_ref.u_input_points_s0.data()),
-  //                 engine.get_buffer(app_data_ref.u_morton_keys_s1.data()),
-  //             })
-  //         ->set_push_constants<PushConstants>({
-  //             .n = static_cast<uint32_t>(app_data_ref.get_n_input()),
-  //             .min_coord = tree::kMinCoord,
-  //             .range = tree::kRange,
-  //         })
-  //         ->build();
+  static auto morton_algo =
+      engine
+          .algorithm(
+              "tree_morton.comp",
+              {
+                  engine.get_buffer(app_data_ref.u_input_points_s0.data()),
+                  engine.get_buffer(app_data_ref.u_morton_keys_s1.data()),
+              })
+          ->set_push_constants<PushConstants>({
+              .n = static_cast<uint32_t>(app_data_ref.get_n_input()),
+              .min_coord = tree::kMinCoord,
+              .range = tree::kRange,
+          })
+          ->build();
 
-  // seq->record_commands(morton_algo.get(), app_data_ref.get_n_input());
+  seq->record_commands(morton_algo.get(), app_data_ref.get_n_input());
 
-  // seq->launch_kernel_async();
-  // seq->sync();
+  seq->launch_kernel_async();
+  seq->sync();
 
-  std::iota(app_data_ref.u_morton_keys_s1.data(),
-            app_data_ref.u_morton_keys_s1.data() + app_data_ref.get_n_input(),
-            0);
+  //   std::iota(app_data_ref.u_morton_keys_s1.data(),
+  //             app_data_ref.u_morton_keys_s1.data() +
+  //             app_data_ref.get_n_input(), 0);
 
-  std::mt19937 g(42);
-  std::ranges::shuffle(app_data_ref.u_morton_keys_s1, g);
+  //   std::mt19937 g(42);
+  //   std::ranges::shuffle(app_data_ref.u_morton_keys_s1, g);
 }
 
 // ----------------------------------------------------------------------------
