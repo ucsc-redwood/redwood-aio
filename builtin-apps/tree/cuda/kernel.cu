@@ -141,7 +141,7 @@ void process_stage_3(AppData &app_data, TempStorage &tmp) {
                                          tmp.unique.temp_storage_bytes,
                                          d_in,
                                          d_out,
-                                         tmp.g_num_selected_out,
+                                         tmp.u_num_selected_out,
                                          num_items));
 
   CubDebugExit(g_allocator.DeviceAllocate(&tmp.unique.d_temp_storage,
@@ -152,14 +152,16 @@ void process_stage_3(AppData &app_data, TempStorage &tmp) {
                                          tmp.unique.temp_storage_bytes,
                                          d_in,
                                          d_out,
-                                         tmp.g_num_selected_out,
+                                         tmp.u_num_selected_out,
                                          num_items));
 
   CubDebugExit(cudaDeviceSynchronize());
 
-  const auto n_unique = tmp.g_num_selected_out[0];
+  // -------- host --------------
+  const auto n_unique = tmp.u_num_selected_out[0];
   app_data.set_n_unique(n_unique);
   app_data.set_n_brt_nodes(n_unique - 1);
+  // ----------------------------
 }
 
 // ----------------------------------------------------------------------------
@@ -220,8 +222,11 @@ void process_stage_6(AppData &app_data, TempStorage &tmp) {
 
   CubDebugExit(cudaDeviceSynchronize());
 
-  app_data.set_n_octree_nodes(
-      app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1]);
+  // -------- host --------------
+  const auto n_octree_nodes =
+      app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1];
+  app_data.set_n_octree_nodes(n_octree_nodes);
+  // ----------------------------
 }
 
 // ----------------------------------------------------------------------------

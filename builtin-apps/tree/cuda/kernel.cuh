@@ -4,9 +4,21 @@
 
 namespace tree::cuda {
 
-// void warmup(AppData &app_data);
-// void cleanup();
-
+/**
+ * @brief Before calling any process_stage functions, you must create an
+ * instance of TempStorage. The TempStorage object manages temporary device
+ * memory needed by various stages. It automatically allocates memory in its
+ * constructor and frees it in its destructor.
+ *
+ * Example usage:
+ * @code
+ * tree::cuda::TempStorage tmp;
+ * process_stage_1(app_data);
+ * process_stage_2(app_data, tmp);
+ * process_stage_3(app_data, tmp);
+ * // etc...
+ * @endcode
+ */
 struct TempStorage {
   explicit TempStorage();
   ~TempStorage();
@@ -20,7 +32,9 @@ struct TempStorage {
     void *d_temp_storage = nullptr;
     size_t temp_storage_bytes = 0;
   } unique;
-  uint32_t *g_num_selected_out = nullptr;
+
+  // Unified
+  uint32_t *u_num_selected_out = nullptr;
 
   struct {
     void *d_temp_storage = nullptr;
