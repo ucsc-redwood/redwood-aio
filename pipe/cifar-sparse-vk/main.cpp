@@ -174,7 +174,50 @@ void run_2_cpu_gpu_stage() {
   std::cout << " --- Average time per task: " << total_ms / num_tasks << " ms"
             << std::endl;
 
-  std::cout << "[main] done" << std::endl;
+  std::cout << "[run_2_cpu_gpu_stage] done" << std::endl;
+}
+
+void run_basline() {
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+  std::queue<Task> q_A;
+  moodycamel::ConcurrentQueue<Task> q_AB;
+  std::queue<Task> q_B;
+
+  init_tasks(q_A, mr);
+
+  auto start = std::chrono::high_resolution_clock::now();
+
+  while (true) {
+    Task t = std::move(q_A.front());
+    q_A.pop();
+    if (t.is_done) {
+      break;
+    }
+
+#pragma omp parallel
+    {
+      cifar_sparse::omp::process_stage_1(*t.app_data);
+      cifar_sparse::omp::process_stage_2(*t.app_data);
+      cifar_sparse::omp::process_stage_3(*t.app_data);
+      cifar_sparse::omp::process_stage_4(*t.app_data);
+      cifar_sparse::omp::process_stage_5(*t.app_data);
+      cifar_sparse::omp::process_stage_6(*t.app_data);
+      cifar_sparse::omp::process_stage_7(*t.app_data);
+      cifar_sparse::omp::process_stage_8(*t.app_data);
+      cifar_sparse::omp::process_stage_9(*t.app_data);
+    }
+  }
+
+  auto end = std::chrono::high_resolution_clock::now();
+
+  auto total_ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+          .count();
+  std::cout << " --- Total time taken: " << total_ms << " ms" << std::endl;
+  std::cout << " --- Average time per task: " << total_ms / num_tasks << " ms"
+            << std::endl;
+
+  std::cout << "[run_basline] done" << std::endl;
 }
 
 void run_2_cpu_stage() {
@@ -257,10 +300,12 @@ void run_2_cpu_stage() {
 
 int main(int argc, char **argv) {
   parse_args(argc, argv);
-  spdlog::set_level(spdlog::level::trace);
+  spdlog::set_level(spdlog::level::off);
 
-  // run_2_cpu_stage();
-  run_2_cpu_gpu_stage_debug();
+  run_basline();
+  run_2_cpu_stage();
+
+  // run_2_cpu_gpu_stage_debug();
 
   return 0;
 }
