@@ -13,73 +13,87 @@ std::string device_id;
 // Manual Test
 // ----------------------------------------------------------------------------
 
-static void manual_visualized_test() {
+static void manual_visualized_test(size_t n_input) {
   spdlog::set_level(spdlog::level::debug);
 
   auto mr = cuda::CudaMemoryResource();
-  tree::AppData appdata(&mr);
+  tree::AppData appdata(&mr, n_input);
 
-  tree::cuda::warmup(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  constexpr auto n_iter = 10;
 
-  tree::cuda::process_stage_1(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  for (auto i = 0u; i < n_iter; i++) {
+    spdlog::debug("Iteration {}...", i);
 
-  spdlog::debug("First 10 morton codes:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
-    spdlog::debug("\tmorton[{}] = {}", i, appdata.u_morton_keys_s1[i]);
-  }
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 morton codes:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
+        spdlog::debug("\tmorton[{}] = {}", i, appdata.u_morton_keys_s1[i]);
+      }
+    }
 
-  tree::cuda::process_stage_2(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+    tree::cuda::process_stage_2(appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
 
-  spdlog::debug("First 10 sorted morton codes:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
-    spdlog::debug(
-        "\tsorted_morton[{}] = {}", i, appdata.u_morton_keys_sorted_s2[i]);
-  }
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 sorted morton codes:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
+        spdlog::debug(
+            "\tsorted_morton[{}] = {}", i, appdata.u_morton_keys_sorted_s2[i]);
+      }
+    }
 
-  tree::cuda::process_stage_3(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+    tree::cuda::process_stage_3(appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
 
-  spdlog::debug("First 10 unique morton codes:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_unique()); i++) {
-    spdlog::debug(
-        "\tunique_morton[{}] = {}", i, appdata.u_morton_keys_unique_s3[i]);
-  }
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 unique morton codes:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_unique()); i++) {
+        spdlog::debug(
+            "\tunique_morton[{}] = {}", i, appdata.u_morton_keys_unique_s3[i]);
+      }
+    }
 
-  tree::cuda::process_stage_4(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+    tree::cuda::process_stage_4(appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
 
-  spdlog::debug("First 10 BRT node parents:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
-    spdlog::debug("\tbrt_parent[{}] = {}", i, appdata.u_brt_parents_s4[i]);
-  }
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 BRT node parents:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
+        spdlog::debug("\tbrt_parent[{}] = {}", i, appdata.u_brt_parents_s4[i]);
+      }
+    }
 
-  tree::cuda::process_stage_5(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+    tree::cuda::process_stage_5(appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
 
-  spdlog::debug("First 10 edge counts:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
-    spdlog::debug("\tedge_count[{}] = {}", i, appdata.u_edge_count_s5[i]);
-  }
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 edge counts:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
+        spdlog::debug("\tedge_count[{}] = {}", i, appdata.u_edge_count_s5[i]);
+      }
+    }
 
-  tree::cuda::process_stage_6(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+    tree::cuda::process_stage_6(appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
 
-  spdlog::debug("First 10 edge offsets:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
-    spdlog::debug("\tedge_offset[{}] = {}", i, appdata.u_edge_offset_s6[i]);
-  }
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 edge offsets:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_brt_nodes()); i++) {
+        spdlog::debug("\tedge_offset[{}] = {}", i, appdata.u_edge_offset_s6[i]);
+      }
+    }
 
-  tree::cuda::process_stage_7(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+    tree::cuda::process_stage_7(appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
 
-  spdlog::debug("First 10 octree nodes:");
-  for (auto i = 0u; i < std::min(10u, appdata.get_n_octree_nodes()); i++) {
-    spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}",
-                  i,
-                  appdata.u_oct_child_node_mask_s7[i]);
+    if (i == n_iter - 1) {
+      spdlog::debug("First 10 octree nodes:");
+      for (auto i = 0u; i < std::min(10u, appdata.get_n_octree_nodes()); i++) {
+        spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}",
+                      i,
+                      appdata.u_oct_child_node_mask_s7[i]);
+      }
+    }
   }
 
   spdlog::info("n_input: {}", appdata.get_n_input());
@@ -220,7 +234,8 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  manual_visualized_test();
+  manual_visualized_test(640 * 480);   // 306k points
+  manual_visualized_test(1440 * 900);  // 1.3M points
 
   spdlog::set_level(spdlog::level::off);
 
