@@ -261,38 +261,63 @@ void Singleton::process_stage_1(tree::AppData &app_data_ref) {
 void Singleton::process_stage_2(tree::AppData &app_data_ref) {
   const uint32_t n = app_data_ref.get_n_input();
 
-  auto algo = cached_algorithms.at("radix_sort").get();
+  {
+    struct PushConstants {
+      uint32_t g_num_elements;
+    };
+    auto algo =
+        engine
+            .algorithm(
+                "tmp_single_radixsort_warp" +
+                    std::to_string(get_vulkan_warp_size()) + ".comp",
+                {
+                    engine.get_buffer(app_data_ref.u_morton_keys_s1.data()),
+                    engine.get_buffer(
+                        app_data_ref.u_morton_keys_sorted_s2.data()),
+                })
+            ->set_push_constants<PushConstants>({
+                .g_num_elements = n,
+            })
+            ->build();
 
-  algo->update_push_constants(InputSizePushConstantsUnsigned{
-      .n = n,
-  });
-
-  algo->update_descriptor_sets({
-      engine.get_buffer(app_data_ref.u_morton_keys_s1.data()),
-      engine.get_buffer(app_data_ref.u_morton_keys_sorted_s2.data()),
-  });
-
-  seq->record_commands_with_blocks(algo, 1);
-
-  std::this_thread::sleep_for(std::chrono::seconds(5));
-
-  seq->launch_kernel_async();
-
-  seq->sync();
-
-  std::this_thread::sleep_for(std::chrono::seconds(5));
-
-  auto u_elements_out = app_data_ref.u_morton_keys_sorted_s2.data();
-  auto is_sorted = std::ranges::is_sorted(u_elements_out, u_elements_out + n);
-  if (!is_sorted) {
-    spdlog::error("Sorted Morton keys are not sorted");
+    auto seq = engine.sequence();
+    seq->record_commands_with_blocks(algo.get(), 1);
+    seq->launch_kernel_async();
+    seq->sync();
   }
 
-  bool all_zeros = std::all_of(
-      u_elements_out, u_elements_out + n, [](uint32_t x) { return x == 0; });
-  if (all_zeros) {
-    spdlog::error("Sorted Morton keys are all zeros");
-  }
+  //   auto algo = cached_algorithms.at("radix_sort").get();
+
+  //   algo->update_push_constants(InputSizePushConstantsUnsigned{
+  //       .n = n,
+  //   });
+
+  //   algo->update_descriptor_sets({
+  //       engine.get_buffer(app_data_ref.u_morton_keys_s1.data()),
+  //       engine.get_buffer(app_data_ref.u_morton_keys_sorted_s2.data()),
+  //   });
+
+  //   seq->record_commands_with_blocks(algo, 1);
+
+  // //   std::this_thread::sleep_for(std::chrono::seconds(5));
+
+  //   seq->launch_kernel_async();
+  //   seq->sync();
+
+  //   std::this_thread::sleep_for(std::chrono::seconds(5));
+
+  //   auto u_elements_out = app_data_ref.u_morton_keys_sorted_s2.data();
+  //   auto is_sorted = std::ranges::is_sorted(u_elements_out, u_elements_out +
+  //   n); if (!is_sorted) {
+  //     spdlog::error("Sorted Morton keys are not sorted");
+  //   }
+
+  //   bool all_zeros = std::all_of(
+  //       u_elements_out, u_elements_out + n, [](uint32_t x) { return x == 0;
+  //       });
+  //   if (all_zeros) {
+  //     spdlog::error("Sorted Morton keys are all zeros");
+  //   }
 
   //   std::ranges::sort(app_data_ref.get_unsorted_morton_keys(),
   //                     app_data_ref.get_unsorted_morton_keys() + n);
