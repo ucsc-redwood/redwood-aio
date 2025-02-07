@@ -18,15 +18,16 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
 (benchmark::State& state) {
   auto mr = cuda::CudaMemoryResource();
   tree::AppData app_data(&mr);
+  tree::cuda::TempStorage tmp;
   CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::process_stage_1(app_data);
-    tree::cuda::process_stage_2(app_data);
-    tree::cuda::process_stage_3(app_data);
+    tree::cuda::process_stage_2(app_data, tmp);
+    tree::cuda::process_stage_3(app_data, tmp);
     tree::cuda::process_stage_4(app_data);
     tree::cuda::process_stage_5(app_data);
-    tree::cuda::process_stage_6(app_data);
+    tree::cuda::process_stage_6(app_data, tmp);
     tree::cuda::process_stage_7(app_data);
     CUDA_CHECK(cudaDeviceSynchronize());
   }

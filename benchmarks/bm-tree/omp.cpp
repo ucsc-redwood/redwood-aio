@@ -24,9 +24,7 @@ class OMP_Tree : public benchmark::Fixture {
     {
       tree::omp::process_stage_1(*app_data);
 #pragma omp single
-      {
-        std::ranges::sort(app_data->u_morton_keys);
-      }
+      { std::ranges::sort(app_data->u_morton_keys_s1); }
       tree::omp::process_stage_3(*app_data);
       tree::omp::process_stage_4(*app_data);
       tree::omp::process_stage_5(*app_data);
@@ -616,7 +614,7 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2little)
     run_stage_2_little(*app_data, g_little_cores, n_threads, temp_storage);
   }
 
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
+  assert(std::ranges::is_sorted(app_data->u_morton_keys_sorted_s2));
 }
 
 void RegisterStage2LittleBenchmarkWithRange(
@@ -649,7 +647,7 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2medium)
     run_stage_2_medium(*app_data, g_medium_cores, n_threads, temp_storage);
   }
 
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
+  assert(std::ranges::is_sorted(app_data->u_morton_keys_sorted_s2));
 }
 
 void RegisterStage2MediumBenchmarkWithRange(
@@ -682,7 +680,7 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2big)
     run_stage_2_big(*app_data, g_big_cores, n_threads, temp_storage);
   }
 
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
+  assert(std::ranges::is_sorted(app_data->u_morton_keys_sorted_s2));
 }
 
 void RegisterStage2BigBenchmarkWithRange(
@@ -703,10 +701,10 @@ void RegisterStage2BigBenchmarkWithRange(
 BENCHMARK_DEFINE_F(OMP_Tree, Stage2std)
 (benchmark::State& state) {
   for (auto _ : state) {
-    std::ranges::sort(app_data->u_morton_keys);
+    std::ranges::sort(app_data->u_morton_keys_s1);
   }
 
-  assert(std::ranges::is_sorted(app_data->u_morton_keys));
+  assert(std::ranges::is_sorted(app_data->u_morton_keys_s1));
 }
 
 void RegisterStage2stdBenchmark() {

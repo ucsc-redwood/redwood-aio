@@ -326,7 +326,7 @@ void Algorithm::create_pipeline() {
   pipeline_cache_ =
       device_ref_.createPipelineCache(vk::PipelineCacheCreateInfo{});
 
-  const vk::PipelineShaderStageCreateInfo shaderstage_create_info{
+  const vk::PipelineShaderStageCreateInfo shader_stage_create_info{
       .stage = vk::ShaderStageFlagBits::eCompute,
       .module = shader_module_,
       .pName = "main",
