@@ -33,9 +33,9 @@ Algorithm::Algorithm(  // VulkanMemoryResource& mr,
   // create parameters (need buffers to be set),
   create_descriptor_set_layout();
   create_descriptor_pool();
+  allocate_descriptor_sets();
 
   // by now, we know the descriptor layouts and push constant sizes
-  allocate_descriptor_sets();
   allocate_push_constants();
 
   // update descriptor sets with the content from the argument passed in
@@ -226,30 +226,10 @@ void Algorithm::create_shader_module() {
 }
 
 // ----------------------------------------------------------------------------
-// Descriptor
-// ----------------------------------------------------------------------------
-
-void Algorithm::create_descriptor_pool() {
-  SPDLOG_TRACE("Algorithm create_descriptor_pool");
-
-  const std::vector pool_sizes{
-      vk::DescriptorPoolSize{
-          .type = vk::DescriptorType::eStorageBuffer,
-          .descriptorCount = static_cast<uint32_t>(usm_buffers_.size()),
-      },
-  };
-
-  const vk::DescriptorPoolCreateInfo create_info{
-      .maxSets = 1,
-      .poolSizeCount = static_cast<uint32_t>(pool_sizes.size()),
-      .pPoolSizes = pool_sizes.data(),
-  };
-
-  descriptor_pool_ = device_ref_.createDescriptorPool(create_info);
-}
-
-// ----------------------------------------------------------------------------
-// Descriptor set layout
+// Descriptor Related
+//   create_descriptor_set_layout();
+//   create_descriptor_pool();
+//   allocate_descriptor_sets();
 // ----------------------------------------------------------------------------
 
 void Algorithm::create_descriptor_set_layout() {
@@ -275,9 +255,24 @@ void Algorithm::create_descriptor_set_layout() {
   descriptor_set_layout_ = device_ref_.createDescriptorSetLayout(create_info);
 }
 
-// ----------------------------------------------------------------------------
-// Allocate descriptor sets
-// ----------------------------------------------------------------------------
+void Algorithm::create_descriptor_pool() {
+  SPDLOG_TRACE("Algorithm create_descriptor_pool");
+
+  const std::vector pool_sizes{
+      vk::DescriptorPoolSize{
+          .type = vk::DescriptorType::eStorageBuffer,
+          .descriptorCount = static_cast<uint32_t>(usm_buffers_.size()),
+      },
+  };
+
+  const vk::DescriptorPoolCreateInfo create_info{
+      .maxSets = 1,
+      .poolSizeCount = static_cast<uint32_t>(pool_sizes.size()),
+      .pPoolSizes = pool_sizes.data(),
+  };
+
+  descriptor_pool_ = device_ref_.createDescriptorPool(create_info);
+}
 
 void Algorithm::allocate_descriptor_sets() {
   SPDLOG_TRACE("Algorithm allocate_descriptor_sets");
@@ -331,7 +326,7 @@ void Algorithm::create_pipeline() {
   pipeline_cache_ =
       device_ref_.createPipelineCache(vk::PipelineCacheCreateInfo{});
 
-  const vk::PipelineShaderStageCreateInfo shader_stage_create_info{
+  const vk::PipelineShaderStageCreateInfo shaderstage_create_info{
       .stage = vk::ShaderStageFlagBits::eCompute,
       .module = shader_module_,
       .pName = "main",
