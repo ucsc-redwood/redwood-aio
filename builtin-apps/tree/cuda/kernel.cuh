@@ -4,6 +4,8 @@
 
 namespace tree::cuda {
 
+void warmup(AppData &app_data);
+
 void process_stage_1(AppData &app_data);
 void process_stage_2(AppData &app_data);
 void process_stage_3(AppData &app_data);

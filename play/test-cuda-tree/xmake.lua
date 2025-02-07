@@ -25,7 +25,6 @@ target("test-cuda-tree")
     add_packages("glm")
 
     add_cugencodes("native")
-
     add_packages("openmp")
     
 

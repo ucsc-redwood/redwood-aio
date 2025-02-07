@@ -42,6 +42,16 @@ void cleanup() {
   }
 }
 
+void warmup(AppData &app_data) {
+  process_stage_1(app_data);
+  process_stage_2(app_data);
+  process_stage_3(app_data);
+  process_stage_4(app_data);
+  process_stage_5(app_data);
+  process_stage_6(app_data);
+  process_stage_7(app_data);
+}
+
 // ----------------------------------------------------------------------------
 // Stage 1 (input -> morton code)
 // ----------------------------------------------------------------------------
@@ -53,8 +63,8 @@ void process_stage_1(AppData &app_data) {
   constexpr auto s_mem = 0;
 
   ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
-      app_data.u_input_points.data(),
-      app_data.get_unsorted_morton_keys(),
+      app_data.u_input_points_s0.data(),
+      app_data.u_morton_keys_s1.data(),
       app_data.get_n_input(),
       tree::kMinCoord,
       tree::kRange);
@@ -65,8 +75,8 @@ void process_stage_1(AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_2(AppData &app_data) {
-  uint32_t *d_keys_in = app_data.get_unsorted_morton_keys();
-  uint32_t *d_keys_out = app_data.get_sorted_morton_keys();
+  uint32_t *d_keys_in = app_data.u_morton_keys_s1.data();
+  uint32_t *d_keys_out = app_data.u_morton_keys_sorted_s2.data();
   uint32_t num_items = app_data.get_n_input();
 
   // Get temporary storage size
@@ -89,8 +99,8 @@ void process_stage_2(AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_3(AppData &app_data) {
-  uint32_t *d_in = app_data.get_sorted_morton_keys();
-  uint32_t *d_out = app_data.get_sorted_unique_morton_keys();
+  uint32_t *d_in = app_data.u_morton_keys_sorted_s2.data();
+  uint32_t *d_out = app_data.u_morton_keys_unique_s3.data();
   uint32_t num_items = app_data.get_n_input();
 
   if (g_num_selected_out == nullptr) {
@@ -132,12 +142,12 @@ void process_stage_4(AppData &app_data) {
 
   ::cuda::kernels::k_BuildRadixTree<<<gridDim, blockDim, sharedMem>>>(
       app_data.get_n_unique(),
-      app_data.get_sorted_unique_morton_keys(),
-      app_data.u_brt_prefix_n.data(),
-      app_data.u_brt_has_leaf_left.data(),
-      app_data.u_brt_has_leaf_right.data(),
-      app_data.u_brt_left_child.data(),
-      app_data.u_brt_parents.data());
+      app_data.u_morton_keys_unique_s3.data(),
+      app_data.u_brt_prefix_n_s4.data(),
+      app_data.u_brt_has_leaf_left_s4.data(),
+      app_data.u_brt_has_leaf_right_s4.data(),
+      app_data.u_brt_left_child_s4.data(),
+      app_data.u_brt_parents_s4.data());
 }
 
 // ----------------------------------------------------------------------------
@@ -150,9 +160,9 @@ void process_stage_5(AppData &app_data) {
   constexpr auto sharedMem = 0;
 
   ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(
-      app_data.u_brt_prefix_n.data(),
-      app_data.u_brt_parents.data(),
-      app_data.u_edge_count.data(),
+      app_data.u_brt_prefix_n_s4.data(),
+      app_data.u_brt_parents_s4.data(),
+      app_data.u_edge_count_s5.data(),
       app_data.get_n_brt_nodes());
 }
 
@@ -164,8 +174,8 @@ void process_stage_6(AppData &app_data) {
   if (g_scan_temp_storage == nullptr) {
     cub::DeviceScan::InclusiveSum(g_scan_temp_storage,
                                   g_scan_temp_bytes,
-                                  app_data.u_edge_count.data(),
-                                  app_data.u_edge_offset.data(),
+                                  app_data.u_edge_count_s5.data(),
+                                  app_data.u_edge_offset_s6.data(),
                                   app_data.get_n_brt_nodes());
     CUDA_CHECK(cudaMalloc(&g_scan_temp_storage, g_scan_temp_bytes));
   }
@@ -173,14 +183,14 @@ void process_stage_6(AppData &app_data) {
   // Perform prefix sum (inclusive scan)
   cub::DeviceScan::InclusiveSum(g_scan_temp_storage,
                                 g_scan_temp_bytes,
-                                app_data.u_edge_count.data(),
-                                app_data.u_edge_offset.data(),
+                                app_data.u_edge_count_s5.data(),
+                                app_data.u_edge_offset_s6.data(),
                                 app_data.get_n_brt_nodes());
 
   CUDA_CHECK(cudaDeviceSynchronize());
 
   app_data.set_n_octree_nodes(
-      app_data.u_edge_offset[app_data.get_n_brt_nodes() - 1]);
+      app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1]);
 }
 
 // ----------------------------------------------------------------------------
@@ -193,15 +203,15 @@ void process_stage_7(AppData &app_data) {
   constexpr auto sharedMem = 0;
 
   ::cuda::kernels::k_MakeOctNodes<<<gridDim, blockDim, sharedMem>>>(
-      reinterpret_cast<int(*)[8]>(app_data.u_oct_children.data()),
-      app_data.u_oct_corner.data(),
-      app_data.u_oct_cell_size.data(),
-      app_data.u_oct_child_node_mask.data(),
-      app_data.u_edge_offset.data(),
-      app_data.u_edge_count.data(),
-      app_data.get_sorted_unique_morton_keys(),
-      app_data.u_brt_prefix_n.data(),
-      app_data.u_brt_parents.data(),
+      reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7.data()),
+      app_data.u_oct_corner_s7.data(),
+      app_data.u_oct_cell_size_s7.data(),
+      app_data.u_oct_child_node_mask_s7.data(),
+      app_data.u_edge_offset_s6.data(),
+      app_data.u_edge_count_s5.data(),
+      app_data.u_morton_keys_unique_s3.data(),
+      app_data.u_brt_prefix_n_s4.data(),
+      app_data.u_brt_parents_s4.data(),
       tree::kMinCoord,
       tree::kRange,
       app_data.get_n_brt_nodes());

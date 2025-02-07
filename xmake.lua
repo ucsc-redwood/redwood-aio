@@ -4,17 +4,17 @@ set_languages("c++20")
 set_warnings("allextra")
 
 
-add_requires("benchmark")
-add_requires("cli11")
+add_requires("benchmark", {system = false})
+add_requires("cli11", {system = false})
 
-add_requires("concurrentqueue")
+add_requires("concurrentqueue", {system = false})
 
 if not is_plat("android") then
     add_requires("openmp")
 end
 
-add_requires("spdlog")
-add_requires("glm")
+add_requires("spdlog", {system = false})
+add_requires("glm", {system = false})
 
 
 -- local has_cuda = true

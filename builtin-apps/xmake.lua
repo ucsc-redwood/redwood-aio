@@ -37,17 +37,21 @@ target("builtin-apps")
     add_packages("cli11")
 target_end()
 
-if not is_plat("android") then
 
+-- ----------------------------------------------------------------------------
+-- CUDA Static Library
+-- ----------------------------------------------------------------------------
+
+if not is_plat("android") then
 target("builtin-apps-cuda")
     set_kind("static")
 
     add_files(source_files)
 
     add_files({
-        -- "common/cuda/cu_mem_resource.cu",
         "cifar-dense/cuda/cu_dense_kernel.cu",
         "cifar-dense/cuda/cu_kernels.cu",
+
         "cifar-sparse/cuda/cu_dispatcher.cu",
         "cifar-sparse/cuda/cu_kernels.cu",
 
@@ -60,6 +64,8 @@ target("builtin-apps-cuda")
         "tree/cuda/07_octree.cu",
         "tree/cuda/im_storage.cu",
         "tree/cuda/kernel.cu",
+
+        "common/cuda/cu_mem_resource.cu",
     })
 
     add_packages("spdlog")
@@ -67,8 +73,5 @@ target("builtin-apps-cuda")
     add_packages("cub")
 
     add_cugencodes("native")
-
-
 target_end()
-
 end
