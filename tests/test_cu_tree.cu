@@ -98,153 +98,111 @@ static void manual_visualized_test() {
 // Google Test
 // ----------------------------------------------------------------------------
 
-// class OmpTreeTestFixture : public ::testing::Test {
-//  protected:
-//   void SetUp() override {
-//     auto mr = std::pmr::new_delete_resource();
-//     // Create a small test dataset
-//     appdata = std::make_unique<tree::AppData>(mr, 100);
-//     n_threads = omp_get_max_threads();
-//     temp_storage =
-//         std::make_unique<tree::omp::v2::TempStorage>(n_threads, n_threads);
-//   }
+class CudaTreeTestFixture : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    auto mr = cuda::CudaMemoryResource();
+    appdata = std::make_unique<tree::AppData>(&mr);
 
-//   void TearDown() override {
-//     appdata.reset();
-//     temp_storage.reset();
-//   }
+    tree::cuda::warmup(*appdata);
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 
-//  protected:
-//   std::unique_ptr<tree::AppData> appdata;
-//   std::unique_ptr<tree::omp::v2::TempStorage> temp_storage;
-//   int n_threads;
-// };
+  void TearDown() override { appdata.reset(); }
 
-// TEST_F(OmpTreeTestFixture, Stage1_MortonCodeGeneration) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//   }
+ protected:
+  std::unique_ptr<tree::AppData> appdata;
+};
 
-//   // Verify that morton codes are generated and non-zero
-//   ASSERT_GT(appdata->get_n_input(), 0);
-//   for (size_t i = 0; i < appdata->get_n_input(); ++i) {
-//     EXPECT_GT(appdata->u_morton_keys_s1[i], 0);
-//   }
-// }
+TEST_F(CudaTreeTestFixture, Stage1_MortonCodeGeneration) {
+  tree::cuda::process_stage_1(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-// TEST_F(OmpTreeTestFixture, Stage2_MortonCodeSorting) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//     tree::omp::v2::process_stage_2(*appdata, *temp_storage);
-//   }
+  // Verify that morton codes are generated and non-zero
+  ASSERT_GT(appdata->get_n_input(), 0);
+  for (size_t i = 0; i < appdata->get_n_input(); ++i) {
+    EXPECT_GT(appdata->u_morton_keys_s1[i], 0);
+  }
+}
 
-//   // Verify that morton codes are sorted
-//   for (size_t i = 1; i < appdata->get_n_input(); ++i) {
-//     EXPECT_LE(appdata->u_morton_keys_sorted_s2[i - 1],
-//               appdata->u_morton_keys_sorted_s2[i]);
-//   }
-// }
+TEST_F(CudaTreeTestFixture, Stage2_MortonCodeSorting) {
+  tree::cuda::process_stage_2(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-// TEST_F(OmpTreeTestFixture, Stage3_UniqueMortonCodes) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//     tree::omp::v2::process_stage_2(*appdata, *temp_storage);
-//     tree::omp::process_stage_3(*appdata);
-//   }
+  // Verify that morton codes are sorted
+  for (size_t i = 1; i < appdata->get_n_input(); ++i) {
+    EXPECT_LE(appdata->u_morton_keys_sorted_s2[i - 1],
+              appdata->u_morton_keys_sorted_s2[i]);
+  }
+}
 
-//   // Verify unique morton codes
-//   ASSERT_GT(appdata->get_n_unique(), 0);
-//   EXPECT_LE(appdata->get_n_unique(), appdata->get_n_input());
-//   for (size_t i = 1; i < appdata->get_n_unique(); ++i) {
-//     EXPECT_LT(appdata->u_morton_keys_unique_s3[i - 1],
-//               appdata->u_morton_keys_unique_s3[i]);
-//   }
-// }
+TEST_F(CudaTreeTestFixture, Stage3_UniqueMortonCodes) {
+  tree::cuda::process_stage_3(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-// TEST_F(OmpTreeTestFixture, Stage4_BRTParents) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//     tree::omp::v2::process_stage_2(*appdata, *temp_storage);
-//     tree::omp::process_stage_3(*appdata);
-//     tree::omp::process_stage_4(*appdata);
-//   }
+  // Verify unique morton codes
+  ASSERT_GT(appdata->get_n_unique(), 0);
+  EXPECT_LE(appdata->get_n_unique(), appdata->get_n_input());
+  for (size_t i = 1; i < appdata->get_n_unique(); ++i) {
+    EXPECT_LT(appdata->u_morton_keys_unique_s3[i - 1],
+              appdata->u_morton_keys_unique_s3[i]);
+  }
+}
 
-//   // Verify BRT parents are non-zero
-//   ASSERT_GT(appdata->get_n_brt_nodes(), 0);
+TEST_F(CudaTreeTestFixture, Stage4_BRTParents) {
+  tree::cuda::process_stage_4(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-//   ASSERT_EQ(appdata->u_brt_parents_s4[0], 0);
-//   for (size_t i = 1; i < appdata->get_n_brt_nodes(); ++i) {
-//     EXPECT_GE(appdata->u_brt_parents_s4[i], 0);
-//   }
-// }
+  // Verify BRT parents are non-zero
+  ASSERT_GT(appdata->get_n_brt_nodes(), 0);
 
-// TEST_F(OmpTreeTestFixture, Stage5_EdgeCounts) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//     tree::omp::v2::process_stage_2(*appdata, *temp_storage);
-//     tree::omp::process_stage_3(*appdata);
-//     tree::omp::process_stage_4(*appdata);
-//     tree::omp::process_stage_5(*appdata);
-//   }
+  ASSERT_EQ(appdata->u_brt_parents_s4[0], 0);
+  for (size_t i = 1; i < appdata->get_n_brt_nodes(); ++i) {
+    EXPECT_GE(appdata->u_brt_parents_s4[i], 0);
+  }
+}
 
-//   // Verify not all are zeros
-//   bool all_zeros = std::ranges::all_of(appdata->u_edge_count_s5,
-//                                        [](int x) { return x == 0; });
-//   EXPECT_FALSE(all_zeros);
-// }
+TEST_F(CudaTreeTestFixture, Stage5_EdgeCounts) {
+  tree::cuda::process_stage_5(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-// TEST_F(OmpTreeTestFixture, Stage6_EdgeOffsets) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//     tree::omp::v2::process_stage_2(*appdata, *temp_storage);
-//     tree::omp::process_stage_3(*appdata);
-//     tree::omp::process_stage_4(*appdata);
-//     tree::omp::process_stage_5(*appdata);
-//     tree::omp::process_stage_6(*appdata);
-//   }
+  // Verify not all are zeros
+  bool all_zeros = std::ranges::all_of(appdata->u_edge_count_s5,
+                                       [](int x) { return x == 0; });
+  EXPECT_FALSE(all_zeros);
+}
 
-//   // Verify not all are zeros
-//   bool all_zeros = std::ranges::all_of(appdata->u_edge_offset_s6,
-//                                        [](int x) { return x == 0; });
-//   EXPECT_FALSE(all_zeros);
+TEST_F(CudaTreeTestFixture, Stage6_EdgeOffsets) {
+  tree::cuda::process_stage_6(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-//   // Verify edge offsets are monotonically increasing
-//   for (size_t i = 1; i < appdata->get_n_brt_nodes(); ++i) {
-//     EXPECT_LE(appdata->u_edge_offset_s6[i - 1],
-//     appdata->u_edge_offset_s6[i]);
-//   }
-// }
+  // Verify not all are zeros
+  bool all_zeros = std::ranges::all_of(appdata->u_edge_offset_s6,
+                                       [](int x) { return x == 0; });
+  EXPECT_FALSE(all_zeros);
 
-// TEST_F(OmpTreeTestFixture, Stage7_OctreeNodes) {
-// #pragma omp parallel
-//   {
-//     tree::omp::process_stage_1(*appdata);
-//     tree::omp::v2::process_stage_2(*appdata, *temp_storage);
-//     tree::omp::process_stage_3(*appdata);
-//     tree::omp::process_stage_4(*appdata);
-//     tree::omp::process_stage_5(*appdata);
-//     tree::omp::process_stage_6(*appdata);
-//     tree::omp::process_stage_7(*appdata);
-//   }
+  // Verify edge offsets are monotonically increasing
+  for (size_t i = 1; i < appdata->get_n_brt_nodes(); ++i) {
+    EXPECT_LE(appdata->u_edge_offset_s6[i - 1], appdata->u_edge_offset_s6[i]);
+  }
+}
 
-//   // Verify not all are zeros
-//   bool all_zeros = std::ranges::all_of(appdata->u_oct_child_node_mask_s7,
-//                                        [](int x) { return x == 0; });
-//   EXPECT_FALSE(all_zeros);
+TEST_F(CudaTreeTestFixture, Stage7_OctreeNodes) {
+  tree::cuda::process_stage_7(*appdata);
+  CUDA_CHECK(cudaDeviceSynchronize());
 
-//   // Verify octree nodes
-//   ASSERT_GT(appdata->get_n_octree_nodes(), 0);
-//   for (size_t i = 0; i < appdata->get_n_octree_nodes(); ++i) {
-//     EXPECT_GE(appdata->u_oct_child_node_mask_s7[i], 0);
-//     EXPECT_LE(appdata->u_oct_child_node_mask_s7[i], 255);  // 8-bit mask
-//   }
-// }
+  // Verify not all are zeros
+  bool all_zeros = std::ranges::all_of(appdata->u_oct_child_node_mask_s7,
+                                       [](int x) { return x == 0; });
+  EXPECT_FALSE(all_zeros);
+
+  // Verify octree nodes
+  ASSERT_GT(appdata->get_n_octree_nodes(), 0);
+  for (size_t i = 0; i < appdata->get_n_octree_nodes(); ++i) {
+    EXPECT_GE(appdata->u_oct_child_node_mask_s7[i], 0);
+    EXPECT_LE(appdata->u_oct_child_node_mask_s7[i], 255);  // 8-bit mask
+  }
+}
 
 // ----------------------------------------------------------------------------
 // Main function for running tests
@@ -266,6 +224,6 @@ int main(int argc, char **argv) {
 
   spdlog::set_level(spdlog::level::off);
 
-  // ::testing::InitGoogleTest(&argc, argv);
-  // return RUN_ALL_TESTS();
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
