@@ -223,9 +223,8 @@ void process_stage_6(AppData &app_data, TempStorage &tmp) {
   CubDebugExit(cudaDeviceSynchronize());
 
   // -------- host --------------
-  const auto n_octree_nodes =
-      app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1];
-  app_data.set_n_octree_nodes(n_octree_nodes);
+  app_data.set_n_octree_nodes(
+      app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1]);
   // ----------------------------
 }
 
