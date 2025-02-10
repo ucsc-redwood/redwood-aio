@@ -2,6 +2,7 @@
 local source_files = {
     "cifar-dense/dense_appdata.cpp",
     "cifar-sparse/sparse_appdata.cpp",
+    "cifar-sparse/omp/sparse_kernel.cpp",
     "tree/tree_appdata.cpp",
     "tree/omp/tree_kernel.cpp",
 }
