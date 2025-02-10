@@ -8,8 +8,12 @@
 #include "cifar-sparse/omp/sparse_kernel.hpp"
 #include "cifar-sparse/vulkan/vk_dispatcher.hpp"
 
-template <int n_stages>
+template <int start_stage, int end_stage>
 void run_stages(cifar_sparse::AppData* app_data) {
+  static_assert(start_stage >= 1 && end_stage <= 9,
+                "Stage range out of bounds");
+  static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
+
   // Function table to map stage numbers to their corresponding functions
   constexpr auto stage_functions = [](auto* app_data) {
     constexpr auto stages = std::array{cifar_sparse::omp::process_stage_1,
@@ -23,7 +27,7 @@ void run_stages(cifar_sparse::AppData* app_data) {
                                        cifar_sparse::omp::process_stage_9};
 
     // Execute only the required number of stages (up to `n_stages`)
-    for (int i = 0; i < n_stages; ++i) {
+    for (int i = start_stage; i < end_stage; ++i) {
       stages[i](*app_data);
     }
   };
@@ -51,7 +55,7 @@ std::atomic<bool> done(false);
     tasks[i] = Task{i, new cifar_sparse::AppData(mr)};
 
     // We actually need to run all the stages first.
-    run_stages<9>(tasks[i].app_data);
+    run_stages<1, 9>(tasks[i].app_data);
   }
 
   return tasks;
