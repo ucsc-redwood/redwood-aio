@@ -8,13 +8,15 @@ target("bm-cifar-dense-omp")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("omp.cpp")
 
     add_deps("builtin-apps")
 
 
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
 
     add_packages("glm")
 
@@ -42,6 +44,8 @@ target("bm-cifar-dense-vk")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("vk.cpp")
 
 
@@ -50,7 +54,7 @@ target("bm-cifar-dense-vk")
 
 
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("spdlog")
     add_packages("glm")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
@@ -83,6 +87,7 @@ target("bm-cifar-dense-cu")
     add_deps("builtin-apps")
     add_deps("builtin-apps-cuda")
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
 
     add_files({
         "cuda.cu",
@@ -91,7 +96,7 @@ target("bm-cifar-dense-cu")
 
     add_packages("spdlog")
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
 
     add_cugencodes("native")
 

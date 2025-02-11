@@ -4,24 +4,24 @@ set_languages("c++20")
 set_warnings("allextra")
 
 
-add_requires("benchmark", {system = false})
-add_requires("cli11", {system = false})
+add_requires("benchmark")
+-- add_requires("cli11")
 
-add_requires("concurrentqueue", {system = false})
+add_requires("concurrentqueue")
 
 if not is_plat("android") then
     add_requires("openmp")
 end
 
-add_requires("spdlog", {system = false})
-add_requires("glm", {system = false})
+add_requires("spdlog")
+add_requires("glm")
 
 includes("android.lua")
 
--- includes("pipe")
+includes("pipe")
 includes("builtin-apps")
+includes("builtin-apps/common/vulkan")
 includes("tests")
 includes("utility")
-includes("builtin-apps/common/vulkan")
 
 includes("benchmarks")

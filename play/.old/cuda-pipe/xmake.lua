@@ -12,7 +12,7 @@ target("cuda-pipe")
 
 
     add_packages("concurrentqueue")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("glm")
 
     add_cugencodes("native")

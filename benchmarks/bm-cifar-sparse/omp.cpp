@@ -1,11 +1,13 @@
 #include <benchmark/benchmark.h>
 
-#include <CLI/CLI.hpp>
+// #include "third-party/CLI11.hpp"
+
 #include <thread>
 
 #include "affinity.hpp"
 #include "app.hpp"
 #include "cifar-sparse/omp/sparse_kernel.hpp"
+#include "third-party/CLI11.hpp"
 
 // ------------------------------------------------------------
 // Global variables

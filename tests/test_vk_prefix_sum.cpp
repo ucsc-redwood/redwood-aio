@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <numeric>

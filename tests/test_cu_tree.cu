@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 
 #include "common/cuda/cu_mem_resource.cuh"
 #include "common/cuda/helpers.cuh"

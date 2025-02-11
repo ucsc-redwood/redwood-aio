@@ -1,11 +1,11 @@
 #include <benchmark/benchmark.h>
 
-#include <CLI/CLI.hpp>
 #include <thread>
 
 #include "affinity.hpp"
 #include "app.hpp"
 #include "cifar-dense/omp/dense_kernel.hpp"
+#include "third-party/CLI11.hpp"
 
 // ------------------------------------------------------------
 // Global variables

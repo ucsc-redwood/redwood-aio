@@ -1,9 +1,9 @@
 #pragma once
 
-#include <CLI/CLI.hpp>
 #include <vector>
 
 #include "conf.hpp"
+#include "third-party/CLI11.hpp"
 
 inline std::string g_device_id;
 inline std::vector<int> g_little_cores;

@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 
 #include "cifar-dense/cuda/cu_dense_kernel.cuh"
 #include "cifar-dense/dense_appdata.hpp"

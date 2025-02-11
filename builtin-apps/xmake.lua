@@ -46,7 +46,7 @@ target("builtin-apps")
     end
 
     add_packages("spdlog")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("glm")
 target_end()
 
@@ -57,6 +57,8 @@ target_end()
 target("builtin-apps-vulkan")
     set_kind("static")
     add_deps("kiss-vk")
+
+    add_includedirs("$(projectdir)")
     
     add_headerfiles({
         -- App specific headers
@@ -75,7 +77,7 @@ target("builtin-apps-vulkan")
 
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
     add_packages("spdlog")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("glm")
 target_end()
 

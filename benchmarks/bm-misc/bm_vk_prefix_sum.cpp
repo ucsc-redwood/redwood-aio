@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 
 #include "base_appdata.hpp"
 #include "common/vulkan/engine.hpp"

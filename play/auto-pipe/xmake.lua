@@ -3,7 +3,7 @@ target("auto-pipe")
     add_files("main.cpp")
 
     add_packages("spdlog")
-    add_packages("cli11")
+    -- add_packages("cli11")
 
     if is_plat("android") then
       on_run(run_on_android)

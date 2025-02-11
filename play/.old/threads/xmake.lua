@@ -8,7 +8,7 @@ target("threads")
 
 
     add_packages("concurrentqueue")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("glm")
 
     -- Add openmp support

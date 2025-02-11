@@ -11,18 +11,17 @@
 #include "spdlog/common.h"
 
 enum class ProcessorType {
-  kAny,
   kLittleCore,
   kMediumCore,
   kBigCore,
 };
 
-template <int start_stage, int end_stage, ProcessorType processor_type>
+template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
 void run_stages(cifar_sparse::AppData* app_data) {
   static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
   static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
 
-#pragma omp parallel
+#pragma omp parallel num_threads(num_threads)
   {
     // Bind to core if needed:
     if constexpr (processor_type == ProcessorType::kLittleCore) {
@@ -52,16 +51,15 @@ struct Task {
 
 std::atomic<bool> done(false);
 
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks, std::pmr::memory_resource* mr) {
+[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
   std::vector<Task> tasks(num_tasks);
 
   spdlog::set_level(spdlog::level::off);
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
     tasks[i] = Task{i, new cifar_sparse::AppData(mr)};
-
-    // We actually need to run all the stages first.
-    run_stages<1, 9, ProcessorType::kAny>(tasks[i].app_data);
   }
 
   spdlog::set_level(spdlog::level::debug);
@@ -69,22 +67,56 @@ std::atomic<bool> done(false);
   return tasks;
 }
 
+void cleanup(std::vector<Task>& tasks) {
+  for (auto& task : tasks) {
+    delete task.app_data;
+  }
+}
+
 // ---------------------------------------------------------------------
 // Tmp
 // ---------------------------------------------------------------------
 
 void tmp() {
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-  auto tasks = init_tasks(10, mr);
+  auto tasks = init_tasks(10);
 
-  run_stages<1, 4, ProcessorType::kLittleCore>(tasks[0].app_data);
-  run_stages<5, 6, ProcessorType::kMediumCore>(tasks[0].app_data);
-  run_stages<7, 9, ProcessorType::kBigCore>(tasks[0].app_data);
+  if (g_device_id == "3A021JEHN02756") {
+    // Little cores: 0 1 2 3
+    // Mid cores: 4 5
+    // Big cores: 6 7
 
-  // cleanup
-  for (auto& task : tasks) {
-    delete task.app_data;
+    std::thread t1(run_stages<1, 4, ProcessorType::kLittleCore, 4>, tasks[0].app_data);
+    std::thread t2(run_stages<5, 6, ProcessorType::kMediumCore, 2>, tasks[0].app_data);
+    std::thread t3(run_stages<7, 9, ProcessorType::kBigCore, 2>, tasks[0].app_data);
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+  } else if (g_device_id == "9b034f1b") {
+    // Little cores: 0 1 2
+    // Mid cores: 3 4
+    // Big cores:
+
+    std::thread t1(run_stages<1, 4, ProcessorType::kLittleCore, 3>, tasks[0].app_data);
+    std::thread t2(run_stages<5, 9, ProcessorType::kMediumCore, 2>, tasks[0].app_data);
+
+    t1.join();
+    t2.join();
+
+  } else if (g_device_id == "ce0717178d7758b00b7e") {
+    // Little cores: 4 5 6 7
+    // Mid cores: 0 1 2 3
+    // Big cores:
+
+    std::thread t1(run_stages<1, 4, ProcessorType::kLittleCore, 4>, tasks[0].app_data);
+    std::thread t2(run_stages<5, 9, ProcessorType::kMediumCore, 4>, tasks[0].app_data);
+
+    t1.join();
+    t2.join();
   }
+
+  cleanup(tasks);
 }
 
 // ---------------------------------------------------------------------

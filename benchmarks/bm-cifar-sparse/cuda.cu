@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 
 #include "cifar-sparse/cuda/cu_dispatcher.cuh"
 #include "cifar-sparse/sparse_appdata.hpp"

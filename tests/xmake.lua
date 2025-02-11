@@ -9,13 +9,15 @@ target("test-omp-tree")
     set_group("test")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("test_omp_tree.cpp")
 
     add_deps("builtin-apps")
 
     add_packages("gtest")
 
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("spdlog")
     add_packages("glm")
 
@@ -39,6 +41,8 @@ target("test-cu-tree")
     set_group("test")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("test_cu_tree.cu")
 
     add_deps("builtin-apps")
@@ -53,7 +57,7 @@ target("test-cu-tree")
     add_ldflags("-fopenmp", {force = true})  -- Link against OpenMP library
     add_packages("openmp")
 
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("spdlog")
     add_packages("glm")
 target_end()
@@ -64,6 +68,8 @@ target("test-vk-tree")
     set_group("test")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("test_vk_tree.cpp")
 
     add_deps("builtin-apps")
@@ -71,7 +77,7 @@ target("test-vk-tree")
 
     add_packages("gtest")
 
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("spdlog")
     add_packages("glm")
 
