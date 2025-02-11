@@ -46,7 +46,7 @@ target("bm-cifar-dense-vk")
 
 
     add_deps("builtin-apps")
-    -- add_deps("vk-backend")
+    add_deps("builtin-apps-vulkan")
 
 
     add_packages("benchmark")

@@ -18,7 +18,7 @@ add_requires("glm", {system = false})
 
 includes("android.lua")
 
-includes("pipe")
+-- includes("pipe")
 includes("builtin-apps")
 includes("tests")
 includes("utility")

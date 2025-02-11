@@ -44,6 +44,7 @@ target("bm-tree-vk")
     add_files("vk.cpp")
 
     add_deps("builtin-apps")
+    add_deps("builtin-apps-vulkan")
 
 
     add_packages("benchmark")
