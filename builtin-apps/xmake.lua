@@ -118,9 +118,7 @@ target("builtin-apps-cuda")
         "tree/cuda/common/helper_string.hpp",
         "tree/cuda/common/helper_timer.hpp",
         "tree/cuda/common.cuh",
-        "tree/cuda/cu_dispatcher.cuh",
         "tree/cuda/func_morton.cuh",
-        "tree/cuda/im_storage.cuh",
         "tree/cuda/kernel.cuh",
     })
 
@@ -144,8 +142,6 @@ target("builtin-apps-cuda")
         "tree/cuda/05_edge_count.cu",
         "tree/cuda/06_prefix_sum.cu",
         "tree/cuda/07_octree.cu",
-        "tree/cuda/cu_dispatcher.cu",
-        "tree/cuda/im_storage.cu",
         "tree/cuda/kernel.cu",
     })
 

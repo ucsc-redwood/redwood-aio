@@ -12,7 +12,14 @@ target("pipe-cifar-sparse-vk")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
 
     add_packages("concurrentqueue")
-    -- add_packages("cli11")
+
+    -- Add openmp support
+    if is_plat("android") then
+        add_cxxflags("-fopenmp -static-openmp")
+        add_ldflags("-fopenmp -static-openmp")
+    else
+        add_packages("openmp")
+    end
 
     if is_plat("android") then
       on_run(run_on_android)
