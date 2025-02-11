@@ -15,6 +15,8 @@ inline std::vector<int> g_big_cores;
     return 16;
   } else if (g_device_id == "9b034f1b") {
     return 64;
+  } else if (g_device_id == "ce0717178d7758b00b7e") {
+    return 32;
   } else if (g_device_id == "pc" || g_device_id == "jetson") {
     return 32;
   }

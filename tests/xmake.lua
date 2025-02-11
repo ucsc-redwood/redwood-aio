@@ -67,6 +67,7 @@ target("test-vk-tree")
     add_files("test_vk_tree.cpp")
 
     add_deps("builtin-apps")
+    add_deps("builtin-apps-vulkan")
 
     add_packages("gtest")
 

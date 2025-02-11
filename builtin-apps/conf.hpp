@@ -18,6 +18,7 @@ const static std::unordered_map<std::string, int> device_id_to_index = {
     {"jetson", 1},
     {"3A021JEHN02756", 2},
     {"9b034f1b", 3},
+    {"ce0717178d7758b00b7e", 4},
 };
 
 struct Device {
@@ -54,8 +55,7 @@ struct Device {
     std::vector<int> all_cores;
     for (size_t core_type = 0; core_type < cores.size(); ++core_type) {
       const auto pinable_cores = get_pinable_cores(core_type);
-      all_cores.insert(
-          all_cores.end(), pinable_cores.begin(), pinable_cores.end());
+      all_cores.insert(all_cores.end(), pinable_cores.begin(), pinable_cores.end());
     }
     return all_cores;
   }
@@ -126,6 +126,19 @@ inline Device init_9b034f1b() {
   return device;
 }
 
+// Samsung Galaxy Note
+inline Device init_ce0717178d7758b00b7e() {
+  Device device;
+  device.core_count = 8;
+  device.core_type_count = 2;
+  device.pinable_mask.set();
+
+  device.cores.push_back({4, 5, 6, 7});  // little cores
+  device.cores.push_back({0, 1, 2, 3});  // big cores
+
+  return device;
+}
+
 inline Device get_device(const std::string& device_id) {
   if (device_id == "pc") {
     return init_pc();
@@ -135,6 +148,8 @@ inline Device get_device(const std::string& device_id) {
     return init_3A021JEHN02756();
   } else if (device_id == "9b034f1b") {
     return init_9b034f1b();
+  } else if (device_id == "ce0717178d7758b00b7e") {
+    return init_ce0717178d7758b00b7e();
   } else {
     throw std::runtime_error("Device not found");
   }
