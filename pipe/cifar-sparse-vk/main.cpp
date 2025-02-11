@@ -81,7 +81,7 @@ namespace device_3A021JEHN02756 {
 void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
   for (auto& task : in_tasks) {
     // ---------
-    run_stages<1, 4, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<1, 3, ProcessorType::kLittleCore, 4>(task.app_data);
     // ---------
 
     q_AB.enqueue(task);
@@ -97,7 +97,7 @@ void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB,
     Task task;
     if (q_AB.try_dequeue(task)) {
       // ---------
-      run_stages<5, 6, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<4, 5, ProcessorType::kMediumCore, 2>(task.app_data);
       // ---------
 
       q_BC.enqueue(task);
@@ -113,7 +113,7 @@ void stage_group_C(moodycamel::ConcurrentQueue<Task>& q_BC, std::vector<Task>& o
     Task task;
     if (q_BC.try_dequeue(task)) {
       // ---------
-      run_stages<7, 9, ProcessorType::kBigCore, 2>(task.app_data);
+      run_stages<6, 9, ProcessorType::kBigCore, 2>(task.app_data);
       // ---------
 
       out_tasks.push_back(task);

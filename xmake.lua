@@ -5,7 +5,6 @@ set_warnings("allextra")
 
 
 add_requires("benchmark")
--- add_requires("cli11")
 
 add_requires("concurrentqueue")
 
