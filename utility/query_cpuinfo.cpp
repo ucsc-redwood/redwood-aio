@@ -12,8 +12,7 @@ std::string getCPUModel() {
   std::ifstream cpuinfo("/proc/cpuinfo");
   std::string line;
   while (std::getline(cpuinfo, line)) {
-    if (line.find("Hardware") != std::string::npos ||
-        line.find("Processor") != std::string::npos) {
+    if (line.find("Hardware") != std::string::npos || line.find("Processor") != std::string::npos) {
       return line.substr(line.find(":") + 2);  // Extract the value after ':'
     }
   }

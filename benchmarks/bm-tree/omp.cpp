@@ -27,8 +27,7 @@ class OMP_Tree : public benchmark::Fixture {
 #pragma omp single
       {
         std::ranges::sort(app_data->u_morton_keys_s1);
-        std::ranges::copy(app_data->u_morton_keys_s1,
-                          app_data->u_morton_keys_sorted_s2.begin());
+        std::ranges::copy(app_data->u_morton_keys_s1, app_data->u_morton_keys_sorted_s2.begin());
       }
       tree::omp::process_stage_3(*app_data);
       tree::omp::process_stage_4(*app_data);
@@ -47,10 +46,9 @@ class OMP_Tree : public benchmark::Fixture {
 // Baseline
 // ----------------------------------------------------------------
 
-static void run_baseline_unrestricted(
-    tree::AppData& app_data,
-    const int n_threads,
-    tree::omp::v2::TempStorage& temp_storage) {
+static void run_baseline_unrestricted(tree::AppData& app_data,
+                                      const int n_threads,
+                                      tree::omp::v2::TempStorage& temp_storage) {
 #pragma omp parallel num_threads(n_threads)
   {
     tree::omp::process_stage_1(app_data);
@@ -189,11 +187,9 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage7little)
 }
 
 // Then define the registration functions for each stage
-void RegisterStage1LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage1LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage1little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage1little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage1_little")
         ->Unit(benchmark::kMillisecond);
@@ -211,55 +207,45 @@ void RegisterStage1LittleBenchmarkWithRange(
 //   }
 // }
 
-void RegisterStage3LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage3LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage3little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage3little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage3_little")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage4LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage4LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage4little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage4little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage4_little")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage5LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage5LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage5little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage5little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage5_little")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage6LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage6LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage6little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage6little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage6_little")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage7LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage7LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage7little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage7little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage7_little")
         ->Unit(benchmark::kMillisecond);
@@ -482,132 +468,108 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage7big)
   }
 }
 
-void RegisterStage1MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage1MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage1medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage1medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage1_medium")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage3MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage3MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage3medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage3medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage3_medium")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage4MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage4MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage4medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage4medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage4_medium")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage5MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage5MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage5medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage5medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage5_medium")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage6MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage6MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage6medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage6medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage6_medium")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage7MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage7MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage7medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage7medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage7_medium")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage1BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage1BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage1big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage1big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage1_big")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage3BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage3BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage3big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage3big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage3_big")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage4BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage4BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage4big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage4big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage4_big")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage5BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage5BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage5big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage5big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage5_big")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage6BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage6BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage6big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage6big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage6_big")
         ->Unit(benchmark::kMillisecond);
   }
 }
 
-void RegisterStage7BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage7BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage7big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage7big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage7_big")
         ->Unit(benchmark::kMillisecond);
@@ -641,11 +603,9 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2little)
   assert(std::ranges::is_sorted(app_data->u_morton_keys_sorted_s2));
 }
 
-void RegisterStage2LittleBenchmarkWithRange(
-    const std::vector<int>& pinable_little_cores) {
+void RegisterStage2LittleBenchmarkWithRange(const std::vector<int>& pinable_little_cores) {
   for (size_t i = 1; i <= pinable_little_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage2little_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage2little_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage2_little")
         ->Unit(benchmark::kMillisecond);
@@ -675,11 +635,9 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2medium)
   assert(std::ranges::is_sorted(app_data->u_morton_keys_sorted_s2));
 }
 
-void RegisterStage2MediumBenchmarkWithRange(
-    const std::vector<int>& pinable_medium_cores) {
+void RegisterStage2MediumBenchmarkWithRange(const std::vector<int>& pinable_medium_cores) {
   for (size_t i = 1; i <= pinable_medium_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage2medium_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage2medium_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage2_medium")
         ->Unit(benchmark::kMillisecond);
@@ -709,11 +667,9 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2big)
   assert(std::ranges::is_sorted(app_data->u_morton_keys_sorted_s2));
 }
 
-void RegisterStage2BigBenchmarkWithRange(
-    const std::vector<int>& pinable_big_cores) {
+void RegisterStage2BigBenchmarkWithRange(const std::vector<int>& pinable_big_cores) {
   for (size_t i = 1; i <= pinable_big_cores.size(); ++i) {
-    ::benchmark::internal::RegisterBenchmarkInternal(
-        new OMP_Tree_Stage2big_Benchmark())
+    ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage2big_Benchmark())
         ->Arg(i)
         ->Name("OMP_Tree/Stage2_big")
         ->Unit(benchmark::kMillisecond);
@@ -734,8 +690,7 @@ BENCHMARK_DEFINE_F(OMP_Tree, Stage2std)
 }
 
 void RegisterStage2stdBenchmark() {
-  ::benchmark::internal::RegisterBenchmarkInternal(
-      new OMP_Tree_Stage2std_Benchmark())
+  ::benchmark::internal::RegisterBenchmarkInternal(new OMP_Tree_Stage2std_Benchmark())
       ->Name("OMP_Tree/Stage2_std")
       ->Unit(benchmark::kMillisecond);
 }

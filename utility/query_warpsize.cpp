@@ -49,8 +49,7 @@ int main() {
     deviceProperties2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
 
     VkPhysicalDeviceSubgroupProperties subgroupProperties = {};
-    subgroupProperties.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
+    subgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
     deviceProperties2.pNext = &subgroupProperties;
 
     vkGetPhysicalDeviceProperties2(device, &deviceProperties2);
@@ -59,8 +58,7 @@ int main() {
     vkGetPhysicalDeviceProperties(device, &deviceProperties);
 
     std::cout << "Device: " << deviceProperties.deviceName << std::endl;
-    std::cout << "  Subgroup Size (Warp Size): "
-              << subgroupProperties.subgroupSize << std::endl;
+    std::cout << "  Subgroup Size (Warp Size): " << subgroupProperties.subgroupSize << std::endl;
   }
 
   // Cleanup

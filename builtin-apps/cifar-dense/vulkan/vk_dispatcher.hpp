@@ -18,9 +18,7 @@ class Singleton {
     return instance;
   }
 
-  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() {
-    return engine.get_mr();
-  }
+  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
   void sync() { seq->sync(); }
 
@@ -40,8 +38,7 @@ class Singleton {
 
   ::vulkan::Engine engine;
   std::shared_ptr<::vulkan::Sequence> seq;
-  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>>
-      algorithms;
+  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>> algorithms;
 
   struct Conv2dPushConstants {
     uint32_t input_height;

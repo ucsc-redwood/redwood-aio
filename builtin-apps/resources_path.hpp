@@ -19,11 +19,7 @@ namespace helpers {
   //         ├── debug
   //         │   ├── bm-cifar-dense
   // resources
-  return std::filesystem::current_path()
-             .parent_path()
-             .parent_path()
-             .parent_path()
-             .parent_path() /
+  return std::filesystem::current_path().parent_path().parent_path().parent_path().parent_path() /
          "resources";
 #endif
 }

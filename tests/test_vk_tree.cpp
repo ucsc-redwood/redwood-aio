@@ -34,19 +34,16 @@ static void manual_visualized_test(size_t n_input) {
     if (i == n_iter - 1) {
       spdlog::debug("First 10 sorted morton codes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_input()); i++) {
-        spdlog::debug(
-            "\tmorton[{}] = {}", i, appdata.u_morton_keys_sorted_s2[i]);
+        spdlog::debug("\tmorton[{}] = {}", i, appdata.u_morton_keys_sorted_s2[i]);
       }
     }
 
-    tree::vulkan::Singleton::getInstance().process_stage_3(appdata,
-                                                           tmp_storage);
+    tree::vulkan::Singleton::getInstance().process_stage_3(appdata, tmp_storage);
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 unique morton codes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_unique()); i++) {
-        spdlog::debug(
-            "\tunique_morton[{}] = {}", i, appdata.u_morton_keys_unique_s3[i]);
+        spdlog::debug("\tunique_morton[{}] = {}", i, appdata.u_morton_keys_unique_s3[i]);
       }
     }
 
@@ -82,9 +79,7 @@ static void manual_visualized_test(size_t n_input) {
     if (i == n_iter - 1) {
       spdlog::debug("First 10 octree nodes:");
       for (auto i = 0u; i < std::min(10u, appdata.get_n_octree_nodes()); i++) {
-        spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}",
-                      i,
-                      appdata.u_oct_child_node_mask_s7[i]);
+        spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}", i, appdata.u_oct_child_node_mask_s7[i]);
       }
     }
   }

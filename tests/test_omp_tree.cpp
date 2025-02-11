@@ -41,8 +41,7 @@ static void manual_visualized_test() {
     {
       spdlog::debug("First 10 sorted morton codes:");
       for (auto i = 0u; i < std::min(10u, app_data.get_n_input()); i++) {
-        spdlog::debug(
-            "\tsorted_morton[{}] = {}", i, app_data.u_morton_keys_sorted_s2[i]);
+        spdlog::debug("\tsorted_morton[{}] = {}", i, app_data.u_morton_keys_sorted_s2[i]);
       }
     }
 
@@ -52,8 +51,7 @@ static void manual_visualized_test() {
     {
       spdlog::debug("First 10 unique morton codes:");
       for (auto i = 0u; i < std::min(10u, app_data.get_n_unique()); i++) {
-        spdlog::debug(
-            "\tunique_morton[{}] = {}", i, app_data.u_morton_keys_unique_s3[i]);
+        spdlog::debug("\tunique_morton[{}] = {}", i, app_data.u_morton_keys_unique_s3[i]);
       }
     }
 
@@ -83,8 +81,7 @@ static void manual_visualized_test() {
     {
       spdlog::debug("First 10 edge offsets:");
       for (auto i = 0u; i < std::min(10u, app_data.get_n_brt_nodes()); i++) {
-        spdlog::debug(
-            "\tedge_offset[{}] = {}", i, app_data.u_edge_offset_s6[i]);
+        spdlog::debug("\tedge_offset[{}] = {}", i, app_data.u_edge_offset_s6[i]);
       }
     }
 
@@ -94,9 +91,7 @@ static void manual_visualized_test() {
     {
       spdlog::debug("First 10 octree nodes:");
       for (auto i = 0u; i < std::min(10u, app_data.get_n_octree_nodes()); i++) {
-        spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}",
-                      i,
-                      app_data.u_oct_child_node_mask_s7[i]);
+        spdlog::debug("\tchild_node_mask[{}] = 0b{:8b}", i, app_data.u_oct_child_node_mask_s7[i]);
       }
     }
   }
@@ -124,8 +119,7 @@ class OmpTreeTestFixture : public ::testing::Test {
     // Create a small test dataset
     appdata = std::make_unique<tree::AppData>(mr, 100);
     n_threads = omp_get_max_threads();
-    temp_storage =
-        std::make_unique<tree::omp::v2::TempStorage>(n_threads, n_threads);
+    temp_storage = std::make_unique<tree::omp::v2::TempStorage>(n_threads, n_threads);
   }
 
   void TearDown() override {
@@ -159,8 +153,7 @@ TEST_F(OmpTreeTestFixture, Stage2_MortonCodeSorting) {
 
   // Verify that morton codes are sorted
   for (size_t i = 1; i < appdata->get_n_input(); ++i) {
-    EXPECT_LE(appdata->u_morton_keys_sorted_s2[i - 1],
-              appdata->u_morton_keys_sorted_s2[i]);
+    EXPECT_LE(appdata->u_morton_keys_sorted_s2[i - 1], appdata->u_morton_keys_sorted_s2[i]);
   }
 }
 
@@ -176,8 +169,7 @@ TEST_F(OmpTreeTestFixture, Stage3_UniqueMortonCodes) {
   ASSERT_GT(appdata->get_n_unique(), 0);
   EXPECT_LE(appdata->get_n_unique(), appdata->get_n_input());
   for (size_t i = 1; i < appdata->get_n_unique(); ++i) {
-    EXPECT_LT(appdata->u_morton_keys_unique_s3[i - 1],
-              appdata->u_morton_keys_unique_s3[i]);
+    EXPECT_LT(appdata->u_morton_keys_unique_s3[i - 1], appdata->u_morton_keys_unique_s3[i]);
   }
 }
 
@@ -210,8 +202,7 @@ TEST_F(OmpTreeTestFixture, Stage5_EdgeCounts) {
   }
 
   // Verify not all are zeros
-  bool all_zeros = std::ranges::all_of(appdata->u_edge_count_s5,
-                                       [](int x) { return x == 0; });
+  bool all_zeros = std::ranges::all_of(appdata->u_edge_count_s5, [](int x) { return x == 0; });
   EXPECT_FALSE(all_zeros);
 }
 
@@ -227,8 +218,7 @@ TEST_F(OmpTreeTestFixture, Stage6_EdgeOffsets) {
   }
 
   // Verify not all are zeros
-  bool all_zeros = std::ranges::all_of(appdata->u_edge_offset_s6,
-                                       [](int x) { return x == 0; });
+  bool all_zeros = std::ranges::all_of(appdata->u_edge_offset_s6, [](int x) { return x == 0; });
   EXPECT_FALSE(all_zeros);
 
   // Verify edge offsets are monotonically increasing
@@ -250,8 +240,8 @@ TEST_F(OmpTreeTestFixture, Stage7_OctreeNodes) {
   }
 
   // Verify not all are zeros
-  bool all_zeros = std::ranges::all_of(appdata->u_oct_child_node_mask_s7,
-                                       [](int x) { return x == 0; });
+  bool all_zeros =
+      std::ranges::all_of(appdata->u_oct_child_node_mask_s7, [](int x) { return x == 0; });
   EXPECT_FALSE(all_zeros);
 
   // Verify octree nodes

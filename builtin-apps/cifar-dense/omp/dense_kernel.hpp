@@ -52,15 +52,11 @@ inline void conv2d_omp(const float *input_data,
         int image_y_base = y * stride + ky - padding;
         for (int kx = 0; kx < weight_width; ++kx) {
           int image_x = x * stride + kx - padding;
-          if (image_y_base >= 0 && image_y_base < input_height &&
-              image_x >= 0 && image_x < input_width) {
-            int file_index =
-                ((in_channel * input_height + image_y_base) * input_width +
-                 image_x);
+          if (image_y_base >= 0 && image_y_base < input_height && image_x >= 0 &&
+              image_x < input_width) {
+            int file_index = ((in_channel * input_height + image_y_base) * input_width + image_x);
             int weight_index =
-                ((((out_channel * weight_input_channels) + in_channel) *
-                      weight_height +
-                  ky) *
+                ((((out_channel * weight_input_channels) + in_channel) * weight_height + ky) *
                      weight_width +
                  kx);
             sum += input_data[file_index] * weight_data[weight_index];
@@ -112,13 +108,11 @@ inline void maxpool2d_omp(const float *input_data,
       int input_h = h * stride + ph;
       int input_w = w * stride + pw;
       if (input_h < input_height && input_w < input_width) {
-        int input_index =
-            c * (input_height * input_width) + input_h * input_width + input_w;
+        int input_index = c * (input_height * input_width) + input_h * input_width + input_w;
         max_val = std::max(max_val, input_data[input_index]);
       }
     }
-    int output_index =
-        c * (output_height * output_width) + h * output_width + w;
+    int output_index = c * (output_height * output_width) + h * output_width + w;
     output_data[output_index] = max_val;
   }
 }
@@ -151,8 +145,7 @@ inline void linear_omp(const float *input,
 // ----------------------------------------------------------------------------
 
 inline void process_stage_1(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv1OutChannels * kConv1OutHeight * kConv1OutWidth;
+  const int total_iterations = kConv1OutChannels * kConv1OutHeight * kConv1OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -182,8 +175,7 @@ inline void process_stage_1(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_2(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv1OutChannels * kPool1OutHeight * kPool1OutWidth;
+  const int total_iterations = kConv1OutChannels * kPool1OutHeight * kPool1OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -204,8 +196,7 @@ inline void process_stage_2(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_3(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv2OutChannels * kConv2OutHeight * kConv2OutWidth;
+  const int total_iterations = kConv2OutChannels * kConv2OutHeight * kConv2OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -235,8 +226,7 @@ inline void process_stage_3(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_4(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv2OutChannels * kPool2OutHeight * kPool2OutWidth;
+  const int total_iterations = kConv2OutChannels * kPool2OutHeight * kPool2OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -257,8 +247,7 @@ inline void process_stage_4(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_5(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv3OutChannels * kConv3OutHeight * kConv3OutWidth;
+  const int total_iterations = kConv3OutChannels * kConv3OutHeight * kConv3OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -288,8 +277,7 @@ inline void process_stage_5(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_6(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv4OutChannels * kConv4OutHeight * kConv4OutWidth;
+  const int total_iterations = kConv4OutChannels * kConv4OutHeight * kConv4OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -319,8 +307,7 @@ inline void process_stage_6(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_7(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv5OutChannels * kConv5OutHeight * kConv5OutWidth;
+  const int total_iterations = kConv5OutChannels * kConv5OutHeight * kConv5OutWidth;
 
   const int start = 0;
   const int end = total_iterations;
@@ -350,8 +337,7 @@ inline void process_stage_7(cifar_dense::AppData &app_data) {
 // ----------------------------------------------------------------------------
 
 inline void process_stage_8(cifar_dense::AppData &app_data) {
-  const int total_iterations =
-      kConv5OutChannels * kPool3OutHeight * kPool3OutWidth;
+  const int total_iterations = kConv5OutChannels * kPool3OutHeight * kPool3OutWidth;
 
   const int start = 0;
   const int end = total_iterations;

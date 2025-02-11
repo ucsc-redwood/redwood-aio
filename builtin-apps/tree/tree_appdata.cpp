@@ -53,28 +53,26 @@ AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input)
   static std::uniform_real_distribution dis(kMinCoord, kMinCoord + kRange);
 
   // generate random points
-  std::ranges::generate(u_input_points_s0, [&]() {
-    return glm::vec4(dis(gen), dis(gen), dis(gen), 1.0f);
-  });
+  std::ranges::generate(u_input_points_s0,
+                        [&]() { return glm::vec4(dis(gen), dis(gen), dis(gen), 1.0f); });
 
   // Calculate total memory allocation in bytes
-  const size_t total_bytes =
-      u_input_points_s0.size() * sizeof(glm::vec4) +       // Stage 1
-      u_morton_keys_s1.size() * sizeof(uint32_t) +         // Stage 1
-      u_morton_keys_sorted_s2.size() * sizeof(uint32_t) +  // Stage 2
-      u_morton_keys_unique_s3.size() * sizeof(uint32_t) +  // Stage 3
-      u_brt_prefix_n_s4.size() * sizeof(uint8_t) +         // Stage 4
-      u_brt_has_leaf_left_s4.size() * sizeof(uint8_t) +    // Stage 4
-      u_brt_has_leaf_right_s4.size() * sizeof(uint8_t) +   // Stage 4
-      u_brt_left_child_s4.size() * sizeof(int32_t) +       // Stage 4
-      u_brt_parents_s4.size() * sizeof(int32_t) +          // Stage 4
-      u_edge_count_s5.size() * sizeof(int32_t) +           // Stage 5
-      u_edge_offset_s6.size() * sizeof(int32_t) +          // Stage 6
-      u_oct_children_s7.size() * sizeof(int32_t) +         // Stage 7
-      u_oct_corner_s7.size() * sizeof(glm::vec4) +         // Stage 7
-      u_oct_cell_size_s7.size() * sizeof(float) +          // Stage 7
-      u_oct_child_node_mask_s7.size() * sizeof(int32_t) +  // Stage 7
-      u_oct_child_leaf_mask_s7.size() * sizeof(int32_t);   // Stage 7
+  const size_t total_bytes = u_input_points_s0.size() * sizeof(glm::vec4) +       // Stage 1
+                             u_morton_keys_s1.size() * sizeof(uint32_t) +         // Stage 1
+                             u_morton_keys_sorted_s2.size() * sizeof(uint32_t) +  // Stage 2
+                             u_morton_keys_unique_s3.size() * sizeof(uint32_t) +  // Stage 3
+                             u_brt_prefix_n_s4.size() * sizeof(uint8_t) +         // Stage 4
+                             u_brt_has_leaf_left_s4.size() * sizeof(uint8_t) +    // Stage 4
+                             u_brt_has_leaf_right_s4.size() * sizeof(uint8_t) +   // Stage 4
+                             u_brt_left_child_s4.size() * sizeof(int32_t) +       // Stage 4
+                             u_brt_parents_s4.size() * sizeof(int32_t) +          // Stage 4
+                             u_edge_count_s5.size() * sizeof(int32_t) +           // Stage 5
+                             u_edge_offset_s6.size() * sizeof(int32_t) +          // Stage 6
+                             u_oct_children_s7.size() * sizeof(int32_t) +         // Stage 7
+                             u_oct_corner_s7.size() * sizeof(glm::vec4) +         // Stage 7
+                             u_oct_cell_size_s7.size() * sizeof(float) +          // Stage 7
+                             u_oct_child_node_mask_s7.size() * sizeof(int32_t) +  // Stage 7
+                             u_oct_child_leaf_mask_s7.size() * sizeof(int32_t);   // Stage 7
 
   const float total_mb = total_bytes / (1024.0f * 1024.0f);
 

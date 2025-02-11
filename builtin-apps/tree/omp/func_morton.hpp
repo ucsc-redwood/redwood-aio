@@ -66,12 +66,9 @@ inline void morton32_to_xyz(glm::vec4 *ret,
   uint32_t dec_raw_x[3];
   m3D_d_magicbits(code, dec_raw_x);
 
-  const auto dec_x =
-      (static_cast<float>(dec_raw_x[0]) / bit_scale) * range + min_coord;
-  const auto dec_y =
-      (static_cast<float>(dec_raw_x[1]) / bit_scale) * range + min_coord;
-  const auto dec_z =
-      (static_cast<float>(dec_raw_x[2]) / bit_scale) * range + min_coord;
+  const auto dec_x = (static_cast<float>(dec_raw_x[0]) / bit_scale) * range + min_coord;
+  const auto dec_y = (static_cast<float>(dec_raw_x[1]) / bit_scale) * range + min_coord;
+  const auto dec_z = (static_cast<float>(dec_raw_x[2]) / bit_scale) * range + min_coord;
 
   (*ret)[0] = dec_x;
   (*ret)[1] = dec_y;

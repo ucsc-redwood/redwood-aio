@@ -22,8 +22,8 @@ void process_stage_1(tree::AppData &app_data) {
 
 #pragma omp for
   for (int i = start; i < end; ++i) {
-    app_data.u_morton_keys_s1[i] = xyz_to_morton32(
-        app_data.u_input_points_s0[i], tree::kMinCoord, tree::kRange);
+    app_data.u_morton_keys_s1[i] =
+        xyz_to_morton32(app_data.u_input_points_s0[i], tree::kMinCoord, tree::kRange);
   }
 }
 
@@ -55,12 +55,11 @@ void process_stage_2(tree::AppData &app_data, v2::TempStorage &temp_storage) {
 // ----------------------------------------------------------------------------
 
 void process_stage_3(tree::AppData &app_data) {
-  const auto last = std::unique_copy(
-      app_data.u_morton_keys_sorted_s2.data(),
-      app_data.u_morton_keys_sorted_s2.data() + app_data.get_n_input(),
-      app_data.u_morton_keys_unique_s3.data());
-  const auto n_unique =
-      std::distance(app_data.u_morton_keys_unique_s3.data(), last);
+  const auto last =
+      std::unique_copy(app_data.u_morton_keys_sorted_s2.data(),
+                       app_data.u_morton_keys_sorted_s2.data() + app_data.get_n_input(),
+                       app_data.u_morton_keys_unique_s3.data());
+  const auto n_unique = std::distance(app_data.u_morton_keys_unique_s3.data(), last);
 
   app_data.set_n_unique(n_unique);
   app_data.set_n_brt_nodes(n_unique - 1);
@@ -131,19 +130,18 @@ void process_stage_7(tree::AppData &app_data) {
 
 #pragma omp for
   for (int i = start; i < end; ++i) {
-    process_oct_node(
-        i,
-        reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7.data()),
-        app_data.u_oct_corner_s7.data(),
-        app_data.u_oct_cell_size_s7.data(),
-        app_data.u_oct_child_node_mask_s7.data(),
-        app_data.u_edge_offset_s6.data(),
-        app_data.u_edge_count_s5.data(),
-        app_data.u_morton_keys_unique_s3.data(),
-        app_data.u_brt_prefix_n_s4.data(),
-        app_data.u_brt_parents_s4.data(),
-        tree::kMinCoord,
-        tree::kRange);
+    process_oct_node(i,
+                     reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7.data()),
+                     app_data.u_oct_corner_s7.data(),
+                     app_data.u_oct_cell_size_s7.data(),
+                     app_data.u_oct_child_node_mask_s7.data(),
+                     app_data.u_edge_offset_s6.data(),
+                     app_data.u_edge_count_s5.data(),
+                     app_data.u_morton_keys_unique_s3.data(),
+                     app_data.u_brt_prefix_n_s4.data(),
+                     app_data.u_brt_parents_s4.data(),
+                     tree::kMinCoord,
+                     tree::kRange);
   }
 }
 

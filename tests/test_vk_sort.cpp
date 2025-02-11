@@ -60,8 +60,7 @@ class VulkanTestFixture : public ::testing::Test {
   }
 };
 
-class VulkanSortTest : public VulkanTestFixture,
-                       public testing::WithParamInterface<unsigned int> {
+class VulkanSortTest : public VulkanTestFixture, public testing::WithParamInterface<unsigned int> {
  protected:
   void verify_sort(unsigned int n) {
     auto mr = engine.get_mr();
@@ -75,8 +74,7 @@ class VulkanSortTest : public VulkanTestFixture,
     std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
     // Keep CPU copy for verification
-    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
-                                         u_elements_in.end());
+    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(), u_elements_in.end());
 
     auto algo = engine
                     .algorithm(get_shader_name(),
@@ -101,9 +99,9 @@ class VulkanSortTest : public VulkanTestFixture,
   }
 };
 
-class VulkanSortIterationTest : public VulkanTestFixture,
-                                public testing::WithParamInterface<
-                                    std::tuple<unsigned int, unsigned int>> {
+class VulkanSortIterationTest
+    : public VulkanTestFixture,
+      public testing::WithParamInterface<std::tuple<unsigned int, unsigned int>> {
  protected:
   void verify_sort_iterations(unsigned int n, unsigned int iterations) {
     auto mr = engine.get_mr();
@@ -117,8 +115,7 @@ class VulkanSortIterationTest : public VulkanTestFixture,
     std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
     // Keep CPU copy for verification
-    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
-                                         u_elements_in.end());
+    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(), u_elements_in.end());
 
     auto algo = engine
                     .algorithm(get_shader_name(),
@@ -141,8 +138,7 @@ class VulkanSortIterationTest : public VulkanTestFixture,
     }
 
     // Verify results
-    bool all_zeros =
-        std::ranges::all_of(u_elements_out, [](uint32_t x) { return x == 0; });
+    bool all_zeros = std::ranges::all_of(u_elements_out, [](uint32_t x) { return x == 0; });
     EXPECT_FALSE(all_zeros);
 
     EXPECT_TRUE(std::ranges::is_sorted(u_elements_out));
@@ -203,8 +199,7 @@ TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
   std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
   // Keep CPU copy for verification
-  std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
-                                       u_elements_in.end());
+  std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(), u_elements_in.end());
 
   auto algo = engine
                   .algorithm(get_shader_name(),
@@ -229,9 +224,7 @@ TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
 }
 
 // Test with different input sizes
-TEST_P(VulkanSortTest, SortsCorrectlyWithDifferentSizes) {
-  verify_sort(GetParam());
-}
+TEST_P(VulkanSortTest, SortsCorrectlyWithDifferentSizes) { verify_sort(GetParam()); }
 
 INSTANTIATE_TEST_SUITE_P(VaryingSizes,
                          VulkanSortTest,
@@ -255,10 +248,9 @@ INSTANTIATE_TEST_SUITE_P(
     VaryingSizesAndIterations,
     VulkanSortIterationTest,
     testing::Combine(testing::Values(1024, 64 * 1024, 640 * 480),  // Sizes
-                     testing::Values(1, 2, 5, 10, 32)  // Number of iterations
+                     testing::Values(1, 2, 5, 10, 32)              // Number of iterations
                      ),
-    [](const testing::TestParamInfo<std::tuple<unsigned int, unsigned int>>
-           &info) {
+    [](const testing::TestParamInfo<std::tuple<unsigned int, unsigned int>> &info) {
       return "Size" + std::to_string(std::get<0>(info.param)) + "_Iterations" +
              std::to_string(std::get<1>(info.param));
     });

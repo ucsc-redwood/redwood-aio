@@ -20,9 +20,7 @@ struct bucket {
   int start;  // starting point in B array
 };
 
-inline int cmpfunc(const void *a, const void *b) {
-  return (*(uint32_t *)a - *(uint32_t *)b);
-}
+inline int cmpfunc(const void *a, const void *b) { return (*(uint32_t *)a - *(uint32_t *)b); }
 
 inline void bucket_sort(
 
@@ -71,21 +69,17 @@ inline void bucket_sort(
 #pragma omp master
   {
     for (j = 1; j < n_buckets; j++) {
-      global_starting_position[j] =
-          global_starting_position[j - 1] + global_n_elem[j - 1];
+      global_starting_position[j] = global_starting_position[j - 1] + global_n_elem[j - 1];
       buckets[j].start = buckets[j - 1].start + global_n_elem[j - 1];
       buckets[j].index = buckets[j - 1].index + global_n_elem[j - 1];
     }
   }
 
 #pragma omp barrier
-  for (j = my_id + n_buckets; j < n_buckets * num_threads;
-       j = j + num_threads) {
+  for (j = my_id + n_buckets; j < n_buckets * num_threads; j = j + num_threads) {
     int prevoius_index = j - n_buckets;
-    buckets[j].start =
-        buckets[prevoius_index].start + buckets[prevoius_index].n_elem;
-    buckets[j].index =
-        buckets[prevoius_index].index + buckets[prevoius_index].n_elem;
+    buckets[j].start = buckets[prevoius_index].start + buckets[prevoius_index].n_elem;
+    buckets[j].index = buckets[prevoius_index].index + buckets[prevoius_index].n_elem;
   }
 #pragma omp barrier
 
@@ -102,10 +96,7 @@ inline void bucket_sort(
 
 #pragma omp for
   for (int i = 0; i < n_buckets; i++)
-    qsort(B + global_starting_position[i],
-          global_n_elem[i],
-          sizeof(uint32_t),
-          cmpfunc);
+    qsort(B + global_starting_position[i], global_n_elem[i], sizeof(uint32_t), cmpfunc);
 
   // // I am not going to copy this back. (02/04/2025)
   // #pragma omp master
@@ -120,8 +111,7 @@ struct TempStorage {
     memset(global_starting_position, 0, sizeof(int) * n_buckets);
 
     // local buckets, n_buckets for each thread
-    buckets =
-        (struct bucket *)calloc(n_buckets * num_threads, sizeof(struct bucket));
+    buckets = (struct bucket *)calloc(n_buckets * num_threads, sizeof(struct bucket));
   }
 
   ~TempStorage() {

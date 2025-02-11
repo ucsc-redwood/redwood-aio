@@ -100,13 +100,11 @@ void maxpool2d_omp(const float *input_data,
       int input_h = h * stride + ph;
       int input_w = w * stride + pw;
       if (input_h < input_height && input_w < input_width) {
-        int input_index =
-            c * (input_height * input_width) + input_h * input_width + input_w;
+        int input_index = c * (input_height * input_width) + input_h * input_width + input_w;
         max_val = std::max(max_val, input_data[input_index]);
       }
     }
-    int output_index =
-        c * (output_height * output_width) + h * output_width + w;
+    int output_index = c * (output_height * output_width) + h * output_width + w;
     output_data[output_index] = max_val;
   }
 }
@@ -124,9 +122,7 @@ void linear_omp(const float *input_data,
   for (int i = start; i < end; ++i) {
     float sum = 0.0f;
 
-    for (int nz_idx = weight_matrix.row_ptr[i];
-         nz_idx < weight_matrix.row_ptr[i + 1];
-         ++nz_idx) {
+    for (int nz_idx = weight_matrix.row_ptr[i]; nz_idx < weight_matrix.row_ptr[i + 1]; ++nz_idx) {
       int col = weight_matrix.col_idx[nz_idx];
       sum += input_data[col] * weight_matrix.values[nz_idx];
     }
@@ -172,8 +168,7 @@ void process_stage_2(cifar_sparse::AppData &app_data) {
 
   constexpr auto output_height = (input_height - kPoolSize) / kPoolStride + 1;
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
-  constexpr auto total_iterations =
-      input_channels * output_height * output_width;
+  constexpr auto total_iterations = input_channels * output_height * output_width;
 
   constexpr auto end = total_iterations;
 
@@ -219,8 +214,7 @@ void process_stage_4(cifar_sparse::AppData &app_data) {
 
   constexpr auto output_height = (input_height - kPoolSize) / kPoolStride + 1;
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
-  constexpr auto total_iterations =
-      input_channels * output_height * output_width;
+  constexpr auto total_iterations = input_channels * output_height * output_width;
 
   const auto start = 0;
   const auto end = total_iterations;
@@ -311,8 +305,7 @@ void process_stage_8(cifar_sparse::AppData &app_data) {
 
   constexpr auto output_height = (input_height - kPoolSize) / kPoolStride + 1;
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
-  constexpr auto total_iterations =
-      input_channels * output_height * output_width;
+  constexpr auto total_iterations = input_channels * output_height * output_width;
 
   const auto start = 0;
   const auto end = total_iterations;

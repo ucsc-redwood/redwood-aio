@@ -19,8 +19,7 @@ enum class ProcessorType {
 
 template <int start_stage, int end_stage, ProcessorType processor_type>
 void run_stages(cifar_sparse::AppData* app_data) {
-  static_assert(start_stage >= 1 && end_stage <= 9,
-                "Stage range out of bounds");
+  static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
   static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
 
 #pragma omp parallel
@@ -35,8 +34,7 @@ void run_stages(cifar_sparse::AppData* app_data) {
     }
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]
-    []<std::size_t... I>(std::index_sequence<I...>,
-                         cifar_sparse::AppData& data) {
+    []<std::size_t... I>(std::index_sequence<I...>, cifar_sparse::AppData& data) {
       // Each I is offset by (start_stage - 1)
       ((cifar_sparse::omp::run_stage<start_stage + I>(data)), ...);
     }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
@@ -54,8 +52,7 @@ struct Task {
 
 std::atomic<bool> done(false);
 
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks,
-                                           std::pmr::memory_resource* mr) {
+[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks, std::pmr::memory_resource* mr) {
   std::vector<Task> tasks(num_tasks);
 
   spdlog::set_level(spdlog::level::off);

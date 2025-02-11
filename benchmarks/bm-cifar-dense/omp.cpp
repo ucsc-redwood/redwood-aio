@@ -11,8 +11,7 @@
 // Global variables
 // ------------------------------------------------------------
 
-static void run_baseline_unrestricted(cifar_dense::AppData& app_data,
-                                      const int n_threads) {
+static void run_baseline_unrestricted(cifar_dense::AppData& app_data, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
     cifar_dense::omp::process_stage_1(app_data);
@@ -30,8 +29,7 @@ static void run_baseline_unrestricted(cifar_dense::AppData& app_data,
 class OMP_CifarDense : public benchmark::Fixture {
  protected:
   void SetUp(benchmark::State&) override {
-    app_data =
-        std::make_unique<cifar_dense::AppData>(std::pmr::new_delete_resource());
+    app_data = std::make_unique<cifar_dense::AppData>(std::pmr::new_delete_resource());
 
     run_baseline_unrestricted(*app_data, std::thread::hardware_concurrency());
   }
@@ -60,33 +58,31 @@ BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
 // Stage benchmarks
 // ------------------------------------------------------------
 
-#define DEFINE_STAGE_BENCHMARK(stage, core_type)                              \
-  static void run_stage_##stage##_##core_type(cifar_dense::AppData& app_data, \
-                                              const std::vector<int>& cores,  \
-                                              const int n_threads) {          \
-    _Pragma("omp parallel num_threads(n_threads)") {                          \
-      bind_thread_to_core(cores);                                             \
-      cifar_dense::omp::process_stage_##stage(app_data);                      \
-    }                                                                         \
-  }                                                                           \
-                                                                              \
-  BENCHMARK_DEFINE_F(OMP_CifarDense, Stage##stage##core_type)                 \
-  (benchmark::State & state) {                                                \
-    const auto n_threads = state.range(0);                                    \
-    for (auto _ : state) {                                                    \
-      run_stage_##stage##_##core_type(                                        \
-          *app_data, g_##core_type##_cores, n_threads);                       \
-    }                                                                         \
-  }                                                                           \
-                                                                              \
-  void RegisterStage##stage##core_type##BenchmarkWithRange() {                \
-    for (size_t i = 1; i <= g_##core_type##_cores.size(); ++i) {              \
-      ::benchmark::internal::RegisterBenchmarkInternal(                       \
-          new OMP_CifarDense_Stage##stage##core_type##_Benchmark())           \
-          ->Arg(i)                                                            \
-          ->Name("OMP_CifarDense/Stage" #stage "_" #core_type)                \
-          ->Unit(benchmark::kMillisecond);                                    \
-    }                                                                         \
+#define DEFINE_STAGE_BENCHMARK(stage, core_type)                                            \
+  static void run_stage_##stage##_##core_type(                                              \
+      cifar_dense::AppData& app_data, const std::vector<int>& cores, const int n_threads) { \
+    _Pragma("omp parallel num_threads(n_threads)") {                                        \
+      bind_thread_to_core(cores);                                                           \
+      cifar_dense::omp::process_stage_##stage(app_data);                                    \
+    }                                                                                       \
+  }                                                                                         \
+                                                                                            \
+  BENCHMARK_DEFINE_F(OMP_CifarDense, Stage##stage##core_type)                               \
+  (benchmark::State & state) {                                                              \
+    const auto n_threads = state.range(0);                                                  \
+    for (auto _ : state) {                                                                  \
+      run_stage_##stage##_##core_type(*app_data, g_##core_type##_cores, n_threads);         \
+    }                                                                                       \
+  }                                                                                         \
+                                                                                            \
+  void RegisterStage##stage##core_type##BenchmarkWithRange() {                              \
+    for (size_t i = 1; i <= g_##core_type##_cores.size(); ++i) {                            \
+      ::benchmark::internal::RegisterBenchmarkInternal(                                     \
+          new OMP_CifarDense_Stage##stage##core_type##_Benchmark())                         \
+          ->Arg(i)                                                                          \
+          ->Name("OMP_CifarDense/Stage" #stage "_" #core_type)                              \
+          ->Unit(benchmark::kMillisecond);                                                  \
+    }                                                                                       \
   }
 
 DEFINE_STAGE_BENCHMARK(1, little);

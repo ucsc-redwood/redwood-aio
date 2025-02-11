@@ -49,8 +49,7 @@ constexpr auto kRange = 1024.0f;
 // clang-format on
 
 struct AppData final : BaseAppData {
-  explicit AppData(std::pmr::memory_resource* mr,
-                   const size_t n_input = kDefaultInputSize);
+  explicit AppData(std::pmr::memory_resource* mr, const size_t n_input = kDefaultInputSize);
 
   ~AppData() override = default;
 
@@ -120,9 +119,7 @@ struct AppData final : BaseAppData {
     return n_unique;
   }
 
-  [[nodiscard]] uint32_t get_n_brt_nodes() const {
-    return this->get_n_unique() - 1;
-  }
+  [[nodiscard]] uint32_t get_n_brt_nodes() const { return this->get_n_unique() - 1; }
 
   [[nodiscard]] uint32_t get_n_octree_nodes() const {
     if (n_octree_nodes == std::numeric_limits<uint32_t>::max()) {
@@ -134,13 +131,9 @@ struct AppData final : BaseAppData {
 
   void set_n_unique(const uint32_t n_unique) { this->n_unique = n_unique; }
 
-  void set_n_brt_nodes(const uint32_t n_brt_nodes) {
-    this->n_brt_nodes = n_brt_nodes;
-  }
+  void set_n_brt_nodes(const uint32_t n_brt_nodes) { this->n_brt_nodes = n_brt_nodes; }
 
-  void set_n_octree_nodes(const uint32_t n_octree_nodes) {
-    this->n_octree_nodes = n_octree_nodes;
-  }
+  void set_n_octree_nodes(const uint32_t n_octree_nodes) { this->n_octree_nodes = n_octree_nodes; }
 };
 
 }  // namespace tree
