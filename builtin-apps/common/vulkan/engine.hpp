@@ -7,34 +7,45 @@
 
 namespace vulkan {
 
-class Engine final : public vulkan::BaseEngine {
+class Engine final : public BaseEngine {
  public:
-  explicit Engine()
-      : vulkan::BaseEngine(),
-        mr_ptr(std::make_unique<VulkanMemoryResource>(get_device())) {}
+  explicit Engine() : BaseEngine(true), mr_ptr_(std::make_unique<VulkanMemoryResource>(device_)) {}
 
-  [[nodiscard]] std::shared_ptr<vulkan::Algorithm> algorithm(
-      const std::string_view comp_name,
-      const std::vector<vk::Buffer> &buffers) const {
-    return std::make_shared<vulkan::Algorithm>(
-        mr_ptr.get(), comp_name, buffers);
+  [[nodiscard]] VulkanMemoryResource* get_mr() const { return mr_ptr_.get(); }
+
+  [[nodiscard]] std::shared_ptr<Algorithm> make_algo(const std::string& shader_name) const {
+    return std::make_shared<Algorithm>(mr_ptr_.get(), shader_name);
   }
 
-  [[nodiscard]] std::shared_ptr<vulkan::Sequence> sequence() {
-    return std::make_shared<vulkan::Sequence>(
-        this->get_device(),
-        this->get_compute_queue(),
-        this->get_compute_queue_family_index());
+  [[nodiscard]] std::shared_ptr<Sequence> make_seq() {
+    return std::make_shared<Sequence>(
+        this->get_device(), this->get_compute_queue(), this->get_compute_queue_family_index());
   }
 
-  [[nodiscard]] VulkanMemoryResource *get_mr() { return mr_ptr.get(); }
+  // To get a 'vk::Buffer' from raw pointer of the 'UsmVector'
+  [[nodiscard]] vk::Buffer get_buffer(void* ptr) const {
+    return mr_ptr_->get_buffer_from_pointer(ptr);
+  }
 
-  [[nodiscard]] vk::Buffer get_buffer(void *ptr) {
-    return mr_ptr->get_buffer_from_pointer(ptr);
+  template <typename T>
+  [[nodiscard]]
+  vk::DescriptorBufferInfo get_buffer_info(std::pmr::vector<T>& vec) const {
+    auto vk_buffer = get_buffer(vec.data());
+
+    spdlog::trace("get_buffer_info: vec.data() = {}, vk_buffer = {}, vec.size() = {}",
+                  static_cast<void*>(vec.data()),
+                  static_cast<void*>(vk_buffer),
+                  vec.size());
+
+    return vk::DescriptorBufferInfo{
+        .buffer = get_buffer(vec.data()),
+        .offset = 0,
+        .range = vec.size() * sizeof(T),
+    };
   }
 
  private:
-  std::unique_ptr<VulkanMemoryResource> mr_ptr;
+  std::unique_ptr<VulkanMemoryResource> mr_ptr_;
 };
 
 }  // namespace vulkan

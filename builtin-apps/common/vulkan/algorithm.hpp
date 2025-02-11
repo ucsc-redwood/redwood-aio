@@ -1,112 +1,104 @@
 #pragma once
 
-#include <cstring>
-#include <memory>
-
 #include "vk.hpp"
 #include "vma_pmr.hpp"
 
-// #include "vulkan_resource.hpp"
-
-// #include "buffer.hpp"
-
 namespace vulkan {
+
+/**
+ * @brief Calculate the ceiling of a division
+ * @param a Dividend
+ * @param b Divisor
+ * @return Ceiling of a divided by b
+ *
+ * Example usage:
+ * ```cpp
+ * constexpr auto grid_size = div_ceil(n, 256);
+ * ```
+ */
+constexpr auto div_ceil(size_t a, size_t b) { return (a + b - 1) / b; }
 
 class Algorithm final : public std::enable_shared_from_this<Algorithm> {
  public:
-  explicit Algorithm(  // VulkanMemoryResource& mr,
-                       // std::shared_ptr<VulkanMemoryResource> mr_ptr,
-      VulkanMemoryResource* mr_ptr,
-      const std::string_view shader_path,
-      const std::vector<vk::Buffer>& buffers);
+  explicit Algorithm(VulkanMemoryResource* mr_ptr, std::string shader_name);
 
-  ~Algorithm() { destroy(); }
+  ~Algorithm() = default;
 
-  void update_descriptor_sets(const std::vector<vk::Buffer>& buffers);
-
+  // Builder pattern
+  [[nodiscard]] std::shared_ptr<Algorithm> work_group_size(uint32_t x, uint32_t y, uint32_t z);
+  [[nodiscard]] std::shared_ptr<Algorithm> num_buffers(size_t n);
+  [[nodiscard]] std::shared_ptr<Algorithm> num_sets(size_t count);
+  [[nodiscard]] std::shared_ptr<Algorithm> push_constant_size(size_t size_in_bytes);
   template <typename T>
-  std::shared_ptr<Algorithm> set_push_constants(const T data) {
-    if (!has_push_constants()) {
-      throw std::runtime_error(
-          "Push constants not reported by shader, thus don't set push "
-          "constants");
-    }
-
-    if (push_constants_ptr_ == nullptr) {
-      // spdlog::warn("Push constants not allocated, allocating");
-
-      allocate_push_constants();
-    }
-
-    update_push_constants(data);
-    return shared_from_this();
+  [[nodiscard]] std::shared_ptr<Algorithm> push_constant() {
+    return push_constant_size(sizeof(T));
   }
-
-  // Allocate enough space for push constants, but does not have any data
-  // You need to 'update_push_constants' later
-  template <typename T>
-  std::shared_ptr<Algorithm> place_holder_push_constants() {
-    if (!has_push_constants()) {
-      throw std::runtime_error(
-          "Push constants not reported by shader, thus don't set push "
-          "constants");
-    }
-
-    if (push_constants_ptr_ == nullptr) {
-      allocate_push_constants();
-    }
-
-    // update_push_constants(data);
-    return shared_from_this();
-  }
-
-  template <typename T>
-  void update_push_constants(const T data) {
-    if (push_constants_ptr_ == nullptr) {
-      throw std::runtime_error("Push constants not allocated");
-    }
-
-    assert(this->get_push_constants_size() == sizeof(data));
-
-    std::memcpy(push_constants_ptr_.get(),
-                std::bit_cast<const std::byte*>(&data),
-                get_push_constants_size());
-  }
-
   [[nodiscard]] std::shared_ptr<Algorithm> build();
 
-  [[nodiscard]] bool has_push_constants() const {
-    return internal_.reflected_push_constant_reported_size_ > 0;
+  // Pass actual data
+  void update_push_constant(const void* data_ptr, size_t size_in_bytes);
+
+  /**
+   * @brief Update push constant data with a templated type
+   * @tparam T Type of push constant data
+   * @param data Push constant data to update
+   *
+   * Example usage:
+   * ```cpp
+   * struct PushConstants {
+   *   uint32_t n;
+   * } pc;
+   *
+   * algo->update_push_constant(pc);
+   * ```
+   */
+  template <typename T>
+  void update_push_constant(const T& data) {
+    update_push_constant(&data, sizeof(T));
   }
 
-  // used by sequence class
-  void record_bind_core(const vk::CommandBuffer& cmd_buf) const;
+  /**
+   * @brief Update buffer bindings for the compute shader
+   * @param buffer_infos List of buffer descriptors to bind
+   *
+   * Example usage:
+   * ```cpp
+   * algo->update_buffer({
+   *   engine.get_buffer_info(input_a),
+   *   engine.get_buffer_info(input_b),
+   *   engine.get_buffer_info(output)
+   * });
+   * ```
+   */
+  // void update_buffer(std::initializer_list<vk::DescriptorBufferInfo> buffer_infos);
+
+  void update_descriptor_set(uint32_t set_index,
+                             const std::vector<vk::DescriptorBufferInfo>& buffer_infos) const;
+
+  // Used by 'Sequence' Class
+  // void record_bind_core(const vk::CommandBuffer& cmd_buf) const;
+
+  void record_bind_core(const vk::CommandBuffer& cmd_buf, uint32_t set_index) const;
+
   void record_bind_push(const vk::CommandBuffer& cmd_buf) const;
 
-  void record_dispatch(const vk::CommandBuffer& cmd_buf,
-                       uint32_t data_count) const;
-  void record_dispatch_blocks(const vk::CommandBuffer& cmd_buf,
-                              uint32_t n_blocks) const;
+  // basically CUDA's <<< grid_size >>>
+  void record_dispatch(const vk::CommandBuffer& cmd_buf, std::array<uint32_t, 3> grid_size) const;
 
- protected:
-  void destroy();
+  [[nodiscard]] bool has_push_constants() const { return internal_.push_constant_size > 0; }
 
  private:
-  void load_and_compile_shader();
-  void post_compile_reflection();
+  void load_compiled_shader();
 
   void create_shader_module();
   void create_descriptor_set_layout();
   void create_descriptor_pool();
-  void create_pipeline();
-
   void allocate_descriptor_sets();
-  void allocate_push_constants();
+
+  void create_pipeline();
 
   // References
   vk::Device device_ref_;
-  // VulkanMemoryResource& mr_ref_;
-  // std::shared_ptr<VulkanMemoryResource> mr_ptr_;
   VulkanMemoryResource* mr_ptr_;
 
   // Core vulkan handles
@@ -116,30 +108,24 @@ class Algorithm final : public std::enable_shared_from_this<Algorithm> {
   vk::PipelineLayout pipeline_layout_ = nullptr;
   vk::DescriptorSetLayout descriptor_set_layout_ = nullptr;
   vk::DescriptorPool descriptor_pool_ = nullptr;
-  vk::DescriptorSet descriptor_set_ = nullptr;
 
-  std::string shader_path_;
+  // vk::DescriptorSet descriptor_set_ = nullptr;
 
-  // Payloads
-  // std::vector<std::shared_ptr<Buffer>> usm_buffers_;
-  std::vector<vk::Buffer> usm_buffers_;
-  std::unique_ptr<std::byte[]> push_constants_ptr_ = nullptr;
+  // Instead of a single descriptor_set_, store a vector.
+  std::vector<vk::DescriptorSet> descriptor_sets_;
+  uint32_t descriptor_set_count_ = 1;  // default to 1
 
-  [[nodiscard]] uint32_t get_push_constants_size() const {
-    return internal_.reflected_push_constant_accumulated_size_;
-  }
+  std::string shader_name_;
 
-  [[nodiscard]] uint32_t get_workgroup_size_x() const {
-    return internal_.reflected_workgroup_size_[0];
-  }
+  // Payloads (buffers and push constants)
+  std::array<std::byte, 128> push_constants_buffer_;
+  std::vector<vk::DescriptorBufferInfo> buffer_infos_;
 
-  // internal use, intermediate data (e.g., compiled shader, reflection data)
   struct {
-    std::vector<uint32_t> spirv_binary_;
-
-    uint32_t reflected_workgroup_size_[3] = {0, 0, 0};
-    uint32_t reflected_push_constant_reported_size_ = 0;
-    uint32_t reflected_push_constant_accumulated_size_ = 0;
+    std::vector<uint32_t> spirv_binary;
+    size_t num_buffers = 0;
+    size_t push_constant_size = 0;
+    uint32_t work_group_size[3] = {0, 0, 0};
   } internal_;
 };
 

@@ -2,23 +2,21 @@
 
 namespace vulkan {
 
-Sequence::Sequence(vk::Device device_ref,
-                   vk::Queue compute_queue_ref,
+Sequence::Sequence(const vk::Device device_ref,
+                   const vk::Queue compute_queue_ref,
                    const uint32_t compute_queue_index)
     : device_ref_(device_ref),
       compute_queue_ref_(compute_queue_ref),
       compute_queue_index_(compute_queue_index) {
-  SPDLOG_TRACE("Sequence constructor");
+  spdlog::trace("Sequence constructor");
 
   create_sync_objects();
   create_command_pool();
   create_command_buffer();
 }
 
-void Sequence::destroy() { SPDLOG_TRACE("Sequence destroy"); }
-
 void Sequence::create_command_pool() {
-  SPDLOG_TRACE("Sequence create_command_pool");
+  spdlog::trace("Sequence::create_command_pool()");
 
   const vk::CommandPoolCreateInfo create_info{
       .flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
@@ -29,14 +27,14 @@ void Sequence::create_command_pool() {
 }
 
 void Sequence::create_sync_objects() {
-  SPDLOG_TRACE("Sequence create_sync_objects");
+  spdlog::trace("Sequence::create_sync_objects()");
 
   constexpr vk::FenceCreateInfo create_info{};
   fence_ = device_ref_.createFence(create_info);
 }
 
 void Sequence::create_command_buffer() {
-  SPDLOG_TRACE("Sequence create_command_buffer");
+  spdlog::trace("Sequence::create_command_buffer()");
 
   const vk::CommandBufferAllocateInfo allocate_info{
       .commandPool = command_pool_,
@@ -48,7 +46,7 @@ void Sequence::create_command_buffer() {
 }
 
 void Sequence::cmd_begin() const {
-  SPDLOG_TRACE("Sequence cmd_begin");
+  spdlog::trace("Sequence::cmd_begin()");
 
   constexpr vk::CommandBufferBeginInfo begin_info{
       .flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
@@ -58,15 +56,36 @@ void Sequence::cmd_begin() const {
 }
 
 void Sequence::cmd_end() const {
-  SPDLOG_TRACE("Sequence cmd_end");
+  spdlog::trace("Sequence::cmd_end()");
 
   handle_.end();
 }
 
-void Sequence::launch_kernel_async() {
-  SPDLOG_TRACE("Sequence launch_kernel_async");
+void Sequence::insert_compute_memory_barrier() const {
+  // For compute passes that read->write a buffer, we often do:
+  //   srcAccess = SHADER_WRITE
+  //   dstAccess = SHADER_READ
+  //   pipeline stages = COMPUTE -> COMPUTE
 
-  vk::SubmitInfo submit_info{
+  vk::MemoryBarrier memory_barrier{.srcAccessMask = vk::AccessFlagBits::eShaderWrite,
+                                   .dstAccessMask = vk::AccessFlagBits::eShaderRead};
+
+  handle_.pipelineBarrier(vk::PipelineStageFlagBits::eComputeShader,  // source stage
+                          vk::PipelineStageFlagBits::eComputeShader,  // destination stage
+                          vk::DependencyFlags{},                      // flags
+                          1,
+                          &memory_barrier,  // memory barrier(s)
+                          0,
+                          nullptr,  // buffer barriers
+                          0,
+                          nullptr  // image barriers
+  );
+}
+
+void Sequence::launch_kernel_async() const {
+  spdlog::trace("Sequence::launch_kernel_async()");
+
+  const vk::SubmitInfo submit_info{
       .commandBufferCount = 1,
       .pCommandBuffers = &handle_,
   };
@@ -75,10 +94,9 @@ void Sequence::launch_kernel_async() {
 }
 
 void Sequence::sync() const {
-  SPDLOG_TRACE("Sequence sync");
+  spdlog::trace("Sequence::sync()");
 
-  if (device_ref_.waitForFences(1, &fence_, true, UINT64_MAX) !=
-      vk::Result::eSuccess) {
+  if (device_ref_.waitForFences(1, &fence_, true, UINT64_MAX) != vk::Result::eSuccess) {
     throw std::runtime_error("Failed to sync sequence");
   }
 
@@ -87,33 +105,20 @@ void Sequence::sync() const {
   }
 }
 
-void Sequence::record_commands(const Algorithm* algo,
-                               const uint32_t data_count) const {
-  cmd_begin();
+// void Sequence::record_commands(const Algorithm* algo,
+//                                const std::array<uint32_t, 3> grid_size) const {
+//   spdlog::trace("Sequence::record_commands()");
 
-  algo->record_bind_core(handle_);
+//   cmd_begin();
 
-  if (algo->has_push_constants()) {
-    algo->record_bind_push(handle_);
-  }
+//   algo->record_bind_core(handle_);
+//   if (algo->has_push_constants()) {
+//     algo->record_bind_push(handle_);
+//   }
 
-  algo->record_dispatch(handle_, data_count);
+//   algo->record_dispatch(handle_, grid_size);
 
-  cmd_end();
-}
-
-void Sequence::record_commands_with_blocks(const Algorithm* algo,
-                                           const uint32_t n_blocks) const {
-  cmd_begin();
-
-  algo->record_bind_core(handle_);
-  if (algo->has_push_constants()) {
-    algo->record_bind_push(handle_);
-  }
-
-  algo->record_dispatch_blocks(handle_, n_blocks);
-
-  cmd_end();
-}
+//   cmd_end();
+// }
 
 }  // namespace vulkan
