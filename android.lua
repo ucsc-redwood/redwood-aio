@@ -139,24 +139,80 @@ end
 -- Push All resources to the device
 -- ----------------------------------------------------------------------------
 
+-- task("push-all-resources")
+--     set_menu {
+--         usage = "$project push-all-resources",
+--         description = "Push All resources to the device."
+--     }
+--     on_run(function ()
+--         local remote_path = ANDROID_CONFIG.remote_base_path 
+
+--         -- Get connected devices
+--         local devices_output = try { function()
+--             return os.iorun("adb devices")
+--         end}
+
+--         if not devices_output then
+--             raise("Failed to get device list from adb")
+--         end
+
+--         -- Parse device list
+--         local devices = {}
+--         for line in devices_output:gmatch("[^\r\n]+") do
+--             if line:find("%s*device$") then
+--                 local device_id = line:match("(%S+)%s+device")
+--                 if device_id and not table.contains(ANDROID_CONFIG.ignored_devices, device_id) then
+--                     table.insert(devices, device_id)
+--                 end
+--             end
+--         end
+
+--         if #devices == 0 then
+--             raise("No connected devices found!")
+--         end
+
+--         -- For each device
+
+--         for i, device_id in ipairs(devices) do
+--             print(string.format("[%d/%d] Pushing all resources to device: %s", i, #devices, device_id))
+
+--             -- Pack and copy all resources to the device's remote path
+--             local data_dir = "./resources/"
+--             os.execv("zip", {"-r", data_dir .. "resources.zip", data_dir})
+--             os.execv("adb", {"-s", device_id, "push", data_dir .. "resources.zip", remote_path})
+--             os.execv("adb", {"-s", device_id, "shell", "unzip -o", remote_path .. "/resources.zip", "-d", remote_path})
+            
+--         end
+
+--     end)
+-- task_end()
+
+
+
+
+-- ----------------------------------------------------------------------------
+-- Push All resources to the device ('tar' version)
+-- ----------------------------------------------------------------------------
+
 task("push-all-resources")
     set_menu {
         usage = "$project push-all-resources",
         description = "Push All resources to the device."
     }
     on_run(function ()
-        local remote_path = ANDROID_CONFIG.remote_base_path 
+        local remote_path = ANDROID_CONFIG.remote_base_path
+        local data_dir = "./resources/"  -- Local resources directory
 
-        -- Get connected devices
+        -- 1) Get connected devices
         local devices_output = try { function()
             return os.iorun("adb devices")
-        end}
+        end }
 
         if not devices_output then
             raise("Failed to get device list from adb")
         end
 
-        -- Parse device list
+        -- 2) Parse device list
         local devices = {}
         for line in devices_output:gmatch("[^\r\n]+") do
             if line:find("%s*device$") then
@@ -171,21 +227,35 @@ task("push-all-resources")
             raise("No connected devices found!")
         end
 
-        -- For each device
+        -- 3) Pack resources into a tar.gz file (avoid writing inside `resources/`)
+        os.execv("tar", {"-czvf", "resources.tar.gz", "-C", data_dir, "."})
 
+        -- 4) Push and extract on each device
         for i, device_id in ipairs(devices) do
             print(string.format("[%d/%d] Pushing all resources to device: %s", i, #devices, device_id))
 
-            -- Pack and copy all resources to the device's remote path
-            local data_dir = "./resources/"
-            os.execv("zip", {"-r", data_dir .. "resources.zip", data_dir})
-            os.execv("adb", {"-s", device_id, "push", data_dir .. "resources.zip", remote_path})
-            os.execv("adb", {"-s", device_id, "shell", "unzip -o", remote_path .. "/resources.zip", "-d", remote_path})
+            -- Push the tar.gz archive to the remote path
+            os.execv("adb", {"-s", device_id, "push", "resources.tar.gz", remote_path})
+
+            -- -- Extract the archive on the device
+            -- os.execv("adb", {
+            --     "-s", device_id,
+            --     "shell",
+            --     "tar",
+            --     "--no-same-owner",
+            --     "-xzvf", remote_path .. "/resources.tar.gz",
+            --     "-C", remote_path
+            -- })
+
+            os.execv("adb", {
+                "-s", device_id,
+                "shell",
+                "mkdir -p " .. remote_path .. "/resources && tar --no-same-owner -xzvf " .. remote_path .. "/resources.tar.gz -C " .. remote_path .. "/resources"
+            })
             
         end
 
+        -- 5) Cleanup local archive
+        os.rm("resources.tar.gz")
     end)
 task_end()
-
-
-
