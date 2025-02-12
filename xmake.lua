@@ -9,8 +9,6 @@ end
 
 add_requires("benchmark")
 
--- add_requires("concurrentqueue")
-
 if not is_plat("android") then
     add_requires("openmp")
 end

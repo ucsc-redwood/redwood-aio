@@ -35,7 +35,6 @@ target("test-omp-tree")
     end
 target_end()
 
--- if not is_plat("android") then
 if has_config("cuda") then
 target("test-cu-tree")
     set_kind("binary")

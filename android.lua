@@ -1,6 +1,4 @@
 local ANDROID_CONFIG = {
-    -- , "9b034f1b"
-    -- ignored_devices = {},
     ignored_devices = {"ZY22FLDDK7"},
     remote_base_path = "/data/local/tmp"  -- Base directory for all executables
 }
@@ -36,33 +34,33 @@ end
 -- Common helper functions
 -- ----------------------------------------------------------------------------
 
--- function parse_device_list()
---     -- Get connected devices
---     local devices_output = try { function()
---         return os.iorun("adb devices")
---     end}
+function parse_device_list()
+    -- Get connected devices
+    local devices_output = try { function()
+        return os.iorun("adb devices")
+    end}
 
---     if not devices_output then
---         raise("Failed to get device list from adb")
---     end
+    if not devices_output then
+        raise("Failed to get device list from adb")
+    end
 
---     -- Parse device list
---     local devices = {}
---     for line in devices_output:gmatch("[^\r\n]+") do
---         if line:find("%s*device$") then
---             local device_id = line:match("(%S+)%s+device")
---             if device_id and not table.contains(ANDROID_CONFIG.ignored_devices, device_id) then
---                 table.insert(devices, device_id)
---             end
---         end
---     end
+    -- Parse device list
+    local devices = {}
+    for line in devices_output:gmatch("[^\r\n]+") do
+        if line:find("%s*device$") then
+            local device_id = line:match("(%S+)%s+device")
+            if device_id and not table.contains(ANDROID_CONFIG.ignored_devices, device_id) then
+                table.insert(devices, device_id)
+            end
+        end
+    end
 
---     if #devices == 0 then
---         raise("No connected devices found!")
---     end
+    if #devices == 0 then
+        raise("No connected devices found!")
+    end
 
---     return devices
--- end
+    return devices
+end
 
 -- ----------------------------------------------------------------------------
 -- Android deployment helper function
