@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
     uint32_t g_num_elements;
   };
 
-  auto algo = engine.make_algo(get_shader_name())
+  auto algo = engine.make_algo("sort_safe_radix_sort")
                   ->work_group_size(256, 1, 1)
                   ->num_sets(1)
                   ->num_buffers(2)
