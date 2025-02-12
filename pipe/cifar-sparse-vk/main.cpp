@@ -25,11 +25,11 @@ void run_stages(cifar_sparse::AppData* app_data) {
   {
     // Bind to core if needed:
     if constexpr (processor_type == ProcessorType::kLittleCore) {
-      bind_thread_to_core(g_little_cores);
+      bind_thread_to_cores(g_little_cores);
     } else if constexpr (processor_type == ProcessorType::kMediumCore) {
-      bind_thread_to_core(g_medium_cores);
+      bind_thread_to_cores(g_medium_cores);
     } else if constexpr (processor_type == ProcessorType::kBigCore) {
-      bind_thread_to_core(g_big_cores);
+      bind_thread_to_cores(g_big_cores);
     }
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]

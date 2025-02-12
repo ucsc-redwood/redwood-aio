@@ -13,9 +13,7 @@ namespace kernels {
  * @param u_flag_heads the discontinuity flags
  * @param n
  */
-__global__ void k_FindDups(const unsigned int *u_keys,
-                           int *u_flag_heads,
-                           int n);
+__global__ void k_FindDups(const unsigned int *u_keys, int *u_flag_heads, int n);
 
 /**
  * @brief After prefix sum on the u_flag_heads array, move the unique elements

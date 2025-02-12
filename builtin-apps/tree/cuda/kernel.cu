@@ -18,8 +18,7 @@ namespace tree::cuda {
 
 // uint32_t *g_num_selected_out = nullptr;
 
-cub::CachingDeviceAllocator g_allocator(
-    true);  // Caching allocator for device memory
+cub::CachingDeviceAllocator g_allocator(true);  // Caching allocator for device memory
 
 // struct TempStorage {
 //   struct {
@@ -87,8 +86,7 @@ TempStorage::~TempStorage() {
 
 void process_stage_1(AppData &app_data) {
   constexpr auto block_size = 256;
-  const auto grid_size =
-      cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
+  const auto grid_size = cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
   constexpr auto s_mem = 0;
 
   ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
@@ -110,21 +108,14 @@ void process_stage_2(AppData &app_data, TempStorage &tmp) {
 
   // Get temporary storage size
 
-  cub::DeviceRadixSort::SortKeys(tmp.sort.d_temp_storage,
-                                 tmp.sort.temp_storage_bytes,
-                                 d_keys_in,
-                                 d_keys_out,
-                                 num_items);
+  cub::DeviceRadixSort::SortKeys(
+      tmp.sort.d_temp_storage, tmp.sort.temp_storage_bytes, d_keys_in, d_keys_out, num_items);
 
-  CubDebugExit(g_allocator.DeviceAllocate(&tmp.sort.d_temp_storage,
-                                          tmp.sort.temp_storage_bytes));
+  CubDebugExit(g_allocator.DeviceAllocate(&tmp.sort.d_temp_storage, tmp.sort.temp_storage_bytes));
 
   // Sort data
-  cub::DeviceRadixSort::SortKeys(tmp.sort.d_temp_storage,
-                                 tmp.sort.temp_storage_bytes,
-                                 d_keys_in,
-                                 d_keys_out,
-                                 num_items);
+  cub::DeviceRadixSort::SortKeys(
+      tmp.sort.d_temp_storage, tmp.sort.temp_storage_bytes, d_keys_in, d_keys_out, num_items);
 }
 
 // ----------------------------------------------------------------------------
@@ -144,8 +135,8 @@ void process_stage_3(AppData &app_data, TempStorage &tmp) {
                                          tmp.u_num_selected_out,
                                          num_items));
 
-  CubDebugExit(g_allocator.DeviceAllocate(&tmp.unique.d_temp_storage,
-                                          tmp.unique.temp_storage_bytes));
+  CubDebugExit(
+      g_allocator.DeviceAllocate(&tmp.unique.d_temp_storage, tmp.unique.temp_storage_bytes));
 
   // Run
   CubDebugExit(cub::DeviceSelect::Unique(tmp.unique.d_temp_storage,
@@ -192,11 +183,10 @@ void process_stage_5(AppData &app_data) {
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;
 
-  ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(
-      app_data.u_brt_prefix_n_s4.data(),
-      app_data.u_brt_parents_s4.data(),
-      app_data.u_edge_count_s5.data(),
-      app_data.get_n_brt_nodes());
+  ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(app_data.u_brt_prefix_n_s4.data(),
+                                                                 app_data.u_brt_parents_s4.data(),
+                                                                 app_data.u_edge_count_s5.data(),
+                                                                 app_data.get_n_brt_nodes());
 }
 
 // ----------------------------------------------------------------------------
@@ -223,8 +213,7 @@ void process_stage_6(AppData &app_data, TempStorage &tmp) {
   CubDebugExit(cudaDeviceSynchronize());
 
   // -------- host --------------
-  app_data.set_n_octree_nodes(
-      app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1]);
+  app_data.set_n_octree_nodes(app_data.u_edge_offset_s6[app_data.get_n_brt_nodes() - 1]);
   // ----------------------------
 }
 

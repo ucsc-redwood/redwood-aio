@@ -134,7 +134,9 @@ class OmpTreeTestFixture : public ::testing::Test {
 
 TEST_F(OmpTreeTestFixture, Stage1_MortonCodeGeneration) {
 #pragma omp parallel
-  { tree::omp::process_stage_1(*appdata); }
+  {
+    tree::omp::process_stage_1(*appdata);
+  }
 
   // Verify that morton codes are generated and non-zero
   ASSERT_GT(appdata->get_n_input(), 0);

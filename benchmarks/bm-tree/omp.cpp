@@ -83,7 +83,7 @@ static void run_stage_1_little(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_1(app_data);
   }
 }
@@ -101,7 +101,7 @@ static void run_stage_3_little(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_3(app_data);
   }
 }
@@ -119,7 +119,7 @@ static void run_stage_4_little(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_4(app_data);
   }
 }
@@ -137,7 +137,7 @@ static void run_stage_5_little(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_5(app_data);
   }
 }
@@ -155,7 +155,7 @@ static void run_stage_6_little(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_6(app_data);
   }
 }
@@ -173,7 +173,7 @@ static void run_stage_7_little(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_7(app_data);
   }
 }
@@ -257,7 +257,7 @@ static void run_stage_1_medium(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_1(app_data);
   }
 }
@@ -275,7 +275,7 @@ static void run_stage_3_medium(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_3(app_data);
   }
 }
@@ -293,7 +293,7 @@ static void run_stage_4_medium(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_4(app_data);
   }
 }
@@ -311,7 +311,7 @@ static void run_stage_5_medium(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_5(app_data);
   }
 }
@@ -329,7 +329,7 @@ static void run_stage_6_medium(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_6(app_data);
   }
 }
@@ -347,7 +347,7 @@ static void run_stage_7_medium(tree::AppData& app_data,
                                const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_7(app_data);
   }
 }
@@ -365,7 +365,7 @@ static void run_stage_1_big(tree::AppData& app_data,
                             const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_1(app_data);
   }
 }
@@ -383,7 +383,7 @@ static void run_stage_3_big(tree::AppData& app_data,
                             const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_3(app_data);
   }
 }
@@ -401,7 +401,7 @@ static void run_stage_4_big(tree::AppData& app_data,
                             const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_4(app_data);
   }
 }
@@ -419,7 +419,7 @@ static void run_stage_5_big(tree::AppData& app_data,
                             const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_5(app_data);
   }
 }
@@ -437,7 +437,7 @@ static void run_stage_6_big(tree::AppData& app_data,
                             const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_6(app_data);
   }
 }
@@ -455,7 +455,7 @@ static void run_stage_7_big(tree::AppData& app_data,
                             const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::process_stage_7(app_data);
   }
 }
@@ -586,7 +586,7 @@ static void run_stage_2_little(tree::AppData& app_data,
                                tree::omp::v2::TempStorage& temp_storage) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
 }
@@ -618,7 +618,7 @@ static void run_stage_2_medium(tree::AppData& app_data,
                                tree::omp::v2::TempStorage& temp_storage) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
 }
@@ -650,7 +650,7 @@ static void run_stage_2_big(tree::AppData& app_data,
                             tree::omp::v2::TempStorage& temp_storage) {
 #pragma omp parallel num_threads(n_threads)
   {
-    bind_thread_to_core(cores);
+    bind_thread_to_cores(cores);
     tree::omp::v2::process_stage_2(app_data, temp_storage);
   }
 }

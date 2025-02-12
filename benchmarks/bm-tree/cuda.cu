@@ -1,10 +1,9 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include "third-party/CLI11.hpp"
-
 #include "common/cuda/cu_mem_resource.cuh"
 #include "common/cuda/helpers.cuh"
+#include "third-party/CLI11.hpp"
 #include "tree/cuda/kernel.cuh"
 #include "tree/tree_appdata.hpp"
 

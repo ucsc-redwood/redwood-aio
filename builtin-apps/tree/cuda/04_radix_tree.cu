@@ -10,13 +10,11 @@ namespace cuda {
 namespace kernels {
 
 struct RadixTreeAgent {
-  __device__ __forceinline__ unsigned int ceil_div_u32(const unsigned int a,
-                                                       const unsigned int b) {
+  __device__ __forceinline__ unsigned int ceil_div_u32(const unsigned int a, const unsigned int b) {
     return (a + b - 1) / b;
   }
 
-  __device__ __forceinline__ uint8_t delta_u32(const unsigned int a,
-                                               const unsigned int b) {
+  __device__ __forceinline__ uint8_t delta_u32(const unsigned int a, const unsigned int b) {
     return __clz(a ^ b) - 1;
   }
 
@@ -30,17 +28,15 @@ struct RadixTreeAgent {
     return n_lower_bits + ((1 << n_lower_bits) < x);
   }
 
-  __device__ __forceinline__ explicit RadixTreeAgent(const int n_brt_nodes)
-      : n(n_brt_nodes) {}
+  __device__ __forceinline__ explicit RadixTreeAgent(const int n_brt_nodes) : n(n_brt_nodes) {}
 
-  __device__ __forceinline__ void ProcessRadixTreeNode(
-      const int i,
-      const unsigned int* codes,
-      uint8_t* prefix_n,
-      uint8_t* has_leaf_left,
-      uint8_t* has_leaf_right,
-      int* left_child,
-      int* parent) {
+  __device__ __forceinline__ void ProcessRadixTreeNode(const int i,
+                                                       const unsigned int* codes,
+                                                       uint8_t* prefix_n,
+                                                       uint8_t* has_leaf_left,
+                                                       uint8_t* has_leaf_right,
+                                                       int* left_child,
+                                                       int* parent) {
     const auto code_i = codes[i];
     // Determine direction of the range (+1 or -1)
     int d;
@@ -64,8 +60,7 @@ struct RadixTreeAgent {
       auto l_max = 2;
       // Cast to ptrdiff_t so in case the result is negative (since d is +/- 1),
       // we can catch it and not index out of bounds
-      while (i + static_cast<std::ptrdiff_t>(l_max) * d >= 0 &&
-             i + l_max * d <= n &&
+      while (i + static_cast<std::ptrdiff_t>(l_max) * d >= 0 && i + l_max * d <= n &&
              delta_u32(code_i, codes[i + l_max * d]) > delta_min) {
         l_max *= 2;
       }
@@ -73,10 +68,8 @@ struct RadixTreeAgent {
       int t;
       int divisor;
       // Find the other end using binary search
-      for (t = l_max / 2, divisor = 2; t >= 1;
-           divisor *= 2, t = l_max / divisor) {
-        if (l + t <= l_cutoff &&
-            delta_u32(code_i, codes[i + (l + t) * d]) > delta_min) {
+      for (t = l_max / 2, divisor = 2; t >= 1; divisor *= 2, t = l_max / divisor) {
+        if (l + t <= l_cutoff && delta_u32(code_i, codes[i + (l + t) * d]) > delta_min) {
           l += t;
         }
       }
@@ -93,8 +86,7 @@ struct RadixTreeAgent {
     const auto s_cutoff = (d == -1) ? i - 1 : n - i - 1;
     for (auto t = ceil_div_u32(l, 2); divisor <= max_divisor;
          divisor <<= 1, t = ceil_div_u32(l, divisor)) {
-      if (s + t <= s_cutoff &&
-          delta_u32(code_i, codes[i + (s + t) * d]) > delta_node) {
+      if (s + t <= s_cutoff && delta_u32(code_i, codes[i + (s + t) * d]) > delta_node) {
         s += t;
       }
     }

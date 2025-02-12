@@ -171,9 +171,8 @@ inline void StopWatchWin::start() {
 ////////////////////////////////////////////////////////////////////////////////
 inline void StopWatchWin::stop() {
   QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&end_time));
-  diff_time = static_cast<float>(((static_cast<double>(end_time.QuadPart) -
-                                   static_cast<double>(start_time.QuadPart)) /
-                                  freq));
+  diff_time = static_cast<float>(
+      ((static_cast<double>(end_time.QuadPart) - static_cast<double>(start_time.QuadPart)) / freq));
 
   total_time += diff_time;
   clock_sessions++;
@@ -207,9 +206,8 @@ inline float StopWatchWin::getTime() {
   if (running) {
     LARGE_INTEGER temp;
     QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&temp));
-    retval += static_cast<float>(((static_cast<double>(temp.QuadPart) -
-                                   static_cast<double>(start_time.QuadPart)) /
-                                  freq));
+    retval += static_cast<float>(
+        ((static_cast<double>(temp.QuadPart) - static_cast<double>(start_time.QuadPart)) / freq));
   }
 
   return retval;
@@ -234,11 +232,7 @@ class StopWatchLinux : public StopWatchInterface {
  public:
   //! Constructor, default
   StopWatchLinux()
-      : start_time(),
-        diff_time(0.0),
-        total_time(0.0),
-        running(false),
-        clock_sessions(0) {}
+      : start_time(), diff_time(0.0), total_time(0.0), running(false), clock_sessions(0) {}
 
   // Destructor
   virtual ~StopWatchLinux() {}
@@ -373,8 +367,7 @@ inline bool sdkCreateTimer(StopWatchInterface **timer_interface) {
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
   *timer_interface = reinterpret_cast<StopWatchInterface *>(new StopWatchWin());
 #else
-  *timer_interface =
-      reinterpret_cast<StopWatchInterface *>(new StopWatchLinux());
+  *timer_interface = reinterpret_cast<StopWatchInterface *>(new StopWatchLinux());
 #endif
   return (*timer_interface != NULL) ? true : false;
 }

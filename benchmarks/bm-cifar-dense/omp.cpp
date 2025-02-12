@@ -62,7 +62,7 @@ BENCHMARK_REGISTER_F(OMP_CifarDense, Baseline)
   static void run_stage_##stage##_##core_type(                                              \
       cifar_dense::AppData& app_data, const std::vector<int>& cores, const int n_threads) { \
     _Pragma("omp parallel num_threads(n_threads)") {                                        \
-      bind_thread_to_core(cores);                                                           \
+      bind_thread_to_cores(cores);                                                          \
       cifar_dense::omp::process_stage_##stage(app_data);                                    \
     }                                                                                       \
   }                                                                                         \

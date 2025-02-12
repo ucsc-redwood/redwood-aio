@@ -10,22 +10,20 @@
 // Math
 // ----------------------------------------------------------------------------
 
-constexpr size_t div_up(const size_t a, const size_t b) {
-  return (a + b - 1) / b;
-}
+constexpr size_t div_up(const size_t a, const size_t b) { return (a + b - 1) / b; }
 
 // ----------------------------------------------------------------------------
 // Helper function to handle CUDA errors
 // ----------------------------------------------------------------------------
 
-#define CUDA_CHECK(call)                                                   \
-  do {                                                                     \
-    cudaError_t _status = call;                                            \
-    if (_status != cudaSuccess) {                                          \
-      std::cerr << "Error: " << cudaGetErrorString(_status) << " at line " \
-                << __LINE__ << std::endl;                                  \
-      exit(EXIT_FAILURE);                                                  \
-    }                                                                      \
+#define CUDA_CHECK(call)                                                               \
+  do {                                                                                 \
+    cudaError_t _status = call;                                                        \
+    if (_status != cudaSuccess) {                                                      \
+      std::cerr << "Error: " << cudaGetErrorString(_status) << " at line " << __LINE__ \
+                << std::endl;                                                          \
+      exit(EXIT_FAILURE);                                                              \
+    }                                                                                  \
   } while (0)
 
 // inline void cudaCheck(cudaError_t err, const char *file, int line) {

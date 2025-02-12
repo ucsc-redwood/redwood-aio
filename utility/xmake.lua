@@ -13,6 +13,7 @@ target("query-warpsize")
     end
 target_end()
 
+if is_plat("linux") or is_plat("android") then
 target("query-cpuinfo")
     set_kind("binary")
     set_group("utility")
@@ -22,6 +23,7 @@ target("query-cpuinfo")
       on_run(run_on_android)
     end
 target_end()
+end
 
 target("test-affinity")
     set_kind("binary")

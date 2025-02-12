@@ -193,8 +193,7 @@ __global__ void maxpool2d(const float* input_data,
     int input_h = h * stride + ph;
     int input_w = w * stride + pw;
     if (input_h < input_height && input_w < input_width) {
-      int input_index =
-          c * (input_height * input_width) + input_h * input_width + input_w;
+      int input_index = c * (input_height * input_width) + input_h * input_width + input_w;
       max_val = max(max_val, input_data[input_index]);
     }
   }
@@ -230,9 +229,7 @@ __global__ void linear(const float* input_data,
   //   for (int i = start; i < end; ++i) {
   float sum = 0.0f;
 
-  for (int nz_idx = weight_matrix_row_ptr[i];
-       nz_idx < weight_matrix_row_ptr[i + 1];
-       ++nz_idx) {
+  for (int nz_idx = weight_matrix_row_ptr[i]; nz_idx < weight_matrix_row_ptr[i + 1]; ++nz_idx) {
     int col = weight_matrix_col_idx[nz_idx];
     sum += input_data[col] * weight_matrix_values[nz_idx];
   }
