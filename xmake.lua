@@ -13,7 +13,10 @@ if not is_plat("android") then
     add_requires("openmp")
 end
 
+-- good for all my apps
 add_requires("spdlog")
+
+-- needed by tree app
 add_requires("glm")
 
 includes("android.lua")
