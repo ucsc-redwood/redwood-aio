@@ -83,7 +83,8 @@ target_end()
 -- CUDA Static Library
 -- ----------------------------------------------------------------------------
 
-if not is_plat("android") then
+-- if not is_plat("android") then
+if has_config("cuda") then
 target("builtin-apps-cuda")
     set_kind("static")
 
@@ -150,3 +151,4 @@ target("builtin-apps-cuda")
     add_cugencodes("native")
 target_end()
 end
+-- end

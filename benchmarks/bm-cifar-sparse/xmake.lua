@@ -74,8 +74,8 @@ target_end()
 -- CUDA
 -- ----------------------------------------------------------------
 
-if not is_plat("android") then
-
+-- if not is_plat("android") then
+if has_config("cuda") then
     target("bm-cifar-sparse-cu")
         set_kind("binary")
         set_group("benchmarks")

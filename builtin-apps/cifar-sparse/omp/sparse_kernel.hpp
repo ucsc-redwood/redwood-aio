@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 #include "../sparse_appdata.hpp"
 
 // --------------------------------------------------------------------------------
