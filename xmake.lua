@@ -25,5 +25,6 @@ includes("builtin-apps")
 includes("builtin-apps/common/vulkan")
 includes("tests")
 includes("utility")
+includes("play")
 
 includes("benchmarks")

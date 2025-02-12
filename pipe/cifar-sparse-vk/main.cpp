@@ -1,7 +1,5 @@
 
 // #include <concurrentqueue.h>
-#include "third-party/concurrentqueue.h"
-
 #include <cstdint>
 #include <memory_resource>
 
@@ -10,6 +8,7 @@
 #include "cifar-sparse/omp/sparse_kernel.hpp"
 #include "cifar-sparse/vulkan/vk_dispatcher.hpp"
 #include "spdlog/common.h"
+#include "third-party/concurrentqueue.h"
 
 enum class ProcessorType {
   kLittleCore,

@@ -19,6 +19,7 @@ const static std::unordered_map<std::string, int> device_id_to_index = {
     {"3A021JEHN02756", 2},
     {"9b034f1b", 3},
     {"ce0717178d7758b00b7e", 4},
+    {"amd-minipc", 5},
 };
 
 struct Device {
@@ -139,6 +140,21 @@ inline Device init_ce0717178d7758b00b7e() {
   return device;
 }
 
+// CPU: AMD Ryzen 9 7940HS w/ Radeon 780M Graphics (16) @ 5.26 GHz
+// GPU: AMD Radeon 780M [Integrated]
+// 16 cores, all are pinable
+// warp size is 64
+inline Device init_amd_minipc() {
+  Device device;
+  device.core_count = 16;
+  device.core_type_count = 1;
+  device.pinable_mask.set();
+
+  device.cores.push_back({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
+
+  return device;
+}
+
 inline Device get_device(const std::string& device_id) {
   if (device_id == "pc") {
     return init_pc();
@@ -150,6 +166,8 @@ inline Device get_device(const std::string& device_id) {
     return init_9b034f1b();
   } else if (device_id == "ce0717178d7758b00b7e") {
     return init_ce0717178d7758b00b7e();
+  } else if (device_id == "amd-minipc") {
+    return init_amd_minipc();
   } else {
     throw std::runtime_error("Device not found");
   }

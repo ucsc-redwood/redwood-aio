@@ -17,10 +17,12 @@ inline std::vector<int> g_big_cores;
     return 64;
   } else if (g_device_id == "ce0717178d7758b00b7e") {
     return 32;
+  } else if (g_device_id == "amd-minipc") {
+    return 64;
   } else if (g_device_id == "pc" || g_device_id == "jetson") {
     return 32;
   }
-  throw std::runtime_error("Invalid device ID" + std::string(__FILE__) + ":" +
+  throw std::runtime_error("Invalid device ID. " + std::string(__FILE__) + ":" +
                            std::to_string(__LINE__));
 }
 
