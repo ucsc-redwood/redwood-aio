@@ -15,8 +15,8 @@
 
 static const int NUM_ATTEMPTS_PER_CORE = 10;
 
-int main() {
-  // Detect how many CPU cores/threads are available.
+static void run_default_test() {
+  // Detect how many CPU cores/threads are available
   unsigned int num_cores = std::thread::hardware_concurrency();
   if (num_cores == 0) {
     // Fallback: If hardware_concurrency() returns 0, assume 1 core.
@@ -78,6 +78,39 @@ int main() {
   std::cout << "Total attempts (overall) : " << total_attempts << "\n";
   std::cout << "Total successes          : " << total_successes << "\n";
   std::cout << "Total failures           : " << (total_attempts - total_successes) << "\n\n";
-
-  return 0;
 }
+
+int main(int argc, char* argv[]) {
+  // Parse command line arguments if provided
+  std::vector<int> target_cores;
+  if (argc > 1) {
+    // Convert command line arguments to integers
+    for (int i = 1; i < argc; i++) {
+      try {
+        target_cores.push_back(std::atoi(argv[i]));
+      } catch (const std::exception& e) {
+        std::cerr << "Error parsing argument '" << argv[i] << "': " << e.what() << std::endl;
+        return 1;
+      }
+    }
+
+    std::vector<std::thread> threads;
+    threads.reserve(target_cores.size());
+
+    for (int core : target_cores) {
+      threads.emplace_back([core]() {
+        bind_thread_to_coress({core});
+        while (true);
+      });
+    }
+
+    for (auto& t : threads) {
+      t.join();
+    }
+    
+  } else {
+    run_default_test();
+  }
+
+    return 0;
+  }
