@@ -107,10 +107,10 @@ int main(int argc, char* argv[]) {
     for (auto& t : threads) {
       t.join();
     }
-    
+
   } else {
     run_default_test();
   }
 
-    return 0;
-  }
+  return 0;
+}

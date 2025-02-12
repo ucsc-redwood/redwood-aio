@@ -2,6 +2,7 @@ target("builtin-apps")
     set_kind("static")
     
     add_headerfiles({
+        -- common headers
         "affinity.hpp",
         "app.hpp",
         "base_appdata.hpp",
@@ -30,9 +31,15 @@ target("builtin-apps")
     })
 
     add_files({
+        -- cifar-dense implementations
         "cifar-dense/dense_appdata.cpp",
+        "cifar-dense/omp/dense_kernel.cpp",
+
+        -- cifar-sparse implementations
         "cifar-sparse/sparse_appdata.cpp",
         "cifar-sparse/omp/sparse_kernel.cpp",
+        
+        -- tree implementations
         "tree/tree_appdata.cpp",
         "tree/omp/tree_kernel.cpp",
     })
