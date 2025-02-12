@@ -12,7 +12,7 @@
 #include <stdexcept>
 #include <vector>
 
-inline void bind_thread_to_coress(const std::vector<int>& core_ids) {
+inline void bind_thread_to_cores(const std::vector<int>& core_ids) {
 #if defined(_WIN32) || defined(_WIN64)
   // Windows implementation
 

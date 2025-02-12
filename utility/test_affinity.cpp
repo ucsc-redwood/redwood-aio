@@ -37,7 +37,7 @@ static void run_default_test() {
       for (int attempt = 1; attempt <= NUM_ATTEMPTS_PER_CORE; ++attempt) {
         try {
           // Attempt to bind this thread to core i
-          bind_thread_to_coress({static_cast<int>(i)});
+          bind_thread_to_cores({static_cast<int>(i)});
           success_counts[i]++;
         } catch (const std::exception& e) {
           // Store the first error message we encounter
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
 
     for (int core : target_cores) {
       threads.emplace_back([core]() {
-        bind_thread_to_coress({core});
+        bind_thread_to_cores({core});
         while (true);
       });
     }
