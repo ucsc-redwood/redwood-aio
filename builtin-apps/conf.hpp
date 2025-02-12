@@ -3,24 +3,24 @@
 #include <bitset>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
+// #include <unordered_map>
 #include <vector>
 
-// The order in the cores vector is the order of core types
-constexpr int kLittleCoreType = 0;
-constexpr int kMediumCoreType = 1;
-constexpr int kBigCoreType = 2;
+// // The order in the cores vector is the order of core types
+// constexpr int kLittleCoreType = 0;
+// constexpr int kMediumCoreType = 1;
+// constexpr int kBigCoreType = 2;
 
-// define a mapping from std::string (device id) to table index
-// for example, "device_0" -> 0, "device_1" -> 1, etc.
-const static std::unordered_map<std::string, int> device_id_to_index = {
-    {"pc", 0},
-    {"jetson", 1},
-    {"3A021JEHN02756", 2},
-    {"9b034f1b", 3},
-    {"ce0717178d7758b00b7e", 4},
-    {"amd-minipc", 5},
-};
+// // define a mapping from std::string (device id) to table index
+// // for example, "device_0" -> 0, "device_1" -> 1, etc.
+// const static std::unordered_map<std::string, int> device_id_to_index = {
+//     {"pc", 0},
+//     {"jetson", 1},
+//     {"3A021JEHN02756", 2},
+//     {"9b034f1b", 3},
+//     {"ce0717178d7758b00b7e", 4},
+//     {"amd-minipc", 5},
+// };
 
 struct Device {
   size_t core_count;
