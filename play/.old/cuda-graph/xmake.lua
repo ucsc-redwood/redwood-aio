@@ -11,7 +11,7 @@ target("cuda-graph")
     add_packages("spdlog")
 
 
-    add_packages("concurrentqueue")
+    -- add_packages("concurrentqueue")
     -- add_packages("cli11")
     add_packages("glm")
 

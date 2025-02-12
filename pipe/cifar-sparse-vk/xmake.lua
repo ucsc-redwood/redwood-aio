@@ -11,7 +11,7 @@ target("pipe-cifar-sparse-vk")
     add_packages("spdlog")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
 
-    add_packages("concurrentqueue")
+    -- add_packages("concurrentqueue")
 
     -- Add openmp support
     if is_plat("android") then

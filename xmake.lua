@@ -3,10 +3,11 @@ add_rules("mode.debug", "mode.release")
 set_languages("c++20")
 set_warnings("allextra")
 
+set_toolchains("clang")
 
 add_requires("benchmark")
 
-add_requires("concurrentqueue")
+-- add_requires("concurrentqueue")
 
 if not is_plat("android") then
     add_requires("openmp")
