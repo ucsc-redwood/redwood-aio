@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 #include "../dense_appdata.hpp"
 
 namespace cifar_dense {
