@@ -81,36 +81,40 @@ static void run_default_test() {
 }
 
 int main(int argc, char* argv[]) {
-  // Parse command line arguments if provided
-  std::vector<int> target_cores;
-  if (argc > 1) {
-    // Convert command line arguments to integers
-    for (int i = 1; i < argc; i++) {
-      try {
-        target_cores.push_back(std::atoi(argv[i]));
-      } catch (const std::exception& e) {
-        std::cerr << "Error parsing argument '" << argv[i] << "': " << e.what() << std::endl;
-        return 1;
-      }
-    }
-
-    std::vector<std::thread> threads;
-    threads.reserve(target_cores.size());
-
-    for (int core : target_cores) {
-      threads.emplace_back([core]() {
-        bind_thread_to_cores({core});
-        while (true);
-      });
-    }
-
-    for (auto& t : threads) {
-      t.join();
-    }
-
-  } else {
     run_default_test();
-  }
+
+
+  // // Parse command line arguments if provided
+  // std::vector<int> target_cores;
+  // if (argc > 1) {
+
+
+  //   // Convert command line arguments to integers
+  //   for (int i = 1; i < argc; i++) {
+  //     try {
+  //       target_cores.push_back(std::atoi(argv[i]));
+  //     } catch (const std::exception& e) {
+  //       std::cerr << "Error parsing argument '" << argv[i] << "': " << e.what() << std::endl;
+  //       return 1;
+  //     }
+  //   }
+
+  //   std::vector<std::thread> threads;
+  //   threads.reserve(target_cores.size());
+
+  //   for (int core : target_cores) {
+  //     threads.emplace_back([core]() {
+  //       bind_txmakhread_to_cores({core});
+  //       while (true);
+  //     });
+  //   }
+
+  //   for (auto& t : threads) {
+  //     t.join();
+  //   }
+
+  // } else {
+  // }
 
   return 0;
 }

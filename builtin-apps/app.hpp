@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 
 #include "conf.hpp"
@@ -26,7 +27,7 @@ inline std::vector<int> g_big_cores;
                            std::to_string(__LINE__));
 }
 
-inline int parse_args(int argc, char **argv) {
+inline int parse_args(int argc, char** argv) {
   CLI::App app{"default"};
   app.add_option("-d,--device", g_device_id, "Device ID")->required();
   app.allow_extras();
@@ -37,28 +38,60 @@ inline int parse_args(int argc, char **argv) {
     throw std::runtime_error("Device ID is required");
   }
 
-  auto device = get_device(g_device_id);
-  g_little_cores = device.get_pinable_cores(kLittleCoreType);
-  g_medium_cores = device.get_pinable_cores(kMediumCoreType);
-  g_big_cores = device.get_pinable_cores(kBigCoreType);
+  auto& registry = GlobalDeviceRegistry();
 
-  std::cout << "Little cores: ";
-  for (auto core : g_little_cores) {
-    std::cout << core << " ";
-  }
-  std::cout << std::endl;
+  try {
+    const Device& device = registry.getDevice(g_device_id);
 
-  std::cout << "Mid cores: ";
-  for (auto core : g_medium_cores) {
-    std::cout << core << " ";
-  }
-  std::cout << std::endl;
+    auto littleCores = device.getCores(CoreType::kLittle);
+    auto mediumCores = device.getCores(CoreType::kMedium);
+    auto bigCores = device.getCores(CoreType::kBig);
 
-  std::cout << "Big cores: ";
-  for (auto core : g_big_cores) {
-    std::cout << core << " ";
+    std::cout << "Little cores: ";
+    for (const auto& core : littleCores) {
+      std::cout << core.id << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Medium cores: ";
+    for (const auto& core : mediumCores) {
+      std::cout << core.id << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Big cores: ";
+    for (const auto& core : bigCores) {
+      std::cout << core.id << " ";
+    }
+    std::cout << std::endl;
+
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
   }
-  std::cout << std::endl;
+
+  // auto device = get_device(g_device_id);
+  // g_little_cores = device.get_pinable_cores(kLittleCoreType);
+  // g_medium_cores = device.get_pinable_cores(kMediumCoreType);
+  // g_big_cores = device.get_pinable_cores(kBigCoreType);
+
+  // std::cout << "Little cores: ";
+  // for (auto core : g_little_cores) {
+  //   std::cout << core << " ";
+  // }
+  // std::cout << std::endl;
+
+  // std::cout << "Mid cores: ";
+  // for (auto core : g_medium_cores) {
+  //   std::cout << core << " ";
+  // }
+  // std::cout << std::endl;
+
+  // std::cout << "Big cores: ";
+  // for (auto core : g_big_cores) {
+  //   std::cout << core << " ";
+  // }
+  // std::cout << std::endl;
 
   return 0;
 }
