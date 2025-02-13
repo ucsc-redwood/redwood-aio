@@ -99,7 +99,7 @@ class Algorithm final : public std::enable_shared_from_this<Algorithm> {
 
   // References
   vk::Device device_ref_;
-  VulkanMemoryResource* mr_ptr_;
+  // VulkanMemoryResource* mr_ptr_;
 
   // Core vulkan handles
   vk::ShaderModule shader_module_ = nullptr;
