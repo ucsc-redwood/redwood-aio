@@ -50,18 +50,21 @@ inline int parse_args(int argc, char** argv) {
     std::cout << "Little cores: ";
     for (const auto& core : littleCores) {
       std::cout << core.id << " ";
+      g_little_cores.push_back(core.id);
     }
     std::cout << std::endl;
 
     std::cout << "Medium cores: ";
     for (const auto& core : mediumCores) {
       std::cout << core.id << " ";
+      g_medium_cores.push_back(core.id);
     }
     std::cout << std::endl;
 
     std::cout << "Big cores: ";
     for (const auto& core : bigCores) {
       std::cout << core.id << " ";
+      g_big_cores.push_back(core.id);
     }
     std::cout << std::endl;
 
