@@ -37,12 +37,16 @@ static void run_baseline_unrestricted(cifar_dense::AppData& app_data, const int 
 void register_baseline_benchmark() {
   std::string benchmark_name = "OMP_CifarDense/Baseline";
 
-  benchmark::RegisterBenchmark(benchmark_name.c_str(), [](benchmark::State& state) {
-    auto app_data = make_appdata();
-    for (auto _ : state) {
-      run_baseline_unrestricted(app_data, std::thread::hardware_concurrency());
-    }
-  })->Unit(benchmark::kMillisecond);
+  benchmark::RegisterBenchmark(benchmark_name.c_str(),
+                               [](benchmark::State& state) {
+                                 const auto n_threads = state.range(0);
+                                 auto app_data = make_appdata();
+                                 for (auto _ : state) {
+                                   run_baseline_unrestricted(app_data, n_threads);
+                                 }
+                               })
+      ->DenseRange(1, std::thread::hardware_concurrency())
+      ->Unit(benchmark::kMillisecond);
 }
 
 // ------------------------------------------------------------
