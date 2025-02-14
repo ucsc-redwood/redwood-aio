@@ -101,7 +101,6 @@ void run_sparse_omp() {
 }
 
 int main(int argc, char** argv) {
-   
   // run_dense_vk();
   run_dense_omp();
 

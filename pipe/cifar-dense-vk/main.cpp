@@ -336,25 +336,15 @@ void run_best() {
   auto start = std::chrono::high_resolution_clock::now();
 
   for (auto& task : tasks) {
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<1>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<2>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<3>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<4>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<5>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<6>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<8>(*task.app_data);
-    // cifar_dense::vulkan::Singleton::getInstance().run_stage<9>(*task.app_data);
-
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_1(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_2(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_3(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_4(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_5(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_6(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_7(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_8(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().process_stage_9(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<1>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<2>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<3>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<4>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<5>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<6>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<8>(*task.app_data);
+    cifar_dense::vulkan::Singleton::getInstance().run_stage<9>(*task.app_data);
   }
 
   auto end = std::chrono::high_resolution_clock::now();
@@ -419,12 +409,13 @@ int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::info);
 
   // find_best_baseline();
-  std::cout << "\nRunning GPU benchmark..." << std::endl;
-  auto gpu_duration = run_gpu_baseline();
-  double gpu_ms = std::chrono::duration<double, std::milli>(gpu_duration).count();
-  std::cout << "GPU time: " << std::fixed << std::setprecision(2) << gpu_ms << " ms" << std::endl;
+  // std::cout << "\nRunning GPU benchmark..." << std::endl;
+  // auto gpu_duration = run_gpu_baseline();
+  // double gpu_ms = std::chrono::duration<double, std::milli>(gpu_duration).count();
+  // std::cout << "GPU time: " << std::fixed << std::setprecision(2) << gpu_ms << " ms" <<
+  // std::endl;
 
-  // run_best();
+  run_best();
 
   return 0;
 }
