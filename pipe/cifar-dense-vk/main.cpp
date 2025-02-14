@@ -10,12 +10,6 @@
 #include "cifar-dense/vulkan/vk_dispatcher.hpp"
 #include "third-party/concurrentqueue.h"
 
-enum class ProcessorType {
-  kLittleCore,
-  kMediumCore,
-  kBigCore,
-};
-
 template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
 void run_stages(cifar_dense::AppData* app_data) {
   static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
@@ -40,6 +34,17 @@ void run_stages(cifar_dense::AppData* app_data) {
       ((cifar_dense::omp::run_stage<start_stage + I>(data)), ...);
     }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
   }
+}
+
+template <int start_stage, int end_stage>
+void run_gpu_stages(cifar_dense::AppData* app_data) {
+  static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
+  static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
+
+  // Generate a compile-time sequence for the range [start_stage, end_stage]
+  []<std::size_t... I>(std::index_sequence<I...>, cifar_dense::AppData& data) {
+    ((cifar_dense::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data)), ...);
+  }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
 }
 
 // ---------------------------------------------------------------------
@@ -106,7 +111,6 @@ void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task
     // ---------
     run_stages<1, 1, ProcessorType::kLittleCore, 4>(task.app_data);
     // ---------
-
     q_AB.enqueue(task);
   }
 
@@ -117,15 +121,12 @@ void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB,
                    moodycamel::ConcurrentQueue<Task>& q_BC) {
   while (!done) {
     Task task;
-
     if (q_AB.try_dequeue(task)) {
       // ---------
       run_stages<2, 4, ProcessorType::kBigCore, 2>(task.app_data);
       // ---------
-
       q_BC.enqueue(task);
     } else {
-      // No task available, yield to avoid busy-waiting
       std::this_thread::yield();
     }
   }
@@ -135,17 +136,12 @@ void stage_group_C(moodycamel::ConcurrentQueue<Task>& q_BC,
                    moodycamel::ConcurrentQueue<Task>& q_CD) {
   while (!done) {
     Task task;
-
     if (q_BC.try_dequeue(task)) {
       // ---------
-      cifar_dense::vulkan::Singleton::getInstance().run_stage<5>(*task.app_data);
-      cifar_dense::vulkan::Singleton::getInstance().run_stage<6>(*task.app_data);
-      cifar_dense::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data);
+      run_gpu_stages<5, 7>(task.app_data);
       // ---------
-
       q_CD.enqueue(task);
     } else {
-      // No task available, yield to avoid busy-waiting
       std::this_thread::yield();
     }
   }
@@ -154,12 +150,10 @@ void stage_group_C(moodycamel::ConcurrentQueue<Task>& q_BC,
 void stage_group_D(moodycamel::ConcurrentQueue<Task>& q_CD, std::vector<Task>& out_tasks) {
   while (!done) {
     Task task;
-
     if (q_CD.try_dequeue(task)) {
       // ---------
       run_stages<8, 9, ProcessorType::kMediumCore, 1>(task.app_data);
       // ---------
-
       out_tasks.push_back(task);
     }
   }
@@ -168,80 +162,6 @@ void stage_group_D(moodycamel::ConcurrentQueue<Task>& q_CD, std::vector<Task>& o
 }  // namespace instance_2
 
 }  // namespace device_3A021JEHN02756
-
-// ---------------------------------------------------------------------
-// Device-specific pipeline stages (9b034f1b)
-// ---------------------------------------------------------------------
-
-namespace device_9b034f1b {
-
-void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
-  for (auto& task : in_tasks) {
-    // ---------
-    run_stages<1, 4, ProcessorType::kLittleCore, 3>(task.app_data);
-    // ---------
-
-    q_AB.enqueue(task);
-  }
-
-  // Signal consumer to stop
-  done = true;
-}
-
-void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB, std::vector<Task>& out_tasks) {
-  while (!done) {
-    Task task;
-    if (q_AB.try_dequeue(task)) {
-      // ---------
-      run_stages<5, 9, ProcessorType::kMediumCore, 2>(task.app_data);
-      // ---------
-
-      out_tasks.push_back(task);
-    } else {
-      // No task available, yield to avoid busy-waiting
-      std::this_thread::yield();
-    }
-  }
-}
-
-}  // namespace device_9b034f1b
-
-// ---------------------------------------------------------------------
-// Device-specific pipeline stages (ce0717178d7758b00b7e)
-// ---------------------------------------------------------------------
-
-namespace device_ce0717178d7758b00b7e {
-
-void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
-  for (auto& task : in_tasks) {
-    // ---------
-    run_stages<1, 4, ProcessorType::kLittleCore, 4>(task.app_data);
-    // ---------
-
-    q_AB.enqueue(task);
-  }
-
-  // Signal consumer to stop
-  done = true;
-}
-
-void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB, std::vector<Task>& out_tasks) {
-  while (!done) {
-    Task task;
-    if (q_AB.try_dequeue(task)) {
-      // ---------
-      run_stages<5, 9, ProcessorType::kMediumCore, 4>(task.app_data);
-      // ---------
-
-      out_tasks.push_back(task);
-    } else {
-      // No task available, yield to avoid busy-waiting
-      std::this_thread::yield();
-    }
-  }
-}
-
-}  // namespace device_ce0717178d7758b00b7e
 
 // ---------------------------------------------------------------------
 // Pipeline Instance (Best)
@@ -263,21 +183,17 @@ void run_best() {
     moodycamel::ConcurrentQueue<Task> q_BC;
     moodycamel::ConcurrentQueue<Task> q_CD;
 
-    std::thread t_A(
-        device_3A021JEHN02756::instance_2::stage_group_A, std::ref(tasks), std::ref(q_AB));
-    std::thread t_B(
-        device_3A021JEHN02756::instance_2::stage_group_B, std::ref(q_AB), std::ref(q_BC));
-    std::thread t_C(
-        device_3A021JEHN02756::instance_2::stage_group_C, std::ref(q_BC), std::ref(q_CD));
-    std::thread t_D(
-        device_3A021JEHN02756::instance_2::stage_group_D, std::ref(q_CD), std::ref(out_tasks));
+    // clang-format off
+    std::thread t_A(device_3A021JEHN02756::instance_2::stage_group_A, std::ref(tasks), std::ref(q_AB));
+    std::thread t_B(device_3A021JEHN02756::instance_2::stage_group_B, std::ref(q_AB), std::ref(q_BC));
+    std::thread t_C(device_3A021JEHN02756::instance_2::stage_group_C, std::ref(q_BC), std::ref(q_CD));
+    std::thread t_D(device_3A021JEHN02756::instance_2::stage_group_D, std::ref(q_CD), std::ref(out_tasks));
+    // clang-format on
 
     t_A.join();
     t_B.join();
     t_C.join();
     t_D.join();
-
-    assert(out_tasks.size() == 20);
 
   } else if (g_device_id == "9b034f1b") {
     exit(0);
@@ -336,15 +252,7 @@ void run_best() {
   auto start = std::chrono::high_resolution_clock::now();
 
   for (auto& task : tasks) {
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<1>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<2>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<3>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<4>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<5>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<6>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<8>(*task.app_data);
-    cifar_dense::vulkan::Singleton::getInstance().run_stage<9>(*task.app_data);
+    run_gpu_stages<1, 9>(task.app_data);
   }
 
   auto end = std::chrono::high_resolution_clock::now();

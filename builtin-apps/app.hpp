@@ -43,9 +43,9 @@ inline int parse_args(int argc, char** argv) {
   try {
     const Device& device = registry.getDevice(g_device_id);
 
-    auto littleCores = device.getCores(CoreType::kLittle);
-    auto mediumCores = device.getCores(CoreType::kMedium);
-    auto bigCores = device.getCores(CoreType::kBig);
+    auto littleCores = device.getCores(ProcessorType::kLittleCore);
+    auto mediumCores = device.getCores(ProcessorType::kMediumCore);
+    auto bigCores = device.getCores(ProcessorType::kBigCore);
 
     std::cout << "Little cores: ";
     for (const auto& core : littleCores) {
