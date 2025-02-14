@@ -3,6 +3,9 @@
 #include <omp.h>
 #include <spdlog/spdlog.h>
 
+#include <cfloat>
+#include <cstdint>
+
 namespace cifar_dense {
 namespace omp {
 
