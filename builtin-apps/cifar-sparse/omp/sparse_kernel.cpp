@@ -140,7 +140,7 @@ void process_stage_1(cifar_sparse::AppData &app_data) {
   constexpr auto start = 0;
   const auto end = app_data.conv1_weights.rows;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_1, conv2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_1, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 app_data.conv1_weights.rows);
@@ -174,7 +174,8 @@ void process_stage_2(cifar_sparse::AppData &app_data) {
 
   constexpr auto end = total_iterations;
 
-  spdlog::debug("[omp][thread {}] process_stage_2, maxpool2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_2, total_iterations: {}",
+                pthread_self(),
                 omp_get_thread_num(),
                 total_iterations);
 
@@ -193,7 +194,7 @@ void process_stage_3(cifar_sparse::AppData &app_data) {
   const auto start = 0;
   const auto end = app_data.conv2_weights.rows;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_3, conv2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_3, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 app_data.conv2_weights.rows);
@@ -226,7 +227,7 @@ void process_stage_4(cifar_sparse::AppData &app_data) {
   const auto start = 0;
   const auto end = total_iterations;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_4, maxpool2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_4, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 total_iterations);
@@ -248,7 +249,7 @@ void process_stage_5(cifar_sparse::AppData &app_data) {
   const auto start = 0;
   const auto end = app_data.conv3_weights.rows;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_5, conv2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_5, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 app_data.conv3_weights.rows);
@@ -273,7 +274,7 @@ void process_stage_6(cifar_sparse::AppData &app_data) {
   const auto start = 0;
   const auto end = app_data.conv4_weights.rows;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_6, conv2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_6, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 app_data.conv4_weights.rows);
@@ -298,7 +299,7 @@ void process_stage_7(cifar_sparse::AppData &app_data) {
   const auto start = 0;
   const auto end = app_data.conv5_weights.rows;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_7, conv2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_7, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 app_data.conv5_weights.rows);
@@ -331,7 +332,7 @@ void process_stage_8(cifar_sparse::AppData &app_data) {
   const auto start = 0;
   const auto end = total_iterations;
 
-  spdlog::debug("[omp][{}][thread {}] process_stage_8, maxpool2d_omp, total_iterations: {}",
+  spdlog::debug("[omp][{}][thread {}] process_stage_8, total_iterations: {}",
                 pthread_self(),
                 omp_get_thread_num(),
                 total_iterations);
