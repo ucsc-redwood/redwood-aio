@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <numeric>
@@ -67,30 +67,28 @@ class VulkanPrefixSumTest : public VulkanTestFixture,
 
     std::ranges::fill(u_elements_in, 1);
 
-    auto local_inclusive_scan =
-        engine
-            .algorithm("tmp_local_inclusive_scan.comp",
-                       {
-                           engine.get_buffer(u_elements_in.data()),
-                           engine.get_buffer(u_elements_out.data()),
-                           engine.get_buffer(u_sums.data()),
-                       })
-            ->set_push_constants<LocalPushConstants>({
-                .g_num_elements = n,
-            })
-            ->build();
+    auto local_inclusive_scan = engine
+                                    .algorithm("tmp_local_inclusive_scan.comp",
+                                               {
+                                                   engine.get_buffer(u_elements_in.data()),
+                                                   engine.get_buffer(u_elements_out.data()),
+                                                   engine.get_buffer(u_sums.data()),
+                                               })
+                                    ->set_push_constants<LocalPushConstants>({
+                                        .g_num_elements = n,
+                                    })
+                                    ->build();
 
-    auto global_exclusive_scan =
-        engine
-            .algorithm("tmp_global_exclusive_scan.comp",
-                       {
-                           engine.get_buffer(u_sums.data()),
-                           engine.get_buffer(u_prefix_sums.data()),
-                       })
-            ->set_push_constants<GlobalPushConstants>({
-                .g_num_blocks = n_blocks,
-            })
-            ->build();
+    auto global_exclusive_scan = engine
+                                     .algorithm("tmp_global_exclusive_scan.comp",
+                                                {
+                                                    engine.get_buffer(u_sums.data()),
+                                                    engine.get_buffer(u_prefix_sums.data()),
+                                                })
+                                     ->set_push_constants<GlobalPushConstants>({
+                                         .g_num_blocks = n_blocks,
+                                     })
+                                     ->build();
 
     auto add_base = engine
                         .algorithm("tmp_add_base.comp",
@@ -129,9 +127,7 @@ class VulkanPrefixSumTest : public VulkanTestFixture,
 
     // Verify results
     std::vector<uint32_t> h_cpu_prefix_sums(n);
-    std::partial_sum(h_cpu_elements.begin(),
-                     h_cpu_elements.end(),
-                     h_cpu_prefix_sums.begin());
+    std::partial_sum(h_cpu_elements.begin(), h_cpu_elements.end(), h_cpu_prefix_sums.begin());
 
     // std::cout << "First 10 CPU prefix sums: ";
     // for (size_t i = 0; i < std::min(size_t(10), h_cpu_prefix_sums.size());
@@ -155,8 +151,7 @@ INSTANTIATE_TEST_SUITE_P(VaryingSizes,
 
 class VulkanPrefixSumIterationTest
     : public VulkanTestFixture,
-      public testing::WithParamInterface<
-          std::tuple<unsigned int, unsigned int>> {
+      public testing::WithParamInterface<std::tuple<unsigned int, unsigned int>> {
  protected:
   void verify_prefix_sum_iterations(unsigned int n, unsigned int iterations) {
     const auto n_blocks = (n + 255) / 256;
@@ -169,30 +164,28 @@ class VulkanPrefixSumIterationTest
 
     std::ranges::fill(u_elements_in, 1);
 
-    auto local_inclusive_scan =
-        engine
-            .algorithm("tmp_local_inclusive_scan.comp",
-                       {
-                           engine.get_buffer(u_elements_in.data()),
-                           engine.get_buffer(u_elements_out.data()),
-                           engine.get_buffer(u_sums.data()),
-                       })
-            ->set_push_constants<LocalPushConstants>({
-                .g_num_elements = n,
-            })
-            ->build();
+    auto local_inclusive_scan = engine
+                                    .algorithm("tmp_local_inclusive_scan.comp",
+                                               {
+                                                   engine.get_buffer(u_elements_in.data()),
+                                                   engine.get_buffer(u_elements_out.data()),
+                                                   engine.get_buffer(u_sums.data()),
+                                               })
+                                    ->set_push_constants<LocalPushConstants>({
+                                        .g_num_elements = n,
+                                    })
+                                    ->build();
 
-    auto global_exclusive_scan =
-        engine
-            .algorithm("tmp_global_exclusive_scan.comp",
-                       {
-                           engine.get_buffer(u_sums.data()),
-                           engine.get_buffer(u_prefix_sums.data()),
-                       })
-            ->set_push_constants<GlobalPushConstants>({
-                .g_num_blocks = n_blocks,
-            })
-            ->build();
+    auto global_exclusive_scan = engine
+                                     .algorithm("tmp_global_exclusive_scan.comp",
+                                                {
+                                                    engine.get_buffer(u_sums.data()),
+                                                    engine.get_buffer(u_prefix_sums.data()),
+                                                })
+                                     ->set_push_constants<GlobalPushConstants>({
+                                         .g_num_blocks = n_blocks,
+                                     })
+                                     ->build();
 
     auto add_base = engine
                         .algorithm("tmp_add_base.comp",
@@ -224,9 +217,7 @@ class VulkanPrefixSumIterationTest
 
     std::vector<uint32_t> h_cpu_elements(n, 1);
     std::vector<uint32_t> h_cpu_prefix_sums(n);
-    std::partial_sum(h_cpu_elements.begin(),
-                     h_cpu_elements.end(),
-                     h_cpu_prefix_sums.begin());
+    std::partial_sum(h_cpu_elements.begin(), h_cpu_elements.end(), h_cpu_prefix_sums.begin());
 
     EXPECT_TRUE(std::ranges::equal(h_cpu_prefix_sums, u_elements_out));
   }
@@ -244,30 +235,28 @@ class VulkanPrefixSumEdgeCasesTest : public VulkanTestFixture {
     UsmVector<uint32_t> u_sums(n_blocks, mr);
     UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
 
-    auto local_inclusive_scan =
-        engine
-            .algorithm("tmp_local_inclusive_scan.comp",
-                       {
-                           engine.get_buffer(u_elements_in.data()),
-                           engine.get_buffer(u_elements_out.data()),
-                           engine.get_buffer(u_sums.data()),
-                       })
-            ->set_push_constants<LocalPushConstants>({
-                .g_num_elements = static_cast<uint32_t>(n),
-            })
-            ->build();
+    auto local_inclusive_scan = engine
+                                    .algorithm("tmp_local_inclusive_scan.comp",
+                                               {
+                                                   engine.get_buffer(u_elements_in.data()),
+                                                   engine.get_buffer(u_elements_out.data()),
+                                                   engine.get_buffer(u_sums.data()),
+                                               })
+                                    ->set_push_constants<LocalPushConstants>({
+                                        .g_num_elements = static_cast<uint32_t>(n),
+                                    })
+                                    ->build();
 
-    auto global_exclusive_scan =
-        engine
-            .algorithm("tmp_global_exclusive_scan.comp",
-                       {
-                           engine.get_buffer(u_sums.data()),
-                           engine.get_buffer(u_prefix_sums.data()),
-                       })
-            ->set_push_constants<GlobalPushConstants>({
-                .g_num_blocks = n_blocks,
-            })
-            ->build();
+    auto global_exclusive_scan = engine
+                                     .algorithm("tmp_global_exclusive_scan.comp",
+                                                {
+                                                    engine.get_buffer(u_sums.data()),
+                                                    engine.get_buffer(u_prefix_sums.data()),
+                                                })
+                                     ->set_push_constants<GlobalPushConstants>({
+                                         .g_num_blocks = n_blocks,
+                                     })
+                                     ->build();
 
     auto add_base = engine
                         .algorithm("tmp_add_base.comp",
@@ -294,8 +283,7 @@ class VulkanPrefixSumEdgeCasesTest : public VulkanTestFixture {
     seq->sync();
 
     std::vector<uint32_t> h_cpu_prefix_sums(n);
-    std::partial_sum(
-        input_data.begin(), input_data.end(), h_cpu_prefix_sums.begin());
+    std::partial_sum(input_data.begin(), input_data.end(), h_cpu_prefix_sums.begin());
 
     EXPECT_TRUE(std::ranges::equal(h_cpu_prefix_sums, u_elements_out));
   }
@@ -313,8 +301,7 @@ INSTANTIATE_TEST_SUITE_P(
     testing::Combine(testing::Values(1024, 64 * 1024, 640 * 480),  // Sizes
                      testing::Values(1, 2, 5, 10, 32)              // Iterations
                      ),
-    [](const testing::TestParamInfo<std::tuple<unsigned int, unsigned int>>
-           &info) {
+    [](const testing::TestParamInfo<std::tuple<unsigned int, unsigned int>> &info) {
       return "Size" + std::to_string(std::get<0>(info.param)) + "_Iterations" +
              std::to_string(std::get<1>(info.param));
     });

@@ -10,12 +10,8 @@ namespace kernels {
 // ============================================================================
 
 template <typename T>
-__global__ void k_PrefixSumLocal(const T* u_input,
-                                 T* u_output,
-                                 const int n,
-                                 T* u_auxiliary) {
-  using TempStorage =
-      typename agents::PrefixSumAgent<T>::TempStorage_LoadScanStore;
+__global__ void k_PrefixSumLocal(const T* u_input, T* u_output, const int n, T* u_auxiliary) {
+  using TempStorage = typename agents::PrefixSumAgent<T>::TempStorage_LoadScanStore;
   __shared__ TempStorage temp_storage;
 
   // Process tiles
@@ -24,11 +20,8 @@ __global__ void k_PrefixSumLocal(const T* u_input,
 }
 
 template <typename T>
-__global__ void k_SingleBlockExclusiveScan(const T* u_input,
-                                           T* u_output,
-                                           const int n) {
-  using TempStorage =
-      typename agents::PrefixSumAgent<T>::TempStorage_LoadScanStore;
+__global__ void k_SingleBlockExclusiveScan(const T* u_input, T* u_output, const int n) {
+  using TempStorage = typename agents::PrefixSumAgent<T>::TempStorage_LoadScanStore;
   __shared__ TempStorage temp_storage;
 
   // Process tiles
@@ -46,8 +39,7 @@ __global__ void k_MakeGlobalPrefixSum(const T* u_local_sums,
 
   // Process tiles
   agents::PrefixSumAgent<T> agent(n);
-  agent.Process_GlobalPrefixSum(
-      temp_storage, u_local_sums, u_auxiliary_summed, u_global_sums);
+  agent.Process_GlobalPrefixSum(temp_storage, u_local_sums, u_auxiliary_summed, u_global_sums);
 }
 
 // ============================================================================
@@ -59,9 +51,7 @@ template __global__ void k_PrefixSumLocal(const int* u_input,
                                           int n,
                                           int* u_auxiliary);
 
-template __global__ void k_SingleBlockExclusiveScan(const int* u_input,
-                                                    int* u_output,
-                                                    int n);
+template __global__ void k_SingleBlockExclusiveScan(const int* u_input, int* u_output, int n);
 
 template __global__ void k_MakeGlobalPrefixSum(const int* u_local_sums,
                                                const int* u_auxiliary_summed,
@@ -77,11 +67,10 @@ template __global__ void k_SingleBlockExclusiveScan(const unsigned int* u_input,
                                                     unsigned int* u_output,
                                                     int n);
 
-template __global__ void k_MakeGlobalPrefixSum(
-    const unsigned int* u_local_sums,
-    const unsigned int* u_auxiliary_summed,
-    unsigned int* u_global_sums,
-    int n);
+template __global__ void k_MakeGlobalPrefixSum(const unsigned int* u_local_sums,
+                                               const unsigned int* u_auxiliary_summed,
+                                               unsigned int* u_global_sums,
+                                               int n);
 
 }  // namespace kernels
 

@@ -7,7 +7,7 @@
 namespace tree {
 
 namespace omp {
-  
+
 using FakeBool = uint8_t;
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -25,8 +25,8 @@ inline unsigned int ceil_div_u32(const unsigned int a, const unsigned int b) {
 }
 
 inline uint8_t delta_u32(const unsigned int a, const unsigned int b) {
-  [[maybe_unused]] constexpr unsigned int bit1_mask =
-      static_cast<unsigned int>(1) << (sizeof(a) * 8 - 1);
+  [[maybe_unused]] constexpr unsigned int bit1_mask = static_cast<unsigned int>(1)
+                                                      << (sizeof(a) * 8 - 1);
   assert((a & bit1_mask) == 0);
   assert((b & bit1_mask) == 0);
   return static_cast<uint8_t>(CLZ(a ^ b) - 1);
@@ -86,8 +86,7 @@ inline void process_radix_tree_i(const int i,
     auto l_max = 2;
     // Cast to ptrdiff_t so in case the result is negative (since d is +/- 1),
     // we can catch it and not index out of bounds
-    while (i + static_cast<std::ptrdiff_t>(l_max) * d >= 0 &&
-           i + l_max * d <= n &&
+    while (i + static_cast<std::ptrdiff_t>(l_max) * d >= 0 && i + l_max * d <= n &&
            delta_u32(code_i, codes[i + l_max * d]) > delta_min) {
       l_max *= 2;
     }
@@ -95,10 +94,8 @@ inline void process_radix_tree_i(const int i,
     int t;
     int divisor;
     // Find the other end using binary search
-    for (t = l_max / 2, divisor = 2; t >= 1;
-         divisor *= 2, t = l_max / divisor) {
-      if (l + t <= l_cutoff &&
-          delta_u32(code_i, codes[i + (l + t) * d]) > delta_min) {
+    for (t = l_max / 2, divisor = 2; t >= 1; divisor *= 2, t = l_max / divisor) {
+      if (l + t <= l_cutoff && delta_u32(code_i, codes[i + (l + t) * d]) > delta_min) {
         l += t;
       }
     }
@@ -115,8 +112,7 @@ inline void process_radix_tree_i(const int i,
   const auto s_cutoff = (d == -1) ? i - 1 : n - i - 1;
   for (auto t = ceil_div_u32(l, 2); divisor <= max_divisor;
        divisor <<= 1, t = ceil_div_u32(l, divisor)) {
-    if (s + t <= s_cutoff &&
-        delta_u32(code_i, codes[i + (s + t) * d]) > delta_node) {
+    if (s + t <= s_cutoff && delta_u32(code_i, codes[i + (s + t) * d]) > delta_node) {
       s += t;
     }
   }
@@ -137,6 +133,6 @@ inline void process_radix_tree_i(const int i,
   }
 }
 
-}  // namespace kernels
+}  // namespace omp
 
-}  // namespace cpu
+}  // namespace tree

@@ -4,52 +4,24 @@
 
 namespace vulkan {
 
-/**
- * @brief Sequence handles command recording and execution for compute
- * operations
- *
- * The Sequence class manages Vulkan command buffers and synchronization for
- * compute shader execution. It provides:
- * - Command buffer management
- * - Command recording utilities
- * - Asynchronous kernel launch
- * - Synchronization primitives
- *
- * Example usage:
- * ```cpp
- * // Create sequence
- * auto sequence = std::make_shared<Sequence>(device, compute_queue,
- * queue_index);
- *
- * // Record commands
- * sequence->record_commands_with_blocks(algorithm.get(), work_groups);
- *
- * // Execute asynchronously
- * sequence->launch_kernel_async();
- *
- * // Do other work...
- *
- * // Wait for completion
- * sequence->sync();
- * ```
- */
 class Sequence {
  public:
   explicit Sequence(vk::Device device_ref,
                     vk::Queue compute_queue_ref,
                     uint32_t compute_queue_index);
 
-  ~Sequence() { destroy(); }
+  ~Sequence() = default;
 
   void cmd_begin() const;
   void cmd_end() const;
 
-  void record_commands(const Algorithm* algo, uint32_t data_count) const;
-  void record_commands_with_blocks(const Algorithm* algo,
-                                   uint32_t n_blocks) const;
+  void insert_compute_memory_barrier() const;
 
-  void launch_kernel_async();
+  // void record_commands(const Algorithm* algo, std::array<uint32_t, 3> grid_size) const;
+  void launch_kernel_async() const;
   void sync() const;
+
+  [[nodiscard]] vk::CommandBuffer get_handle() const { return handle_; }
 
  protected:
   void destroy();

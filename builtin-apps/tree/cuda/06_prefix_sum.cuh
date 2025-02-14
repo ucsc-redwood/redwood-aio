@@ -9,15 +9,10 @@ namespace kernels {
 // ============================================================================
 
 template <typename T>
-__global__ void k_PrefixSumLocal(const T* u_input,
-                                 T* u_output,
-                                 int n,
-                                 T* u_auxiliary = nullptr);
+__global__ void k_PrefixSumLocal(const T* u_input, T* u_output, int n, T* u_auxiliary = nullptr);
 
 template <typename T>
-__global__ void k_SingleBlockExclusiveScan(const T* u_input,
-                                           T* u_output,
-                                           int n);
+__global__ void k_SingleBlockExclusiveScan(const T* u_input, T* u_output, int n);
 
 template <typename T>
 __global__ void k_MakeGlobalPrefixSum(const T* u_local_sums,

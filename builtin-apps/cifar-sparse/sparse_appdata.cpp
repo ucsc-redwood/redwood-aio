@@ -10,8 +10,7 @@ void readDataFromFile(const char* filename, float* data, int maxSize) {
   const auto base_path = helpers::get_resource_base_path();
   std::ifstream file(base_path / filename);
   if (!file.is_open()) {
-    throw std::runtime_error("Could not open the file - '" +
-                             std::string(filename) + "'");
+    throw std::runtime_error("Could not open the file - '" + std::string(filename) + "'");
   }
 
   // Zero initialize the entire array
@@ -106,8 +105,7 @@ AppData::AppData(std::pmr::memory_resource* mr)
       u_conv5_bias(256, mr),
       u_linear_bias(10, mr) {
   // Load input image data
-  readDataFromFile(
-      "images/flattened_dog_dog_13.txt", u_image_data.data(), 3072);
+  readDataFromFile("images/flattened_dog_dog_13.txt", u_image_data.data(), 3072);
 
   // Load CSR data for all layers
   readCSRFromFiles("sparse/conv1_values.txt",
@@ -173,12 +171,8 @@ AppData::AppData(std::pmr::memory_resource* mr)
   readDataFromFile("sparse/linear_bias.txt", u_linear_bias.data(), 10);
 
   // Create CSR matrices
-  conv1_weights = {u_conv1_values.data(),
-                   u_conv1_row_ptr.data(),
-                   u_conv1_col_idx.data(),
-                   64,
-                   27,
-                   MAX_NNZ_CONV1};
+  conv1_weights = {
+      u_conv1_values.data(), u_conv1_row_ptr.data(), u_conv1_col_idx.data(), 64, 27, MAX_NNZ_CONV1};
   conv2_weights = {u_conv2_values.data(),
                    u_conv2_row_ptr.data(),
                    u_conv2_col_idx.data(),

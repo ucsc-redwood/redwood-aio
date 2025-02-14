@@ -1,396 +1,245 @@
-
 #include "vk_dispatcher.hpp"
+
+#include <cstdint>
+#include <numeric>
+#include <random>
+
+#include "../../app.hpp"
 
 namespace tree {
 
 namespace vulkan {
 
-// ----------------------------------------------------------------------------
-// Singleton Constructor
-// ----------------------------------------------------------------------------
-
-Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.sequence()) {
+Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
   spdlog::info("Singleton instance created.");
 
-  // tmp
-  tree::AppData app_data(engine.get_mr());
-  auto tmp_storage =
-      ::vulkan::TmpStorage(engine.get_mr(), app_data.get_n_input());
+  // ----------------------------------------------------------------------------
+  // Stage 1 (Input -> Morton)
+  // ----------------------------------------------------------------------------
 
-  // --------------------------------------------------------------------------
-  // Morton
-  // --------------------------------------------------------------------------
-
-  auto morton_algo =
-      engine
-          .algorithm("tree_morton.comp",
-                     {
-                         engine.get_buffer(app_data.u_input_points.data()),
-                         engine.get_buffer(app_data.u_morton_keys.data()),
-                     })
-          ->set_push_constants<MortonPushConstants>({
-              .n = static_cast<uint32_t>(app_data.get_n_input()),
-              .min_coord = app_data.min_coord,
-              .range = app_data.range,
-          })
-          ->build();
+  auto morton_algo = engine.make_algo("tree_morton")
+                         ->work_group_size(768, 1, 1)  // Morton uses 768 threads
+                         ->num_sets(1)
+                         ->num_buffers(2)
+                         ->push_constant<MortonPushConstants>()
+                         ->build();
 
   cached_algorithms.try_emplace("morton", std::move(morton_algo));
 
-  // --------------------------------------------------------------------------
-  // Merge Sort
-  // --------------------------------------------------------------------------
-
-  auto merge_sort_algo =
-      engine
-          .algorithm("tree_merge_sort.comp",
-                     {
-                         engine.get_buffer(app_data.u_morton_keys.data()),
-                         engine.get_buffer(app_data.u_morton_keys_alt.data()),
-                     })
-          ->set_push_constants<MergeSortPushConstants>({
-              .n_logical_blocks = 16,
-              .n = static_cast<uint32_t>(app_data.get_n_input()),
-              .width = 16,
-              .num_pairs = 8,
-          })
+  auto radixsort_algo =
+      engine.make_algo("tmp_single_radixsort_warp" + std::to_string(get_vulkan_warp_size()))
+          ->work_group_size(256, 1, 1)
+          ->num_sets(1)
+          ->num_buffers(2)
+          ->push_constant<InputSizePushConstantsUnsigned>()
           ->build();
 
-  cached_algorithms.try_emplace("merge_sort", std::move(merge_sort_algo));
+  cached_algorithms.try_emplace("radixsort", std::move(radixsort_algo));
 
-  // --------------------------------------------------------------------------
-  // Find Dups
-  // --------------------------------------------------------------------------
+  auto build_radix_tree_algo = engine.make_algo("tree_build_radix_tree")
+                                   ->work_group_size(256, 1, 1)
+                                   ->num_sets(1)
+                                   ->num_buffers(6)
+                                   ->push_constant<InputSizePushConstantsSigned>()
+                                   ->build();
 
-  auto find_dups_algo =
-      engine
-          .algorithm("tree_find_dups.comp",
-                     {
-                         engine.get_buffer(app_data.get_sorted_morton_keys()),
-                         engine.get_buffer(tmp_storage.u_contributes.data()),
-                     })
-          ->set_push_constants<FindDupsPushConstants>({
-              .n = static_cast<int32_t>(app_data.get_n_input()),
-          })
-          ->build();
+  cached_algorithms.try_emplace("build_radix_tree", std::move(build_radix_tree_algo));
 
-  cached_algorithms.try_emplace("find_dups", std::move(find_dups_algo));
-
-  // --------------------------------------------------------------------------
-  // Move Dups
-  // --------------------------------------------------------------------------
-
-  auto move_dups_algo =
-      engine
-          .algorithm("tree_move_dups.comp",
-                     {
-                         engine.get_buffer(tmp_storage.u_out_idx.data()),
-                         engine.get_buffer(app_data.get_sorted_morton_keys()),
-                         engine.get_buffer(app_data.get_unique_morton_keys()),
-                     })
-          ->set_push_constants<MoveDupsPushConstants>({
-              .n = static_cast<uint32_t>(app_data.get_n_input()),
-          })
-          ->build();
-
-  cached_algorithms.try_emplace("move_dups", std::move(move_dups_algo));
-
-  // --------------------------------------------------------------------------
-  // Build Radix Tree
-  // --------------------------------------------------------------------------
-
-  auto build_radix_tree_algo =
-      engine
-          .algorithm(
-              "tree_build_radix_tree.comp",
-              {
-                  engine.get_buffer(app_data.get_unique_morton_keys()),
-                  engine.get_buffer(app_data.brt.u_prefix_n.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_left.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_right.data()),
-                  engine.get_buffer(app_data.brt.u_left_child.data()),
-                  engine.get_buffer(app_data.brt.u_parents.data()),
-              })
-          ->place_holder_push_constants<BuildTreePushConstants>()
-          ->build();
-
-  cached_algorithms.try_emplace("build_radix_tree",
-                                std::move(build_radix_tree_algo));
-
-  // --------------------------------------------------------------------------
-  // Edge Count
-  // --------------------------------------------------------------------------
-
-  auto edge_count_algo =
-      engine
-          .algorithm("tree_edge_count.comp",
-                     {
-                         engine.get_buffer(app_data.brt.u_prefix_n.data()),
-                         engine.get_buffer(app_data.brt.u_parents.data()),
-                         engine.get_buffer(app_data.u_edge_count.data()),
-                     })
-          ->place_holder_push_constants<EdgeCountPushConstants>()
-          ->build();
+  auto edge_count_algo = engine.make_algo("tree_edge_count")
+                             ->work_group_size(512, 1, 1)  // Edge count uses 512 threads
+                             ->num_sets(1)
+                             ->num_buffers(3)
+                             ->push_constant<InputSizePushConstantsUnsigned>()
+                             ->build();
 
   cached_algorithms.try_emplace("edge_count", std::move(edge_count_algo));
 
-  // --------------------------------------------------------------------------
-  // Prefix Sum
-  // --------------------------------------------------------------------------
-
-  auto prefix_sum_algo =
-      engine
-          .algorithm("tree_naive_prefix_sum.comp",
-                     {
-                         engine.get_buffer(app_data.u_edge_count.data()),
-                         engine.get_buffer(app_data.u_edge_offset.data()),
-                     })
-          ->place_holder_push_constants<PrefixSumPushConstants>()
-          ->build();
-
-  cached_algorithms.try_emplace("prefix_sum", std::move(prefix_sum_algo));
-
-  // --------------------------------------------------------------------------
-  // Build Octree
-  // --------------------------------------------------------------------------
-
-  auto build_octree_algo =
-      engine
-          .algorithm(
-              "tree_build_octree.comp",
-              {
-                  engine.get_buffer(app_data.oct.u_children.data()),
-                  engine.get_buffer(app_data.oct.u_corner.data()),
-                  engine.get_buffer(app_data.oct.u_cell_size.data()),
-                  engine.get_buffer(app_data.oct.u_child_node_mask.data()),
-                  engine.get_buffer(app_data.oct.u_child_leaf_mask.data()),
-                  engine.get_buffer(app_data.u_edge_offset.data()),
-                  engine.get_buffer(app_data.u_edge_count.data()),
-                  engine.get_buffer(app_data.get_unique_morton_keys()),
-                  engine.get_buffer(app_data.brt.u_prefix_n.data()),
-                  engine.get_buffer(app_data.brt.u_parents.data()),
-                  engine.get_buffer(app_data.brt.u_left_child.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_left.data()),
-                  engine.get_buffer(app_data.brt.u_has_leaf_right.data()),
-              })
-          ->place_holder_push_constants<OctreePushConstants>()
-          ->build();
+  auto build_octree_algo = engine.make_algo("tree_build_octree")
+                               ->work_group_size(256, 1, 1)
+                               ->num_sets(1)
+                               ->num_buffers(13)
+                               ->push_constant<OctreePushConstants>()
+                               ->build();
 
   cached_algorithms.try_emplace("build_octree", std::move(build_octree_algo));
 }
 
-// ----------------------------------------------------------------------------
-// Stage 1
-// ----------------------------------------------------------------------------
-
 void Singleton::process_stage_1(tree::AppData &app_data_ref) {
-  const int total_iterations = app_data_ref.get_n_input();
-
   auto algo = cached_algorithms.at("morton").get();
 
-  seq->record_commands(algo, total_iterations);
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(app_data_ref.u_input_points_s0),
+                                  engine.get_buffer_info(app_data_ref.u_morton_keys_s1),
+                              });
+
+  algo->update_push_constant(MortonPushConstants{
+      .n = static_cast<uint32_t>(app_data_ref.get_n_input()),
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
+  });
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(::vulkan::div_ceil(app_data_ref.get_n_input(), 768)), 1, 1});
+  seq->cmd_end();
 
   seq->launch_kernel_async();
   seq->sync();
 }
-
-// ----------------------------------------------------------------------------
-// Stage 2
-// ----------------------------------------------------------------------------
 
 void Singleton::process_stage_2(tree::AppData &app_data_ref) {
-  const uint32_t n = app_data_ref.get_n_input();
+  auto algo = cached_algorithms.at("radixsort").get();
 
-  auto algo = cached_algorithms.at("merge_sort").get();
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(app_data_ref.u_morton_keys_s1),
+                                  engine.get_buffer_info(app_data_ref.u_morton_keys_sorted_s2),
+                              });
 
-  constexpr auto threads_per_block = 256;
+  algo->update_push_constant(InputSizePushConstantsUnsigned{
+      .n = app_data_ref.get_n_input(),
+  });
 
-  // Make copies of the input and output buffers
-  auto iterations = 0;
-  for (uint32_t width = 1; width < n; width *= 2, ++iterations) {
-    uint32_t num_pairs = (n + 2 * width - 1) / (2 * width);
-    uint32_t total_threads = num_pairs;
-    uint32_t logical_blocks =
-        (total_threads + threads_per_block - 1) / threads_per_block;
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(), {1, 1, 1});  // Special case: single workgroup
+  seq->cmd_end();
 
-    algo->set_push_constants(MergeSortPushConstants{
-        .n_logical_blocks = logical_blocks,
-        .n = n,
-        .width = width,
-        .num_pairs = num_pairs,
-    });
-
-    if (iterations % 2 == 0) {
-      algo->update_descriptor_sets({
-          engine.get_buffer(app_data_ref.u_morton_keys.data()),
-          engine.get_buffer(app_data_ref.u_morton_keys_alt.data()),
-      });
-    } else {
-      algo->update_descriptor_sets({
-          engine.get_buffer(app_data_ref.u_morton_keys_alt.data()),
-          engine.get_buffer(app_data_ref.u_morton_keys.data()),
-      });
-    }
-
-    seq->record_commands(algo, n);
-    seq->launch_kernel_async();
-    seq->sync();
-
-    // std::swap(elements_in_copy, elements_out_copy);
-  }
-
-  // If the number of iterations is odd, swap the input and output buffers
-  if (iterations % 2 == 0) {
-    std::swap(app_data_ref.u_morton_keys, app_data_ref.u_morton_keys_alt);
-  }
+  seq->launch_kernel_async();
+  seq->sync();
 }
 
 // ----------------------------------------------------------------------------
-// Stage 3
+// Stage 3 (Sorted Morton -> Unique Sorted Morton)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_stage_3(tree::AppData &app_data_ref,
-                                ::vulkan::TmpStorage &tmp_storage) {
-  const uint32_t n = app_data_ref.get_n_input();
+void Singleton::process_stage_3(tree::AppData &app_data_ref, TmpStorage &tmp_storage) {
+  const auto last =
+      std::unique_copy(app_data_ref.u_morton_keys_sorted_s2.data(),
+                       app_data_ref.u_morton_keys_sorted_s2.data() + app_data_ref.get_n_input(),
+                       app_data_ref.u_morton_keys_unique_s3.data());
+  const auto n_unique = std::distance(app_data_ref.u_morton_keys_unique_s3.data(), last);
 
-  auto find_dups = cached_algorithms.at("find_dups").get();
-
-  auto prefix_sum = cached_algorithms.at("prefix_sum").get();
-
-  auto move_dups = cached_algorithms.at("move_dups").get();
-
-  find_dups->update_push_constants(FindDupsPushConstants{
-      .n = static_cast<int32_t>(n),
-  });
-
-  prefix_sum->update_push_constants(PrefixSumPushConstants{
-      .inputSize = n,
-  });
-  prefix_sum->update_descriptor_sets({
-      engine.get_buffer(tmp_storage.u_contributes.data()),
-      engine.get_buffer(tmp_storage.u_out_idx.data()),
-  });
-
-  move_dups->update_push_constants(MoveDupsPushConstants{
-      .n = n,
-  });
-
-  seq->record_commands(find_dups, n);
-  seq->launch_kernel_async();
-  seq->sync();
-
-  // print 10 u_contributes
-  for (auto i = 0; i < 10; ++i) {
-    spdlog::trace("u_contributes[{}] = {}", i, tmp_storage.u_contributes[i]);
-  }
-
-  seq->record_commands_with_blocks(prefix_sum, 1);
-  seq->launch_kernel_async();
-  seq->sync();
-
-  // print 10 u_out_idx
-  for (auto i = 0; i < 10; ++i) {
-    spdlog::trace("u_out_idx[{}] = {}", i, tmp_storage.u_out_idx[i]);
-  }
-
-  seq->record_commands(move_dups, n);
-  seq->launch_kernel_async();
-  seq->sync();
-
-  const auto n_unique = tmp_storage.u_out_idx[n - 1] + 1;
   app_data_ref.set_n_unique(n_unique);
   app_data_ref.set_n_brt_nodes(n_unique - 1);
-
-  // print 10 u_out_idx
-  for (auto i = 0; i < 10; ++i) {
-    spdlog::trace("u_out_idx[{}] = {}", i, tmp_storage.u_out_idx[i]);
-  }
 }
-
-// ----------------------------------------------------------------------------
-// Stage 4
-// ----------------------------------------------------------------------------
 
 void Singleton::process_stage_4(tree::AppData &app_data_ref) {
   const int32_t n = app_data_ref.get_n_unique();
+  auto algo = cached_algorithms.at("build_radix_tree").get();
 
-  auto build_radix_tree = cached_algorithms.at("build_radix_tree").get();
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(app_data_ref.u_morton_keys_unique_s3),
+                                  engine.get_buffer_info(app_data_ref.u_brt_prefix_n_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_has_leaf_left_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_has_leaf_right_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_left_child_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_parents_s4),
+                              });
 
-  build_radix_tree->update_push_constants(BuildTreePushConstants{
+  algo->update_push_constant(InputSizePushConstantsSigned{
       .n = n,
   });
 
-  seq->record_commands(build_radix_tree, n);
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(),
+                        {static_cast<uint32_t>(::vulkan::div_ceil(n, 256)), 1, 1});
+  seq->cmd_end();
+
   seq->launch_kernel_async();
   seq->sync();
 }
-
-// ----------------------------------------------------------------------------
-// Stage 5
-// ----------------------------------------------------------------------------
 
 void Singleton::process_stage_5(tree::AppData &app_data_ref) {
-  auto edge_count = cached_algorithms.at("edge_count").get();
+  auto algo = cached_algorithms.at("edge_count").get();
 
-  const int32_t n = app_data_ref.get_n_brt_nodes();
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(app_data_ref.u_brt_prefix_n_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_parents_s4),
+                                  engine.get_buffer_info(app_data_ref.u_edge_count_s5),
+                              });
 
-  edge_count->update_push_constants(EdgeCountPushConstants{
-      .n_brt_nodes = n,
+  algo->update_push_constant(InputSizePushConstantsUnsigned{
+      .n = app_data_ref.get_n_brt_nodes(),
   });
 
-  seq->record_commands(edge_count, n);
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(::vulkan::div_ceil(app_data_ref.get_n_brt_nodes(), 512)), 1, 1});
+  seq->cmd_end();
+
   seq->launch_kernel_async();
   seq->sync();
 }
 
 // ----------------------------------------------------------------------------
-// Stage 6
+// Stage 6 (Edge Count -> Edge Offset, prefix sum)
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_6(tree::AppData &app_data_ref) {
-  auto prefix_sum = cached_algorithms.at("prefix_sum").get();
+  const int start = 0;
+  const int end = app_data_ref.get_n_brt_nodes();
 
-  const uint32_t n = app_data_ref.get_n_brt_nodes();
+  std::partial_sum(app_data_ref.u_edge_count_s5.data() + start,
+                   app_data_ref.u_edge_count_s5.data() + end,
+                   app_data_ref.u_edge_offset_s6.data() + start);
 
-  prefix_sum->update_descriptor_sets({
-      engine.get_buffer(app_data_ref.u_edge_count.data()),
-      engine.get_buffer(app_data_ref.u_edge_offset.data()),
-  });
+  // num_octree node is the result of the partial sum
+  const auto num_octree_nodes = app_data_ref.u_edge_offset_s6[end - 1];
 
-  prefix_sum->update_push_constants(PrefixSumPushConstants{
-      .inputSize = n,
-  });
-
-  seq->record_commands_with_blocks(prefix_sum, 1);
-  seq->launch_kernel_async();
-  seq->sync();
-
-  //   const auto n_octree_nodes =
-  //   data.u_edge_offset->at(data.get_n_brt_nodes());
-
-  //   spdlog::info("n_octree_nodes: {}", n_octree_nodes);
-  //   data.set_n_octree_nodes(n_octree_nodes);
-
-  const auto n_octree_nodes = app_data_ref.u_edge_offset[n - 1] + 1;
-  app_data_ref.set_n_octree_nodes(n_octree_nodes);
+  app_data_ref.set_n_octree_nodes(num_octree_nodes);
 }
 
-// ----------------------------------------------------------------------------
-// Stage 7
-// ----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+// Stage 7 (Edge Offset -> Octree)
+//----------------------------------------------------------------------------
 
 void Singleton::process_stage_7(tree::AppData &app_data_ref) {
-  auto build_octree = cached_algorithms.at("build_octree").get();
+  auto algo = cached_algorithms.at("build_octree").get();
 
-  const int32_t n = app_data_ref.get_n_brt_nodes();
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(app_data_ref.u_oct_children_s7),
+                                  engine.get_buffer_info(app_data_ref.u_oct_corner_s7),
+                                  engine.get_buffer_info(app_data_ref.u_oct_cell_size_s7),
+                                  engine.get_buffer_info(app_data_ref.u_oct_child_node_mask_s7),
+                                  engine.get_buffer_info(app_data_ref.u_oct_child_leaf_mask_s7),
+                                  engine.get_buffer_info(app_data_ref.u_edge_offset_s6),
+                                  engine.get_buffer_info(app_data_ref.u_edge_count_s5),
+                                  engine.get_buffer_info(app_data_ref.u_morton_keys_unique_s3),
+                                  engine.get_buffer_info(app_data_ref.u_brt_prefix_n_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_parents_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_left_child_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_has_leaf_left_s4),
+                                  engine.get_buffer_info(app_data_ref.u_brt_has_leaf_right_s4),
+                              });
 
-  build_octree->update_push_constants(OctreePushConstants{
-      .min_coord = app_data_ref.min_coord,
-      .range = app_data_ref.range,
-      .n_brt_nodes = n,
+  algo->update_push_constant(OctreePushConstants{
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
+      .n_brt_nodes = static_cast<int32_t>(app_data_ref.get_n_brt_nodes()),
   });
 
-  seq->record_commands(build_octree, n);
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(::vulkan::div_ceil(app_data_ref.get_n_octree_nodes(), 256)), 1, 1});
+  seq->cmd_end();
+
   seq->launch_kernel_async();
   seq->sync();
 }

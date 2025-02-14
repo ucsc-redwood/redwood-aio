@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include <CLI/CLI.hpp>
+#include "third-party/CLI11.hpp"
 
 #include "base_appdata.hpp"
 #include "common/vulkan/engine.hpp"
@@ -64,30 +64,28 @@ BENCHMARK_DEFINE_F(VK_Misc, PrefixSum)
 
   std::ranges::fill(u_elements_in, 1);
 
-  auto local_inclusive_scan =
-      engine
-          .algorithm("tmp_local_inclusive_scan.comp",
-                     {
-                         engine.get_buffer(u_elements_in.data()),
-                         engine.get_buffer(u_elements_out.data()),
-                         engine.get_buffer(u_sums.data()),
-                     })
-          ->set_push_constants<LocalPushConstants>({
-              .g_num_elements = n,
-          })
-          ->build();
+  auto local_inclusive_scan = engine
+                                  .algorithm("tmp_local_inclusive_scan.comp",
+                                             {
+                                                 engine.get_buffer(u_elements_in.data()),
+                                                 engine.get_buffer(u_elements_out.data()),
+                                                 engine.get_buffer(u_sums.data()),
+                                             })
+                                  ->set_push_constants<LocalPushConstants>({
+                                      .g_num_elements = n,
+                                  })
+                                  ->build();
 
-  auto global_exclusive_scan =
-      engine
-          .algorithm("tmp_global_exclusive_scan.comp",
-                     {
-                         engine.get_buffer(u_sums.data()),
-                         engine.get_buffer(u_prefix_sums.data()),
-                     })
-          ->set_push_constants<GlobalPushConstants>({
-              .g_num_blocks = n_blocks,
-          })
-          ->build();
+  auto global_exclusive_scan = engine
+                                   .algorithm("tmp_global_exclusive_scan.comp",
+                                              {
+                                                  engine.get_buffer(u_sums.data()),
+                                                  engine.get_buffer(u_prefix_sums.data()),
+                                              })
+                                   ->set_push_constants<GlobalPushConstants>({
+                                       .g_num_blocks = n_blocks,
+                                   })
+                                   ->build();
 
   auto add_base = engine
                       .algorithm("tmp_add_base.comp",

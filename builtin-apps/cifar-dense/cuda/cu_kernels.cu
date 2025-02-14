@@ -23,8 +23,7 @@ __global__ void conv2d(const float* __restrict__ input_data,
   int global_idx = blockIdx.x * blockDim.x + threadIdx.x;
 
   // Total number of output elements
-  int total_output_elements =
-      weight_output_channels * output_height * output_width;
+  int total_output_elements = weight_output_channels * output_height * output_width;
 
   // Check that the thread is within the valid range
   if (global_idx >= total_output_elements) return;
@@ -47,13 +46,9 @@ __global__ void conv2d(const float* __restrict__ input_data,
         // Check boundaries
         if (image_y_base >= 0 && image_y_base < input_height && image_x >= 0 &&
             image_x < input_width) {
-          int input_index =
-              ((in_channel * input_height + image_y_base) * input_width +
-               image_x);
+          int input_index = ((in_channel * input_height + image_y_base) * input_width + image_x);
           int weight_index =
-              ((((out_channel * weight_input_channels) + in_channel) *
-                    weight_height +
-                ky) *
+              ((((out_channel * weight_input_channels) + in_channel) * weight_height + ky) *
                    weight_width +
                kx);
 
@@ -110,8 +105,7 @@ __global__ void maxpool2d(const float* __restrict__ input_data,
 
       // Check boundaries
       if (input_h < input_height && input_w < input_width) {
-        int input_index =
-            c * (input_height * input_width) + input_h * input_width + input_w;
+        int input_index = c * (input_height * input_width) + input_h * input_width + input_w;
         float val = input_data[input_index];
         max_val = (val > max_val) ? val : max_val;
       }
@@ -136,9 +130,7 @@ __global__ void linear(const float* __restrict__ input_data,
 
   // Compute the output element: sum over the input dimension
   float sum = 0.0f;
-  int weight_start =
-      global_idx *
-      input_size;  // Starting index of weights for this output neuron
+  int weight_start = global_idx * input_size;  // Starting index of weights for this output neuron
   for (int j = 0; j < input_size; ++j) {
     sum += input_data[j] * weight_data[weight_start + j];
   }

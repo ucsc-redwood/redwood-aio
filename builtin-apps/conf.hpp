@@ -1,141 +1,156 @@
 #pragma once
 
-#include <bitset>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-// The order in the cores vector is the order of core types
-constexpr int kLittleCoreType = 0;
-constexpr int kMediumCoreType = 1;
-constexpr int kBigCoreType = 2;
+// 1. Define an enum for core types.
+enum class CoreType { kLittle, kMedium, kBig };
 
-// define a mapping from std::string (device id) to table index
-// for example, "device_0" -> 0, "device_1" -> 1, etc.
-const static std::unordered_map<std::string, int> device_id_to_index = {
-    {"pc", 0},
-    {"jetson", 1},
-    {"3A021JEHN02756", 2},
-    {"9b034f1b", 3},
+// 2. Define a struct for a Core.
+struct Core {
+  int id;         // The OS/core id.
+  CoreType type;  // Type of the core (LITTLE, MEDIUM, BIG).
+  bool pinnable;  // Whether this core is available for pinning.
 };
 
-struct Device {
-  size_t core_count;
-  size_t core_type_count;
-  std::bitset<32> pinable_mask;
+// 3. Create a Device class that holds a list of cores.
+class Device {
+ public:
+  // Construct a device with a name and a list of cores.
+  Device(std::string name, std::vector<Core> cores)
+      : name_(std::move(name)), cores_(std::move(cores)) {}
 
-  // cores[core_type] contains the list of cores of that type
-  std::vector<std::vector<int>> cores;
+  // Get all cores.
+  const std::vector<Core>& getCores() const { return cores_; }
 
-  [[nodiscard]] int get_core_count(const int core_type) const {
-    if (core_type >= (int)cores.size()) {
-      return 0;
-    }
-    return cores[core_type].size();
-  }
-
-  [[nodiscard]] std::vector<int> get_pinable_cores(int core_type) const {
-    if (core_type >= (int)cores.size()) {
-      return {};
-    }
-
-    std::vector<int> pinable_cores;
-    // Check each core in the requested core_type group
-    for (int core : cores[core_type]) {
-      if (pinable_mask[core]) {
-        pinable_cores.push_back(core);
+  // Get all cores of a specific type.
+  std::vector<Core> getCores(CoreType type) const {
+    std::vector<Core> result;
+    for (const auto& core : cores_) {
+      if (core.type == type) {
+        result.push_back(core);
       }
     }
-    return pinable_cores;
+    return result;
   }
 
-  [[nodiscard]] std::vector<int> get_pinable_cores() const {
-    std::vector<int> all_cores;
-    for (size_t core_type = 0; core_type < cores.size(); ++core_type) {
-      const auto pinable_cores = get_pinable_cores(core_type);
-      all_cores.insert(
-          all_cores.end(), pinable_cores.begin(), pinable_cores.end());
+  // Get all pinnable cores (optionally filtered by type).
+  std::vector<Core> getPinnableCores(CoreType type = CoreType::kLittle) const {
+    std::vector<Core> result;
+    for (const auto& core : cores_) {
+      if (core.pinnable && core.type == type) result.push_back(core);
     }
-    return all_cores;
+    return result;
   }
+
+  // Get all pinnable cores regardless of type.
+  std::vector<Core> getAllPinnableCores() const {
+    std::vector<Core> result;
+    for (const auto& core : cores_) {
+      if (core.pinnable) result.push_back(core);
+    }
+    return result;
+  }
+
+ private:
+  std::string name_;
+  std::vector<Core> cores_;
 };
 
-inline Device init_pc() {
-  Device device;
-  device.core_count = 8;
-  device.core_type_count = 2;
-  device.pinable_mask.set();
+// 4. Create a device registry for easy lookup.
+class DeviceRegistry {
+ public:
+  DeviceRegistry() {
+    // For "pc": 8 cores split into LITTLE and MEDIUM
+    devices_.emplace("pc",
+                     Device("pc",
+                            std::vector<Core>{
+                                {8, CoreType::kLittle, true},
+                                {9, CoreType::kLittle, true},
+                                {10, CoreType::kLittle, true},
+                                {11, CoreType::kLittle, true},
+                                {1, CoreType::kMedium, true},
+                                {2, CoreType::kMedium, true},
+                                {3, CoreType::kMedium, true},
+                                {6, CoreType::kMedium, true},
+                            }));
 
-  device.cores.push_back({{8, 9, 10, 11}});  // little cores
-  device.cores.push_back({{1, 2, 3, 6}});    // medium cores
+    // For "jetson": 6 cores all of one type.
+    devices_.emplace("jetson",
+                     Device("jetson",
+                            std::vector<Core>{
+                                {0, CoreType::kLittle, true},
+                                {1, CoreType::kLittle, true},
+                                {2, CoreType::kLittle, true},
+                                {3, CoreType::kLittle, true},
+                                {4, CoreType::kLittle, true},
+                                {5, CoreType::kLittle, true},
+                            }));
 
-  return device;
-}
+    // For "3A021JEHN02756": 8 cores in 3 groups.
+    devices_.emplace("3A021JEHN02756",
+                     Device("3A021JEHN02756",
+                            std::vector<Core>{
+                                {0, CoreType::kLittle, true},
+                                {1, CoreType::kLittle, true},
+                                {2, CoreType::kLittle, true},
+                                {3, CoreType::kLittle, true},
+                                {4, CoreType::kMedium, true},
+                                {5, CoreType::kMedium, true},
+                                {6, CoreType::kBig, true},
+                                {7, CoreType::kBig, true},
+                            }));
 
-// jetson has 6 cores, all are pinable
-// All cores are same type
-inline Device init_jetson() {
-  Device device;
-  device.core_count = 6;
-  device.core_type_count = 1;
-  device.pinable_mask.set();
+    // For "9b034f1b": 8 cores, only cores 0-4 are pinnable.
+    devices_.emplace("9b034f1b",
+                     Device("9b034f1b",
+                            std::vector<Core>{
+                                {0, CoreType::kLittle, true},
+                                {1, CoreType::kLittle, true},
+                                {2, CoreType::kLittle, true},
+                                {3, CoreType::kMedium, true},
+                                {4, CoreType::kMedium, true},
+                                {5, CoreType::kBig, false},
+                                {6, CoreType::kBig, false},
+                                {7, CoreType::kBig, false},
+                            }));
 
-  device.cores.push_back({0, 1, 2, 3, 4, 5});  // all cores are same type
-  return device;
-}
+    // For "ce0717178d7758b00b7e": 8 cores split into LITTLE and BIG.
+    devices_.emplace("ce0717178d7758b00b7e",
+                     Device("ce0717178d7758b00b7e",
+                            std::vector<Core>{
+                                {4, CoreType::kLittle, true},
+                                {5, CoreType::kLittle, true},
+                                {6, CoreType::kLittle, true},
+                                {7, CoreType::kLittle, true},
+                                {0, CoreType::kBig, true},
+                                {1, CoreType::kBig, true},
+                                {2, CoreType::kBig, true},
+                                {3, CoreType::kBig, true},
+                            }));
 
-// 3A021JEHN02756 has 8 cores, all are pinable
-// CPU0–3 	0xd05 	Cortex‑A55 	Efficiency (“little”)
-// CPU4–5 	0xd41 	Cortex‑A78 	Big (performance)
-// CPU6–7 	0xd44 	Cortex‑X1 	Prime (top performance)
-inline Device init_3A021JEHN02756() {
-  Device device;
-  device.core_count = 8;
-  device.core_type_count = 3;
-  device.pinable_mask.set();
-
-  device.cores.push_back({0, 1, 2, 3});  // little cores
-  device.cores.push_back({4, 5});        // big cores
-  device.cores.push_back({6, 7});        // prime core
-  return device;
-}
-
-// 9b034f1b has 8 cores, 0-4 are pinable
-// CPU0–2 	0xd46 	Cortex‑A510 	Efficiency (“little”)
-// CPU3–4 	0xd4d 	Cortex‑A7x (mid/high) 	Big (performance) cluster
-// CPU5–6 	0xd47 	Cortex‑A7x (mid/high) 	Big (performance) cluster
-// CPU7 	0xd4e 	Cortex‑X series 	Prime (top performance) core
-//
-// but because a lot of them are very much similar,
-// let's just use
-inline Device init_9b034f1b() {
-  Device device;
-  device.core_count = 8;
-  device.core_type_count = 3;
-  device.pinable_mask.set(0);
-  device.pinable_mask.set(1);
-  device.pinable_mask.set(2);
-  device.pinable_mask.set(3);
-  device.pinable_mask.set(4);
-
-  device.cores.push_back({0, 1, 2});  // little cores
-  device.cores.push_back({3, 4});     // big cores
-  device.cores.push_back({5, 6, 7});  // adjusted big cores
-
-  return device;
-}
-
-inline Device get_device(const std::string& device_id) {
-  if (device_id == "pc") {
-    return init_pc();
-  } else if (device_id == "jetson") {
-    return init_jetson();
-  } else if (device_id == "3A021JEHN02756") {
-    return init_3A021JEHN02756();
-  } else if (device_id == "9b034f1b") {
-    return init_9b034f1b();
-  } else {
-    throw std::runtime_error("Device not found");
+    // For "amd-minipc": 16 cores all of the same type.
+    std::vector<Core> amdCores;
+    for (int i = 0; i < 16; ++i) {
+      amdCores.push_back({i, CoreType::kLittle, true});
+    }
+    devices_.emplace("amd-minipc", Device("amd-minipc", amdCores));
   }
+
+  // Retrieve a device configuration by its id.
+  const Device& getDevice(const std::string& deviceId) const {
+    auto it = devices_.find(deviceId);
+    if (it != devices_.end()) return it->second;
+    throw std::runtime_error("Device not found: " + deviceId);
+  }
+
+ private:
+  std::unordered_map<std::string, Device> devices_;
+};
+
+inline DeviceRegistry& GlobalDeviceRegistry() {
+  static DeviceRegistry instance;
+  return instance;
 }

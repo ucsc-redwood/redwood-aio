@@ -49,8 +49,7 @@ __device__ __forceinline__ uint32_t ActiveInclusiveWarpScan(uint32_t val) {
   return val;
 }
 
-__device__ __forceinline__ uint32_t
-InclusiveWarpScanCircularShift(uint32_t val) {
+__device__ __forceinline__ uint32_t InclusiveWarpScanCircularShift(uint32_t val) {
 #pragma unroll
   for (int i = 1; i <= 16; i <<= 1)  // 16 = LANE_COUNT >> 1
   {
@@ -61,8 +60,7 @@ InclusiveWarpScanCircularShift(uint32_t val) {
   return __shfl_sync(0xffffffff, val, getLaneId() + LANE_MASK & LANE_MASK);
 }
 
-__device__ __forceinline__ uint32_t
-ActiveInclusiveWarpScanCircularShift(uint32_t val) {
+__device__ __forceinline__ uint32_t ActiveInclusiveWarpScanCircularShift(uint32_t val) {
   const uint32_t mask = __activemask();
 #pragma unroll
   for (int i = 1; i <= 16; i <<= 1)  // 16 = LANE_COUNT >> 1

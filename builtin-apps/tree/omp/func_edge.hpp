@@ -15,6 +15,6 @@ inline void process_edge_count_i(const int i,
   edge_count[i] = my_depth - parent_depth;
 }
 
-}  // namespace kernels
+}  // namespace omp
 
-}  // namespace cpu
+}  // namespace tree

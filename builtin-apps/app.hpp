@@ -1,49 +1,77 @@
 #pragma once
 
-#include <CLI/CLI.hpp>
+#include <iostream>
 #include <vector>
 
 #include "conf.hpp"
+#include "third-party/CLI11.hpp"
 
+inline std::string g_device_id;
 inline std::vector<int> g_little_cores;
 inline std::vector<int> g_medium_cores;
 inline std::vector<int> g_big_cores;
 
-inline int parse_args(int argc, char **argv) {
-  std::string device_id;
+[[nodiscard]] inline size_t get_vulkan_warp_size() {
+  if (g_device_id == "3A021JEHN02756") {
+    return 16;
+  } else if (g_device_id == "9b034f1b") {
+    return 64;
+  } else if (g_device_id == "ce0717178d7758b00b7e") {
+    return 32;
+  } else if (g_device_id == "amd-minipc") {
+    return 64;
+  } else if (g_device_id == "pc" || g_device_id == "jetson") {
+    return 32;
+  }
+  throw std::runtime_error("Invalid device ID. " + std::string(__FILE__) + ":" +
+                           std::to_string(__LINE__));
+}
 
+inline int parse_args(int argc, char** argv) {
   CLI::App app{"default"};
-  app.add_option("-d,--device", device_id, "Device ID")->required();
+  app.add_option("-d,--device", g_device_id, "Device ID")->required();
   app.allow_extras();
 
   CLI11_PARSE(app, argc, argv);
 
-  if (device_id.empty()) {
+  if (g_device_id.empty()) {
     throw std::runtime_error("Device ID is required");
   }
 
-  auto device = get_device(device_id);
-  g_little_cores = device.get_pinable_cores(kLittleCoreType);
-  g_medium_cores = device.get_pinable_cores(kMediumCoreType);
-  g_big_cores = device.get_pinable_cores(kBigCoreType);
+  auto& registry = GlobalDeviceRegistry();
 
-  std::cout << "Little cores: ";
-  for (auto core : g_little_cores) {
-    std::cout << core << " ";
-  }
-  std::cout << std::endl;
+  try {
+    const Device& device = registry.getDevice(g_device_id);
 
-  std::cout << "Mid cores: ";
-  for (auto core : g_medium_cores) {
-    std::cout << core << " ";
-  }
-  std::cout << std::endl;
+    auto littleCores = device.getCores(CoreType::kLittle);
+    auto mediumCores = device.getCores(CoreType::kMedium);
+    auto bigCores = device.getCores(CoreType::kBig);
 
-  std::cout << "Big cores: ";
-  for (auto core : g_big_cores) {
-    std::cout << core << " ";
+    std::cout << "Little cores: ";
+    for (const auto& core : littleCores) {
+      std::cout << core.id << " ";
+      g_little_cores.push_back(core.id);
+    }
+    std::cout << std::endl;
+
+    std::cout << "Medium cores: ";
+    for (const auto& core : mediumCores) {
+      std::cout << core.id << " ";
+      g_medium_cores.push_back(core.id);
+    }
+    std::cout << std::endl;
+
+    std::cout << "Big cores: ";
+    for (const auto& core : bigCores) {
+      std::cout << core.id << " ";
+      g_big_cores.push_back(core.id);
+    }
+    std::cout << std::endl;
+
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
   }
-  std::cout << std::endl;
 
   return 0;
 }

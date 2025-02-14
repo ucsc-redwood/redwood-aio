@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
 
-#include <CLI/CLI.hpp>
 #include <algorithm>
 #include <cstdint>
 #include <numeric>
 #include <random>
 
 #include "base_appdata.hpp"
+#include "common/vulkan/algorithm.hpp"
 #include "common/vulkan/engine.hpp"
+#include "third-party/CLI11.hpp"
 
 // ----------------------------------------------------------------------------
 // globals
@@ -50,18 +51,19 @@ class VulkanTestFixture : public ::testing::Test {
 
   std::string get_shader_name() const {
     if (device_id == "3A021JEHN02756") {
-      return "tmp_single_radixsort_warp16.comp";
+      return "tmp_single_radixsort_warp16";
     } else if (device_id == "9b034f1b") {
-      return "tmp_single_radixsort_warp64.comp";
+      return "tmp_single_radixsort_warp64";
+    } else if (device_id == "ce0717178d7758b00b7e") {
+      return "tmp_single_radixsort_warp32";
     } else if (device_id == "pc" || device_id == "jetson") {
-      return "tmp_single_radixsort_warp32.comp";
+      return "tmp_single_radixsort_warp32";
     }
     throw std::runtime_error("Invalid device ID");
   }
 };
 
-class VulkanSortTest : public VulkanTestFixture,
-                       public testing::WithParamInterface<unsigned int> {
+class VulkanSortTest : public VulkanTestFixture, public testing::WithParamInterface<unsigned int> {
  protected:
   void verify_sort(unsigned int n) {
     auto mr = engine.get_mr();
@@ -75,22 +77,33 @@ class VulkanSortTest : public VulkanTestFixture,
     std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
     // Keep CPU copy for verification
-    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
-                                         u_elements_in.end());
+    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(), u_elements_in.end());
 
-    auto algo = engine
-                    .algorithm(get_shader_name(),
-                               {
-                                   engine.get_buffer(u_elements_in.data()),
-                                   engine.get_buffer(u_elements_out.data()),
-                               })
-                    ->set_push_constants<PushConstants>({
-                        .g_num_elements = n,
-                    })
+    auto algo = engine.make_algo(get_shader_name())
+                    ->work_group_size(256, 1, 1)
+                    ->num_sets(1)
+                    ->num_buffers(2)
+                    ->push_constant<PushConstants>()
                     ->build();
 
-    auto seq = engine.sequence();
-    seq->record_commands_with_blocks(algo.get(), 1);
+    algo->update_descriptor_set(0,
+                                {
+                                    engine.get_buffer_info(u_elements_in),
+                                    engine.get_buffer_info(u_elements_out),
+                                });
+
+    algo->update_push_constant(PushConstants{
+        .g_num_elements = n,
+    });
+
+    auto seq = engine.make_seq();
+
+    seq->cmd_begin();
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(), {(uint32_t)vulkan::div_ceil(n, 256), 1, 1});
+    seq->cmd_end();
+
     seq->launch_kernel_async();
     seq->sync();
 
@@ -101,9 +114,9 @@ class VulkanSortTest : public VulkanTestFixture,
   }
 };
 
-class VulkanSortIterationTest : public VulkanTestFixture,
-                                public testing::WithParamInterface<
-                                    std::tuple<unsigned int, unsigned int>> {
+class VulkanSortIterationTest
+    : public VulkanTestFixture,
+      public testing::WithParamInterface<std::tuple<unsigned int, unsigned int>> {
  protected:
   void verify_sort_iterations(unsigned int n, unsigned int iterations) {
     auto mr = engine.get_mr();
@@ -117,30 +130,42 @@ class VulkanSortIterationTest : public VulkanTestFixture,
     std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
     // Keep CPU copy for verification
-    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
-                                         u_elements_in.end());
+    std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(), u_elements_in.end());
 
-    auto algo = engine
-                    .algorithm(get_shader_name(),
-                               {
-                                   engine.get_buffer(u_elements_in.data()),
-                                   engine.get_buffer(u_elements_out.data()),
-                               })
-                    ->set_push_constants<PushConstants>({
-                        .g_num_elements = n,
-                    })
+    auto algo = engine.make_algo(get_shader_name())
+                    ->work_group_size(256, 1, 1)
+                    ->num_sets(1)
+                    ->num_buffers(2)
+                    ->push_constant<PushConstants>()
                     ->build();
 
-    auto seq = engine.sequence();
+    algo->update_descriptor_set(0,
+                                {
+                                    engine.get_buffer_info(u_elements_in),
+                                    engine.get_buffer_info(u_elements_out),
+                                });
 
-    // Run the sort multiple times
+    algo->update_push_constant(PushConstants{
+        .g_num_elements = static_cast<uint32_t>(n),
+    });
+
+    auto seq = engine.make_seq();
+
     for (unsigned int i = 0; i < iterations; ++i) {
-      seq->record_commands_with_blocks(algo.get(), 1);
+      seq->cmd_begin();
+      algo->record_bind_core(seq->get_handle(), 0);
+      algo->record_bind_push(seq->get_handle());
+      algo->record_dispatch(seq->get_handle(), {1, 1, 1});
+      seq->cmd_end();
+
       seq->launch_kernel_async();
       seq->sync();
     }
 
     // Verify results
+    bool all_zeros = std::ranges::all_of(u_elements_out, [](uint32_t x) { return x == 0; });
+    EXPECT_FALSE(all_zeros);
+
     EXPECT_TRUE(std::ranges::is_sorted(u_elements_out));
     std::ranges::sort(h_cpu_elements);
     EXPECT_TRUE(std::ranges::equal(h_cpu_elements, u_elements_out));
@@ -159,19 +184,42 @@ class VulkanSortEdgeCasesTest : public VulkanTestFixture {
     // Keep CPU copy for verification
     std::vector<uint32_t> h_cpu_elements = input_data;
 
-    auto algo = engine
-                    .algorithm(get_shader_name(),
-                               {
-                                   engine.get_buffer(u_elements_in.data()),
-                                   engine.get_buffer(u_elements_out.data()),
-                               })
-                    ->set_push_constants<PushConstants>({
-                        .g_num_elements = static_cast<uint32_t>(n),
-                    })
+    // auto algo = engine
+    //                 .algorithm(get_shader_name(),
+    //                            {
+    //                                engine.get_buffer(u_elements_in.data()),
+    //                                engine.get_buffer(u_elements_out.data()),
+    //                            })
+    //                 ->set_push_constants<PushConstants>({
+    //                     .g_num_elements = static_cast<uint32_t>(n),
+    //                 })
+    //                 ->build();
+
+    auto algo = engine.make_algo(get_shader_name())
+                    ->work_group_size(256, 1, 1)
+                    ->num_sets(1)
+                    ->num_buffers(2)
+                    ->push_constant<PushConstants>()
                     ->build();
 
-    auto seq = engine.sequence();
-    seq->record_commands_with_blocks(algo.get(), 1);
+    algo->update_descriptor_set(0,
+                                {
+                                    engine.get_buffer_info(u_elements_in),
+                                    engine.get_buffer_info(u_elements_out),
+                                });
+
+    algo->update_push_constant(PushConstants{
+        .g_num_elements = static_cast<uint32_t>(n),
+    });
+
+    auto seq = engine.make_seq();
+
+    seq->cmd_begin();
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(), {1, 1, 1});
+    seq->cmd_end();
+
     seq->launch_kernel_async();
     seq->sync();
 
@@ -199,22 +247,48 @@ TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
   std::shuffle(u_elements_in.begin(), u_elements_in.end(), rng);
 
   // Keep CPU copy for verification
-  std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(),
-                                       u_elements_in.end());
+  std::vector<uint32_t> h_cpu_elements(u_elements_in.begin(), u_elements_in.end());
 
-  auto algo = engine
-                  .algorithm(get_shader_name(),
-                             {
-                                 engine.get_buffer(u_elements_in.data()),
-                                 engine.get_buffer(u_elements_out.data()),
-                             })
-                  ->set_push_constants<PushConstants>({
-                      .g_num_elements = n,
-                  })
+  // auto algo = engine
+  //                 .algorithm(get_shader_name(),
+  //                            {
+  //                                engine.get_buffer(u_elements_in.data()),
+  //                                engine.get_buffer(u_elements_out.data()),
+  //                            })
+  //                 ->set_push_constants<PushConstants>({
+  //                     .g_num_elements = n,
+  //                 })
+  //                 ->build();
+
+  // auto seq = engine.sequence();
+
+  // seq->record_commands_with_blocks(algo.get(), 1);
+
+  auto algo = engine.make_algo(get_shader_name())
+                  ->work_group_size(256, 1, 1)
+                  ->num_sets(1)
+                  ->num_buffers(2)
+                  ->push_constant<PushConstants>()
                   ->build();
 
-  auto seq = engine.sequence();
-  seq->record_commands_with_blocks(algo.get(), 1);
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(u_elements_in),
+                                  engine.get_buffer_info(u_elements_out),
+                              });
+
+  algo->update_push_constant(PushConstants{
+      .g_num_elements = static_cast<uint32_t>(n),
+  });
+
+  auto seq = engine.make_seq();
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(), {1, 1, 1});
+  seq->cmd_end();
+
   seq->launch_kernel_async();
   seq->sync();
 
@@ -225,9 +299,7 @@ TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
 }
 
 // Test with different input sizes
-TEST_P(VulkanSortTest, SortsCorrectlyWithDifferentSizes) {
-  verify_sort(GetParam());
-}
+TEST_P(VulkanSortTest, SortsCorrectlyWithDifferentSizes) { verify_sort(GetParam()); }
 
 INSTANTIATE_TEST_SUITE_P(VaryingSizes,
                          VulkanSortTest,
@@ -251,10 +323,9 @@ INSTANTIATE_TEST_SUITE_P(
     VaryingSizesAndIterations,
     VulkanSortIterationTest,
     testing::Combine(testing::Values(1024, 64 * 1024, 640 * 480),  // Sizes
-                     testing::Values(1, 2, 5, 10, 32)  // Number of iterations
+                     testing::Values(1, 2, 5, 10, 32)              // Number of iterations
                      ),
-    [](const testing::TestParamInfo<std::tuple<unsigned int, unsigned int>>
-           &info) {
+    [](const testing::TestParamInfo<std::tuple<unsigned int, unsigned int>> &info) {
       return "Size" + std::to_string(std::get<0>(info.param)) + "_Iterations" +
              std::to_string(std::get<1>(info.param));
     });

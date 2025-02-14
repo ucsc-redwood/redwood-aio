@@ -13,7 +13,7 @@ target("bm-vk-prefix-sum")
     add_deps("builtin-apps")
 
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("spdlog")
     add_packages("glm")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")

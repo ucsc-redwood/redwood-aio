@@ -142,8 +142,7 @@ void process_stage_4(AppData &appdata) {
 
   constexpr auto output_height = (input_height - kPoolSize) / kPoolStride + 1;
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
-  constexpr auto total_iterations =
-      input_channels * output_height * output_width;
+  constexpr auto total_iterations = input_channels * output_height * output_width;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -235,8 +234,7 @@ void process_stage_8(AppData &appdata) {
 
   constexpr auto output_height = (input_height - kPoolSize) / kPoolStride + 1;
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
-  constexpr auto total_iterations =
-      input_channels * output_height * output_width;
+  constexpr auto total_iterations = input_channels * output_height * output_width;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 

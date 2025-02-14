@@ -8,13 +8,15 @@ target("bm-cifar-dense-omp")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("omp.cpp")
 
     add_deps("builtin-apps")
 
 
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
 
     add_packages("glm")
 
@@ -42,15 +44,17 @@ target("bm-cifar-dense-vk")
     set_group("benchmarks")
 
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
+
     add_files("vk.cpp")
 
 
     add_deps("builtin-apps")
-    -- add_deps("vk-backend")
+    add_deps("builtin-apps-vulkan")
 
 
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
     add_packages("spdlog")
     add_packages("glm")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
@@ -74,8 +78,8 @@ target_end()
 -- CUDA benchmarks
 -- ------------------------------------------------------------
 
-if not is_plat("android") then
-
+-- if not is_plat("android") then
+if has_config("cuda") then
 target("bm-cifar-dense-cu")
     set_kind("binary")
     set_group("benchmarks")
@@ -83,15 +87,16 @@ target("bm-cifar-dense-cu")
     add_deps("builtin-apps")
     add_deps("builtin-apps-cuda")
     add_includedirs("$(projectdir)/builtin-apps/")
+    add_includedirs("$(projectdir)")
 
     add_files({
         "cuda.cu",
-        "../../builtin-apps/common/cuda/cu_mem_resource.cu",
+        -- "../../builtin-apps/common/cuda/cu_mem_resource.cu",
     })
 
     add_packages("spdlog")
     add_packages("benchmark")
-    add_packages("cli11")
+    -- add_packages("cli11")
 
     add_cugencodes("native")
 

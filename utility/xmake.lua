@@ -13,3 +13,24 @@ target("query-warpsize")
     end
 target_end()
 
+if is_plat("linux") or is_plat("android") then
+target("query-cpuinfo")
+    set_kind("binary")
+    set_group("utility")
+    add_files("query_cpuinfo.cpp")
+
+    if is_plat("android") then
+      on_run(run_on_android)
+    end
+target_end()
+end
+
+target("test-affinity")
+    set_kind("binary")
+    set_group("utility")
+    add_files("test_affinity.cpp")
+
+    if is_plat("android") then
+      on_run(run_on_android)
+    end
+target_end()

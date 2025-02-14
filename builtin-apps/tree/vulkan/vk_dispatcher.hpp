@@ -17,16 +17,13 @@ class Singleton {
     return instance;
   }
 
-  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() {
-    return engine.get_mr();
-  }
+  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
   void sync() { seq->sync(); }
 
   void process_stage_1(tree::AppData &app_data_ref);
   void process_stage_2(tree::AppData &app_data_ref);
-  void process_stage_3(tree::AppData &app_data_ref,
-                       ::vulkan::TmpStorage &tmp_storage);
+  void process_stage_3(tree::AppData &app_data_ref, TmpStorage &tmp_storage);
   void process_stage_4(tree::AppData &app_data_ref);
   void process_stage_5(tree::AppData &app_data_ref);
   void process_stage_6(tree::AppData &app_data_ref);
@@ -38,10 +35,25 @@ class Singleton {
 
   ::vulkan::Engine engine;
   std::shared_ptr<::vulkan::Sequence> seq;
-  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>>
-      cached_algorithms;
+  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>> cached_algorithms;
 
-  // ::vulkan::TmpStorage tmp_storage;
+  // --------------------------------------------------------------------------
+  // Temporary storages
+  // --------------------------------------------------------------------------
+
+  // (n + 255) / 256;
+  UsmVector<uint32_t> tmp_u_sums;
+  UsmVector<uint32_t> tmp_u_prefix_sums;
+
+  struct LocalPushConstants {
+    uint32_t n_elements;
+  };
+
+  struct GlobalPushConstants {
+    uint32_t n_blocks;
+  };
+
+  // uint32_t warp_size;
 
   // --------------------------------------------------------------------------
   // Stage 1
@@ -54,50 +66,15 @@ class Singleton {
   };
 
   // --------------------------------------------------------------------------
-  // Stage 2
+  // Stage 2 - 6
   // --------------------------------------------------------------------------
 
-  struct MergeSortPushConstants {
-    uint32_t n_logical_blocks;
-    uint32_t n;
-    uint32_t width;
-    uint32_t num_pairs;
-  };
-
-  // --------------------------------------------------------------------------
-  // Stage 3
-  // --------------------------------------------------------------------------
-
-  struct FindDupsPushConstants {
-    int32_t n;
-  };
-
-  struct MoveDupsPushConstants {
+  struct InputSizePushConstantsUnsigned {
     uint32_t n;
   };
 
-  // --------------------------------------------------------------------------
-  // Stage 4
-  // --------------------------------------------------------------------------
-
-  struct BuildTreePushConstants {
+  struct InputSizePushConstantsSigned {
     int32_t n;
-  };
-
-  // --------------------------------------------------------------------------
-  // Stage 5
-  // --------------------------------------------------------------------------
-
-  struct EdgeCountPushConstants {
-    int32_t n_brt_nodes;
-  };
-
-  // --------------------------------------------------------------------------
-  // Stage 6
-  // --------------------------------------------------------------------------
-
-  struct PrefixSumPushConstants {
-    uint32_t inputSize;
   };
 
   // --------------------------------------------------------------------------

@@ -13,8 +13,7 @@ void device_sync() { CUDA_CHECK(cudaDeviceSynchronize()); }
 // -----------------------------------------------------------------------------
 
 void process_stage_1(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv1OutChannels * kConv1OutHeight * kConv1OutWidth;
+  constexpr auto total_iterations = kConv1OutChannels * kConv1OutHeight * kConv1OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -42,8 +41,7 @@ void process_stage_1(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_2(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv1OutChannels * kPool1OutHeight * kPool1OutWidth;
+  constexpr auto total_iterations = kConv1OutChannels * kPool1OutHeight * kPool1OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -63,8 +61,7 @@ void process_stage_2(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_3(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv2OutChannels * kConv2OutHeight * kConv2OutWidth;
+  constexpr auto total_iterations = kConv2OutChannels * kConv2OutHeight * kConv2OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -92,8 +89,7 @@ void process_stage_3(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_4(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv2OutChannels * kPool2OutHeight * kPool2OutWidth;
+  constexpr auto total_iterations = kConv2OutChannels * kPool2OutHeight * kPool2OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -113,8 +109,7 @@ void process_stage_4(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_5(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv3OutChannels * kConv3OutHeight * kConv3OutWidth;
+  constexpr auto total_iterations = kConv3OutChannels * kConv3OutHeight * kConv3OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -142,8 +137,7 @@ void process_stage_5(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_6(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv4OutChannels * kConv4OutHeight * kConv4OutWidth;
+  constexpr auto total_iterations = kConv4OutChannels * kConv4OutHeight * kConv4OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -171,8 +165,7 @@ void process_stage_6(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_7(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv5OutChannels * kConv5OutHeight * kConv5OutWidth;
+  constexpr auto total_iterations = kConv5OutChannels * kConv5OutHeight * kConv5OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
@@ -200,8 +193,7 @@ void process_stage_7(AppData &app_data) {
 // -----------------------------------------------------------------------------
 
 void process_stage_8(AppData &app_data) {
-  constexpr auto total_iterations =
-      kConv5OutChannels * kPool3OutHeight * kPool3OutWidth;
+  constexpr auto total_iterations = kConv5OutChannels * kPool3OutHeight * kPool3OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 

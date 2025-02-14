@@ -64,14 +64,11 @@ inline void process_oct_node(const int i /*brt node index*/,
     set_child(parent, oct_children, oct_child_node_mask, which_child, oct_idx);
 
     // compute the corner of the current octnode
-    morton32_to_xyz(&oct_corner[oct_idx],
-                    node_prefix << (morton_bits - (3 * level)),
-                    min_coord,
-                    range);
+    morton32_to_xyz(
+        &oct_corner[oct_idx], node_prefix << (morton_bits - (3 * level)), min_coord, range);
 
     // each cell is half the size of the level above it
-    oct_cell_size[oct_idx] =
-        range / static_cast<float>(1 << (level - root_level));
+    oct_cell_size[oct_idx] = range / static_cast<float>(1 << (level - root_level));
 
     // go to the next octnode (parent)
     oct_idx = parent;
@@ -93,21 +90,16 @@ inline void process_oct_node(const int i /*brt node index*/,
 
     const auto oct_parent = edge_offsets[rt_parent];
     const auto top_level = rt_prefix_n[i] / 3 - n_new_nodes + 1;
-    const auto top_node_prefix =
-        morton_codes[i] >> (morton_bits - (3 * top_level));
+    const auto top_node_prefix = morton_codes[i] >> (morton_bits - (3 * top_level));
 
     const auto which_child = top_node_prefix & 0b111;
 
-    set_child(
-        oct_parent, oct_children, oct_child_node_mask, which_child, oct_idx);
+    set_child(oct_parent, oct_children, oct_child_node_mask, which_child, oct_idx);
 
-    morton32_to_xyz(&oct_corner[oct_idx],
-                    top_node_prefix << (morton_bits - (3 * top_level)),
-                    min_coord,
-                    range);
+    morton32_to_xyz(
+        &oct_corner[oct_idx], top_node_prefix << (morton_bits - (3 * top_level)), min_coord, range);
 
-    oct_cell_size[oct_idx] =
-        range / static_cast<float>(1 << (top_level - root_level));
+    oct_cell_size[oct_idx] = range / static_cast<float>(1 << (top_level - root_level));
   }
 }
 
@@ -127,8 +119,7 @@ inline void process_link_leaf(const int i /*brt node index*/,
   if (rt_has_leaf_left[i]) {
     const auto leaf_idx = rt_left_child[i];
     const auto leaf_level = rt_prefix_n[i] / 3 + 1;
-    const auto leaf_prefix =
-        morton_codes[leaf_idx] >> (morton_bits - (3 * leaf_level));
+    const auto leaf_prefix = morton_codes[leaf_idx] >> (morton_bits - (3 * leaf_level));
     const auto child_idx = leaf_prefix & 0b111;
 
     // walk up the radix tree until finding a node which contributes an octnode
@@ -140,14 +131,12 @@ inline void process_link_leaf(const int i /*brt node index*/,
     // the lowest octnode in the string contributed by rt_node will be the
     // lowest index
     const auto bottom_oct_idx = edge_offsets[rt_node];
-    set_leaf(
-        bottom_oct_idx, oct_children, oct_child_leaf_mask, child_idx, leaf_idx);
+    set_leaf(bottom_oct_idx, oct_children, oct_child_leaf_mask, child_idx, leaf_idx);
   }
   if (rt_has_leaf_right[i]) {
     const auto leaf_idx = rt_left_child[i] + 1;
     const auto leaf_level = rt_prefix_n[i] / 3 + 1;
-    const auto leaf_prefix =
-        morton_codes[leaf_idx] >> (morton_bits - (3 * leaf_level));
+    const auto leaf_prefix = morton_codes[leaf_idx] >> (morton_bits - (3 * leaf_level));
     const auto child_idx = leaf_prefix & 0b111;
     auto rt_node = i;
     while (edge_counts[rt_node] == 0) {
@@ -157,8 +146,7 @@ inline void process_link_leaf(const int i /*brt node index*/,
     // the lowest octnode in the string contributed by rt_node will be the
     // lowest index
     const auto bottom_oct_idx = edge_offsets[rt_node];
-    set_leaf(
-        bottom_oct_idx, oct_children, oct_child_leaf_mask, child_idx, leaf_idx);
+    set_leaf(bottom_oct_idx, oct_children, oct_child_leaf_mask, child_idx, leaf_idx);
   }
 }
 
