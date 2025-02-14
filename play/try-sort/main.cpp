@@ -4,20 +4,20 @@
 #include "builtin-apps/base_appdata.hpp"
 #include "builtin-apps/common/vulkan/engine.hpp"
 
-[[nodiscard]] static std::string get_shader_name() {
-  if (g_device_id == "3A021JEHN02756") {
-    return "tmp_single_radixsort_warp16";
-  } else if (g_device_id == "9b034f1b") {
-    return "tmp_single_radixsort_warp64";
-  } else if (g_device_id == "ce0717178d7758b00b7e") {
-    return "tmp_single_radixsort_warp32";
-  } else if (g_device_id == "amd-minipc") {
-    return "tmp_single_radixsort_warp64";
-  } else if (g_device_id == "pc" || g_device_id == "jetson") {
-    return "tmp_single_radixsort_warp32";
-  }
-  throw std::runtime_error("Invalid device ID");
-}
+// [[nodiscard]] static std::string get_shader_name() {
+//   if (g_device_id == "3A021JEHN02756") {
+//     return "tmp_single_radixsort_warp16";
+//   } else if (g_device_id == "9b034f1b") {
+//     return "tmp_single_radixsort_warp64";
+//   } else if (g_device_id == "ce0717178d7758b00b7e") {
+//     return "tmp_single_radixsort_warp32";
+//   } else if (g_device_id == "amd-minipc") {
+//     return "tmp_single_radixsort_warp64";
+//   } else if (g_device_id == "pc" || g_device_id == "jetson") {
+//     return "tmp_single_radixsort_warp32";
+//   }
+//   throw std::runtime_error("Invalid device ID");
+// }
 
 int main(int argc, char** argv) {
   parse_args(argc, argv);
