@@ -80,14 +80,12 @@ static void run_default_test() {
   std::cout << "Total failures           : " << (total_attempts - total_successes) << "\n\n";
 }
 
-int main(int argc, char* argv[]) {
-    run_default_test();
-
+int main() {
+  run_default_test();
 
   // // Parse command line arguments if provided
   // std::vector<int> target_cores;
   // if (argc > 1) {
-
 
   //   // Convert command line arguments to integers
   //   for (int i = 1; i < argc; i++) {
