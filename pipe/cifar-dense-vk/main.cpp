@@ -419,7 +419,7 @@ int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::info);
 
   // find_best_baseline();
-   std::cout << "\nRunning GPU benchmark..." << std::endl;
+  std::cout << "\nRunning GPU benchmark..." << std::endl;
   auto gpu_duration = run_gpu_baseline();
   double gpu_ms = std::chrono::duration<double, std::milli>(gpu_duration).count();
   std::cout << "GPU time: " << std::fixed << std::setprecision(2) << gpu_ms << " ms" << std::endl;

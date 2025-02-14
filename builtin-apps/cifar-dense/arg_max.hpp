@@ -6,6 +6,8 @@
 
 #include "dense_appdata.hpp"
 
+namespace cifar_dense {
+
 [[nodiscard]] inline int arg_max(const float* ptr) {
   const auto max_index =
       std::distance(ptr, std::ranges::max_element(ptr, ptr + cifar_dense::kLinearOutFeatures));
@@ -29,3 +31,5 @@ inline void print_prediction(const int max_index) {
   std::cout << (class_names.contains(max_index) ? class_names.at(max_index) : "Unknown");
   std::cout << std::endl;
 }
+
+}  // namespace cifar_dense
