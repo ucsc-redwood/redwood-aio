@@ -1,18 +1,28 @@
 import sqlite3
 import argparse
 import random
+from typing import Dict, List, Tuple, Optional, Any, Set
+import json
+from pathlib import Path
 
-DB_NAME = "benchmark_results.db"
+DB_NAME: str = "benchmark_results.db"
 
 # Devices dictionary.
 # For each machine we list available (usable) processing unit types and the number of threads to use.
-devices = {
+devices: Dict[str, Dict[str, int]] = {
     "3A021JEHN02756": {"little": 4, "medium": 2, "big": 2, "gpu": 1},
     # Additional devices can be added here.
 }
 
 
-def get_stage_time(conn, machine_name, application, stage, hardware, threads):
+def get_stage_time(
+    conn: sqlite3.Connection,
+    machine_name: str,
+    application: str,
+    stage: int,
+    hardware: str,
+    threads: int,
+) -> float:
     """
     Query the database for the execution time (time_ms) of a given stage.
 
@@ -67,7 +77,12 @@ def get_stage_time(conn, machine_name, application, stage, hardware, threads):
         return 9999.9
 
 
-def estimate_schedule_time(conn, machine_name, application, schedule):
+def estimate_schedule_time(
+    conn: sqlite3.Connection,
+    machine_name: str,
+    application: str,
+    schedule: List[Dict[str, Any]],
+) -> float:
     """
     For the given execution schedule (a list of chunk dictionaries),
     query the DB for each stage's time. For each chunk, sum the stage times,
@@ -99,7 +114,7 @@ def estimate_schedule_time(conn, machine_name, application, schedule):
     return total_time
 
 
-def print_schedule_report(schedule, total_time):
+def print_schedule_report(schedule: List[Dict[str, Any]], total_time: float) -> None:
     """
     Print a report for one schedule:
       - Print timing for each stage in each chunk.
@@ -121,7 +136,7 @@ def print_schedule_report(schedule, total_time):
     print("-" * 50)
 
 
-def random_fixed_partition(stages, num_chunks):
+def random_fixed_partition(stages: List[int], num_chunks: int) -> List[List[int]]:
     """
     Partition the list 'stages' (must have length >= num_chunks) into exactly 'num_chunks'
     contiguous groups by randomly choosing num_chunks-1 breakpoints.
@@ -142,7 +157,9 @@ def random_fixed_partition(stages, num_chunks):
     return partition
 
 
-def random_fixed_schedule(stages, hw_specs):
+def random_fixed_schedule(
+    stages: List[int], hw_specs: Dict[str, int]
+) -> List[Dict[str, Any]]:
     """
     Generate a random schedule subject to the constraint that each hardware type appears exactly once.
 
@@ -171,7 +188,9 @@ def random_fixed_schedule(stages, hw_specs):
     return schedule
 
 
-def query_baseline(conn, machine_name, application):
+def query_baseline(
+    conn: sqlite3.Connection, machine_name: str, application: str
+) -> Tuple[Optional[int], Optional[float]]:
     """
     Query the database for baseline records (stage 0) and return the best (lowest time)
     along with its number of threads and time.
@@ -196,7 +215,52 @@ def query_baseline(conn, machine_name, application):
     return best[0], float(best[1])
 
 
-def main():
+def schedule_to_json(
+    machine_name: str, schedule: List[Dict[str, Any]], schedule_id: str
+) -> Dict[str, Any]:
+    """Convert a schedule to a JSON-compatible dictionary format."""
+    return {
+        "schedule_id": schedule_id,
+        "device_id": machine_name,
+        "chunks": [
+            {
+                "name": f"chunk{chunk['chunk_id']}",
+                "hardware": chunk["hardware"],
+                "threads": chunk["threads"],
+                "stages": chunk["stages"],
+            }
+            for chunk in schedule
+        ],
+    }
+
+
+def save_schedules_to_json(
+    machine_name: str,
+    valid_schedules: List[Tuple[List[Dict[str, Any]], float, float]],
+    application: str,
+) -> None:
+    """Save all valid schedules to a JSON file."""
+    schedules_json = [
+        {
+            "schedule": schedule_to_json(
+                machine_name, sched, f"{machine_name}_{application}_schedule_{idx:03d}"
+            ),
+            "total_time": total_time,
+            "max_chunk_time": max_chunk_time,
+        }
+        for idx, (sched, total_time, max_chunk_time) in enumerate(valid_schedules, 1)
+    ]
+
+    output_dir = Path("schedules")
+    output_dir.mkdir(exist_ok=True)
+    output_file = output_dir / f"{machine_name}_{application}_schedules.json"
+
+    with open(output_file, "w") as f:
+        json.dump(schedules_json, f, indent=2)
+    print(f"\nSaved {len(valid_schedules)} schedules to {output_file}")
+
+
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--machine_name", required=True, help="Machine name (e.g., 3A021JEHN02756)"
@@ -292,10 +356,19 @@ def main():
 
     print(f"Found {len(valid_schedules)} unique schedules.\n")
 
+    # Save schedules to JSON file
+    save_schedules_to_json(machine_name, valid_schedules, application)
+
     # Report the schedules.
     for idx, (sched, total_time, max_chunk_time) in enumerate(valid_schedules, start=1):
-        print(f"--- Valid Execution Schedule #{idx} ---")
+        schedule_id = f"{machine_name}_{application}_schedule_{idx:03d}"
+        print(f"--- Valid Execution Schedule #{idx} (ID: {schedule_id}) ---")
         print_schedule_report(sched, total_time)
+        # Print JSON representation
+        json_repr = schedule_to_json(machine_name, sched, schedule_id)
+        print("JSON representation:")
+        print(json.dumps(json_repr, indent=2))
+        print("-" * 50)
 
     conn.close()
 

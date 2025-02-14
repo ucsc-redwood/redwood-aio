@@ -3,7 +3,15 @@ import argparse
 
 DB_NAME = "benchmark_results.db"
 
-def query_database(machine_name=None, application=None, backend=None, stage=None, core_type=None, num_threads=None):
+
+def query_database(
+    machine_name=None,
+    application=None,
+    backend=None,
+    stage=None,
+    core_type=None,
+    num_threads=None,
+):
     """
     Query the database with optional filters and display the results.
     """
@@ -51,13 +59,20 @@ def query_database(machine_name=None, application=None, backend=None, stage=None
 
     conn.close()
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Query benchmark database with optional filters.")
+    parser = argparse.ArgumentParser(
+        description="Query benchmark database with optional filters."
+    )
     parser.add_argument("--machine_name", type=str, help="Filter by machine name")
     parser.add_argument("--application", type=str, help="Filter by application name")
-    parser.add_argument("--backend", type=str, help="Filter by backend type (e.g., OMP, CUDA, Vulkan)")
+    parser.add_argument(
+        "--backend", type=str, help="Filter by backend type (e.g., OMP, CUDA, Vulkan)"
+    )
     parser.add_argument("--stage", type=int, help="Filter by stage number")
-    parser.add_argument("--core_type", type=str, help="Filter by core type (e.g., little, medium, big)")
+    parser.add_argument(
+        "--core_type", type=str, help="Filter by core type (e.g., little, medium, big)"
+    )
     parser.add_argument("--num_threads", type=int, help="Filter by number of threads")
 
     args = parser.parse_args()
@@ -68,5 +83,5 @@ if __name__ == "__main__":
         backend=args.backend,
         stage=args.stage,
         core_type=args.core_type,
-        num_threads=args.num_threads
+        num_threads=args.num_threads,
     )
