@@ -1,12 +1,13 @@
+#include <spdlog/spdlog.h>
 
-#include <climits>
 #include <cstdint>
+#include <iomanip>
+#include <iostream>
 
 #include "affinity.hpp"
 #include "app.hpp"
 #include "cifar-dense/omp/dense_kernel.hpp"
 #include "cifar-dense/vulkan/vk_dispatcher.hpp"
-#include "spdlog/common.h"
 #include "third-party/concurrentqueue.h"
 
 enum class ProcessorType {
@@ -29,6 +30,8 @@ void run_stages(cifar_dense::AppData* app_data) {
       bind_thread_to_cores(g_medium_cores);
     } else if constexpr (processor_type == ProcessorType::kBigCore) {
       bind_thread_to_cores(g_big_cores);
+    } else {
+      assert(false);
     }
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]
@@ -44,8 +47,7 @@ void run_stages(cifar_dense::AppData* app_data) {
 // ---------------------------------------------------------------------
 
 struct Task {
-  // uint32_t uid;
-  cifar_dense::AppData* app_data;
+  cifar_dense::AppData* app_data;  // basically just a pointer
 };
 
 std::atomic<bool> done(false);
@@ -75,134 +77,6 @@ void cleanup(std::vector<Task>& tasks) {
 // ---------------------------------------------------------------------
 
 namespace device_3A021JEHN02756 {
-
-namespace tmp {
-
-void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
-  for (auto& task : in_tasks) {
-    // ---------
-    run_stages<1, 3, ProcessorType::kLittleCore, 4>(task.app_data);
-    // ---------
-
-    q_AB.enqueue(task);
-  }
-
-  // Signal consumer to stop
-  done = true;
-}
-
-void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB,
-                   moodycamel::ConcurrentQueue<Task>& q_BC) {
-  while (!done) {
-    Task task;
-    if (q_AB.try_dequeue(task)) {
-      // ---------
-      run_stages<4, 5, ProcessorType::kMediumCore, 2>(task.app_data);
-      // ---------
-
-      q_BC.enqueue(task);
-    } else {
-      // No task available, yield to avoid busy-waiting
-      std::this_thread::yield();
-    }
-  }
-}
-
-void stage_group_C(moodycamel::ConcurrentQueue<Task>& q_BC, std::vector<Task>& out_tasks) {
-  while (!done) {
-    Task task;
-    if (q_BC.try_dequeue(task)) {
-      // ---------
-      run_stages<6, 9, ProcessorType::kBigCore, 2>(task.app_data);
-      // ---------
-
-      out_tasks.push_back(task);
-    } else {
-      // No task available, yield to avoid busy-waiting
-      std::this_thread::yield();
-    }
-  }
-}
-
-}  // namespace tmp
-
-namespace instance_1 {
-
-// {"chunk_id": 1, "stages": [1, 2, 3], "hardware": "little", "threads": 4},
-// {"chunk_id": 2, "stages": [4, 5], "hardware": "big", "threads": 2},
-// {"chunk_id": 3, "stages": [6, 7, 8, 9], "hardware": "gpu", "threads": 1},
-
-// --- Execution Schedule #1 ---
-// Schedule Report:
-//   Chunk 1: Hardware = little, Threads = 4
-//     Stage 1: 4.24 ms
-//     Stage 2: 0.272 ms
-//     Stage 3: 62.6 ms
-//     Chunk Total Time: 67.112 ms
-//   Chunk 2: Hardware = big, Threads = 2
-//     Stage 4: 0.118 ms
-//     Stage 5: 35.8 ms
-//     Chunk Total Time: 35.918 ms
-//   Chunk 3: Hardware = gpu, Threads = 1
-//     Stage 6: 12.4 ms
-//     Stage 7: 9.66 ms
-//     Stage 8: 0.69 ms
-//     Stage 9: 13.7 ms
-//     Chunk Total Time: 36.45 ms
-// Total Pipeline Time: 139.48000000000002 ms
-
-void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
-  for (auto& task : in_tasks) {
-    // ---------
-    run_stages<1, 3, ProcessorType::kLittleCore, 4>(task.app_data);
-    // ---------
-
-    q_AB.enqueue(task);
-  }
-
-  // Signal consumer to stop
-  done = true;
-}
-
-void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB,
-                   moodycamel::ConcurrentQueue<Task>& q_BC) {
-  while (!done) {
-    Task task;
-    if (q_AB.try_dequeue(task)) {
-      // ---------
-      run_stages<4, 5, ProcessorType::kBigCore, 2>(task.app_data);
-      // ---------
-
-      q_BC.enqueue(task);
-    } else {
-      // No task available, yield to avoid busy-waiting
-      std::this_thread::yield();
-    }
-  }
-}
-
-void stage_group_C(moodycamel::ConcurrentQueue<Task>& q_BC, std::vector<Task>& out_tasks) {
-  while (!done) {
-    Task task;
-    if (q_BC.try_dequeue(task)) {
-      // ---------
-      cifar_dense::vulkan::Singleton::getInstance().run_stage<6>(*task.app_data);
-      cifar_dense::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data);
-      cifar_dense::vulkan::Singleton::getInstance().run_stage<8>(*task.app_data);
-      // cifar_dense::vulkan::Singleton::getInstance().run_stage<9>(*task.app_data);
-      run_stages<9, 9, ProcessorType::kMediumCore, 1>(task.app_data);
-
-      // ---------
-
-      out_tasks.push_back(task);
-    } else {
-      // No task available, yield to avoid busy-waiting
-      std::this_thread::yield();
-    }
-  }
-}
-
-}  // namespace instance_1
 
 namespace instance_2 {
 // --- Valid Execution Schedule #81 ---
@@ -370,80 +244,6 @@ void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB, std::vector<Task>& o
 }  // namespace device_ce0717178d7758b00b7e
 
 // ---------------------------------------------------------------------
-// Pipeline Instance
-// ---------------------------------------------------------------------
-
-void tmp() {
-  auto tasks = init_tasks(20);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(tasks.size());
-
-  auto start = std::chrono::high_resolution_clock::now();
-
-  if (g_device_id == "3A021JEHN02756") {
-    // Little cores: 0 1 2 3
-    // Mid cores: 4 5
-    // Big cores: 6 7
-
-    moodycamel::ConcurrentQueue<Task> q_AB;
-    moodycamel::ConcurrentQueue<Task> q_BC;
-
-    // std::thread t_A(device_3A021JEHN02756::stage_group_A, std::ref(tasks), std::ref(q_AB));
-    // std::thread t_B(device_3A021JEHN02756::stage_group_B, std::ref(q_AB), std::ref(q_BC));
-    // std::thread t_C(device_3A021JEHN02756::stage_group_C, std::ref(q_BC), std::ref(out_tasks));
-    std::thread t_A(
-        device_3A021JEHN02756::instance_1::stage_group_A, std::ref(tasks), std::ref(q_AB));
-    std::thread t_B(
-        device_3A021JEHN02756::instance_1::stage_group_B, std::ref(q_AB), std::ref(q_BC));
-    std::thread t_C(
-        device_3A021JEHN02756::instance_1::stage_group_C, std::ref(q_BC), std::ref(out_tasks));
-
-    t_A.join();
-    t_B.join();
-    t_C.join();
-
-  } else if (g_device_id == "9b034f1b") {
-    // Little cores: 0 1 2
-    // Mid cores: 3 4
-    // Big cores: (un pinnable)
-
-    exit(0);
-
-    moodycamel::ConcurrentQueue<Task> q_AB;
-
-    std::thread t1(device_9b034f1b::stage_group_A, std::ref(tasks), std::ref(q_AB));
-    std::thread t2(device_9b034f1b::stage_group_B, std::ref(q_AB), std::ref(out_tasks));
-
-    t1.join();
-    t2.join();
-
-  } else if (g_device_id == "ce0717178d7758b00b7e") {
-    // Little cores: 4 5 6 7
-    // Mid cores: 0 1 2 3
-    // Big cores:
-
-    exit(0);
-
-    moodycamel::ConcurrentQueue<Task> q_AB;
-
-    std::thread t1(device_ce0717178d7758b00b7e::stage_group_A, std::ref(tasks), std::ref(q_AB));
-    std::thread t2(device_ce0717178d7758b00b7e::stage_group_B, std::ref(q_AB), std::ref(out_tasks));
-
-    t1.join();
-    t2.join();
-  }
-
-  auto end = std::chrono::high_resolution_clock::now();
-
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  double avg_time = duration.count() / static_cast<double>(tasks.size());
-  std::cout << "Pipeline: Average time per iteration: " << avg_time << " us" << "\t "
-            << avg_time / 1000.0 << " ms" << std::endl;
-
-  cleanup(tasks);
-}
-
-// ---------------------------------------------------------------------
 // Pipeline Instance (Best)
 // ---------------------------------------------------------------------
 
@@ -477,6 +277,8 @@ void run_best() {
     t_C.join();
     t_D.join();
 
+    assert(out_tasks.size() == 20);
+
   } else if (g_device_id == "9b034f1b") {
     exit(0);
   } else if (g_device_id == "ce0717178d7758b00b7e") {
@@ -497,7 +299,7 @@ void run_best() {
 // Baseline
 // ---------------------------------------------------------------------
 
-void run_baseline() {
+[[nodiscard]] std::chrono::duration<double> run_baseline(const int num_threads) {
   auto tasks = init_tasks(10);
   std::vector<Task> out_tasks;
   out_tasks.reserve(tasks.size());
@@ -505,7 +307,7 @@ void run_baseline() {
   auto start = std::chrono::high_resolution_clock::now();
 
   for (auto& task : tasks) {
-#pragma omp parallel
+#pragma omp parallel num_threads(num_threads)
     {
       cifar_dense::omp::run_stage<1>(*task.app_data);
       cifar_dense::omp::run_stage<2>(*task.app_data);
@@ -520,12 +322,39 @@ void run_baseline() {
   }
 
   auto end = std::chrono::high_resolution_clock::now();
-
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  double avg_time = duration.count() / static_cast<double>(tasks.size());
-  std::cout << "Baseline: Average time per iteration: " << avg_time << " us" << std::endl;
+  auto duration = end - start;
 
   cleanup(tasks);
+  return duration;
+}
+
+void find_best_baseline() {
+  std::chrono::duration<double> min_duration = std::chrono::duration<double>::max();
+  int best_threads = 1;
+  const int max_threads = std::thread::hardware_concurrency();
+
+  spdlog::info("Running baseline benchmarks with 1-{} threads...", max_threads);
+
+  for (int i = 1; i <= max_threads; ++i) {
+    auto duration = run_baseline(i);
+    double ms = std::chrono::duration<double, std::milli>(duration).count();
+
+    // Use std::cout for progress updates
+    std::cout << "Time with " << i << " thread" << (i == 1 ? "" : "s") << ": " << std::fixed
+              << std::setprecision(2) << ms << " ms" << std::endl;
+
+    if (duration < min_duration) {
+      min_duration = duration;
+      best_threads = i;
+    }
+  }
+
+  // Use spdlog for final result
+  double best_ms = std::chrono::duration<double, std::milli>(min_duration).count();
+  spdlog::info("Best configuration: {} thread{} ({:.2f} ms)",
+               best_threads,
+               best_threads == 1 ? "" : "s",
+               best_ms);
 }
 
 // ---------------------------------------------------------------------
@@ -535,11 +364,10 @@ void run_baseline() {
 int main(int argc, char** argv) {
   parse_args(argc, argv);
 
-  spdlog::set_level(spdlog::level::off);
+  spdlog::set_level(spdlog::level::info);
 
-  tmp();
   run_best();
-  run_baseline();
+  find_best_baseline();
 
   return 0;
 }
