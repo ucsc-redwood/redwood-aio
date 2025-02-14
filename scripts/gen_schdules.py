@@ -328,18 +328,20 @@ def main() -> None:
     # Save each schedule to an individual JSON file
     save_schedules_to_individual_json(machine_name, valid_schedules, application)
 
-    # Optionally also print them out
-    for idx, (sched, total_time, max_chunk_time) in enumerate(valid_schedules, start=1):
-        schedule_id = f"{machine_name}_{application}_schedule_{idx:03d}"
-        print(f"--- Valid Execution Schedule #{idx} (ID: {schedule_id}) ---")
-        print_schedule_report(sched, total_time)
-        # Show JSON representation in console
-        json_repr = schedule_to_json(machine_name, sched, schedule_id)
-        print("JSON representation:")
-        print(json.dumps(json_repr, indent=2))
-        print("-" * 50)
+    # # Optionally also print them out
+    # for idx, (sched, total_time, max_chunk_time) in enumerate(valid_schedules, start=1):
+    #     schedule_id = f"{machine_name}_{application}_schedule_{idx:03d}"
+    #     print(f"--- Valid Execution Schedule #{idx} (ID: {schedule_id}) ---")
+    #     print_schedule_report(sched, total_time)
+    #     # Show JSON representation in console
+    #     json_repr = schedule_to_json(machine_name, sched, schedule_id)
+    #     print("JSON representation:")
+    #     print(json.dumps(json_repr, indent=2))
+    #     print("-" * 50)
 
     conn.close()
+
+    print("Done.")
 
 
 if __name__ == "__main__":

@@ -79,8 +79,6 @@ struct Task {
   cifar_dense::AppData* app_data;  // basically just a pointer
 };
 
-std::atomic<bool> done(false);
-
 [[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
   auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
 
@@ -129,6 +127,8 @@ namespace instance_2 {
 //     Chunk Total Time: 0.07100000000000001 ms
 // Pipeline Total Time: 59.462 ms
 // Max (Slowest) Chunk Time: 31.080000000000002 ms
+
+std::atomic<bool> done(false);
 
 void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
   for (auto& task : in_tasks) {
