@@ -43,10 +43,10 @@ void Singleton::process_stage_1(cifar_dense::AppData &app_data) {
 
   algo->update_descriptor_set(0,
                               {
+                                  engine.get_buffer_info(app_data.u_image),
+                                  engine.get_buffer_info(app_data.u_conv1_weights),
+                                  engine.get_buffer_info(app_data.u_conv1_bias),
                                   engine.get_buffer_info(app_data.u_conv1_out),
-                                  engine.get_buffer_info(app_data.u_conv2_weights),
-                                  engine.get_buffer_info(app_data.u_conv2_bias),
-                                  engine.get_buffer_info(app_data.u_conv2_out),
                               });
 
   algo->update_push_constant(Conv2dPushConstants{

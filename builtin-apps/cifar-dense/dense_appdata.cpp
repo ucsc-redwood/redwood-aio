@@ -75,15 +75,6 @@ AppData::AppData(std::pmr::memory_resource *mr)
   // Load linear parameters
   readDataFromFile("dense/classifier_weight.txt", u_linear_weights.data(), kLinearWeightSize);
   readDataFromFile("dense/classifier_bias.txt", u_linear_bias.data(), kLinearBiasSize);
-
-  // fill in zeros for the rest of the buffers
-  std::ranges::fill(u_conv1_out, 0.0f);
-  std::ranges::fill(u_conv2_out, 0.0f);
-  std::ranges::fill(u_conv3_out, 0.0f);
-  std::ranges::fill(u_conv4_out, 0.0f);
-  std::ranges::fill(u_conv5_out, 0.0f);
-  std::ranges::fill(u_pool3_out, 0.0f);
-  std::ranges::fill(u_linear_out, 0.0f);
 }
 
 }  // namespace cifar_dense
