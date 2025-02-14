@@ -4,7 +4,7 @@
 
 namespace vulkan {
 Algorithm::Algorithm(VulkanMemoryResource* mr_ptr, std::string shader_name)
-    : device_ref_(mr_ptr->get_device()), mr_ptr_(mr_ptr), shader_name_(std::move(shader_name)) {
+    : device_ref_(mr_ptr->get_device()), shader_name_(std::move(shader_name)) {
   load_compiled_shader();
   create_shader_module();
 }

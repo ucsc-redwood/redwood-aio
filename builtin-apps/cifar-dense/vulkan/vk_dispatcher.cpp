@@ -340,7 +340,7 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
 }
 
 void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
-  const int total_iterations = cifar_dense::kLinearOutFeatures;
+  constexpr int total_iterations = cifar_dense::kLinearOutFeatures;  // 10
 
   auto algo = algorithms.at("linear").get();
 

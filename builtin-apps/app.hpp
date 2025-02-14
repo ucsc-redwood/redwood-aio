@@ -73,28 +73,5 @@ inline int parse_args(int argc, char** argv) {
     return 1;
   }
 
-  // auto device = get_device(g_device_id);
-  // g_little_cores = device.get_pinable_cores(kLittleCoreType);
-  // g_medium_cores = device.get_pinable_cores(kMediumCoreType);
-  // g_big_cores = device.get_pinable_cores(kBigCoreType);
-
-  // std::cout << "Little cores: ";
-  // for (auto core : g_little_cores) {
-  //   std::cout << core << " ";
-  // }
-  // std::cout << std::endl;
-
-  // std::cout << "Mid cores: ";
-  // for (auto core : g_medium_cores) {
-  //   std::cout << core << " ";
-  // }
-  // std::cout << std::endl;
-
-  // std::cout << "Big cores: ";
-  // for (auto core : g_big_cores) {
-  //   std::cout << core << " ";
-  // }
-  // std::cout << std::endl;
-
   return 0;
 }
