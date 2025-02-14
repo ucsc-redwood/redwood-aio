@@ -50,24 +50,40 @@ AppData::AppData(std::pmr::memory_resource *mr)
       u_linear_bias(kLinearBiasSize, mr),
       u_linear_out(kLinearOutSize, mr) {
   // Load input image
-  readDataFromFile("sparse/features_3_weight.txt", u_conv2_weights.data(), kConv2WeightSize);
-  readDataFromFile("sparse/features_3_bias.txt", u_conv2_bias.data(), kConv2BiasSize);
+  readDataFromFile("images/flattened_deer_deer_35.txt", u_image.data(), kImageSize);
+
+  // Load conv1 parameters
+  readDataFromFile("dense/features_0_weight.txt", u_conv1_weights.data(), kConv1WeightSize);
+  readDataFromFile("dense/features_0_bias.txt", u_conv1_bias.data(), kConv1BiasSize);
+
+  // Load conv2 parameters
+  readDataFromFile("dense/features_3_weight.txt", u_conv2_weights.data(), kConv2WeightSize);
+  readDataFromFile("dense/features_3_bias.txt", u_conv2_bias.data(), kConv2BiasSize);
 
   // Load conv3 parameters
-  readDataFromFile("sparse/features_6_weight.txt", u_conv3_weights.data(), kConv3WeightSize);
-  readDataFromFile("sparse/features_6_bias.txt", u_conv3_bias.data(), kConv3BiasSize);
+  readDataFromFile("dense/features_6_weight.txt", u_conv3_weights.data(), kConv3WeightSize);
+  readDataFromFile("dense/features_6_bias.txt", u_conv3_bias.data(), kConv3BiasSize);
 
   // Load conv4 parameters
-  readDataFromFile("sparse/features_8_weight.txt", u_conv4_weights.data(), kConv4WeightSize);
-  readDataFromFile("sparse/features_8_bias.txt", u_conv4_bias.data(), kConv4BiasSize);
+  readDataFromFile("dense/features_8_weight.txt", u_conv4_weights.data(), kConv4WeightSize);
+  readDataFromFile("dense/features_8_bias.txt", u_conv4_bias.data(), kConv4BiasSize);
 
   // Load conv5 parameters
-  readDataFromFile("sparse/features_10_weight.txt", u_conv5_weights.data(), kConv5WeightSize);
-  readDataFromFile("sparse/features_10_bias.txt", u_conv5_bias.data(), kConv5BiasSize);
+  readDataFromFile("dense/features_10_weight.txt", u_conv5_weights.data(), kConv5WeightSize);
+  readDataFromFile("dense/features_10_bias.txt", u_conv5_bias.data(), kConv5BiasSize);
 
   // Load linear parameters
-  readDataFromFile("sparse/classifier_weight.txt", u_linear_weights.data(), kLinearWeightSize);
-  readDataFromFile("sparse/classifier_bias.txt", u_linear_bias.data(), kLinearBiasSize);
+  readDataFromFile("dense/classifier_weight.txt", u_linear_weights.data(), kLinearWeightSize);
+  readDataFromFile("dense/classifier_bias.txt", u_linear_bias.data(), kLinearBiasSize);
+
+  // fill in zeros for the rest of the buffers
+  std::ranges::fill(u_conv1_out, 0.0f);
+  std::ranges::fill(u_conv2_out, 0.0f);
+  std::ranges::fill(u_conv3_out, 0.0f);
+  std::ranges::fill(u_conv4_out, 0.0f);
+  std::ranges::fill(u_conv5_out, 0.0f);
+  std::ranges::fill(u_pool3_out, 0.0f);
+  std::ranges::fill(u_linear_out, 0.0f);
 }
 
 }  // namespace cifar_dense
