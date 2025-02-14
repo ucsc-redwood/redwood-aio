@@ -7,6 +7,7 @@
 #include "third-party/CLI11.hpp"
 
 inline std::string g_device_id;
+inline std::string g_spdlog_log_level;
 inline std::vector<int> g_little_cores;
 inline std::vector<int> g_medium_cores;
 inline std::vector<int> g_big_cores;
@@ -30,6 +31,7 @@ inline std::vector<int> g_big_cores;
 inline int parse_args(int argc, char** argv) {
   CLI::App app{"default"};
   app.add_option("-d,--device", g_device_id, "Device ID")->required();
+  app.add_option("-l,--log-level", g_spdlog_log_level, "Log level")->default_val("info");
   app.allow_extras();
 
   CLI11_PARSE(app, argc, argv);

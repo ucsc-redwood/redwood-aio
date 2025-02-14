@@ -172,6 +172,8 @@ void run_best() {
   std::vector<Task> out_tasks;
   out_tasks.reserve(tasks.size());
 
+  spdlog::info("Starting pipeline with {} tasks", tasks.size());
+
   auto start = std::chrono::high_resolution_clock::now();
 
   if (g_device_id == "3A021JEHN02756") {
@@ -314,9 +316,9 @@ void find_best_baseline() {
 int main(int argc, char** argv) {
   parse_args(argc, argv);
 
-  spdlog::set_level(spdlog::level::info);
+  spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
-  find_best_baseline();
+  // find_best_baseline();
 
   run_best();
 

@@ -10,6 +10,20 @@
 #include "cifar-dense/vulkan/vk_dispatcher.hpp"
 #include "third-party/concurrentqueue.h"
 
+/**
+ * @brief Runs stages of the CIFAR dense network on specified processor cores with OpenMP
+ * parallelization
+ *
+ * @tparam start_stage First stage to execute (must be >= 1)
+ * @tparam end_stage Last stage to execute (must be <= 9)
+ * @tparam processor_type Type of processor core to run on (kLittleCore, kMediumCore, or kBigCore)
+ * @tparam num_threads Number of OpenMP threads to use
+ * @param app_data Pointer to application data containing network state
+ *
+ * This template function executes the specified range of network stages using OpenMP
+ * parallelization. It binds threads to the appropriate processor cores based on processor_type and
+ * runs the stages in sequence using compile-time unrolling.
+ */
 template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
 void run_stages(cifar_dense::AppData* app_data) {
   static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
@@ -36,6 +50,16 @@ void run_stages(cifar_dense::AppData* app_data) {
   }
 }
 
+/**
+ * @brief Runs stages of the CIFAR dense network on GPU using Vulkan
+ *
+ * @tparam start_stage First stage to execute (must be >= 1)
+ * @tparam end_stage Last stage to execute (must be <= 9)
+ * @param app_data Pointer to application data containing network state
+ *
+ * This template function executes the specified range of network stages on the GPU using Vulkan.
+ * The stages are run in sequence using compile-time unrolling.
+ */
 template <int start_stage, int end_stage>
 void run_gpu_stages(cifar_dense::AppData* app_data) {
   static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
@@ -314,14 +338,9 @@ void find_best_baseline() {
 int main(int argc, char** argv) {
   parse_args(argc, argv);
 
-  spdlog::set_level(spdlog::level::info);
+  spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   // find_best_baseline();
-  // std::cout << "\nRunning GPU benchmark..." << std::endl;
-  // auto gpu_duration = run_gpu_baseline();
-  // double gpu_ms = std::chrono::duration<double, std::milli>(gpu_duration).count();
-  // std::cout << "GPU time: " << std::fixed << std::setprecision(2) << gpu_ms << " ms" <<
-  // std::endl;
 
   run_best();
 

@@ -1,7 +1,8 @@
 #include "dense_kernel.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include <cfloat>
-#include <cmath>
 #include <cstdint>
 
 namespace cifar_dense {
@@ -145,6 +146,8 @@ void process_stage_1(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
+  spdlog::trace("[OMP] process_stage_1, (conv2d_omp), total_iterations: {}", total_iterations);
+
   conv2d_omp(app_data.u_image.data(),
              kInputChannels,  // image_input_channels
              kInputHeight,
@@ -175,6 +178,8 @@ void process_stage_2(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
+  spdlog::trace("[OMP] process_stage_2, (maxpool2d_omp), total_iterations: {}", total_iterations);
+
   maxpool2d_omp(app_data.u_conv1_out.data(),
                 kConv1OutChannels,
                 kConv1OutHeight,
@@ -195,6 +200,8 @@ void process_stage_3(cifar_dense::AppData &app_data) {
 
   const int start = 0;
   const int end = total_iterations;
+
+  spdlog::trace("[OMP] process_stage_3, (conv2d_omp), total_iterations: {}", total_iterations);
 
   conv2d_omp(app_data.u_pool1_out.data(),
              kConv1OutChannels,
@@ -226,6 +233,8 @@ void process_stage_4(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
+  spdlog::trace("[OMP] process_stage_4, (maxpool2d_omp), total_iterations: {}", total_iterations);
+
   maxpool2d_omp(app_data.u_conv2_out.data(),
                 kConv2OutChannels,
                 kConv2OutHeight,
@@ -246,6 +255,8 @@ void process_stage_5(cifar_dense::AppData &app_data) {
 
   const int start = 0;
   const int end = total_iterations;
+
+  spdlog::trace("[OMP] process_stage_5, (conv2d_omp), total_iterations: {}", total_iterations);
 
   conv2d_omp(app_data.u_pool2_out.data(),
              kConv2OutChannels,
@@ -277,6 +288,8 @@ void process_stage_6(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
+  spdlog::trace("[OMP] process_stage_6, (conv2d_omp), total_iterations: {}", total_iterations);
+
   conv2d_omp(app_data.u_conv3_out.data(),
              kConv3OutChannels,
              kConv3OutHeight,
@@ -306,6 +319,8 @@ void process_stage_7(cifar_dense::AppData &app_data) {
 
   const int start = 0;
   const int end = total_iterations;
+
+  spdlog::trace("[OMP] process_stage_7, (conv2d_omp), total_iterations: {}", total_iterations);
 
   conv2d_omp(app_data.u_conv4_out.data(),
              kConv4OutChannels,
@@ -337,6 +352,8 @@ void process_stage_8(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
+  spdlog::trace("[OMP] process_stage_8, (maxpool2d_omp), total_iterations: {}", total_iterations);
+
   maxpool2d_omp(app_data.u_conv5_out.data(),
                 kConv5OutChannels,
                 kConv5OutHeight,
@@ -357,6 +374,8 @@ void process_stage_9(cifar_dense::AppData &app_data) {
 
   const int start = 0;
   const int end = total_iterations;
+
+  spdlog::trace("[OMP] process_stage_9, (linear_omp), total_iterations: {}", total_iterations);
 
   linear_omp(app_data.u_pool3_out.data(),
              app_data.u_linear_weights.data(),

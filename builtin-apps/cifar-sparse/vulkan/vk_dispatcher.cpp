@@ -1,4 +1,3 @@
-
 #include "vk_dispatcher.hpp"
 
 #include <cstdint>
@@ -28,7 +27,7 @@ constexpr bool kRelu = true;
 // ----------------------------------------------------------------------------
 
 Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
-  spdlog::info("Singleton instance created.");
+  spdlog::debug("Singleton instance created.");
 
   auto conv2d_algo = engine.make_algo("cifar_sparse_conv2d")
                          ->work_group_size(256, 1, 1)
@@ -56,105 +55,6 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
                          ->build();
 
   algorithms.try_emplace("linear", std::move(linear_algo));
-
-  //   conv2d_algo->update_push_constant(Conv2dPushConstants{
-  //       .input_height = 0,
-  //       .input_width = 0,
-  //       .weight_output_channels = 0,
-  //       .weight_input_channels = 0,
-  //       .weight_height = 0,
-  //       .weight_width = 0,
-  //       .kernel_size = 0,
-  //       .stride = 0,
-  //       .padding = 0,
-  //       .relu = false,
-  //   });
-
-  //   maxpool2d_algo->update_push_constant(MaxpoolPushConstants{
-  //       .input_channels = 0,
-  //       .input_height = 0,
-  //       .input_width = 0,
-  //       .pool_size = 0,
-  //       .stride = 0,
-  //   });
-
-  //   linear_algo->update_push_constant(LinearPushConstants{
-  //       .weight_matrix_rows = 0,
-  //       .weight_matrix_cols = 0,
-  //   });
-
-  //   conv2d_algo->update_descriptor_set(0,
-  //                                      {
-  //                                          engine.get_buffer_info(buf_a),
-  //                                          engine.get_buffer_info(buf_b),
-  //                                      });
-
-  //   auto conv2d_algo =
-  //       engine
-  //           .algorithm("cifar_sparse_conv2d.comp",
-  //                      {
-  //                          // We still need the buffer here, because we need
-  //                          to
-  //                          // know the size to setup the vk::Pipeline. While
-  //                          the
-  //                          // values here does not matter yet.
-  //                          engine.get_buffer(app_data.u_image_data.data()),
-  //                          engine.get_buffer(app_data.u_conv1_values.data()),
-  //                          engine.get_buffer(app_data.u_conv1_row_ptr.data()),
-  //                          engine.get_buffer(app_data.u_conv1_col_idx.data()),
-  //                          engine.get_buffer(app_data.u_conv1_bias.data()),
-  //                          engine.get_buffer(app_data.u_conv1_output.data()),
-  //                      })
-  //           ->set_push_constants<Conv2dPushConstants>({
-  //               // Similarly here, we need to know how many elements we have
-  //               in .input_height = 0, .input_width = 0,
-  //               .weight_output_channels = 0,
-  //               .weight_input_channels = 0,
-  //               .weight_height = 0,
-  //               .weight_width = 0,
-  //               .kernel_size = 0,
-  //               .stride = 0,
-  //               .padding = 0,
-  //               .relu = false,
-  //           })
-  //           ->build();
-
-  //   auto maxpool2d_algo =
-  //       engine
-  //           .algorithm("cifar_sparse_maxpool.comp",
-  //                      {
-  //                          engine.get_buffer(app_data.u_conv1_output.data()),  // input
-  //                          engine.get_buffer(app_data.u_pool1_output.data()),  // output
-  //                      })
-  //           ->set_push_constants<MaxpoolPushConstants>({
-  //               .input_channels = 0,
-  //               .input_height = 0,
-  //               .input_width = 0,
-  //               .pool_size = 0,
-  //               .stride = 0,
-  //           })
-  //           ->build();
-
-  //   algorithms.try_emplace("maxpool2d", std::move(maxpool2d_algo));
-
-  //   auto linear_algo =
-  //       engine
-  //           .algorithm("cifar_sparse_linear.comp",
-  //                      {
-  //                          engine.get_buffer(app_data.u_pool3_output.data()),    // input
-  //                          engine.get_buffer(app_data.u_linear_values.data()),   // weights
-  //                          engine.get_buffer(app_data.u_linear_row_ptr.data()),  // row ptr
-  //                          engine.get_buffer(app_data.u_linear_col_idx.data()),  // col idx
-  //                          engine.get_buffer(app_data.u_linear_bias.data()),     // bias
-  //                          engine.get_buffer(app_data.u_linear_output.data()),   // output
-  //                      })
-  //           ->set_push_constants<LinearPushConstants>({
-  //               .weight_matrix_rows = 0,
-  //               .weight_matrix_cols = 0,
-  //           })
-  //           ->build();
-
-  //   algorithms.try_emplace("linear", std::move(linear_algo));
 }
 
 // ----------------------------------------------------------------------------
@@ -164,29 +64,9 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
 void Singleton::process_stage_1(cifar_sparse::AppData &app_data) {
   const uint32_t total_iterations = app_data.conv1_weights.rows;
 
+  spdlog::debug("[VK] process_stage_1, (sparse_conv2d), total_iterations: {}", total_iterations);
+
   auto algo = algorithms.at("conv2d").get();
-
-  //   algo->update_descriptor_sets({
-  //       engine.get_buffer(app_data.u_image_data.data()),
-  //       engine.get_buffer(app_data.u_conv1_values.data()),
-  //       engine.get_buffer(app_data.u_conv1_row_ptr.data()),
-  //       engine.get_buffer(app_data.u_conv1_col_idx.data()),
-  //       engine.get_buffer(app_data.u_conv1_bias.data()),
-  //       engine.get_buffer(app_data.u_conv1_output.data()),
-  //   });
-
-  //   algo->update_push_constants(Conv2dPushConstants{
-  //       .input_height = kInputHeight,
-  //       .input_width = kInputWidth,
-  //       .weight_output_channels = 64,
-  //       .weight_input_channels = kInputChannels,
-  //       .weight_height = static_cast<uint32_t>(app_data.conv1_weights.rows),
-  //       .weight_width = static_cast<uint32_t>(app_data.conv1_weights.cols),
-  //       .kernel_size = kKernelSize,
-  //       .stride = kStride,
-  //       .padding = kPadding,
-  //       .relu = kRelu,
-  //   });
 
   algo->update_descriptor_set(0,
                               {
@@ -234,6 +114,8 @@ void Singleton::process_stage_2(cifar_sparse::AppData &app_data) {
   constexpr auto output_height = (kInputHeight - kPoolSize) / kPoolStride + 1;
   constexpr auto output_width = (kInputWidth - kPoolSize) / kPoolStride + 1;
   auto total_iterations = kInputChannels * output_height * output_width;
+
+  spdlog::debug("[VK] process_stage_2, (sparse_maxpool2d), total_iterations: {}", total_iterations);
 
   auto algo = algorithms.at("maxpool2d").get();
 
@@ -285,6 +167,8 @@ void Singleton::process_stage_2(cifar_sparse::AppData &app_data) {
 
 void Singleton::process_stage_3(cifar_sparse::AppData &app_data) {
   const auto total_iterations = app_data.conv2_weights.rows;
+
+  spdlog::debug("[VK] process_stage_3, (sparse_conv2d), total_iterations: {}", total_iterations);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -361,6 +245,8 @@ void Singleton::process_stage_4(cifar_sparse::AppData &app_data) {
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
   constexpr auto total_iterations = input_channels * output_height * output_width;
 
+  spdlog::debug("[VK] process_stage_4, (sparse_maxpool2d), total_iterations: {}", total_iterations);
+
   auto algo = algorithms.at("maxpool2d").get();
 
   //   algo->update_descriptor_sets({
@@ -411,6 +297,8 @@ void Singleton::process_stage_4(cifar_sparse::AppData &app_data) {
 
 void Singleton::process_stage_5(cifar_sparse::AppData &app_data) {
   const auto total_iterations = app_data.conv3_weights.rows;
+
+  spdlog::debug("[VK] process_stage_5, (sparse_conv2d), total_iterations: {}", total_iterations);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -481,6 +369,8 @@ void Singleton::process_stage_5(cifar_sparse::AppData &app_data) {
 void Singleton::process_stage_6(cifar_sparse::AppData &app_data) {
   const auto total_iterations = app_data.conv4_weights.rows;
 
+  spdlog::debug("[VK] process_stage_6, (sparse_conv2d), total_iterations: {}", total_iterations);
+
   auto algo = algorithms.at("conv2d").get();
 
   //   algo->update_descriptor_sets({
@@ -549,6 +439,8 @@ void Singleton::process_stage_6(cifar_sparse::AppData &app_data) {
 
 void Singleton::process_stage_7(cifar_sparse::AppData &app_data) {
   const auto total_iterations = app_data.conv5_weights.rows;
+
+  spdlog::debug("[VK] process_stage_7, (sparse_conv2d), total_iterations: {}", total_iterations);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -625,6 +517,8 @@ void Singleton::process_stage_8(cifar_sparse::AppData &app_data) {
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
   constexpr auto total_iterations = input_channels * output_height * output_width;
 
+  spdlog::debug("[VK] process_stage_8, (sparse_maxpool2d), total_iterations: {}", total_iterations);
+
   auto algo = algorithms.at("maxpool2d").get();
 
   //   algo->update_descriptor_sets({
@@ -675,6 +569,8 @@ void Singleton::process_stage_8(cifar_sparse::AppData &app_data) {
 
 void Singleton::process_stage_9(cifar_sparse::AppData &app_data) {
   const auto total_iterations = app_data.linear_weights.rows;
+
+  spdlog::debug("[VK] process_stage_9, (sparse_linear), total_iterations: {}", total_iterations);
 
   auto algo = algorithms.at("linear").get();
 

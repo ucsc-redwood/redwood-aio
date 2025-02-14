@@ -1,6 +1,7 @@
 #include "algorithm.hpp"
 
 #include "shaders/all_shaders.hpp"
+#include "spdlog/spdlog.h"
 
 namespace vulkan {
 Algorithm::Algorithm(VulkanMemoryResource* mr_ptr, std::string shader_name)
@@ -109,9 +110,8 @@ void Algorithm::record_bind_core(const vk::CommandBuffer& cmd_buf, uint32_t set_
 }
 
 void Algorithm::record_bind_push(const vk::CommandBuffer& cmd_buf) const {
-  spdlog::trace("Algorithm::record_bind_push()");
-
-  spdlog::debug("Pushing constants of size {}", internal_.push_constant_size);
+  spdlog::trace("Algorithm::record_bind_push(), push_constant_size: {}",
+                internal_.push_constant_size);
 
   if (!has_push_constants()) {
     throw std::runtime_error("Push constants not allocated");
@@ -126,15 +126,14 @@ void Algorithm::record_bind_push(const vk::CommandBuffer& cmd_buf) const {
 
 void Algorithm::record_dispatch(const vk::CommandBuffer& cmd_buf,
                                 const std::array<uint32_t, 3> grid_size) const {
-  spdlog::trace("Algorithm::record_dispatch()");
-
-  spdlog::debug("Dispatching ({}, {}, {}) blocks of size ({}, {}, {})",
-                grid_size[0],
-                grid_size[1],
-                grid_size[2],
-                internal_.work_group_size[0],
-                internal_.work_group_size[1],
-                internal_.work_group_size[2]);
+  spdlog::trace(
+      "Algorithm::record_dispatch(), grid_size: ({}, {}, {}), work_group_size: ({}, {}, {})",
+      grid_size[0],
+      grid_size[1],
+      grid_size[2],
+      internal_.work_group_size[0],
+      internal_.work_group_size[1],
+      internal_.work_group_size[2]);
 
   cmd_buf.dispatch(grid_size[0], grid_size[1], grid_size[2]);
 }
@@ -172,7 +171,7 @@ void Algorithm::create_shader_module() {
 
   shader_module_ = device_ref_.createShaderModule(create_info);
 
-  spdlog::debug("Shader module [{}] created successfully", shader_name_);
+  spdlog::trace("Shader module [{}] created successfully", shader_name_);
 }
 
 // ----------------------------------------------------------------------------
