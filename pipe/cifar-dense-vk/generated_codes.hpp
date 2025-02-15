@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_001.hpp"
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_002.hpp"
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_003.hpp"
@@ -76,159 +78,63 @@
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_074.hpp"
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_075.hpp"
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_076.hpp"
+#include "task.hpp"
 
-// doremy@ucsc-android-devel ~/D/r/scripts (dev-gen-pipeline)> tree
-// ../pipe/cifar-dense-vk/generated-code/
-// ../pipe/cifar-dense-vk/generated-code/
-// ├── 3A021JEHN02756_CifarDense_schedule_001.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_001.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_002.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_002.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_003.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_003.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_004.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_004.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_005.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_005.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_006.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_006.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_007.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_007.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_008.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_008.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_009.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_009.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_010.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_010.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_011.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_011.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_012.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_012.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_013.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_013.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_014.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_014.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_015.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_015.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_016.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_016.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_017.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_017.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_018.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_018.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_019.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_019.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_020.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_020.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_021.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_021.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_022.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_022.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_023.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_023.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_024.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_024.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_025.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_025.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_026.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_026.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_027.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_027.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_028.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_028.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_029.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_029.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_030.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_030.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_031.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_031.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_032.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_032.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_033.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_033.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_034.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_034.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_035.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_035.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_036.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_036.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_037.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_037.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_038.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_038.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_039.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_039.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_040.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_040.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_041.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_041.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_042.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_042.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_043.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_043.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_044.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_044.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_045.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_045.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_046.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_046.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_047.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_047.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_048.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_048.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_049.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_049.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_050.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_050.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_051.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_051.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_052.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_052.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_053.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_053.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_054.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_054.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_055.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_055.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_056.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_056.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_057.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_057.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_058.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_058.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_059.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_059.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_060.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_060.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_061.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_061.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_062.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_062.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_063.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_063.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_064.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_064.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_065.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_065.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_066.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_066.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_067.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_067.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_068.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_068.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_069.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_069.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_070.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_070.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_071.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_071.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_072.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_072.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_073.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_073.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_074.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_074.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_075.cpp
-// ├── 3A021JEHN02756_CifarDense_schedule_075.hpp
-// ├── 3A021JEHN02756_CifarDense_schedule_076.cpp
-// └── 3A021JEHN02756_CifarDense_schedule_076.hpp
+namespace device_3A021JEHN02756 {
+
+// Define function pointer type for run_pipeline
+using RunPipelineFunc = void (*)(std::vector<Task>&, std::vector<Task>&);
+
+// Array of function pointers to all run_pipeline implementations
+// Index 0 corresponds to schedule_001, etc.
+static const RunPipelineFunc run_pipeline_table[] = {
+    CifarDense_schedule_001::run_pipeline, CifarDense_schedule_002::run_pipeline,
+    CifarDense_schedule_003::run_pipeline, CifarDense_schedule_004::run_pipeline,
+    CifarDense_schedule_005::run_pipeline, CifarDense_schedule_006::run_pipeline,
+    CifarDense_schedule_007::run_pipeline, CifarDense_schedule_008::run_pipeline,
+    CifarDense_schedule_009::run_pipeline, CifarDense_schedule_010::run_pipeline,
+    CifarDense_schedule_011::run_pipeline, CifarDense_schedule_012::run_pipeline,
+    CifarDense_schedule_013::run_pipeline, CifarDense_schedule_014::run_pipeline,
+    CifarDense_schedule_015::run_pipeline, CifarDense_schedule_016::run_pipeline,
+    CifarDense_schedule_017::run_pipeline, CifarDense_schedule_018::run_pipeline,
+    CifarDense_schedule_019::run_pipeline, CifarDense_schedule_020::run_pipeline,
+    CifarDense_schedule_021::run_pipeline, CifarDense_schedule_022::run_pipeline,
+    CifarDense_schedule_023::run_pipeline, CifarDense_schedule_024::run_pipeline,
+    CifarDense_schedule_025::run_pipeline, CifarDense_schedule_026::run_pipeline,
+    CifarDense_schedule_027::run_pipeline, CifarDense_schedule_028::run_pipeline,
+    CifarDense_schedule_029::run_pipeline, CifarDense_schedule_030::run_pipeline,
+    CifarDense_schedule_031::run_pipeline, CifarDense_schedule_032::run_pipeline,
+    CifarDense_schedule_033::run_pipeline, CifarDense_schedule_034::run_pipeline,
+    CifarDense_schedule_035::run_pipeline, CifarDense_schedule_036::run_pipeline,
+    CifarDense_schedule_037::run_pipeline, CifarDense_schedule_038::run_pipeline,
+    CifarDense_schedule_039::run_pipeline, CifarDense_schedule_040::run_pipeline,
+    CifarDense_schedule_041::run_pipeline, CifarDense_schedule_042::run_pipeline,
+    CifarDense_schedule_043::run_pipeline, CifarDense_schedule_044::run_pipeline,
+    CifarDense_schedule_045::run_pipeline, CifarDense_schedule_046::run_pipeline,
+    CifarDense_schedule_047::run_pipeline, CifarDense_schedule_048::run_pipeline,
+    CifarDense_schedule_049::run_pipeline, CifarDense_schedule_050::run_pipeline,
+    CifarDense_schedule_051::run_pipeline, CifarDense_schedule_052::run_pipeline,
+    CifarDense_schedule_053::run_pipeline, CifarDense_schedule_054::run_pipeline,
+    CifarDense_schedule_055::run_pipeline, CifarDense_schedule_056::run_pipeline,
+    CifarDense_schedule_057::run_pipeline, CifarDense_schedule_058::run_pipeline,
+    CifarDense_schedule_059::run_pipeline, CifarDense_schedule_060::run_pipeline,
+    CifarDense_schedule_061::run_pipeline, CifarDense_schedule_062::run_pipeline,
+    CifarDense_schedule_063::run_pipeline, CifarDense_schedule_064::run_pipeline,
+    CifarDense_schedule_065::run_pipeline, CifarDense_schedule_066::run_pipeline,
+    CifarDense_schedule_067::run_pipeline, CifarDense_schedule_068::run_pipeline,
+    CifarDense_schedule_069::run_pipeline, CifarDense_schedule_070::run_pipeline,
+    CifarDense_schedule_071::run_pipeline, CifarDense_schedule_072::run_pipeline,
+    CifarDense_schedule_073::run_pipeline, CifarDense_schedule_074::run_pipeline,
+    CifarDense_schedule_075::run_pipeline, CifarDense_schedule_076::run_pipeline};
+
+// Helper function to get the run_pipeline function for a given schedule ID (1-based indexing)
+[[nodiscard]] inline RunPipelineFunc get_run_pipeline(int schedule_id) {
+  if (schedule_id < 1 || schedule_id > 76) {
+    return nullptr;
+  }
+  return run_pipeline_table[schedule_id - 1];
+}
+
+[[nodiscard]] inline int get_num_schedules() { return 76; }
+
+}  // namespace device_3A021JEHN02756

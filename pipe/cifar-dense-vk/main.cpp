@@ -8,125 +8,37 @@
 #include "task.hpp"
 
 // ---------------------------------------------------------------------
-// Device-specific pipeline stages (3A021JEHN02756)
-// ---------------------------------------------------------------------
-
-// namespace device_3A021JEHN02756 {
-
-// namespace instance_2 {
-// // --- Valid Execution Schedule #81 ---
-// // Schedule Report:
-// //   Chunk 1: Hardware = little, Threads = 4
-// //     Stage 1: 4.24 ms
-// //     Chunk Total Time: 4.24 ms
-// //   Chunk 2: Hardware = big, Threads = 2
-// //     Stage 2: 0.153 ms
-// //     Stage 3: 23.8 ms
-// //     Stage 4: 0.118 ms
-// //     Chunk Total Time: 24.070999999999998 ms
-// //   Chunk 3: Hardware = gpu, Threads = 1
-// //     Stage 5: 9.02 ms
-// //     Stage 6: 12.4 ms
-// //     Stage 7: 9.66 ms
-// //     Chunk Total Time: 31.080000000000002 ms
-// //   Chunk 4: Hardware = medium, Threads = 2
-// //     Stage 8: 0.046 ms
-// //     Stage 9: 0.025 ms
-// //     Chunk Total Time: 0.07100000000000001 ms
-// // Pipeline Total Time: 59.462 ms
-// // Max (Slowest) Chunk Time: 31.080000000000002 ms
-
-// std::atomic<bool> done(false);
-
-// void stage_group_A(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& q_AB) {
-//   for (auto& task : in_tasks) {
-//     // ---------
-//     run_stages<1, 1, ProcessorType::kLittleCore, 4>(task.app_data);
-//     // ---------
-//     q_AB.enqueue(task);
-//   }
-
-//   done = true;
-// }
-
-// void stage_group_B(moodycamel::ConcurrentQueue<Task>& q_AB,
-//                    moodycamel::ConcurrentQueue<Task>& q_BC) {
-//   while (!done) {
-//     Task task;
-//     if (q_AB.try_dequeue(task)) {
-//       // ---------
-//       run_stages<2, 4, ProcessorType::kBigCore, 2>(task.app_data);
-//       // ---------
-//       q_BC.enqueue(task);
-//     } else {
-//       std::this_thread::yield();
-//     }
-//   }
-// }
-
-// void stage_group_C(moodycamel::ConcurrentQueue<Task>& q_BC,
-//                    moodycamel::ConcurrentQueue<Task>& q_CD) {
-//   while (!done) {
-//     Task task;
-//     if (q_BC.try_dequeue(task)) {
-//       // ---------
-//       run_gpu_stages<5, 7>(task.app_data);
-//       // ---------
-//       q_CD.enqueue(task);
-//     } else {
-//       std::this_thread::yield();
-//     }
-//   }
-// }
-
-// void stage_group_D(moodycamel::ConcurrentQueue<Task>& q_CD, std::vector<Task>& out_tasks) {
-//   while (!done) {
-//     Task task;
-//     if (q_CD.try_dequeue(task)) {
-//       // ---------
-//       run_stages<8, 9, ProcessorType::kMediumCore, 1>(task.app_data);
-//       // ---------
-//       out_tasks.push_back(task);
-//     }
-//   }
-// }
-
-// }  // namespace instance_2
-
-// }  // namespace device_3A021JEHN02756
-
-// ---------------------------------------------------------------------
 // Pipeline Instance (Best)
 // ---------------------------------------------------------------------
 
-void run_best() {
+void run_one_schedule(int schedule_id) {
   auto tasks = init_tasks(20);
   std::vector<Task> out_tasks;
   out_tasks.reserve(tasks.size());
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  if (g_device_id == "3A021JEHN02756") {
-    // Little cores: 0 1 2 3
-    // Mid cores: 4 5
-    // Big cores: 6 7
-
-    device_3A021JEHN02756::CifarDense_schedule_076::run_pipeline(tasks, out_tasks);
-
-  } else if (g_device_id == "9b034f1b") {
-    exit(0);
-  } else if (g_device_id == "ce0717178d7758b00b7e") {
-    exit(0);
-  }
+  // -------------------  run the pipeline  ------------------------------
+  device_3A021JEHN02756::get_run_pipeline(schedule_id)(tasks, out_tasks);
+  // ---------------------------------------------------------------------
 
   auto end = std::chrono::high_resolution_clock::now();
 
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
   double avg_time = duration.count() / static_cast<double>(tasks.size());
-  std::cout << "Pipeline: Average time per iteration: " << avg_time << " us" << "\t "
-            << avg_time / 1000.0 << " ms" << std::endl;
+  std::cout << "[schedule " << schedule_id << "]: Average time per iteration: " << avg_time << " ms"
+            << std::endl;
 
   cleanup(tasks);
+}
+
+void run_all_schedules() {
+  const auto num_schedules = device_3A021JEHN02756::get_num_schedules();
+  for (auto i = 1; i <= num_schedules; ++i) {
+    // spdlog::info("Running schedule {}", i);
+    std::cout << "Running schedule " << i << std::endl;
+    run_one_schedule(i);
+  }
 }
 
 // ---------------------------------------------------------------------
@@ -230,11 +142,65 @@ void find_best_baseline() {
 // ---------------------------------------------------------------------
 
 int main(int argc, char** argv) {
-  parse_args(argc, argv);
+  CLI::App app{"default"};
+  app.add_option("-d,--device", g_device_id, "Device ID")->required();
+  app.add_option("-l,--log-level", g_spdlog_log_level, "Log level")->default_val("info");
+
+  int which_schedule = 1;
+  app.add_option("-s,--schedule", which_schedule, "Schedule ID")->required();
+
+  app.allow_extras();
+
+  CLI11_PARSE(app, argc, argv);
+
+  if (g_device_id.empty()) {
+    throw std::runtime_error("Device ID is required");
+  }
+
+  auto& registry = GlobalDeviceRegistry();
+
+  try {
+    const Device& device = registry.getDevice(g_device_id);
+
+    auto littleCores = device.getCores(ProcessorType::kLittleCore);
+    auto mediumCores = device.getCores(ProcessorType::kMediumCore);
+    auto bigCores = device.getCores(ProcessorType::kBigCore);
+
+    std::cout << "Little cores: ";
+    for (const auto& core : littleCores) {
+      std::cout << core.id << " ";
+      g_little_cores.push_back(core.id);
+    }
+    std::cout << std::endl;
+
+    std::cout << "Medium cores: ";
+    for (const auto& core : mediumCores) {
+      std::cout << core.id << " ";
+      g_medium_cores.push_back(core.id);
+    }
+    std::cout << std::endl;
+
+    std::cout << "Big cores: ";
+    for (const auto& core : bigCores) {
+      std::cout << core.id << " ";
+      g_big_cores.push_back(core.id);
+    }
+    std::cout << std::endl;
+
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
 
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
-  run_best();
+  if (g_device_id == "3A021JEHN02756") {
+    run_one_schedule(which_schedule);
+  } else if (g_device_id == "9b034f1b") {
+    return 0;
+  } else if (g_device_id == "ce0717178d7758b00b7e") {
+    return 0;
+  }
 
   return 0;
 }
