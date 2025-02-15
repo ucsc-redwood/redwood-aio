@@ -1,8 +1,15 @@
 target("pipe-cifar-dense-vk")
     set_kind("binary")
 
+    add_headerfiles({
+        "run_stages.hpp",
+        "task.hpp",
+        "generated-code/*.hpp",
+    })
+
     add_files({
         "main.cpp",
+        "task.cpp",
         "generated-code/*.cpp",
     })
 
