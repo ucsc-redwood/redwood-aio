@@ -1,8 +1,11 @@
 target("pipe-cifar-dense-vk")
     set_kind("binary")
-    add_files("main.cpp")
 
-    add_includedirs("$(projectdir)/builtin-apps")
+    add_files({
+        "main.cpp",
+        "generated-code/*.cpp",
+    })
+
     add_includedirs("$(projectdir)")
 
     add_deps("builtin-apps")
