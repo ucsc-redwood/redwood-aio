@@ -8,7 +8,8 @@
 #include "../task.hpp"
 #include "third-party/concurrentqueue.h"
 
-namespace schedule_3A021JEHN02756_CifarDense_schedule_001 {
+namespace device_3A021JEHN02756 {
+namespace CifarDense_schedule_001 {
 
 constexpr const char* kScheduleId = "3A021JEHN02756_CifarDense_schedule_001";
 
@@ -24,4 +25,5 @@ void stage_group_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Tas
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
-}  // end namespace schedule_3A021JEHN02756_CifarDense_schedule_001
+}  // namespace CifarDense_schedule_001
+}  // namespace device_3A021JEHN02756

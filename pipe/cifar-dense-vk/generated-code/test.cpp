@@ -8,7 +8,8 @@
 
 #include "../run_stages.hpp"
 
-namespace schedule_3A021JEHN02756_CifarDense_schedule_001 {
+namespace device_3A021JEHN02756 {
+namespace CifarDense_schedule_001 {
 
 static std::atomic<bool> done(false);
 
@@ -97,4 +98,5 @@ void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
   t_chunk4.join();
 }
 
-}  // end namespace schedule_3A021JEHN02756_CifarDense_schedule_001
+}  // end namespace CifarDense_schedule_001
+}  // end namespace device_3A021JEHN02756
