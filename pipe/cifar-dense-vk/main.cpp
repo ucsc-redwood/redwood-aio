@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "generated-code/test.hpp"
+#include "generated_codes.hpp"
 #include "run_stages.hpp"
 #include "task.hpp"
 
@@ -111,7 +111,7 @@ void run_best() {
     // Mid cores: 4 5
     // Big cores: 6 7
 
-    device_3A021JEHN02756::CifarDense_schedule_001::run_pipeline(tasks, out_tasks);
+    device_3A021JEHN02756::CifarDense_schedule_076::run_pipeline(tasks, out_tasks);
 
   } else if (g_device_id == "9b034f1b") {
     exit(0);

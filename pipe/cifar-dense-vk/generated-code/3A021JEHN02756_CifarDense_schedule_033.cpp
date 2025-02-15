@@ -5,6 +5,7 @@
 
 #include <atomic>
 #include <thread>
+
 #include "../run_stages.hpp"
 
 namespace device_3A021JEHN02756 {
@@ -20,7 +21,8 @@ void stage_group_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue
   done.store(true, std::memory_order_release);
 }
 
-void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                        moodycamel::ConcurrentQueue<Task>& out_q) {
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -39,7 +41,8 @@ void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Con
   }
 }
 
-void stage_group_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void stage_group_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                        moodycamel::ConcurrentQueue<Task>& out_q) {
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
