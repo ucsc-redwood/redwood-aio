@@ -10,6 +10,8 @@
 
 namespace schedule_3A021JEHN02756_CifarDense_schedule_001 {
 
+constexpr const char* kScheduleId = "3A021JEHN02756_CifarDense_schedule_001";
+
 void stage_group_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 
 void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,

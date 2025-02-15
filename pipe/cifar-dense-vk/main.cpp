@@ -3,10 +3,9 @@
 #include <iomanip>
 #include <iostream>
 
-#include "generated-code.hpp"
+#include "generated-code/test.hpp"
 #include "run_stages.hpp"
 #include "task.hpp"
-#include "third-party/concurrentqueue.h"
 
 // ---------------------------------------------------------------------
 // Device-specific pipeline stages (3A021JEHN02756)
