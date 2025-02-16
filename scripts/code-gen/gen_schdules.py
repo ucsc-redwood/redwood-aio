@@ -11,7 +11,9 @@ DB_NAME: str = "benchmark_results.db"
 # Devices dictionary.
 devices: Dict[str, Dict[str, int]] = {
     "3A021JEHN02756": {"little": 4, "medium": 2, "big": 2, "gpu": 1},
-    # Additional devices can be added here.
+    "ce0717178d7758b00b7e": {"little": 4, "medium": 0, "big": 4, "gpu": 1},
+    "9b034f1b": {"little": 3, "medium": 2, "big": 0, "gpu": 1},
+    "jetson-orin-nano": {"little": 6, "medium": 0, "big": 0, "gpu": 1},
 }
 
 
