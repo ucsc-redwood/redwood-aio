@@ -1,10 +1,11 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
+#include <CLI/CLI.hpp>
+
 #include "app.hpp"
 #include "cifar-dense/dense_appdata.hpp"
 #include "cifar-dense/vulkan/vk_dispatcher.hpp"
-#include "third-party/CLI11.hpp"
 
 // ----------------------------------------------------------------
 // Baseline

@@ -1,6 +1,6 @@
 #include <spdlog/spdlog.h>
 
-#include "third-party/CLI11.hpp"
+#include <CLI/CLI.hpp>
 
 #include "app.hpp"
 #include "spdlog/common.h"

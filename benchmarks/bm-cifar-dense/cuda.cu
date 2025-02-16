@@ -5,7 +5,7 @@
 #include "cifar-dense/dense_appdata.hpp"
 #include "common/cuda/cu_mem_resource.cuh"
 #include "common/cuda/helpers.cuh"
-#include "third-party/CLI11.hpp"
+#include <CLI/CLI.hpp>
 
 // ----------------------------------------------------------------
 // Baseline

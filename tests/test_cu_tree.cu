@@ -3,7 +3,7 @@
 
 #include "common/cuda/cu_mem_resource.cuh"
 #include "common/cuda/helpers.cuh"
-#include "third-party/CLI11.hpp"
+#include <CLI/CLI.hpp>
 #include "tree/cuda/kernel.cuh"
 
 std::string device_id;

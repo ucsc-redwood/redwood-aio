@@ -1,9 +1,10 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
+#include <CLI/CLI.hpp>
+
 #include "app.hpp"
 #include "spdlog/common.h"
-#include "third-party/CLI11.hpp"
 #include "tree/tree_appdata.hpp"
 #include "tree/vulkan/vk_dispatcher.hpp"
 

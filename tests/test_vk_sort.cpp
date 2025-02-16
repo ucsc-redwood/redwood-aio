@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <CLI/CLI.hpp>
 #include <algorithm>
 #include <cstdint>
 #include <numeric>
@@ -8,7 +9,6 @@
 #include "base_appdata.hpp"
 #include "common/vulkan/algorithm.hpp"
 #include "common/vulkan/engine.hpp"
-#include "third-party/CLI11.hpp"
 
 // ----------------------------------------------------------------------------
 // globals

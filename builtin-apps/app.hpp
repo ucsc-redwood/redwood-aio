@@ -1,10 +1,10 @@
 #pragma once
 
+#include <CLI/CLI.hpp>
 #include <iostream>
 #include <vector>
 
 #include "conf.hpp"
-#include "third-party/CLI11.hpp"
 
 inline std::string g_device_id;
 inline std::string g_spdlog_log_level;

@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 
+#include <CLI/CLI.hpp>
+
 #include "app.hpp"
-#include "third-party/CLI11.hpp"
 #include "tree/vulkan/tmp_storage.hpp"
 #include "tree/vulkan/vk_dispatcher.hpp"
 

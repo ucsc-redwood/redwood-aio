@@ -2,7 +2,8 @@
 #include <omp.h>
 #include <spdlog/spdlog.h>
 
-#include "third-party/CLI11.hpp"
+#include <CLI/CLI.hpp>
+
 #include "tree/omp/tree_kernel.hpp"
 
 std::string device_id;
