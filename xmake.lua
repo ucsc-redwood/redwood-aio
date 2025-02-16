@@ -3,6 +3,7 @@ add_rules("mode.debug", "mode.release")
 set_languages("c++20")
 set_warnings("allextra")
 
+-- For consistency across Windows, Linux
 if not is_plat("android") then
     set_toolchains("clang")
 end
@@ -70,11 +71,11 @@ rule_end()
 -- Projects
 -- ----------------------------------------------------------------
 
--- includes("pipe")
+includes("builtin-apps/common/vulkan") -- KISS-VK library
 includes("builtin-apps")
-includes("builtin-apps/common/vulkan")
--- includes("tests")
--- includes("utility")
+includes("tests")
+includes("benchmarks")
+includes("utility")
+-- includes("pipe")
 -- includes("play")
--- includes("benchmarks")
 

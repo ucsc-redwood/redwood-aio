@@ -3,6 +3,9 @@
 -- Common test configuration
 -- ----------------------------------------------------------------
 
+-- currently using:
+-- - gtest-v1.15.2:
+
 add_requires("gtest")
 
 rule("test_config")
@@ -12,49 +15,62 @@ rule("test_config")
         target:add("includedirs", "$(projectdir)/builtin-apps/")
         target:add("includedirs", "$(projectdir)")
         target:add("packages", "gtest")
-        target:add("packages", "spdlog")
-        target:add("packages", "glm")
     end)
 rule_end()
 
 -- ----------------------------------------------------------------
--- Tree Tests
+-- OMP-based Tree Tests
 -- ----------------------------------------------------------------
 
-target("test-omp-tree")
-    add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
-    add_files("test_omp_tree.cpp")
+target("test-omp-tree") do
+    add_rules("test_config", "common_flags", "run_on_android")
+    add_files({
+        "test_omp_tree.cpp",
+    })
     add_deps("builtin-apps")
+end 
 
-if has_config("cuda") then
-target("test-cu-tree")
-    add_rules("test_config")
-    add_files("test_cu_tree.cu")
-    add_deps("builtin-apps", "builtin-apps-cuda")
-    
-    -- CUDA-specific OpenMP flags
-    add_cuflags("-Xcompiler", "-fopenmp", {force = true})
-    add_ldflags("-fopenmp", {force = true})
-    add_packages("openmp")
-    add_cugencodes("native")
-target_end()
+-- ----------------------------------------------------------------
+-- CUDA-based Tree Tests
+-- ----------------------------------------------------------------
+
+-- if has_config("cuda") then
+--     target("test-cu-tree") do
+--         add_rules("test_config")
+--         add_files("test_cu_tree.cu")
+--         add_deps("builtin-apps", "builtin-apps-cuda")
+        
+--         -- CUDA-specific OpenMP flags
+--         add_cuflags("-Xcompiler", "-fopenmp", {force = true})
+--         add_ldflags("-fopenmp", {force = true})
+--         add_packages("openmp")
+--         add_cugencodes("native")
+--     end
+-- end
+
+-- ----------------------------------------------------------------
+-- VK-based Tree Tests
+-- ----------------------------------------------------------------
+
+target("test-vk-tree") do
+    add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
+    add_files({
+        "test_vk_tree.cpp",
+    })
+    add_deps("builtin-apps", "builtin-apps-vulkan")
 end
 
-target("test-vk-tree")
-    add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
-    add_files("test_vk_tree.cpp")
-    add_deps("builtin-apps", "builtin-apps-vulkan")
-target_end()
-
 -- ----------------------------------------------------------------
--- VK Tests
+-- VK primitive tests (e.g., radix sort, prefix sum)
 -- ----------------------------------------------------------------
 
-target("test-vk-sort")
+target("test-vk-sort") do
     add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
-    add_files("test_vk_sort.cpp")
+    add_files({
+        "test_vk_sort.cpp",
+    })
     add_deps("builtin-apps", "builtin-apps-vulkan")
-target_end()
+end
 
 
 -- target("test-vk-prefix-sum")
