@@ -28,7 +28,7 @@ target("test-omp-tree")
 
 if has_config("cuda") then
 target("test-cu-tree")
-    add_rules("test_config", "cuda_config")
+    add_rules("test_config")
     add_files("test_cu_tree.cu")
     add_deps("builtin-apps", "builtin-apps-cuda")
     
@@ -36,6 +36,7 @@ target("test-cu-tree")
     add_cuflags("-Xcompiler", "-fopenmp", {force = true})
     add_ldflags("-fopenmp", {force = true})
     add_packages("openmp")
+    add_cugencodes("native")
 target_end()
 end
 

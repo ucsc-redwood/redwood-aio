@@ -79,14 +79,14 @@ if has_config("cuda") then
         add_includedirs("$(projectdir)/builtin-apps/")
         add_includedirs("$(projectdir)")
 
-        add_rules("benchmark_config", "cuda_config")
+        add_rules("benchmark_config")
         add_files({
             "cuda.cu",
         })
     
         add_packages("spdlog")
         add_packages("benchmark")
-    
+        
+        add_cugencodes("native")
     target_end()
-    
 end 
