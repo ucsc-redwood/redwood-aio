@@ -29,7 +29,7 @@
         },
         "description": "N/A"
     },
-    "jetson-orin-nano": {
+    "jetson": {
         "name": "NVIDIA Jetson Orin Nano",
         "pinnable_cores": {
             "little": 6,
