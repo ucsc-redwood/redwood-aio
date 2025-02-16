@@ -1,4 +1,10 @@
+
+-- ----------------------------------------------------------------
 -- Common benchmark configuration
+-- ----------------------------------------------------------------
+
+add_requires("benchmark")
+
 rule("benchmark_config")
     on_load(function (target)
         target:set("kind", "binary")
@@ -11,6 +17,9 @@ rule("benchmark_config")
     end)
 rule_end()
 
+-- ----------------------------------------------------------------
+-- Benchmarks
+-- ----------------------------------------------------------------
 
 includes("bm-tree")
 includes("bm-cifar-sparse")

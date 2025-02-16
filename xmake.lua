@@ -7,14 +7,52 @@ if not is_plat("android") then
     set_toolchains("clang")
 end
 
-add_requires("benchmark")
 
+
+-- ----------------------------------------------------------------
+-- Common packages used in the project
+-- ----------------------------------------------------------------
+
+add_requires("spdlog")  -- everything
+add_requires("cli11") -- all binaries
+add_requires("glm") -- tree applications
+
+-- OpenMP is handled differently on Android
 if not is_plat("android") then
     add_requires("openmp")
 end
 
-add_requires("spdlog")
-add_requires("glm")
+-- Common configurations
+rule("common_flags")
+    on_load(function (target)
+        -- OpenMP flags for Android (special case)
+        if is_plat("android") then
+            target:add("cxxflags", "-fopenmp -static-openmp")
+            target:add("ldflags", "-fopenmp -static-openmp")
+        else
+            target:add("packages", "openmp")
+        end
+
+        add_packages("cli11")
+        add_packages("spdlog")
+        add_packages("glm")
+    end)
+rule_end()
+
+-- ----------------------------------------------------------------
+-- Vulkan configuration
+-- ----------------------------------------------------------------
+
+rule("vulkan_config") 
+    on_load(function (target)
+        target:add("packages", "vulkan-hpp")
+        target:add("packages", "vulkan-memory-allocator")
+    end)
+rule_end()
+
+-- ----------------------------------------------------------------
+-- Android configuration
+-- ----------------------------------------------------------------
 
 includes("android.lua")
 
@@ -23,6 +61,10 @@ rule("run_on_android")
       on_run(run_on_android)
     end
 rule_end()
+
+-- ----------------------------------------------------------------
+-- Projects
+-- ----------------------------------------------------------------
 
 includes("pipe")
 includes("builtin-apps")
@@ -33,43 +75,3 @@ includes("play")
 
 includes("benchmarks")
 
--- Common configurations
-rule("common_flags")
-    on_load(function (target)
-        -- OpenMP flags for Android
-        if is_plat("android") then
-            target:add("cxxflags", "-fopenmp -static-openmp")
-            target:add("ldflags", "-fopenmp -static-openmp")
-        else
-            target:add("packages", "openmp")
-        end
-    end)
-rule_end()
-
--- Vulkan configuration
-rule("vulkan_config") 
-    on_load(function (target)
-        target:add("packages", "vulkan-hpp")
-        target:add("packages", "vulkan-memory-allocator")
-    end)
-rule_end()
-
--- Common test configuration
-rule("test_config")
-    on_load(function (target)
-        target:set("kind", "binary")
-        target:set("group", "test")
-        target:add("includedirs", "$(projectdir)/builtin-apps/")
-        target:add("includedirs", "$(projectdir)")
-        target:add("packages", "gtest")
-        target:add("packages", "spdlog")
-        target:add("packages", "glm")
-    end)
-rule_end()
-
--- CUDA configuration
-rule("cuda_config")
-    on_load(function (target)
-        target:add("cugencodes", "native")
-    end)
-rule_end()

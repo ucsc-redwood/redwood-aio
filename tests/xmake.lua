@@ -1,7 +1,24 @@
-add_requires("gtest")
 
 -- ----------------------------------------------------------------
--- Tree
+-- Common test configuration
+-- ----------------------------------------------------------------
+
+add_requires("gtest")
+
+rule("test_config")
+    on_load(function (target)
+        target:set("kind", "binary")
+        target:set("group", "test")
+        target:add("includedirs", "$(projectdir)/builtin-apps/")
+        target:add("includedirs", "$(projectdir)")
+        target:add("packages", "gtest")
+        target:add("packages", "spdlog")
+        target:add("packages", "glm")
+    end)
+rule_end()
+
+-- ----------------------------------------------------------------
+-- Tree Tests
 -- ----------------------------------------------------------------
 
 target("test-omp-tree")
@@ -29,14 +46,13 @@ target("test-vk-tree")
 target_end()
 
 -- ----------------------------------------------------------------
--- VK
+-- VK Tests
 -- ----------------------------------------------------------------
 
 target("test-vk-sort")
     add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
     add_files("test_vk_sort.cpp")
     add_deps("builtin-apps", "builtin-apps-vulkan")
-    add_packages("benchmark", "cli11")
 target_end()
 
 

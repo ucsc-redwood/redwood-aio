@@ -1,3 +1,8 @@
+
+-- ----------------------------------------------------------------
+-- Builtin Apps (Tree, CIFAR-Sparse, CIFAR-Dense) Static Library
+-- ----------------------------------------------------------------
+
 target("builtin-apps")
     set_kind("static")
     
