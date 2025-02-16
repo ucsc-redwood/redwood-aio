@@ -27,10 +27,7 @@ target("bm-tree-omp")
         add_packages("openmp")
     end
 
-
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 
@@ -65,11 +62,7 @@ target("bm-tree-vk")
 
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
 
-
-
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 

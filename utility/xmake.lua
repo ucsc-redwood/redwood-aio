@@ -7,10 +7,8 @@ target("query-warpsize")
     
     add_packages("vulkan-hpp")
     add_packages("volk")
+    add_rules("run_on_android")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
 target_end()
 
 if is_plat("linux") or is_plat("android") then
@@ -19,9 +17,8 @@ target("query-cpuinfo")
     set_group("utility")
     add_files("query_cpuinfo.cpp")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+
+    add_rules("run_on_android")
 target_end()
 end
 
@@ -30,9 +27,7 @@ target("test-affinity")
     set_group("utility")
     add_files("test_affinity.cpp")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 target("query-cacheline") 
@@ -40,7 +35,5 @@ target("query-cacheline")
     set_group("utility")
     add_files("query_cacheline.cpp")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()

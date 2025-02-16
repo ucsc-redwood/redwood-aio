@@ -30,9 +30,7 @@ target("test-omp-tree")
     end
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
     
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 if has_config("cuda") then
@@ -91,9 +89,7 @@ target("test-vk-tree")
 
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 -- ----------------------------------------------------------------
@@ -129,9 +125,7 @@ target("test-vk-sort")
 
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 

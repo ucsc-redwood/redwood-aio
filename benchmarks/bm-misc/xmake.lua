@@ -1,4 +1,3 @@
-
 -- ----------------------------------------------------------------
 -- Vulkan
 -- ----------------------------------------------------------------
@@ -26,7 +25,5 @@ target("bm-vk-prefix-sum")
         add_packages("openmp")
     end
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()

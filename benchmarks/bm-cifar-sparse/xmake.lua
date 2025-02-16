@@ -28,9 +28,7 @@ target("bm-cifar-sparse-omp")
     end
 
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 -- ----------------------------------------------------------------
@@ -65,9 +63,7 @@ target("bm-cifar-sparse-vk")
     end
 
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
 target_end()
 
 -- ----------------------------------------------------------------

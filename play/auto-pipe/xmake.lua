@@ -5,6 +5,4 @@ target("auto-pipe")
     add_packages("spdlog")
     -- add_packages("cli11")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")

@@ -19,9 +19,6 @@ add_requires("glm")
 includes("android.lua")
 
 rule("run_on_android")
-    -- on_run(function (target)
-    --     os.runv("adb", "shell", "su", "-c", target:targetfile())
-    -- end)
     if is_plat("android") then
       on_run(run_on_android)
     end
