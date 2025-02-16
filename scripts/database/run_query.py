@@ -1,7 +1,8 @@
 import sqlite3
 import argparse
+import os
 
-DB_NAME = "benchmark_results.db"
+DB_PATH = "scripts/benchmark_results.db"
 
 
 def query_database(
@@ -15,7 +16,7 @@ def query_database(
     """
     Query the database with optional filters and display the results.
     """
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     # Base query

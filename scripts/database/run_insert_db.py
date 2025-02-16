@@ -5,33 +5,31 @@ import os
 from parser import parse_benchmark_log
 from db import create_database, insert_benchmark_result
 
+DB_PATH = "scripts/benchmark_results.db"
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python insert_db.py <logfile> [db_file]")
+        print("Usage: python scripts/database/run_insert_db.py <logfile>")
         sys.exit(1)
 
     logfile = sys.argv[1]
-    # Extract machine name from filename without .txt extension
+    if not os.path.isabs(logfile):
+        logfile = os.path.abspath(logfile)
     machine_name = os.path.splitext(os.path.basename(logfile))[0]
-    db_file = sys.argv[2] if len(sys.argv) > 2 else "benchmark_results.db"
 
-    # 1) Create DB if needed
-    create_database(db_file)
+    # Create DB if needed
+    create_database(DB_PATH)
 
-    # 2) Parse the log
+    # Parse the log
     with open(logfile, "r") as f:
         raw_text = f.read()
     records = parse_benchmark_log(raw_text, machine_name)
 
-    # 3) Insert each record
+    # Insert each record
     for rec in records:
-        insert_benchmark_result(db_file, rec)
+        insert_benchmark_result(DB_PATH, rec)
 
-    print(
-        f"Inserted {len(records)} records into {db_file} for machine '{machine_name}'"
-    )
-
+    print(f"Inserted {len(records)} records into {DB_PATH} for machine '{machine_name}'")
 
 if __name__ == "__main__":
     main()
