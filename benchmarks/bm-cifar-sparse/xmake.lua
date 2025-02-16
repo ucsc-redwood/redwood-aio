@@ -33,7 +33,7 @@ end
 
 if has_config("cuda") then
     target("bm-cifar-sparse-cu") do
-        add_rules("benchmark_config")
+        add_rules("benchmark_config", "common_flags")
         add_files({
             "cuda.cu",
         })
