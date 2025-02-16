@@ -7,8 +7,6 @@ if not is_plat("android") then
     set_toolchains("clang")
 end
 
-
-
 -- ----------------------------------------------------------------
 -- Common packages used in the project
 -- ----------------------------------------------------------------
@@ -33,9 +31,10 @@ rule("common_flags")
             target:add("packages", "openmp")
         end
 
-        add_packages("cli11")
-        add_packages("spdlog")
-        add_packages("glm")
+        -- Add common packages to the target
+        target:add("packages", "cli11")
+        target:add("packages", "spdlog")
+        target:add("packages", "glm")
     end)
 rule_end()
 
@@ -66,12 +65,11 @@ rule_end()
 -- Projects
 -- ----------------------------------------------------------------
 
-includes("pipe")
+-- includes("pipe")
 includes("builtin-apps")
 includes("builtin-apps/common/vulkan")
 includes("tests")
 includes("utility")
 includes("play")
-
 includes("benchmarks")
 

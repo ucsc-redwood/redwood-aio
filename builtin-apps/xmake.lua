@@ -5,6 +5,7 @@
 
 target("builtin-apps")
     set_kind("static")
+    add_rules("common_flags")
     
     add_headerfiles({
         -- common headers
@@ -49,16 +50,6 @@ target("builtin-apps")
         "tree/omp/tree_kernel.cpp",
     })
 
-    -- Add openmp support
-    if is_plat("android") then
-        add_cxxflags("-fopenmp -static-openmp")
-        add_ldflags("-fopenmp -static-openmp")
-    else
-        add_packages("openmp")
-    end
-
-    add_packages("spdlog")
-    add_packages("glm")
 target_end()
 
 -- ----------------------------------------------------------------------------
@@ -68,6 +59,7 @@ target_end()
 target("builtin-apps-vulkan")
     set_kind("static")
     add_deps("kiss-vk")
+    add_rules("common_flags", "vulkan_config")
 
     add_includedirs("$(projectdir)")
     
