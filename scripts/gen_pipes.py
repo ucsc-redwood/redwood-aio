@@ -47,7 +47,7 @@ def generate_header(schedule_obj: dict) -> str:
     lines.append("")
     lines.append("#include <vector>")
     lines.append('#include "../task.hpp"')
-    lines.append('#include "third-party/concurrentqueue.h"')  # or update to your actual path
+    lines.append('#include <concurrentqueue.h>')
     lines.append("")
     lines.append(f"namespace {device_ns} {{")
     lines.append(f"namespace {schedule_ns} {{")

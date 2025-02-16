@@ -10,3 +10,7 @@ set-default:
 
 push-all-resources:
     xmake push-all-resources
+
+# run-benchmarks:
+#     xmake r -g benchmarks
+

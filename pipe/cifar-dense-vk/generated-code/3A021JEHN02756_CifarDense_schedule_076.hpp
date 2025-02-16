@@ -3,10 +3,11 @@
 
 #pragma once
 
+#include <concurrentqueue.h>
+
 #include <vector>
 
 #include "../task.hpp"
-#include "third-party/concurrentqueue.h"
 
 namespace device_3A021JEHN02756 {
 namespace CifarDense_schedule_076 {

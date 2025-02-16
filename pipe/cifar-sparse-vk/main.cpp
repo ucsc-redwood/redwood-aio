@@ -1,3 +1,4 @@
+#include <concurrentqueue.h>
 #include <spdlog/spdlog.h>
 
 #include <cstdint>
@@ -8,7 +9,6 @@
 #include "app.hpp"
 #include "cifar-sparse/omp/sparse_kernel.hpp"
 #include "cifar-sparse/vulkan/vk_dispatcher.hpp"
-#include "third-party/concurrentqueue.h"
 
 template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
 void run_stages(cifar_sparse::AppData* app_data) {
