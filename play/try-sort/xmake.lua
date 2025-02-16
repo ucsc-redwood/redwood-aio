@@ -9,6 +9,4 @@ target("try-sort")
     add_packages("vulkan-hpp", "vulkan-memory-allocator")
     add_packages("spdlog")
 
-    if is_plat("android") then
-      on_run(run_on_android)
-    end
+    add_rules("run_on_android")
