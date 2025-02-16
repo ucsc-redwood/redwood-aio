@@ -11,6 +11,10 @@ end
 -- Common packages used in the project
 -- ----------------------------------------------------------------
 
+-- currently using:
+-- - cli11-v2.4.2
+-- - spdlog-v1.14.1
+-- - glm-1.0.1
 add_requires("spdlog")  -- everything
 add_requires("cli11") -- all binaries
 add_requires("glm") -- tree applications
@@ -44,6 +48,7 @@ rule_end()
 
 rule("vulkan_config") 
     on_load(function (target)
+        target:add("packages", "vulkan-headers")
         target:add("packages", "vulkan-hpp")
         target:add("packages", "vulkan-memory-allocator")
     end)

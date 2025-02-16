@@ -6,6 +6,7 @@
 target("builtin-apps")
     set_kind("static")
     add_rules("common_flags")
+    set_group("static-libs")
     
     add_headerfiles({
         -- common headers
@@ -58,10 +59,12 @@ target_end()
 
 target("builtin-apps-vulkan")
     set_kind("static")
-    add_deps("kiss-vk")
+    set_group("static-libs")
     add_rules("common_flags", "vulkan_config")
 
-    add_includedirs("$(projectdir)")
+    add_deps("kiss-vk")
+
+    -- add_includedirs("$(projectdir)")
     
     add_headerfiles({
         -- App specific headers
@@ -78,9 +81,6 @@ target("builtin-apps-vulkan")
         "tree/vulkan/vk_dispatcher.cpp",
     })
 
-    add_packages("vulkan-hpp", "vulkan-memory-allocator")
-    add_packages("spdlog")
-    add_packages("glm")
 target_end()
 
 -- ----------------------------------------------------------------------------
@@ -92,6 +92,8 @@ if has_config("cuda") then
 
 target("builtin-apps-cuda")
     set_kind("static")
+    set_group("static-libs")
+    add_rules("common_flags")
 
     add_headerfiles({
         -- Common CUDA headers
@@ -148,11 +150,9 @@ target("builtin-apps-cuda")
         "tree/cuda/07_octree.cu",
         "tree/cuda/kernel.cu",
     })
-
-    add_packages("spdlog")
-    add_packages("glm")
+    
+    -- Best CUDA library
     add_packages("cub")
-
     add_cugencodes("native")
 target_end()
 

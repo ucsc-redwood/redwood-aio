@@ -1,8 +1,20 @@
--- add_requires("vulkan-hpp 1.3.290")
-add_requires("vulkan-hpp", "vulkan-memory-allocator")
+-- currently using:
+-- - vulkan-headers-1.3.290
+-- - vulkan-hpp-v1.3.290
+-- - vulkan-memory-allocator-v3.1.0
+
+-- ----------------------------------------------------------------
+-- kiss-vk (Keep-It-Simple-Stupid Vulkan)
+-- ----------------------------------------------------------------
+
+add_requires("vulkan-headers")
+add_requires("vulkan-hpp")
+add_requires("vulkan-memory-allocator")
 
 target("kiss-vk")
     set_kind("static")
+    add_rules("common_flags", "vulkan_config")
+    set_group("static-libs")
     
     add_headerfiles({
         "algorithm.hpp",
@@ -19,9 +31,6 @@ target("kiss-vk")
         "sequence.cpp",
         "vma_pmr.cpp",
     })
-
-    add_packages("vulkan-hpp", "vulkan-memory-allocator")
-    add_packages("spdlog")
 
 target_end()
 
