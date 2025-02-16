@@ -34,3 +34,13 @@ target("test-affinity")
       on_run(run_on_android)
     end
 target_end()
+
+target("query-cacheline") 
+    set_kind("binary")
+    set_group("utility")
+    add_files("query_cacheline.cpp")
+
+    if is_plat("android") then
+      on_run(run_on_android)
+    end
+target_end()
