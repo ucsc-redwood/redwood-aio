@@ -9,6 +9,7 @@ target("bm-cifar-sparse-omp")
     add_includedirs("$(projectdir)/builtin-apps/")
     add_includedirs("$(projectdir)")
 
+    add_rules("benchmark_config", "common_flags", "run_on_android")
     add_files("omp.cpp")
 
     add_deps("builtin-apps")
@@ -28,7 +29,6 @@ target("bm-cifar-sparse-omp")
     end
 
 
-    add_rules("run_on_android")
 target_end()
 
 -- ----------------------------------------------------------------
@@ -42,10 +42,10 @@ target("bm-cifar-sparse-vk")
     add_includedirs("$(projectdir)/builtin-apps/")
     add_includedirs("$(projectdir)")
 
+    add_rules("benchmark_config", "common_flags", "vulkan_config", "run_on_android")
     add_files("vk.cpp")
 
-    add_deps("builtin-apps")
-    add_deps("builtin-apps-vulkan")
+    add_deps("builtin-apps", "builtin-apps-vulkan")
 
 
     add_packages("benchmark")
@@ -63,7 +63,6 @@ target("bm-cifar-sparse-vk")
     end
 
 
-    add_rules("run_on_android")
 target_end()
 
 -- ----------------------------------------------------------------
@@ -76,20 +75,17 @@ if has_config("cuda") then
         set_kind("binary")
         set_group("benchmarks")
     
-        add_deps("builtin-apps")
-        add_deps("builtin-apps-cuda")
+        add_deps("builtin-apps", "builtin-apps-cuda")
         add_includedirs("$(projectdir)/builtin-apps/")
         add_includedirs("$(projectdir)")
 
+        add_rules("benchmark_config", "cuda_config")
         add_files({
             "cuda.cu",
         })
     
         add_packages("spdlog")
         add_packages("benchmark")
-    
-        add_cugencodes("native")
-    
     
     target_end()
     

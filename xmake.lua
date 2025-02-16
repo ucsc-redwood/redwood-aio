@@ -32,3 +32,44 @@ includes("utility")
 includes("play")
 
 includes("benchmarks")
+
+-- Common configurations
+rule("common_flags")
+    on_load(function (target)
+        -- OpenMP flags for Android
+        if is_plat("android") then
+            target:add("cxxflags", "-fopenmp -static-openmp")
+            target:add("ldflags", "-fopenmp -static-openmp")
+        else
+            target:add("packages", "openmp")
+        end
+    end)
+rule_end()
+
+-- Vulkan configuration
+rule("vulkan_config") 
+    on_load(function (target)
+        target:add("packages", "vulkan-hpp")
+        target:add("packages", "vulkan-memory-allocator")
+    end)
+rule_end()
+
+-- Common test configuration
+rule("test_config")
+    on_load(function (target)
+        target:set("kind", "binary")
+        target:set("group", "test")
+        target:add("includedirs", "$(projectdir)/builtin-apps/")
+        target:add("includedirs", "$(projectdir)")
+        target:add("packages", "gtest")
+        target:add("packages", "spdlog")
+        target:add("packages", "glm")
+    end)
+rule_end()
+
+-- CUDA configuration
+rule("cuda_config")
+    on_load(function (target)
+        target:add("cugencodes", "native")
+    end)
+rule_end()
