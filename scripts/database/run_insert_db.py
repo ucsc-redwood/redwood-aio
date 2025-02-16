@@ -5,17 +5,21 @@ import os
 from parser import parse_benchmark_log
 from db import create_database, insert_benchmark_result
 
-DB_PATH = "scripts/benchmark_results.db"
+DB_PATH = "data/benchmark_results.db"
 
 def main():
     if len(sys.argv) < 2:
         print("Usage: python scripts/database/run_insert_db.py <logfile>")
+        print("Example: python scripts/database/run_insert_db.py data/raw_bm_logs/device1.txt")
         sys.exit(1)
 
     logfile = sys.argv[1]
     if not os.path.isabs(logfile):
         logfile = os.path.abspath(logfile)
     machine_name = os.path.splitext(os.path.basename(logfile))[0]
+
+    # Ensure data directory exists
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
     # Create DB if needed
     create_database(DB_PATH)

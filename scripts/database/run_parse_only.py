@@ -8,6 +8,7 @@ from parser import parse_benchmark_log
 def main():
     if len(sys.argv) < 2:
         print("Usage: python scripts/database/run_parse_only.py <logfile>")
+        print("Example: python scripts/database/run_parse_only.py data/raw_bm_logs/device1.txt")
         sys.exit(1)
 
     logfile = sys.argv[1]

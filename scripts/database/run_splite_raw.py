@@ -32,12 +32,17 @@ def split_logs(log_text):
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python scripts/database/run_splite_raw.py <path_to_log_file>")
+        print("Example: python scripts/database/run_splite_raw.py data/raw_bm_logs/02_16_2025.txt")
         sys.exit(1)
         
     log_file_path = sys.argv[1]
     if not os.path.isabs(log_file_path):
         log_file_path = os.path.abspath(log_file_path)
+        
+    # Ensure output directory exists
     output_dir = os.path.dirname(log_file_path)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     
     try:
         with open(log_file_path, "r") as infile:

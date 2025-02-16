@@ -1,8 +1,9 @@
 import sqlite3
 import argparse
 import os
+import sys
 
-DB_PATH = "scripts/benchmark_results.db"
+DB_PATH = "data/benchmark_results.db"
 
 
 def query_database(
@@ -16,6 +17,10 @@ def query_database(
     """
     Query the database with optional filters and display the results.
     """
+    if not os.path.exists(DB_PATH):
+        print(f"Error: Database file not found at {DB_PATH}")
+        sys.exit(1)
+        
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 

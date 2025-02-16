@@ -12,9 +12,9 @@ push-all-resources:
     xmake push-all-resources
 
 bm-to-db:
-    rm -f scripts/benchmark_results.db
-    python3 scripts/database/run_splite_raw.py scripts/database/raw_logs/02_16_2025.txt
-    python3 scripts/database/run_insert_db.py scripts/database/raw_logs/3A021JEHN02756.txt
-    python3 scripts/database/run_insert_db.py scripts/database/raw_logs/ce0717178d7758b00b7e.txt
-    python3 scripts/database/run_insert_db.py scripts/database/raw_logs/9b034f1b.txt
+    rm -f data/benchmark_results.db
+    python3 scripts/database/run_splite_raw.py data/raw_logs/02_16_2025.txt
+    python3 scripts/database/run_insert_db.py data/raw_logs/3A021JEHN02756.txt
+    python3 scripts/database/run_insert_db.py data/raw_logs/ce0717178d7758b00b7e.txt
+    python3 scripts/database/run_insert_db.py data/raw_logs/9b034f1b.txt
     
