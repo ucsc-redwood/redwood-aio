@@ -2,43 +2,64 @@ import json
 import sys
 from typing import Dict, Any
 import argparse
+from collections import defaultdict
 
 def load_config(file_path: str) -> Dict[str, Any]:
     """Load and parse a JSON configuration file."""
     with open(file_path, 'r') as f:
         return json.load(f)
 
-def calculate_combinations(device_config: Dict[str, Any], app_config: Dict[str, Any]) -> int:
-    """
-    Calculate total number of possible combinations for running an app on a device.
+def calculate_unrestricted_combinations(device_config: Dict[str, Any], app_config: Dict[str, Any]) -> int:
+    """Calculate combinations with no restrictions."""
+    num_stages = app_config["num_stages"]
+    cores = device_config["pinnable_cores"]
     
-    For each stage:
-    - Can run on any core type (little/medium/big/gpu)
-    - For each core type, can use 1 to N threads where N is the number of cores of that type
-    - Can mix and match different configurations for different stages
+    options_per_stage = sum(count for count in cores.values() if count > 0)
+    return options_per_stage ** num_stages
+
+def calculate_restricted_combinations(device_config: Dict[str, Any], app_config: Dict[str, Any]) -> int:
+    """
+    Calculate combinations where:
+    1. All processing units must be used
+    2. Total threads used across all stages cannot exceed available cores
+    3. Same processing unit can be used for multiple stages
     """
     num_stages = app_config["num_stages"]
     cores = device_config["pinnable_cores"]
     
-    # For each core type, calculate how many thread options we have
-    # If we have N cores, we can use 1 to N threads
-    options_per_core_type = {}
-    for core_type, count in cores.items():
-        if count > 0:
-            # Can use 1 to count threads
-            options_per_core_type[core_type] = count
+    def count_valid_assignments(stage: int, remaining_cores: Dict[str, int]) -> int:
+        # Base case: all stages assigned
+        if stage == num_stages:
+            # Check if all core types have been used
+            return 1 if all(used > 0 for used in core_usage.values()) else 0
+        
+        total = 0
+        # Try each core type and thread count for this stage
+        for core_type, max_threads in cores.items():
+            if max_threads == 0:
+                continue
+                
+            # Try different thread counts for this stage
+            for threads in range(1, max_threads + 1):
+                if remaining_cores[core_type] >= threads:
+                    # Try this assignment
+                    remaining_cores[core_type] -= threads
+                    core_usage[core_type] += 1
+                    
+                    total += count_valid_assignments(stage + 1, remaining_cores)
+                    
+                    # Backtrack
+                    remaining_cores[core_type] += threads
+                    core_usage[core_type] -= 1
+                    
+        return total
     
-    # For each stage, calculate how many options we have
-    options_per_stage = 0
-    for core_type, max_threads in options_per_core_type.items():
-        # For each core type, we can use 1 to max_threads threads
-        options_per_stage += max_threads
+    # Track how many times each core type has been used
+    core_usage = defaultdict(int)
+    # Track remaining cores of each type
+    remaining = {k: v for k, v in cores.items()}
     
-    # Total combinations is this number raised to the power of stages
-    # (because each stage can independently use any option)
-    total_combinations = options_per_stage ** num_stages
-    
-    return total_combinations
+    return count_valid_assignments(0, remaining)
 
 def main():
     parser = argparse.ArgumentParser(description='Calculate possible scheduling combinations.')
@@ -66,19 +87,28 @@ def main():
         print(f"Available applications: {', '.join(app_config.keys())}")
         sys.exit(1)
     
-    # Calculate combinations
+    # Get configurations
     device_config = hw_config[args.device]
     app_config = app_config[args.app]
-    total_combinations = calculate_combinations(device_config, app_config)
+    
+    # Calculate both types of combinations
+    unrestricted = calculate_unrestricted_combinations(device_config, app_config)
+    restricted = calculate_restricted_combinations(device_config, app_config)
     
     # Print results
     print(f"\nAnalysis for {args.app} on {device_config['name']} ({args.device}):")
     print(f"Number of stages: {app_config['num_stages']}")
-    print("Available core types and counts:")
+    print("\nAvailable processing units:")
     for core_type, count in device_config['pinnable_cores'].items():
         if count > 0:
             print(f"  - {core_type}: {count} cores (can use 1 to {count} threads)")
-    print(f"\nTotal possible combinations: {total_combinations:,}")
+    
+    print(f"\nUnrestricted combinations: {unrestricted:,}")
+    print(f"Restricted combinations: {restricted:,}")
+    print("\nRestriction rules:")
+    print("1. All processing unit types must be used")
+    print("2. Total threads used across stages cannot exceed available cores")
+    print("3. Same processing unit can be used for multiple stages")
 
 if __name__ == "__main__":
     main()
