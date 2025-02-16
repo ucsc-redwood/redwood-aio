@@ -1,32 +1,21 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
-target("pipe-cifar-dense-vk")
+target("pipe-cifar-dense-vk") do
     add_rules("common_flags", "vulkan_config", "run_on_android")
-    set_kind("binary")
+
+    add_includedirs("$(projectdir)")
 
     add_headerfiles({
         "run_stages.hpp",
         "task.hpp",
-        "generated-code/*.hpp",
+        "generated-code/*.hpp", -- generated code
     })
 
     add_files({
         "main.cpp",
         "task.cpp",
-        "generated-code/*.cpp",
+        "generated-code/*.cpp", -- generated code
     })
 
-    add_includedirs("$(projectdir)")
-
     add_deps("builtin-apps", "builtin-apps-vulkan")
-
-    add_packages("spdlog")
-    add_packages("vulkan-hpp", "vulkan-memory-allocator")
-
-    -- Add openmp support
-    if is_plat("android") then
-        add_cxxflags("-fopenmp -static-openmp")
-        add_ldflags("-fopenmp -static-openmp")
-    else
-        add_packages("openmp")
-    end
+end

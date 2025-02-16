@@ -14,8 +14,6 @@ rule("benchmark_config")
         target:add("includedirs", "$(projectdir)/builtin-apps/")
         target:add("includedirs", "$(projectdir)")
         target:add("packages", "benchmark")
-        -- target:add("packages", "glm")
-        -- target:add("packages", "spdlog")
     end)
 rule_end()
 

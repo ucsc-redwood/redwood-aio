@@ -77,7 +77,5 @@ includes("builtin-apps/common/vulkan") -- KISS-VK library
 includes("builtin-apps")
 includes("tests")
 includes("benchmarks")
+includes("pipe")
 includes("utility")
--- includes("pipe")
--- includes("play")
-
