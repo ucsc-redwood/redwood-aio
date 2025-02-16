@@ -1,3 +1,5 @@
+-- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
+
 target("vk-prefix-sum")
     set_kind("binary")
     set_group("play")

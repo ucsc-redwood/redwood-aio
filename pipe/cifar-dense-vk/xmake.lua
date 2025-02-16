@@ -1,3 +1,5 @@
+-- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
+
 target("pipe-cifar-dense-vk")
     add_rules("common_flags", "vulkan_config", "run_on_android")
     set_kind("binary")

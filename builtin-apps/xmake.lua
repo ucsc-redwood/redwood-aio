@@ -1,3 +1,4 @@
+-- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
 -- ----------------------------------------------------------------
 -- Builtin Apps (Tree, CIFAR-Sparse, CIFAR-Dense) Static Library
