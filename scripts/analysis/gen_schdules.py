@@ -1,13 +1,22 @@
 import json
-from itertools import permutations
 import argparse
-from typing import List, Tuple, Dict, Any
 import sqlite3
 import os
 import sys
 
-# Define a type for a schedule entry: ((start_stage, end_stage), (pu_type, num_threads))
-Schedule = List[Tuple[Tuple[int, int], Tuple[str, int]]]
+from dataclasses import dataclass
+from itertools import permutations
+from typing import List, Tuple, Dict, Any
+
+
+@dataclass
+class Schedule:
+    chunks: List[Tuple[int, int]]
+    pu_types: List[str]
+    pu_threads: List[int]
+    chunk_times: List[float]
+    max_chunk_time: float
+
 
 DB_PATH = "data/benchmark_results.db"
 
@@ -103,12 +112,29 @@ def generate_schedules_with_chunks(
 
         # Generate all permutations of PU configs of length k
         for pu_perm in permutations(pu_configs, k):
-            schedule = []
+            # Initialize lists for Schedule
+            chunks = []
+            pu_types = []
+            pu_threads = []
+
             for chunk_info, (pu_type, num_threads) in zip(partition, pu_perm):
+                chunks.append(chunk_info)
+                pu_types.append(pu_type)
                 # For GPU, set num_threads to 0 as it's not applicable
                 threads = 0 if pu_type == "gpu" else num_threads
-                schedule.append((chunk_info, (pu_type, threads)))
-            all_schedules.append(schedule)
+                pu_threads.append(threads)
+
+            # Initialize with empty times - will be filled by timing function
+            chunk_times = [0.0] * len(chunks)
+            all_schedules.append(
+                Schedule(
+                    chunks=chunks,
+                    pu_types=pu_types,
+                    pu_threads=pu_threads,
+                    chunk_times=chunk_times,
+                    max_chunk_time=0.0,
+                )
+            )
 
     return all_schedules
 
@@ -123,9 +149,11 @@ def show_schedule_timing(
     """Show timing for a schedule and return the max chunk time."""
     chunk_times = []
 
-    for chunk_index, ((start_stage, end_stage), (pu_type, num_threads)) in enumerate(
-        schedule, start=1
-    ):
+    for chunk_idx in range(len(schedule.chunks)):
+        start_stage, end_stage = schedule.chunks[chunk_idx]
+        pu_type = schedule.pu_types[chunk_idx]
+        num_threads = schedule.pu_threads[chunk_idx]
+
         # Determine the backend and core_type
         if pu_type == "gpu":
             backend = "VK"
@@ -139,7 +167,6 @@ def show_schedule_timing(
         # Sum the times for each stage in [start_stage..end_stage]
         total_time_ms = 0.0
         for stage_id in range(start_stage, end_stage + 1):
-            # Skip stage = 0 records if they exist (you mentioned they are baseline)
             if stage_id == 0:
                 continue
 
@@ -183,21 +210,15 @@ def show_schedule_timing(
 
             total_time_ms += chunk_time_for_stage
 
-        # Store this chunk's total time
         chunk_times.append(total_time_ms)
-
-        # # Print the chunk info
-        # print(
-        #     f"Chunk {chunk_index} => stages {start_stage}-{end_stage}, "
-        #     f"PU={pu_type} (threads={num_threads}), total_time={total_time_ms:.2f} ms"
-        # )
+        schedule.chunk_times[chunk_idx] = total_time_ms
 
     if chunk_times:
         max_chunk_time = max(chunk_times)
-        # print(f"Max chunk time: {max_chunk_time:.2f} ms")
+        schedule.max_chunk_time = max_chunk_time
         return max_chunk_time
     else:
-        # print("No valid chunks to measure.")
+        schedule.max_chunk_time = 0.0
         return 0.0
 
 
@@ -207,48 +228,35 @@ def evaluate_and_sort_schedules(
     cursor: sqlite3.Cursor,
     device_key: str,
     app_key: str,
-) -> List[Tuple[Schedule, float]]:
+) -> List[Schedule]:
     """
     Evaluate each schedule's maximum chunk time and sort them by performance.
-    Returns a list of (schedule, max_chunk_time) tuples sorted by max_chunk_time.
+    Returns a list of schedules sorted by max_chunk_time.
     """
     # Evaluate each schedule
-    schedule_times = []
     for schedule in schedules:
-        max_chunk_time = show_schedule_timing(
-            schedule, device_info, cursor, device_key, app_key
-        )
-        schedule_times.append((schedule, max_chunk_time))
+        show_schedule_timing(schedule, device_info, cursor, device_key, app_key)
 
     # Sort by max_chunk_time
-    sorted_schedules = sorted(schedule_times, key=lambda x: x[1])
-    return sorted_schedules
+    return sorted(schedules, key=lambda x: x.max_chunk_time)
 
 
 def remove_duplicate_schedules(schedules: List[Schedule]) -> List[Schedule]:
-    """
-    Remove duplicate schedules from a list of schedules.
-    Two schedules are considered duplicates if they have the same sequence of
-    stage ranges assigned to the same PU types with same thread counts.
-
-    Args:
-        schedules: List of schedules to deduplicate
-
-    Returns:
-        List of unique schedules with duplicates removed
-    """
+    """Remove duplicate schedules from a list of schedules."""
     # Convert each schedule to a tuple for hashing
     seen = set()
     unique_schedules = []
 
     for schedule in schedules:
-        # Convert schedule to hashable tuple format
-        schedule_tuple = tuple(
-            (start_end, pu_config) for start_end, pu_config in schedule
+        # Create a hashable representation of the schedule
+        schedule_key = (
+            tuple(schedule.chunks),
+            tuple(schedule.pu_types),
+            tuple(schedule.pu_threads),
         )
 
-        if schedule_tuple not in seen:
-            seen.add(schedule_tuple)
+        if schedule_key not in seen:
+            seen.add(schedule_key)
             unique_schedules.append(schedule)
 
     return unique_schedules
@@ -296,12 +304,16 @@ def main():
 
         # Write all schedules to a log file, now sorted by performance
         with open("schedules.log", "w") as f:
-            for idx, (schedule, max_time) in enumerate(sorted_schedules, 1):
-                f.write(f"Schedule {idx} (Max chunk time: {max_time:.2f} ms):\n")
-                for chunk_info, (pu_type, num_threads) in schedule:
-                    start, end = chunk_info
+            for idx, schedule in enumerate(sorted_schedules, 1):
+                f.write(
+                    f"Schedule {idx} (Max chunk time: {schedule.max_chunk_time:.2f} ms):\n"
+                )
+                for i in range(len(schedule.chunks)):
+                    start, end = schedule.chunks[i]
                     f.write(
-                        f"  Stages {start}-{end}: {pu_type} (threads={num_threads})\n"
+                        f"  Stages {start}-{end}: {schedule.pu_types[i]} "
+                        f"(threads={schedule.pu_threads[i]}, "
+                        f"time={schedule.chunk_times[i]:.2f} ms)\n"
                     )
                 f.write("\n")
 
