@@ -6,7 +6,7 @@ import sys
 
 from dataclasses import dataclass
 from itertools import permutations
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Optional
 
 
 @dataclass
@@ -262,6 +262,31 @@ def remove_duplicate_schedules(schedules: List[Schedule]) -> List[Schedule]:
     return unique_schedules
 
 
+def query_baseline(
+    device_key: str,
+    app_key: str,
+    conn: sqlite3.Connection,
+) -> Tuple[Optional[int], Optional[float]]:
+    """
+    Query for baseline records (stage=0). Return (num_threads, best_time) with the lowest time.
+    """
+    query = """
+    SELECT num_threads, time_ms FROM benchmark_result
+    WHERE machine_name = ?
+      AND application = ?
+      AND stage = 0
+      AND backend = 'OMP'
+      AND core_type IS NULL
+    """
+    cur = conn.cursor()
+    cur.execute(query, (device_key, app_key))
+    rows = cur.fetchall()
+    if not rows:
+        return None, None
+    best = min(rows, key=lambda r: float(r[1]))
+    return best[0], float(best[1])
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate possible scheduling combinations."
@@ -300,6 +325,22 @@ def main():
         print("\nEvaluating all schedules...")
         schedules = evaluate_and_sort_schedules(
             schedules, device_info, cursor, args.machine_name, args.app
+        )
+
+        # Query baseline
+        baseline_threads, baseline_time = query_baseline(
+            args.machine_name, args.app, conn
+        )
+
+        # filter out schedules whose max chunk time is greater than baseline time
+        schedules = [
+            schedule
+            for schedule in schedules
+            if schedule.max_chunk_time <= baseline_time
+        ]
+
+        print(
+            f"Number of schedules after filtering <= {baseline_time:.2f}ms: {len(schedules)}"
         )
 
         # Write all schedules to a log file, now sorted by performance
