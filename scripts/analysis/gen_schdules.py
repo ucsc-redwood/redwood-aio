@@ -206,6 +206,30 @@ def show_schedule_timing(
         return 0.0
 
 
+def evaluate_and_sort_schedules(
+    schedules: List[Schedule],
+    device_info: Dict[str, Any],
+    cursor: sqlite3.Cursor,
+    device_key: str,
+    app_key: str,
+) -> List[Tuple[Schedule, float]]:
+    """
+    Evaluate each schedule's maximum chunk time and sort them by performance.
+    Returns a list of (schedule, max_chunk_time) tuples sorted by max_chunk_time.
+    """
+    # Evaluate each schedule
+    schedule_times = []
+    for schedule in schedules:
+        max_chunk_time = show_schedule_timing(
+            schedule, device_info, cursor, device_key, app_key
+        )
+        schedule_times.append((schedule, max_chunk_time))
+    
+    # Sort by max_chunk_time
+    sorted_schedules = sorted(schedule_times, key=lambda x: x[1])
+    return sorted_schedules
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate possible scheduling combinations."
@@ -240,16 +264,26 @@ def main():
         schedules = [schedule for schedule in schedules if len(schedule) == 4]
         print(f"Number of valid schedules with 4 chunks: {len(schedules)}")
 
-        # Show timing for first 5 schedules using the same cursor
-        for schedule in schedules[:5]:
-            show_schedule_timing(
-                schedule, device_info, cursor, args.machine_name, args.app
-            )
+        # Evaluate and sort all schedules
+        print("\nEvaluating all schedules...")
+        sorted_schedules = evaluate_and_sort_schedules(
+            schedules, device_info, cursor, args.machine_name, args.app
+        )
 
-        # Write all schedules to a log file
+        # Print the best 5 schedules
+        print("\nTop 5 Best Schedules:")
+        print("-" * 50)
+        for i, (schedule, max_time) in enumerate(sorted_schedules[:5], 1):
+            print(f"\nSchedule #{i} (Max chunk time: {max_time:.2f} ms):")
+            for chunk_info, pu_type in schedule:
+                start, end = chunk_info
+                print(f"  Stages {start}-{end}: {pu_type}")
+            print()
+
+        # Write all schedules to a log file, now sorted by performance
         with open("schedules.log", "w") as f:
-            for idx, schedule in enumerate(schedules, 1):
-                f.write(f"Schedule {idx}:\n")
+            for idx, (schedule, max_time) in enumerate(sorted_schedules, 1):
+                f.write(f"Schedule {idx} (Max chunk time: {max_time:.2f} ms):\n")
                 for chunk_info, pu_type in schedule:
                     start, end = chunk_info
                     f.write(f"  Stages {start}-{end}: {pu_type}\n")
