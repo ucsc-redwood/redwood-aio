@@ -16,7 +16,26 @@
                            std::to_string(__LINE__));
 }
 
+[[nodiscard]]
+inline bool check_device_arg(const int argc, char** argv) {
+  for (int i = 0; i < argc; ++i) {
+    std::string arg(argv[i]);
+    if (arg.find("--device=") != std::string::npos) {
+      return true;
+    }
+    if (arg == "--device" && i + 1 < argc) {
+      return true;
+    }
+  }
+  std::cerr << "Error: --device argument is required\n";
+  std::exit(1);
+  return false;
+}
+
 int parse_args(int argc, char** argv) {
+  if (!check_device_arg(argc, argv)) {
+    std::exit(1);
+  }
   PARSE_ARGS_BEGIN
   PARSE_ARGS_END
   return 0;
