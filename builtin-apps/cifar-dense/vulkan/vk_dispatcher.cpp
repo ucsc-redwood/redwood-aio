@@ -35,15 +35,15 @@ Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
   algorithms.try_emplace("linear", std::move(linear_algo));
 }
 
-inline void log_kernel(const int stage, const AppData &app_data) {
-  spdlog::debug("[vk] process_stage_{}, app_data: {:p}", stage, (void *)&app_data);
+inline void log_kernel(const int stage, const void *appdata_addr) {
+  spdlog::debug("[vk] process_stage_{}, app_data: {:p}", stage, appdata_addr);
 }
 
 void Singleton::process_stage_1(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv1OutChannels * cifar_dense::kConv1OutHeight * cifar_dense::kConv1OutWidth;
 
-  log_kernel(1, app_data);
+  log_kernel(1, (void *)&app_data);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -86,7 +86,7 @@ void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv1OutChannels * cifar_dense::kPool1OutHeight * cifar_dense::kPool1OutWidth;
 
-  log_kernel(2, app_data);
+  log_kernel(2, (void *)&app_data);
 
   auto algo = algorithms.at("maxpool2d").get();
 
@@ -121,7 +121,7 @@ void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv2OutChannels * cifar_dense::kConv2OutHeight * cifar_dense::kConv2OutWidth;
 
-  log_kernel(3, app_data);
+  log_kernel(3, (void *)&app_data);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -164,7 +164,7 @@ void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv2OutChannels * cifar_dense::kPool2OutHeight * cifar_dense::kPool2OutWidth;
 
-  log_kernel(4, app_data);
+  log_kernel(4, (void *)&app_data);
 
   auto algo = algorithms.at("maxpool2d").get();
 
@@ -199,7 +199,7 @@ void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv3OutChannels * cifar_dense::kConv3OutHeight * cifar_dense::kConv3OutWidth;
 
-  log_kernel(5, app_data);
+  log_kernel(5, (void *)&app_data);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -242,7 +242,7 @@ void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv4OutChannels * cifar_dense::kConv4OutHeight * cifar_dense::kConv4OutWidth;
 
-  log_kernel(6, app_data);
+  log_kernel(6, (void *)&app_data);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -285,7 +285,7 @@ void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv5OutChannels * cifar_dense::kConv5OutHeight * cifar_dense::kConv5OutWidth;
 
-  log_kernel(7, app_data);
+  log_kernel(7, (void *)&app_data);
 
   auto algo = algorithms.at("conv2d").get();
 
@@ -328,7 +328,7 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
   const int total_iterations =
       cifar_dense::kConv5OutChannels * cifar_dense::kPool3OutHeight * cifar_dense::kPool3OutWidth;
 
-  log_kernel(8, app_data);
+  log_kernel(8, (void *)&app_data);
 
   auto algo = algorithms.at("maxpool2d").get();
 
@@ -362,7 +362,7 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
 void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
   constexpr int total_iterations = cifar_dense::kLinearOutFeatures;  // 10
 
-  log_kernel(9, app_data);
+  log_kernel(9, (void *)&app_data);
 
   auto algo = algorithms.at("linear").get();
 

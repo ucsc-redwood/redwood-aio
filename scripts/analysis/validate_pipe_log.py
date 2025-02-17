@@ -47,7 +47,9 @@ def main():
             gd = match.groupdict()
             backend = gd["backend"]
             # For OMP entries, use the full core address as the ID
-            core_id = gd["core"] if gd["core"] is not None else "-1"  # Use "-1" for GPU/vk
+            core_id = (
+                gd["core"] if gd["core"] is not None else "-1"
+            )  # Use "-1" for GPU/vk
             thread_id = int(gd["thread"]) if gd["thread"] is not None else 0
             stage_num = int(gd["stage"])
             app_data = gd["appdata"]
@@ -102,10 +104,10 @@ def main():
     else:
         print("Finished checking. Issues were reported above.")
 
-    # Print all unique app_data addresses
-    print("\nAll unique app_data addresses:")
-    for i, app_data in enumerate(sorted(all_appdatas), 1):
-        print(f"{i}: {app_data}")
+    # # Print all unique app_data addresses
+    # print("\nAll unique app_data addresses:")
+    # for i, app_data in enumerate(sorted(all_appdatas), 1):
+    #     print(f"{i}: {app_data}")
 
 
 if __name__ == "__main__":
