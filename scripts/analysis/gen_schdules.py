@@ -40,8 +40,8 @@ def generate_schedules_with_chunks(
 
     # Get available PU types and their core counts
     pu_configs = [
-        (core_type, count) 
-        for core_type, count in device_info["pinnable_cores"].items() 
+        (core_type, count)
+        for core_type, count in device_info["pinnable_cores"].items()
         if count > 0
     ]
 
@@ -186,18 +186,18 @@ def show_schedule_timing(
         # Store this chunk's total time
         chunk_times.append(total_time_ms)
 
-        # Print the chunk info
-        print(
-            f"Chunk {chunk_index} => stages {start_stage}-{end_stage}, "
-            f"PU={pu_type} (threads={num_threads}), total_time={total_time_ms:.2f} ms"
-        )
+        # # Print the chunk info
+        # print(
+        #     f"Chunk {chunk_index} => stages {start_stage}-{end_stage}, "
+        #     f"PU={pu_type} (threads={num_threads}), total_time={total_time_ms:.2f} ms"
+        # )
 
     if chunk_times:
         max_chunk_time = max(chunk_times)
-        print(f"Max chunk time: {max_chunk_time:.2f} ms")
+        # print(f"Max chunk time: {max_chunk_time:.2f} ms")
         return max_chunk_time
     else:
-        print("No valid chunks to measure.")
+        # print("No valid chunks to measure.")
         return 0.0
 
 
@@ -225,6 +225,33 @@ def evaluate_and_sort_schedules(
     return sorted_schedules
 
 
+def remove_duplicate_schedules(schedules: List[Schedule]) -> List[Schedule]:
+    """
+    Remove duplicate schedules from a list of schedules.
+    Two schedules are considered duplicates if they have the same sequence of
+    stage ranges assigned to the same PU types with same thread counts.
+
+    Args:
+        schedules: List of schedules to deduplicate
+
+    Returns:
+        List of unique schedules with duplicates removed
+    """
+    # Convert each schedule to a tuple for hashing
+    seen = set()
+    unique_schedules = []
+
+    for schedule in schedules:
+        # Convert schedule to hashable tuple format
+        schedule_tuple = tuple(
+            (start_end, pu_config) for start_end, pu_config in schedule
+        )
+
+        if schedule_tuple not in seen:
+            seen.add(schedule_tuple)
+            unique_schedules.append(schedule)
+
+    return unique_schedules
 
 
 def main():
@@ -257,10 +284,14 @@ def main():
         schedules = generate_schedules_with_chunks(device_info, app_info)
         print(f"Number of valid schedules: {len(schedules)}")
 
+        # Remove duplicates
+        unique_schedules = remove_duplicate_schedules(schedules)
+        print(f"Number of unique schedules: {len(unique_schedules)}")
+
         # Evaluate and sort all schedules
         print("\nEvaluating all schedules...")
         sorted_schedules = evaluate_and_sort_schedules(
-            schedules, device_info, cursor, args.machine_name, args.app
+            unique_schedules, device_info, cursor, args.machine_name, args.app
         )
 
         # Write all schedules to a log file, now sorted by performance
@@ -269,7 +300,9 @@ def main():
                 f.write(f"Schedule {idx} (Max chunk time: {max_time:.2f} ms):\n")
                 for chunk_info, (pu_type, num_threads) in schedule:
                     start, end = chunk_info
-                    f.write(f"  Stages {start}-{end}: {pu_type} (threads={num_threads})\n")
+                    f.write(
+                        f"  Stages {start}-{end}: {pu_type} (threads={num_threads})\n"
+                    )
                 f.write("\n")
 
     finally:
