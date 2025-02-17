@@ -344,11 +344,13 @@ def write_schedules_to_json(
         # Convert schedule to JSON format
         schedule_json = schedule_to_json(schedule, schedule_id, device_id)
 
-        # Create a hash of the schedule content for uniqueness
-        schedule_hash = hashlib.md5(str(schedule_json).encode()).hexdigest()[:8]
+        # # Create a hash of the schedule content for uniqueness
+        # schedule_hash = hashlib.md5(str(schedule_json).encode()).hexdigest()[:8]
 
         # Create filename with schedule ID and hash
-        filename = f"{schedule_id}_{schedule_hash}.json"
+        # filename = f"{schedule_id}_{schedule_hash}.json"
+
+        filename = f"{schedule_id}.json"
         file_path = output_path / filename
 
         # Write to file with pretty printing

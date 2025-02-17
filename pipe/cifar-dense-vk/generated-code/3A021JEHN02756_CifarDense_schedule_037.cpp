@@ -5,7 +5,6 @@
 
 #include <atomic>
 #include <thread>
-
 #include "../run_stages.hpp"
 
 namespace device_3A021JEHN02756 {
@@ -15,18 +14,17 @@ static std::atomic<bool> done(false);
 
 void stage_group_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 1, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<1, 1, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
   done.store(true, std::memory_order_release);
 }
 
-void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
-                        moodycamel::ConcurrentQueue<Task>& out_q) {
+void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 2, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_gpu_stages<2, 6>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -36,17 +34,16 @@ void stage_group_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 2, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_gpu_stages<2, 6>(task.app_data);
     out_q.enqueue(task);
   }
 }
 
-void stage_group_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
-                        moodycamel::ConcurrentQueue<Task>& out_q) {
+void stage_group_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<3, 8>(task.app_data);
+      run_stages<7, 8, ProcessorType::kBigCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -56,7 +53,7 @@ void stage_group_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<3, 8>(task.app_data);
+    run_stages<7, 8, ProcessorType::kBigCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
