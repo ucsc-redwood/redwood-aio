@@ -3,6 +3,8 @@ import argparse
 import sqlite3
 import os
 import sys
+import hashlib
+from pathlib import Path
 
 from dataclasses import dataclass
 from itertools import permutations
@@ -287,6 +289,73 @@ def query_baseline(
     return best[0], float(best[1])
 
 
+def schedule_to_json(
+    schedule: Schedule,
+    schedule_id: str,
+    device_id: str,
+) -> dict:
+    """Convert a Schedule object to JSON format."""
+    chunks_json = []
+    for i in range(len(schedule.chunks)):
+        start, end = schedule.chunks[i]
+        # Create list of stages for this chunk
+        stages = list(range(start, end + 1))
+
+        chunk_json = {
+            "name": f"chunk{i+1}",
+            "hardware": schedule.pu_types[i],
+            "threads": schedule.pu_threads[i],
+            "stages": stages,
+        }
+        chunks_json.append(chunk_json)
+
+    # Calculate total time (sum of all chunk times)
+    total_time = sum(schedule.chunk_times)
+
+    return {
+        "schedule": {
+            "schedule_id": schedule_id,
+            "device_id": device_id,
+            "chunks": chunks_json,
+        },
+        "total_time": total_time,
+        "max_chunk_time": schedule.max_chunk_time,
+    }
+
+
+def write_schedules_to_json(
+    schedules: List[Schedule],
+    device_id: str,
+    app_name: str,
+    output_dir: str,
+) -> None:
+    """
+    Write each schedule to a separate JSON file in the specified output directory.
+    Files are named using schedule_id and a hash of the schedule content.
+    """
+    # Create output directory if it doesn't exist
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    for idx, schedule in enumerate(schedules, 1):
+        # Create a unique schedule ID
+        schedule_id = f"{device_id}_{app_name}_schedule_{idx:03d}"
+
+        # Convert schedule to JSON format
+        schedule_json = schedule_to_json(schedule, schedule_id, device_id)
+
+        # Create a hash of the schedule content for uniqueness
+        schedule_hash = hashlib.md5(str(schedule_json).encode()).hexdigest()[:8]
+
+        # Create filename with schedule ID and hash
+        filename = f"{schedule_id}_{schedule_hash}.json"
+        file_path = output_path / filename
+
+        # Write to file with pretty printing
+        with open(file_path, "w") as f:
+            json.dump(schedule_json, f, indent=2)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate possible scheduling combinations."
@@ -296,6 +365,11 @@ def main():
     )
     parser.add_argument(
         "--app", required=True, help="Application name from application config"
+    )
+    parser.add_argument(
+        "--output_dir",
+        default="data/generated-schedules",
+        help="Directory for output JSON files",
     )
     args = parser.parse_args()
 
@@ -343,20 +417,28 @@ def main():
             f"Number of schedules after filtering <= {baseline_time:.2f}ms: {len(schedules)}"
         )
 
-        # Write all schedules to a log file, now sorted by performance
-        with open("schedules.log", "w") as f:
-            for idx, schedule in enumerate(schedules, 1):
-                f.write(
-                    f"Schedule {idx} (Max chunk time: {schedule.max_chunk_time:.2f} ms):\n"
-                )
-                for i in range(len(schedule.chunks)):
-                    start, end = schedule.chunks[i]
-                    f.write(
-                        f"  Stages {start}-{end}: {schedule.pu_types[i]} "
-                        f"(threads={schedule.pu_threads[i]}, "
-                        f"time={schedule.chunk_times[i]:.2f} ms)\n"
-                    )
-                f.write("\n")
+        # # Write all schedules to a log file, now sorted by performance
+        # with open("schedules.log", "w") as f:
+        #     for idx, schedule in enumerate(schedules, 1):
+        #         f.write(
+        #             f"Schedule {idx} (Max chunk time: {schedule.max_chunk_time:.2f} ms):\n"
+        #         )
+        #         for i in range(len(schedule.chunks)):
+        #             start, end = schedule.chunks[i]
+        #             f.write(
+        #                 f"  Stages {start}-{end}: {schedule.pu_types[i]} "
+        #                 f"(threads={schedule.pu_threads[i]}, "
+        #                 f"time={schedule.chunk_times[i]:.2f} ms)\n"
+        #             )
+        #         f.write("\n")
+
+        # take the first 50 schedules
+        schedules = schedules[:50]
+
+        # After filtering schedules, write them to JSON files
+        write_schedules_to_json(schedules, args.machine_name, args.app, args.output_dir)
+
+        print(f"Wrote {len(schedules)} schedules to {args.output_dir}")
 
     finally:
         conn.close()
