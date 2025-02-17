@@ -7,7 +7,7 @@ set_warnings("allextra")
 
 -- For consistency across Windows, Linux
 if not is_plat("android") then
-    set_toolchains("clang")
+    -- set_toolchains("clang")
 end
 
 -- ----------------------------------------------------------------

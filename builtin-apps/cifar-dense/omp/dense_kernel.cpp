@@ -6,16 +6,10 @@
 #include <cfloat>
 #include <cstdint>
 
+#include "../../debug_logger.hpp"
+
 namespace cifar_dense {
 namespace omp {
-
-inline void log_kernel(const int stage, const void *appdata_addr) {
-  spdlog::debug("[omp][{}][thread {}] process_stage_{}, app_data: {:p}",
-                pthread_self(),
-                omp_get_thread_num(),
-                stage,
-                appdata_addr);
-}
 
 // ----------------------------------------------------------------------------
 // Convolution 2D (Dense)
@@ -155,7 +149,7 @@ void process_stage_1(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(1, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 1, &app_data);
 
   conv2d_omp(app_data.u_image.data(),
              kInputChannels,  // image_input_channels
@@ -187,7 +181,7 @@ void process_stage_2(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(2, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 2, &app_data);
 
   maxpool2d_omp(app_data.u_conv1_out.data(),
                 kConv1OutChannels,
@@ -210,7 +204,7 @@ void process_stage_3(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(3, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 3, &app_data);
 
   conv2d_omp(app_data.u_pool1_out.data(),
              kConv1OutChannels,
@@ -242,7 +236,7 @@ void process_stage_4(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(4, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 4, &app_data);
 
   maxpool2d_omp(app_data.u_conv2_out.data(),
                 kConv2OutChannels,
@@ -265,7 +259,7 @@ void process_stage_5(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(5, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 5, &app_data);
 
   conv2d_omp(app_data.u_pool2_out.data(),
              kConv2OutChannels,
@@ -297,7 +291,7 @@ void process_stage_6(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(6, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 6, &app_data);
 
   conv2d_omp(app_data.u_conv3_out.data(),
              kConv3OutChannels,
@@ -329,7 +323,7 @@ void process_stage_7(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(7, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 7, &app_data);
 
   conv2d_omp(app_data.u_conv4_out.data(),
              kConv4OutChannels,
@@ -361,7 +355,7 @@ void process_stage_8(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(8, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 8, &app_data);
 
   maxpool2d_omp(app_data.u_conv5_out.data(),
                 kConv5OutChannels,
@@ -384,7 +378,7 @@ void process_stage_9(cifar_dense::AppData &app_data) {
   const int start = 0;
   const int end = total_iterations;
 
-  log_kernel(9, (void *)&app_data);
+  LOG_KERNEL(LogKernelType::kOMP, 9, &app_data);
 
   linear_omp(app_data.u_pool3_out.data(),
              app_data.u_linear_weights.data(),
