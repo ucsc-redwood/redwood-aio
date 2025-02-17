@@ -293,18 +293,18 @@ def main():
         print(f"Number of valid schedules: {len(schedules)}")
 
         # Remove duplicates
-        unique_schedules = remove_duplicate_schedules(schedules)
-        print(f"Number of unique schedules: {len(unique_schedules)}")
+        schedules = remove_duplicate_schedules(schedules)
+        print(f"Number of unique schedules: {len(schedules)}")
 
         # Evaluate and sort all schedules
         print("\nEvaluating all schedules...")
-        sorted_schedules = evaluate_and_sort_schedules(
-            unique_schedules, device_info, cursor, args.machine_name, args.app
+        schedules = evaluate_and_sort_schedules(
+            schedules, device_info, cursor, args.machine_name, args.app
         )
 
         # Write all schedules to a log file, now sorted by performance
         with open("schedules.log", "w") as f:
-            for idx, schedule in enumerate(sorted_schedules, 1):
+            for idx, schedule in enumerate(schedules, 1):
                 f.write(
                     f"Schedule {idx} (Max chunk time: {schedule.max_chunk_time:.2f} ms):\n"
                 )
