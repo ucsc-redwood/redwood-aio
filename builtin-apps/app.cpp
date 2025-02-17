@@ -1,6 +1,6 @@
 #include "app.hpp"
 
-[[nodiscard]] inline size_t get_vulkan_warp_size() {
+[[nodiscard]] size_t get_vulkan_warp_size() {
   if (g_device_id == "3A021JEHN02756") {
     return 16;
   } else if (g_device_id == "9b034f1b") {
