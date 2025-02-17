@@ -28,8 +28,7 @@ class Engine final : public BaseEngine {
   }
 
   template <typename T>
-  [[nodiscard]]
-  vk::DescriptorBufferInfo get_buffer_info(std::pmr::vector<T>& vec) const {
+  [[nodiscard]] vk::DescriptorBufferInfo get_buffer_info(std::pmr::vector<T>& vec) const {
     // auto vk_buffer = get_buffer(vec.data());
     // spdlog::trace("get_buffer_info: vec.data() = {}, vk_buffer = {}, vec.size() = {}",
     //               static_cast<void*>(vec.data()),

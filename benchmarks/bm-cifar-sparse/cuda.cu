@@ -1,11 +1,12 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include "cifar-sparse/cuda/cu_dispatcher.cuh"
-#include "cifar-sparse/sparse_appdata.hpp"
-#include "common/cuda/cu_mem_resource.cuh"
-#include "common/cuda/helpers.cuh"
 #include <CLI/CLI.hpp>
+
+#include "builtin-apps/cifar-sparse/cuda/cu_dispatcher.cuh"
+#include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
+#include "builtin-apps/common/cuda/cu_mem_resource.cuh"
+#include "builtin-apps/common/cuda/helpers.cuh"
 
 // ----------------------------------------------------------------
 // Baseline

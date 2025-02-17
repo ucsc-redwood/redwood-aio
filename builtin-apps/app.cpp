@@ -16,8 +16,7 @@
                            std::to_string(__LINE__));
 }
 
-[[nodiscard]]
-inline bool check_device_arg(const int argc, char** argv) {
+[[nodiscard]] inline bool check_device_arg(const int argc, char** argv) {
   for (int i = 0; i < argc; ++i) {
     std::string arg(argv[i]);
     if (arg.find("--device=") != std::string::npos) {

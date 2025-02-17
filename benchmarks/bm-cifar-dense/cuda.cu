@@ -1,11 +1,12 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include "cifar-dense/cuda/cu_dense_kernel.cuh"
-#include "cifar-dense/dense_appdata.hpp"
-#include "common/cuda/cu_mem_resource.cuh"
-#include "common/cuda/helpers.cuh"
 #include <CLI/CLI.hpp>
+
+#include "builtin-apps/cifar-dense/cuda/cu_dense_kernel.cuh"
+#include "builtin-apps/cifar-dense/dense_appdata.hpp"
+#include "builtin-apps/common/cuda/cu_mem_resource.cuh"
+#include "builtin-apps/common/cuda/helpers.cuh"
 
 // ----------------------------------------------------------------
 // Baseline

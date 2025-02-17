@@ -736,8 +736,7 @@ int main(int argc, char** argv) {
 
   // Initialize and run benchmarks
   const auto storage_location = helpers::get_benchmark_storage_location();
-  const auto out_name =
-      std::format("{}/BM_Tree_OMP_{}.json", storage_location.string(), g_device_id);
+  const auto out_name = storage_location.string() + "/BM_Tree_OMP_" + g_device_id + ".json";
 
   auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
 

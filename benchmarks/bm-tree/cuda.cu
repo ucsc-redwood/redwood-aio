@@ -1,11 +1,12 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include "common/cuda/cu_mem_resource.cuh"
-#include "common/cuda/helpers.cuh"
 #include <CLI/CLI.hpp>
-#include "tree/cuda/kernel.cuh"
-#include "tree/tree_appdata.hpp"
+
+#include "builtin-apps/common/cuda/cu_mem_resource.cuh"
+#include "builtin-apps/common/cuda/helpers.cuh"
+#include "builtin-apps/tree/cuda/kernel.cuh"
+#include "builtin-apps/tree/tree_appdata.hpp"
 
 // ----------------------------------------------------------------
 // Baseline
