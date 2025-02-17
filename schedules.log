@@ -1,0 +1,8064 @@
+Schedule 1:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 3), 'big')
+  Stage 4: ((4, 9), 'gpu')
+
+Schedule 2:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 3), 'gpu')
+  Stage 4: ((4, 9), 'big')
+
+Schedule 3:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 3), 'medium')
+  Stage 4: ((4, 9), 'gpu')
+
+Schedule 4:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 3), 'gpu')
+  Stage 4: ((4, 9), 'medium')
+
+Schedule 5:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 3), 'medium')
+  Stage 4: ((4, 9), 'big')
+
+Schedule 6:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 3), 'big')
+  Stage 4: ((4, 9), 'medium')
+
+Schedule 7:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 3), 'big')
+  Stage 4: ((4, 9), 'gpu')
+
+Schedule 8:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 3), 'gpu')
+  Stage 4: ((4, 9), 'big')
+
+Schedule 9:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 3), 'little')
+  Stage 4: ((4, 9), 'gpu')
+
+Schedule 10:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 3), 'gpu')
+  Stage 4: ((4, 9), 'little')
+
+Schedule 11:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 3), 'little')
+  Stage 4: ((4, 9), 'big')
+
+Schedule 12:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 3), 'big')
+  Stage 4: ((4, 9), 'little')
+
+Schedule 13:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 3), 'medium')
+  Stage 4: ((4, 9), 'gpu')
+
+Schedule 14:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 3), 'gpu')
+  Stage 4: ((4, 9), 'medium')
+
+Schedule 15:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 3), 'little')
+  Stage 4: ((4, 9), 'gpu')
+
+Schedule 16:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 3), 'gpu')
+  Stage 4: ((4, 9), 'little')
+
+Schedule 17:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 3), 'little')
+  Stage 4: ((4, 9), 'medium')
+
+Schedule 18:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 3), 'medium')
+  Stage 4: ((4, 9), 'little')
+
+Schedule 19:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 3), 'medium')
+  Stage 4: ((4, 9), 'big')
+
+Schedule 20:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 3), 'big')
+  Stage 4: ((4, 9), 'medium')
+
+Schedule 21:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 3), 'little')
+  Stage 4: ((4, 9), 'big')
+
+Schedule 22:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 3), 'big')
+  Stage 4: ((4, 9), 'little')
+
+Schedule 23:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 3), 'little')
+  Stage 4: ((4, 9), 'medium')
+
+Schedule 24:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 3), 'medium')
+  Stage 4: ((4, 9), 'little')
+
+Schedule 25:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 4), 'big')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 26:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 4), 'gpu')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 27:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 4), 'medium')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 28:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 4), 'gpu')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 29:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 4), 'medium')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 30:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 4), 'big')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 31:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 4), 'big')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 32:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 4), 'gpu')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 33:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 4), 'little')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 34:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 4), 'gpu')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 35:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 4), 'little')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 36:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 4), 'big')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 37:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 4), 'medium')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 38:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 4), 'gpu')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 39:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 4), 'little')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 40:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 4), 'gpu')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 41:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 4), 'little')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 42:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 4), 'medium')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 43:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 4), 'medium')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 44:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 4), 'big')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 45:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 4), 'little')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 46:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 4), 'big')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 47:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 4), 'little')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 48:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 4), 'medium')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 49:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 50:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 51:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 52:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 53:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 54:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 55:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 56:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 57:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 58:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 59:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 60:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 61:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 62:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 63:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 64:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 65:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 66:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 67:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 68:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 69:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 70:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 71:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 72:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 73:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 74:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 75:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 76:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 77:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 78:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 79:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 80:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 81:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 82:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 83:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 84:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 85:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 86:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 87:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 88:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 89:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 90:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 91:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 92:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 93:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 94:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 95:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 96:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 97:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 98:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 99:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 100:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 101:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 102:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 103:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 104:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 105:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 106:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 107:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 108:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 109:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 110:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 111:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 112:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 113:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 114:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 115:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 116:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 117:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 118:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 119:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 120:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 121:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 122:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 123:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 124:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 125:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 126:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 127:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 128:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 129:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 130:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 131:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 132:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 133:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 134:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 135:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 136:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 137:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 138:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 2), 'gpu')
+  Stage 3: ((3, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 139:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 140:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'little')
+  Stage 3: ((3, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 141:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 142:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'medium')
+  Stage 3: ((3, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 143:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 144:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 2), 'big')
+  Stage 3: ((3, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 145:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 146:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 147:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 148:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 149:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 150:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 151:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 152:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 153:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 154:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 155:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 156:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 157:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 158:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 159:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 160:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 161:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 162:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 163:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 164:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 165:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 166:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 167:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 168:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 169:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 170:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 171:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 172:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 173:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 174:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 175:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 176:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 177:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 178:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 179:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 180:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 181:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 182:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 183:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 184:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 185:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 186:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 187:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 188:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 189:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 190:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 191:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 192:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 193:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 194:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 195:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 196:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 197:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 198:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 199:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 200:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 201:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 202:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 203:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 204:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 205:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 206:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 207:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 208:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 209:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 210:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 211:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 212:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 213:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 214:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 215:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 216:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 217:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 218:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 219:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 220:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 221:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 222:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 223:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 224:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 225:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 226:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 227:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 228:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 229:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 230:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 231:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 232:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 233:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 234:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 235:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 236:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 237:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 238:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 239:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 240:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 241:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 242:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 243:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 244:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 245:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 246:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 247:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 248:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 249:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 250:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 251:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 252:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 253:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 254:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 255:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 256:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 257:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 258:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 3), 'gpu')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 259:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 260:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'little')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 261:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 262:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'medium')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 263:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 264:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 3), 'big')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 265:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 266:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 267:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 268:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 269:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 270:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 271:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 272:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 273:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 274:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 275:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 276:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 277:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 278:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 279:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 280:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 281:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 282:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 283:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 284:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 285:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 286:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 287:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 288:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 289:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 290:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 291:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 292:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 293:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 294:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 295:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 296:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 297:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 298:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 299:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 300:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 301:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 302:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 303:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 304:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 305:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 306:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 307:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 308:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 309:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 310:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 311:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 312:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 313:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 314:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 315:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 316:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 317:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 318:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 319:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 320:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 321:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 322:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 323:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 324:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 325:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 326:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 327:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 328:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 329:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 330:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 331:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 332:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 333:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 334:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 335:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 336:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 337:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 338:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 339:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 340:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 341:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 342:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 343:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 344:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 345:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 346:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 347:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 348:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 349:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 350:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 351:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 352:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 353:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 354:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 4), 'gpu')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 355:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 356:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'little')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 357:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 358:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'medium')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 359:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 360:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 4), 'big')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 361:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 362:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 363:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 364:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 365:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 366:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 367:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 368:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 369:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 370:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 371:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 372:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 373:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 374:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 375:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 376:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 377:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 378:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 379:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 380:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 381:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 382:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 383:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 384:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 385:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 386:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 387:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 388:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 389:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 390:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 391:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 392:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 393:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 394:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 395:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 396:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 397:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 398:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 399:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 400:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 401:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 402:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 403:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 404:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 405:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 406:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 407:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 408:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 409:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 410:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 411:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 412:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 413:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 414:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 415:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 416:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 417:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 418:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 419:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 420:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 421:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 422:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 423:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 424:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 425:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 426:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 427:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 428:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 429:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 430:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 431:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 432:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 433:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 434:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 435:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 436:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 437:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 438:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 439:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 440:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 441:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 442:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 443:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 444:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 445:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 446:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 447:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 448:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 449:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 450:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 451:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 452:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 453:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 454:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 455:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 456:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 457:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 458:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 459:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 460:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 461:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 462:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 463:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 464:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 465:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 466:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 467:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 468:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 469:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 470:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 471:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 472:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 473:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 474:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 475:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 476:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 477:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 478:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 479:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 480:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 481:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 482:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 483:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 484:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 485:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 486:
+  Stage 1: ((1, 1), 'little')
+  Stage 2: ((2, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 487:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 488:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 489:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 490:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 491:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 492:
+  Stage 1: ((1, 1), 'medium')
+  Stage 2: ((2, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 493:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 494:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 495:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 496:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 497:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 498:
+  Stage 1: ((1, 1), 'big')
+  Stage 2: ((2, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 499:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 500:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 501:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 502:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 503:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 504:
+  Stage 1: ((1, 1), 'gpu')
+  Stage 2: ((2, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 505:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 506:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 507:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 508:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 509:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 510:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 511:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 512:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 513:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 514:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 515:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 516:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 517:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 518:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 519:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'gpu')
+
+Schedule 520:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 4), 'gpu')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 521:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 522:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 523:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 524:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 525:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'big')
+
+Schedule 526:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 4), 'big')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 527:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 4), 'little')
+  Stage 4: ((5, 9), 'medium')
+
+Schedule 528:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 4), 'medium')
+  Stage 4: ((5, 9), 'little')
+
+Schedule 529:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 530:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 531:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 532:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 533:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 534:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 535:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 536:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 537:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 538:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 539:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 540:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 541:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 542:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 543:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 544:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 545:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 546:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 547:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 548:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 549:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 550:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 551:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 552:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 553:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 554:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 555:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 556:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 557:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 558:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 559:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 560:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 561:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 562:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 563:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 564:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 565:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 566:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 567:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 568:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 569:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 570:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 571:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 572:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 573:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 574:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 575:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 576:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 577:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 578:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 579:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 580:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 581:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 582:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 583:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 584:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 585:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 586:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 587:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 588:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 589:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 590:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 591:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 592:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 593:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 594:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 595:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 596:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 597:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 598:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 599:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 600:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 601:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 602:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 603:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 604:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 605:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 606:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 607:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 608:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 609:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 610:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 611:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 612:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 613:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 614:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 615:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 616:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 617:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 618:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 3), 'gpu')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 619:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 620:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'little')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 621:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 622:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'medium')
+  Stage 3: ((4, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 623:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 624:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 3), 'big')
+  Stage 3: ((4, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 625:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 626:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 627:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 628:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 629:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 630:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 631:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 632:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 633:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 634:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 635:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 636:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 637:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 638:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 639:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 640:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 641:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 642:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 643:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 644:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 645:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 646:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 647:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 648:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 649:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 650:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 651:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 652:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 653:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 654:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 655:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 656:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 657:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 658:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 659:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 660:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 661:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 662:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 663:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 664:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 665:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 666:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 667:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 668:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 669:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 670:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 671:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 672:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 673:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 674:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 675:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 676:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 677:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 678:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 679:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 680:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 681:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 682:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 683:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 684:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 685:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 686:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 687:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 688:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 689:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 690:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 691:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 692:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 693:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 694:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 695:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 696:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 697:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 698:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 699:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 700:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 701:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 702:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 703:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 704:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 705:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 706:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 707:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 708:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 709:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 710:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 711:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 712:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 713:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 714:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 4), 'gpu')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 715:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 716:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'little')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 717:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 718:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'medium')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 719:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 720:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 4), 'big')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 721:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 722:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 723:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 724:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 725:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 726:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 727:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 728:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 729:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 730:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 731:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 732:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 733:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 734:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 735:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 736:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 737:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 738:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 739:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 740:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 741:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 742:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 743:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 744:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 745:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 746:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 747:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 748:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 749:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 750:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 751:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 752:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 753:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 754:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 755:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 756:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 757:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 758:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 759:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 760:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 761:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 762:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 763:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 764:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 765:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 766:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 767:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 768:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 769:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 770:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 771:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 772:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 773:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 774:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 775:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 776:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 777:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 778:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 779:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 780:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 781:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 782:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 783:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 784:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 785:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 786:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 787:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 788:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 789:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 790:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 791:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 792:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 793:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 794:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 795:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 796:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 797:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 798:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 799:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 800:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 801:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 802:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 803:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 804:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 805:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 806:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 807:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 808:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 809:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 810:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 811:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 812:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 813:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 814:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 815:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 816:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 817:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 818:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 819:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 820:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 821:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 822:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 823:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 824:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 825:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 826:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 827:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 828:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 829:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 830:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 831:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 832:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 833:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 834:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 835:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 836:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 837:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 838:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 839:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 840:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 841:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 842:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 843:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 844:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 845:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 846:
+  Stage 1: ((1, 2), 'little')
+  Stage 2: ((3, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 847:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 848:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 849:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 850:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 851:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 852:
+  Stage 1: ((1, 2), 'medium')
+  Stage 2: ((3, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 853:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 854:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 855:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 856:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 857:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 858:
+  Stage 1: ((1, 2), 'big')
+  Stage 2: ((3, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 859:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 860:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 861:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 862:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 863:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 864:
+  Stage 1: ((1, 2), 'gpu')
+  Stage 2: ((3, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 865:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 866:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 867:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 868:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 869:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 870:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 871:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 872:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 873:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 874:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 875:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 876:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 877:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 878:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 879:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'gpu')
+
+Schedule 880:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 5), 'gpu')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 881:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 882:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 883:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 884:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 885:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'big')
+
+Schedule 886:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 5), 'big')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 887:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 5), 'little')
+  Stage 4: ((6, 9), 'medium')
+
+Schedule 888:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 5), 'medium')
+  Stage 4: ((6, 9), 'little')
+
+Schedule 889:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 890:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 891:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 892:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 893:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 894:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 895:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 896:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 897:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 898:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 899:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 900:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 901:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 902:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 903:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 904:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 905:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 906:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 907:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 908:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 909:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 910:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 911:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 912:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 913:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 914:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 915:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 916:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 917:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 918:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 919:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 920:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 921:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 922:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 923:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 924:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 925:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 926:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 927:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 928:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 929:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 930:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 931:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 932:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 933:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 934:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 935:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 936:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 937:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 938:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 939:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 940:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 941:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 942:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 943:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 944:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 945:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 946:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 947:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 948:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 949:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 950:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 951:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 952:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 953:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 954:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 4), 'gpu')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 955:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 956:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'little')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 957:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 958:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'medium')
+  Stage 3: ((5, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 959:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 960:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 4), 'big')
+  Stage 3: ((5, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 961:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 962:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 963:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 964:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 965:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 966:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 967:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 968:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 969:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 970:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 971:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 972:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 973:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 974:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 975:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 976:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 977:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 978:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 979:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 980:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 981:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 982:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 983:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 984:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 985:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 986:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 987:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 988:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 989:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 990:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 991:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 992:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 993:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 994:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 995:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 996:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 997:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 998:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 999:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1000:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1001:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1002:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1003:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1004:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1005:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1006:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1007:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1008:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1009:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1010:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1011:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1012:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1013:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1014:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1015:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1016:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1017:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1018:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1019:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1020:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1021:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1022:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1023:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1024:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1025:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1026:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1027:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1028:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1029:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1030:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1031:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1032:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1033:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1034:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1035:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1036:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1037:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1038:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1039:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1040:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1041:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1042:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1043:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1044:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1045:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1046:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1047:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1048:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1049:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1050:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1051:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1052:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1053:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1054:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1055:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1056:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1057:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1058:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1059:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1060:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1061:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1062:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1063:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1064:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1065:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1066:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1067:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1068:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1069:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1070:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1071:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1072:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1073:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1074:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1075:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1076:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1077:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1078:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1079:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1080:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1081:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1082:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1083:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1084:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1085:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1086:
+  Stage 1: ((1, 3), 'little')
+  Stage 2: ((4, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1087:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1088:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1089:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1090:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1091:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1092:
+  Stage 1: ((1, 3), 'medium')
+  Stage 2: ((4, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1093:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1094:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1095:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1096:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1097:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1098:
+  Stage 1: ((1, 3), 'big')
+  Stage 2: ((4, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1099:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1100:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1101:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1102:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1103:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1104:
+  Stage 1: ((1, 3), 'gpu')
+  Stage 2: ((4, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1105:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 1106:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 1107:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 1108:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 1109:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 1110:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 1111:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 1112:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 1113:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 1114:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 1115:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 1116:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 1117:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 1118:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 1119:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'gpu')
+
+Schedule 1120:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 6), 'gpu')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 1121:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 1122:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 1123:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 1124:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 1125:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'big')
+
+Schedule 1126:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 6), 'big')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 1127:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 6), 'little')
+  Stage 4: ((7, 9), 'medium')
+
+Schedule 1128:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 6), 'medium')
+  Stage 4: ((7, 9), 'little')
+
+Schedule 1129:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1130:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1131:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1132:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1133:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1134:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1135:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1136:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1137:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1138:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1139:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1140:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1141:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1142:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1143:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1144:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1145:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1146:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1147:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1148:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1149:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1150:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1151:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1152:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1153:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1154:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1155:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1156:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1157:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1158:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1159:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1160:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1161:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1162:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1163:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1164:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1165:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1166:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1167:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1168:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1169:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1170:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 5), 'gpu')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1171:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1172:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'little')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1173:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1174:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'medium')
+  Stage 3: ((6, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1175:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1176:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 5), 'big')
+  Stage 3: ((6, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1177:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1178:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1179:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1180:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1181:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1182:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1183:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1184:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1185:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1186:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1187:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1188:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1189:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1190:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1191:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1192:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1193:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1194:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1195:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1196:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1197:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1198:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1199:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1200:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1201:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1202:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1203:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1204:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1205:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1206:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1207:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1208:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1209:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1210:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1211:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1212:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1213:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1214:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1215:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1216:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1217:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1218:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1219:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1220:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1221:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1222:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1223:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1224:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1225:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1226:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1227:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1228:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1229:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1230:
+  Stage 1: ((1, 4), 'little')
+  Stage 2: ((5, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1231:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1232:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1233:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1234:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1235:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1236:
+  Stage 1: ((1, 4), 'medium')
+  Stage 2: ((5, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1237:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1238:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1239:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1240:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1241:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1242:
+  Stage 1: ((1, 4), 'big')
+  Stage 2: ((5, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1243:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1244:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1245:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1246:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1247:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1248:
+  Stage 1: ((1, 4), 'gpu')
+  Stage 2: ((5, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1249:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1250:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1251:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1252:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1253:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1254:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1255:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1256:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1257:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1258:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1259:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1260:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1261:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1262:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1263:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'gpu')
+
+Schedule 1264:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 7), 'gpu')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1265:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1266:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1267:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1268:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1269:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'big')
+
+Schedule 1270:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 7), 'big')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1271:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 7), 'little')
+  Stage 4: ((8, 9), 'medium')
+
+Schedule 1272:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 7), 'medium')
+  Stage 4: ((8, 9), 'little')
+
+Schedule 1273:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1274:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1275:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1276:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1277:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1278:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1279:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1280:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1281:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1282:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1283:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1284:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1285:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1286:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1287:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1288:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1289:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1290:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 6), 'gpu')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1291:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1292:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'little')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1293:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1294:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'medium')
+  Stage 3: ((7, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1295:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1296:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 6), 'big')
+  Stage 3: ((7, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1297:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1298:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1299:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1300:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1301:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1302:
+  Stage 1: ((1, 5), 'little')
+  Stage 2: ((6, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1303:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1304:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1305:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1306:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1307:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1308:
+  Stage 1: ((1, 5), 'medium')
+  Stage 2: ((6, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1309:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1310:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1311:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1312:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1313:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1314:
+  Stage 1: ((1, 5), 'big')
+  Stage 2: ((6, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1315:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1316:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1317:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1318:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1319:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1320:
+  Stage 1: ((1, 5), 'gpu')
+  Stage 2: ((6, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1321:
+  Stage 1: ((1, 6), 'little')
+  Stage 2: ((7, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1322:
+  Stage 1: ((1, 6), 'little')
+  Stage 2: ((7, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1323:
+  Stage 1: ((1, 6), 'little')
+  Stage 2: ((7, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1324:
+  Stage 1: ((1, 6), 'little')
+  Stage 2: ((7, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1325:
+  Stage 1: ((1, 6), 'little')
+  Stage 2: ((7, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1326:
+  Stage 1: ((1, 6), 'little')
+  Stage 2: ((7, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1327:
+  Stage 1: ((1, 6), 'medium')
+  Stage 2: ((7, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1328:
+  Stage 1: ((1, 6), 'medium')
+  Stage 2: ((7, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1329:
+  Stage 1: ((1, 6), 'medium')
+  Stage 2: ((7, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1330:
+  Stage 1: ((1, 6), 'medium')
+  Stage 2: ((7, 7), 'big')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1331:
+  Stage 1: ((1, 6), 'medium')
+  Stage 2: ((7, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1332:
+  Stage 1: ((1, 6), 'medium')
+  Stage 2: ((7, 7), 'gpu')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1333:
+  Stage 1: ((1, 6), 'big')
+  Stage 2: ((7, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1334:
+  Stage 1: ((1, 6), 'big')
+  Stage 2: ((7, 7), 'little')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1335:
+  Stage 1: ((1, 6), 'big')
+  Stage 2: ((7, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'gpu')
+
+Schedule 1336:
+  Stage 1: ((1, 6), 'big')
+  Stage 2: ((7, 7), 'medium')
+  Stage 3: ((8, 8), 'gpu')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1337:
+  Stage 1: ((1, 6), 'big')
+  Stage 2: ((7, 7), 'gpu')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1338:
+  Stage 1: ((1, 6), 'big')
+  Stage 2: ((7, 7), 'gpu')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1339:
+  Stage 1: ((1, 6), 'gpu')
+  Stage 2: ((7, 7), 'little')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1340:
+  Stage 1: ((1, 6), 'gpu')
+  Stage 2: ((7, 7), 'little')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1341:
+  Stage 1: ((1, 6), 'gpu')
+  Stage 2: ((7, 7), 'medium')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'big')
+
+Schedule 1342:
+  Stage 1: ((1, 6), 'gpu')
+  Stage 2: ((7, 7), 'medium')
+  Stage 3: ((8, 8), 'big')
+  Stage 4: ((9, 9), 'little')
+
+Schedule 1343:
+  Stage 1: ((1, 6), 'gpu')
+  Stage 2: ((7, 7), 'big')
+  Stage 3: ((8, 8), 'little')
+  Stage 4: ((9, 9), 'medium')
+
+Schedule 1344:
+  Stage 1: ((1, 6), 'gpu')
+  Stage 2: ((7, 7), 'big')
+  Stage 3: ((8, 8), 'medium')
+  Stage 4: ((9, 9), 'little')
+
