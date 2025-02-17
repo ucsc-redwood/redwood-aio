@@ -20,8 +20,9 @@ def main():
 
     # Regex to parse lines of the form:
     # [timestamp] [debug] [backend][coreID][thread THR] process_stage_N, app_data: 0x...
+    # Note: backend can be 'vk' without a core/thread ID
     line_regex = re.compile(
-        r"^\[([^\]]+)\]\s+\[debug\]\s+\[(?P<backend>\w+)\]\[(?P<core>\d+)\]\[thread\s+(?P<thread>\d+)\]\s+"
+        r"^\[([^\]]+)\]\s+\[debug\]\s+\[(?P<backend>\w+)\](?:\[(?P<core>\d+)\])?\s*(?:\[thread\s+(?P<thread>\d+)\])?\s+"
         r"process_stage_(?P<stage>\d+),\s+app_data:\s+(?P<appdata>0x[0-9A-Fa-f]+)$"
     )
 
@@ -45,8 +46,9 @@ def main():
 
             gd = match.groupdict()
             backend = gd["backend"]
-            core_id = int(gd["core"])
-            thread_id = int(gd["thread"])
+            # For OMP entries, use the full core address as the ID
+            core_id = gd["core"] if gd["core"] is not None else "-1"  # Use "-1" for GPU/vk
+            thread_id = int(gd["thread"]) if gd["thread"] is not None else 0
             stage_num = int(gd["stage"])
             app_data = gd["appdata"]
 
@@ -55,12 +57,13 @@ def main():
                 stages_per_task[app_data] = set()
             stages_per_task[app_data].add(stage_num)
 
-            # Update info on this core
-            if core_id not in core_stage_map:
-                core_stage_map[core_id] = set()
-                backend_map[core_id] = set()
-            core_stage_map[core_id].add(stage_num)
-            backend_map[core_id].add(backend)
+            # Update info on this core (skip for GPU/vk)
+            if core_id != "-1":
+                if core_id not in core_stage_map:
+                    core_stage_map[core_id] = set()
+                    backend_map[core_id] = set()
+                core_stage_map[core_id].add(stage_num)
+                backend_map[core_id].add(backend)
 
     # ---- Checks ----
 
@@ -98,6 +101,11 @@ def main():
             print(f"  Core {cid} (backends={bset}) => stages {stage_subset}")
     else:
         print("Finished checking. Issues were reported above.")
+
+    # Print all unique app_data addresses
+    print("\nAll unique app_data addresses:")
+    for i, app_data in enumerate(sorted(all_appdatas), 1):
+        print(f"{i}: {app_data}")
 
 
 if __name__ == "__main__":

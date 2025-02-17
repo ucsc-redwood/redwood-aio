@@ -1,473 +1,760 @@
-doremy@ucsc-android-devel ~/D/redwood-aio (dev-gen-pipeline)> xmake r pipe-cifar-dense-vk -l debug -s 1
-[1/3] Running pipe-cifar-dense-vk on device: 3A021JEHN02756
-build/android/arm64-v8a/release/pipe-cifar-dense-vk: 1 file pushed, 0 skipped. 496.1 MB/s (2567368 bytes in 0.005s)
-Little cores: 0 1 2 3
-Medium cores: 4 5
-Big cores: 6 7
-[2025-02-16 20:41:25.562] [warning] Validation layer requested but not available, continuing without it...
-[2025-02-16 20:41:25.568] [info] Using integrated GPU: Mali-G710
-[2025-02-16 20:41:25.572] [debug] VulkanMemoryResource created with usageFlags = 32, memoryUsage = 7, allocFlags = 2052
-[2025-02-16 20:41:25.572] [info] Singleton instance created.
-[2025-02-16 20:41:25.592] [debug] Pipeline [cifar_conv2d] created successfully
-[2025-02-16 20:41:25.602] [debug] Pipeline [cifar_maxpool2d] created successfully
-[2025-02-16 20:41:25.609] [debug] Pipeline [cifar_linear] created successfully
-[2025-02-16 20:41:25.899] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.900] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.902] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.902] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.903] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.907] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.940] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.940] [debug] [vk] process_stage_4, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.941] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.942] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.943] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.943] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.944] [debug] [vk] process_stage_5, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.947] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.954] [debug] [vk] process_stage_6, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.971] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.971] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:25.979] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:25.979] [debug] [vk] process_stage_4, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.979] [debug] [vk] process_stage_5, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:25.980] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:25.981] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:25.981] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:25.981] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:25.987] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:25.991] [debug] [vk] process_stage_6, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.001] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.002] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.002] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.007] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.007] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.012] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.013] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.013] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.013] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.013] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:26.015] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.015] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.017] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.017] [debug] [vk] process_stage_4, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.017] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.017] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.017] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.023] [debug] [vk] process_stage_5, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.033] [debug] [vk] process_stage_6, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.036] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.036] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.036] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.036] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.036] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.036] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.037] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.037] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.037] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.037] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:26.038] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.038] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.039] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.039] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.049] [debug] [vk] process_stage_4, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.049] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.049] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.050] [debug] [vk] process_stage_5, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.058] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.058] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.059] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.059] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.060] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.060] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.061] [debug] [vk] process_stage_6, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.075] [debug] [vk] process_stage_4, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.075] [debug] [vk] process_stage_5, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.078] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.078] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.078] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.078] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.078] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.078] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.079] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.079] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.079] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.079] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:26.081] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.081] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.083] [debug] [vk] process_stage_6, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.083] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.083] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.084] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.084] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.093] [debug] [vk] process_stage_4, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.093] [debug] [vk] process_stage_5, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.100] [debug] [vk] process_stage_6, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.104] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.104] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.105] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.105] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.106] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.106] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.107] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.107] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.107] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.107] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.107] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.107] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.108] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.108] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.108] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.108] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:26.110] [debug] [vk] process_stage_4, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.110] [debug] [vk] process_stage_5, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.116] [debug] [vk] process_stage_6, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.129] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.129] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.131] [debug] [vk] process_stage_4, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.131] [debug] [vk] process_stage_5, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.131] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.131] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.132] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.132] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.136] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.136] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.136] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.136] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.136] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.136] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.137] [debug] [vk] process_stage_6, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.137] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.137] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.137] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.137] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:26.154] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.154] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.155] [debug] [vk] process_stage_4, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.155] [debug] [vk] process_stage_5, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.156] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.156] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.156] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.156] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.161] [debug] [vk] process_stage_6, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.165] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.165] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.165] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.165] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.165] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.165] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.166] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.166] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.166] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.166] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:26.178] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.178] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.179] [debug] [vk] process_stage_4, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.179] [debug] [vk] process_stage_5, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.180] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.180] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.181] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.181] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.185] [debug] [vk] process_stage_6, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.195] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.195] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.195] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.195] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.195] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.195] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.196] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.196] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.196] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.196] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:26.202] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.202] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.203] [debug] [vk] process_stage_4, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.203] [debug] [vk] process_stage_5, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.204] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.204] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.205] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.205] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.209] [debug] [vk] process_stage_6, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.224] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.224] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.224] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.224] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.224] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.224] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.225] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.225] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.225] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.225] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:26.228] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.228] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.230] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.230] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.230] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.230] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.231] [debug] [vk] process_stage_4, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.231] [debug] [vk] process_stage_5, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.238] [debug] [vk] process_stage_6, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.253] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.253] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.253] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.253] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.253] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.253] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.254] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.254] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.254] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.254] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:26.254] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.254] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.256] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.256] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.256] [debug] [vk] process_stage_4, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.256] [debug] [vk] process_stage_5, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.257] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.257] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.263] [debug] [vk] process_stage_6, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.280] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.280] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.281] [debug] [vk] process_stage_4, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.281] [debug] [vk] process_stage_5, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.282] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.282] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.282] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.283] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.282] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.282] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.282] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.283] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.283] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.283] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.283] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c05f0
-[2025-02-16 20:41:26.283] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.284] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.284] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.288] [debug] [vk] process_stage_6, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.306] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.306] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.306] [debug] [vk] process_stage_4, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.308] [debug] [vk] process_stage_5, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.309] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.309] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.309] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.309] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.312] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.312] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.312] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.312] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:26.314] [debug] [vk] process_stage_6, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.331] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.331] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.331] [debug] [vk] process_stage_4, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.332] [debug] [vk] process_stage_5, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.333] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.333] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.333] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.333] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.339] [debug] [vk] process_stage_6, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.341] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.341] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.341] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.341] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:26.356] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.356] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.356] [debug] [vk] process_stage_4, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.357] [debug] [vk] process_stage_5, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.358] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.358] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.359] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.359] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.365] [debug] [vk] process_stage_6, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.369] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.369] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.369] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.369] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.369] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.369] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.370] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.370] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.370] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.370] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:26.382] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.382] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.382] [debug] [vk] process_stage_4, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.383] [debug] [vk] process_stage_5, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.384] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.384] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.384] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.384] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.390] [debug] [vk] process_stage_6, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.398] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.398] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.399] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.399] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.399] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.399] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.400] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.400] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.400] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.400] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:26.407] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.407] [debug] [vk] process_stage_4, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.407] [debug] [omp][519253048496][thread 1] process_stage_1, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.407] [debug] [vk] process_stage_5, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.408] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.408] [debug] [omp][519253048496][thread 1] process_stage_2, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.409] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.409] [debug] [omp][519253048496][thread 1] process_stage_3, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.415] [debug] [vk] process_stage_6, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.427] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.427] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.427] [debug] [omp][519194254512][thread 2] process_stage_8, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.427] [debug] [omp][519202667696][thread 1] process_stage_8, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.427] [debug] [omp][519169064112][thread 3] process_stage_8, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.427] [debug] [omp][519322258608][thread 0] process_stage_8, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.428] [debug] [omp][519194254512][thread 2] process_stage_9, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.428] [debug] [omp][519169064112][thread 3] process_stage_9, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.428] [debug] [omp][519322258608][thread 0] process_stage_9, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.428] [debug] [omp][519202667696][thread 1] process_stage_9, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:26.431] [debug] [vk] process_stage_4, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.432] [debug] [vk] process_stage_5, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.440] [debug] [vk] process_stage_6, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.456] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.456] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314cab90
-[2025-02-16 20:41:26.486] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.486] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.515] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.515] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.545] [debug] [omp][519323298992][thread 0] process_stage_7, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.545] [debug] [omp][519227858096][thread 1] process_stage_7, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.874] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.874] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.877] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.877] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.878] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.883] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314cdd90
-[2025-02-16 20:41:26.920] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c4790
-[2025-02-16 20:41:26.922] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c4790
-[2025-02-16 20:41:26.924] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c4790
-[2025-02-16 20:41:26.924] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c4790
-[2025-02-16 20:41:26.924] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c4790
-[2025-02-16 20:41:26.931] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c4790
-[2025-02-16 20:41:26.954] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.954] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.956] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.956] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.956] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.956] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c95b0
-[2025-02-16 20:41:26.976] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.976] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.978] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.978] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.978] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.978] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c7350
-[2025-02-16 20:41:26.997] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.997] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.998] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.998] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.999] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:26.999] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2210
-[2025-02-16 20:41:27.018] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:27.018] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:27.019] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:27.019] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:27.020] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:27.020] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c4470
-[2025-02-16 20:41:27.039] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:27.039] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:27.040] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:27.040] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:27.041] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:27.041] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c5d70
-[2025-02-16 20:41:27.060] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2850
-[2025-02-16 20:41:27.060] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c2850
-[2025-02-16 20:41:27.062] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c2850
-[2025-02-16 20:41:27.062] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2850
-[2025-02-16 20:41:27.062] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2850
-[2025-02-16 20:41:27.062] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c2850
-[2025-02-16 20:41:27.082] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:27.082] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:27.083] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:27.083] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:27.083] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:27.083] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c5a50
-[2025-02-16 20:41:27.103] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:27.103] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:27.104] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:27.104] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:27.104] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:27.104] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c18b0
-[2025-02-16 20:41:27.124] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:27.124] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:27.125] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:27.125] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:27.126] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:27.126] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c2b70
-[2025-02-16 20:41:27.146] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:27.146] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:27.147] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:27.147] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:27.147] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:27.147] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c31b0
-[2025-02-16 20:41:27.168] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:27.168] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:27.169] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:27.169] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:27.169] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:27.169] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c4ab0
-[2025-02-16 20:41:27.189] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:27.189] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:27.191] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:27.191] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:27.191] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:27.191] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c1590
-[2025-02-16 20:41:27.210] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:27.210] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:27.212] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:27.212] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:27.212] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:27.212] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c2530
-[2025-02-16 20:41:27.231] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:27.231] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:27.233] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:27.233] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:27.233] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:27.233] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314bf330
-[2025-02-16 20:41:27.253] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:27.253] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:27.254] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:27.254] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:27.255] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:27.255] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314bffb0
-[2025-02-16 20:41:27.275] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:27.275] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:27.276] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:27.276] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:27.276] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:27.276] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314bf650
-[2025-02-16 20:41:27.296] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:27.296] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:27.297] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:27.297] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:27.298] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:27.298] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c50f0
-[2025-02-16 20:41:27.317] [debug] [omp][519325379760][thread 0] process_stage_1, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:27.317] [debug] [omp][519304441008][thread 1] process_stage_1, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:27.319] [debug] [omp][519325379760][thread 0] process_stage_2, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:27.319] [debug] [omp][519304441008][thread 1] process_stage_2, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:27.319] [debug] [omp][519304441008][thread 1] process_stage_3, app_data: 0xb400007b314c1bd0
-[2025-02-16 20:41:27.319] [debug] [omp][519325379760][thread 0] process_stage_3, app_data: 0xb400007b314c1bd0
+[2025-02-16 21:05:07.340] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.341] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.342] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.343] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.343] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.351] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.369] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.369] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.369] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.370] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.370] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.372] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.372] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.375] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.392] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.400] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.400] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.401] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.401] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.402] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.402] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.416] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.416] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.417] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.419] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.419] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.421] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.421] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.421] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.421] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.423] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.426] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.439] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.439] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.440] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.440] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.441] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.441] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.444] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.444] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.454] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.459] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.459] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.460] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.460] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.460] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.460] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.468] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.468] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.473] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.474] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.474] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.476] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.474] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.474] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.474] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.476] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.476] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.476] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.476] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:07.479] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.479] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.480] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.480] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.480] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.480] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.486] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.486] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.493] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.499] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.499] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.500] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.500] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.500] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.500] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.504] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.504] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.507] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.507] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.507] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.507] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.507] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.507] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.508] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.508] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.508] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.508] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:07.511] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.519] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.519] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.520] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.520] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.521] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.521] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.522] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.522] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.530] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.537] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.537] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.537] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.537] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.537] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.537] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.538] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.538] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.538] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.538] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:07.539] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.539] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.541] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.541] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.541] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.541] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.541] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.542] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.549] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.560] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.560] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.560] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.561] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.562] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.562] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.562] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.562] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.567] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.567] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.567] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.567] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.567] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.567] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.568] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.568] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.568] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.568] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:07.568] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.580] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.580] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.587] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.588] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.591] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.593] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.593] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.593] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.593] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.596] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.598] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.596] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.596] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.596] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.596] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.596] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.598] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.599] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.598] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.598] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.598] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:07.605] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.614] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.614] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.616] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.616] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.617] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.617] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.617] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.617] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.623] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.626] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.626] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.626] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.626] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.626] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.626] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.627] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.627] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.627] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.627] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:07.639] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.639] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.639] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.639] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.641] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.641] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.641] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.641] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.645] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.654] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.654] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.654] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.654] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:07.663] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.663] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.663] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.663] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.664] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.664] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.665] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.665] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.669] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.682] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.682] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.682] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.682] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:07.691] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.691] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.691] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.691] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.693] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.693] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.693] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.693] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.698] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.710] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.710] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.710] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.710] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:07.716] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.716] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.716] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.716] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.717] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.717] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.718] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.718] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.723] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.738] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.738] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.738] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.738] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.738] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.738] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.739] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.739] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.739] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.739] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9df7f0
+[2025-02-16 21:05:07.742] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.742] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.742] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.743] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.744] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.744] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.744] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.744] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.750] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.766] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.767] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.767] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.767] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.766] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.767] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.767] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.767] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.767] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.768] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.767] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.768] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.768] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.768] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:07.769] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.769] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.770] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.770] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.775] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.794] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.794] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.794] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.794] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.796] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.796] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.796] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.796] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.796] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.796] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.797] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.797] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.797] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.797] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:07.797] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.797] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.798] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.798] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.802] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.821] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.822] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.825] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.825] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.825] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.825] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.825] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.825] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.826] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.826] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.826] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.826] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:07.829] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:07.854] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.854] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.854] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.854] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.854] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.854] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.855] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.855] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.855] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.855] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:07.883] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.883] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.883] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.883] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.883] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.883] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.884] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.884] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.884] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.884] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:07.912] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.912] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.912] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.912] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.912] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.912] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.913] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.913] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.913] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.913] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:07.943] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.943] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.943] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.943] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e42f0
+[2025-02-16 21:05:07.973] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.973] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:07.973] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:07.973] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.003] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.003] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.003] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.003] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.003] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.003] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.004] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.004] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.004] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.004] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.033] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.033] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.033] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.033] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.034] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.034] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.034] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.034] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.329] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.329] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.330] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.330] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.331] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.331] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.361] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.361] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.361] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.363] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.364] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.364] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.365] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.371] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.372] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.383] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.384] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.399] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.401] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.402] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.402] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.402] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.399] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.403] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.407] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.410] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.412] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.413] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.413] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.416] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.416] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.416] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.416] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.416] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e3990
+[2025-02-16 21:05:08.422] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.422] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.430] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.430] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.430] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.430] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.431] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.431] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.431] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.431] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.437] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.449] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.449] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.450] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.450] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.451] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.451] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.451] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.451] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.451] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.451] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.451] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.451] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.452] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.452] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.452] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.452] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.452] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.452] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dd270
+[2025-02-16 21:05:08.458] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.473] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.473] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.473] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.473] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.474] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.474] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.475] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.475] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.479] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.479] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.479] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.479] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.479] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.479] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.480] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.480] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.480] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.480] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e7b30
+[2025-02-16 21:05:08.479] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.496] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.496] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.496] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.496] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.498] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.498] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.499] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.499] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.503] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.509] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.509] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.509] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.509] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.509] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.509] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.510] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.510] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.510] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.510] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e8170
+[2025-02-16 21:05:08.522] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.522] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.522] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.522] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.524] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.524] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.524] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.524] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.529] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.539] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.539] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.539] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.539] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e0790
+[2025-02-16 21:05:08.547] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.547] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.547] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.547] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.548] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.548] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.549] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.549] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.554] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.568] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.568] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.568] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.568] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.568] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.568] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.569] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.569] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.569] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.569] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e23b0
+[2025-02-16 21:05:08.573] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.573] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.573] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.573] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.575] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.575] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.576] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.576] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.580] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.597] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.597] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.597] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.597] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.597] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.597] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.598] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.598] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.598] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.598] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9df1b0
+[2025-02-16 21:05:08.608] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.609] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.609] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.609] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.610] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.610] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.611] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.611] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.614] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.626] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.626] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.626] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.626] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.626] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.626] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.627] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.627] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.627] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.627] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dfb10
+[2025-02-16 21:05:08.637] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.637] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.637] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.637] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.639] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.639] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.639] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.639] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.643] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.654] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.654] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.654] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.654] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.654] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.654] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.655] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.655] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.655] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.655] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dbc90
+[2025-02-16 21:05:08.661] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.661] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.661] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.661] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.662] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.662] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.663] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.663] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.668] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.682] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.682] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.682] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.682] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e26d0
+[2025-02-16 21:05:08.684] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.684] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.684] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.685] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.686] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.686] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.687] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.687] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.692] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.708] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.708] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.708] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.708] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.709] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.709] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.709] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.709] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.709] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.709] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.710] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.710] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.710] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.710] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9db970
+[2025-02-16 21:05:08.710] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.710] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.711] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.711] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.715] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.732] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.733] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.732] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.733] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.734] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.734] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.735] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.735] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.737] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.737] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.737] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.737] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.737] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.737] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.738] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.738] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.738] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.738] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9df4d0
+[2025-02-16 21:05:08.740] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.757] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.757] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.757] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.757] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.758] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.758] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.759] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.759] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.764] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.767] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.767] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.767] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.767] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e1410
+[2025-02-16 21:05:08.781] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.781] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.781] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.782] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.783] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.783] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.784] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.784] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.789] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.796] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.796] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.796] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.796] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9de210
+[2025-02-16 21:05:08.806] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.806] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.806] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.806] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.808] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.808] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.809] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.809] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.814] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.825] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.825] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.825] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.825] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e0dd0
+[2025-02-16 21:05:08.831] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.831] [debug] [omp][529365343408][thread 1] process_stage_1, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.831] [debug] [omp][529437674672][thread 0] process_stage_1, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.832] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.833] [debug] [omp][529365343408][thread 1] process_stage_2, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.833] [debug] [omp][529437674672][thread 0] process_stage_2, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.834] [debug] [omp][529365343408][thread 1] process_stage_3, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.834] [debug] [omp][529437674672][thread 0] process_stage_3, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.839] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.854] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.854] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.854] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.854] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.854] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.854] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.855] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.855] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.855] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.855] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e1d70
+[2025-02-16 21:05:08.856] [debug] [vk] process_stage_4, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.856] [debug] [vk] process_stage_5, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.864] [debug] [vk] process_stage_6, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.883] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.883] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.883] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.883] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dd8b0
+[2025-02-16 21:05:08.912] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.912] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.912] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.912] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9e0150
+[2025-02-16 21:05:08.941] [debug] [omp][529435593904][thread 0] process_stage_7, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.941] [debug] [omp][529340153008][thread 1] process_stage_7, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.941] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.941] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.941] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.941] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.942] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.942] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.942] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.942] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dbfb0
+[2025-02-16 21:05:08.972] [debug] [omp][529434553520][thread 0] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529314962608][thread 1] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529306549424][thread 2] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529281359024][thread 3] process_stage_8, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529434553520][thread 0] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529314962608][thread 1] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529281359024][thread 3] process_stage_9, app_data: 0xb400007bcf9dc910
+[2025-02-16 21:05:08.972] [debug] [omp][529306549424][thread 2] process_stage_9, app_data: 0xb400007bcf9dc910

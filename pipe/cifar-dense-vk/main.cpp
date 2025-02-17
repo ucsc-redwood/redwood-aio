@@ -12,6 +12,9 @@
 // ---------------------------------------------------------------------
 
 void run_warmup(int schedule_id) {
+  // disable logging for warmup
+  spdlog::set_level(spdlog::level::off);
+
   auto tasks = init_tasks(20);
   std::vector<Task> out_tasks;
   out_tasks.reserve(tasks.size());
@@ -19,6 +22,9 @@ void run_warmup(int schedule_id) {
   device_3A021JEHN02756::get_run_pipeline(schedule_id)(tasks, out_tasks);
 
   cleanup(tasks);
+
+  // restore original log level
+  spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 }
 
 void run_one_schedule(int schedule_id) {
