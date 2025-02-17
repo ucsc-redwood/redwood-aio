@@ -1,13 +1,13 @@
 import json
-from itertools import product, permutations
+from itertools import permutations
 import argparse
 from typing import List, Tuple, Dict, Any
 import sqlite3
 import os
 import sys
 
-# Define a type for a schedule entry: ((start_stage, end_stage), pu_type)
-Schedule = List[Tuple[Tuple[int, int], str]]
+# Define a type for a schedule entry: ((start_stage, end_stage), (pu_type, num_threads))
+Schedule = List[Tuple[Tuple[int, int], Tuple[str, int]]]
 
 DB_PATH = "data/benchmark_results.db"
 
@@ -36,18 +36,19 @@ def generate_schedules_with_chunks(
     app_info: Dict[str, Any],
 ) -> List[Schedule]:
     """Generate all possible schedules with contiguous chunks."""
-    # Number of stages in the application
     num_stages = app_info["num_stages"]
 
-    # Identify the PU types that are actually available (> 0 cores)
-    all_pu_types = [
-        core for core, count in device_info["pinnable_cores"].items() if count > 0
+    # Get available PU types and their core counts
+    pu_configs = [
+        (core_type, count) 
+        for core_type, count in device_info["pinnable_cores"].items() 
+        if count > 0
     ]
 
     # ----------------------------
     # 1) Partition stages into contiguous chunks
     # ----------------------------
-    # We'll generate all partitions of [1..num_stages] into between 1 and len(all_pu_types) chunks.
+    # We'll generate all partitions of [1..num_stages] into between 1 and len(pu_configs) chunks.
     # Each partition is a list of (start_stage, end_stage) for each chunk.
 
     def generate_partitions(n_stages, max_chunks):
@@ -85,8 +86,8 @@ def generate_schedules_with_chunks(
 
         return results
 
-    # We'll get all partitions with up to len(all_pu_types) chunks
-    all_partitions = generate_partitions(num_stages, max_chunks=len(all_pu_types))
+    # We'll get all partitions with up to len(pu_configs) chunks
+    all_partitions = generate_partitions(num_stages, max_chunks=len(pu_configs))
 
     # ----------------------------
     # 2) Assign each chunk a unique PU type
@@ -96,18 +97,17 @@ def generate_schedules_with_chunks(
 
     all_schedules = []
     for partition in all_partitions:
-        k = len(partition)  # number of chunks
-        # If we have fewer PU types than chunks, skip
-        if k > len(all_pu_types):
+        k = len(partition)
+        if k > len(pu_configs):
             continue
 
-        # Generate all permutations of PU types of length k
-        for pu_perm in permutations(all_pu_types, k):
-            # Combine chunk info with the chosen PU type
-            # We can store as a list of tuples: [((start, end), pu_type), ...]
+        # Generate all permutations of PU configs of length k
+        for pu_perm in permutations(pu_configs, k):
             schedule = []
-            for chunk_info, pu_type in zip(partition, pu_perm):
-                schedule.append(((chunk_info, pu_type)))
+            for chunk_info, (pu_type, num_threads) in zip(partition, pu_perm):
+                # For GPU, set num_threads to 0 as it's not applicable
+                threads = 0 if pu_type == "gpu" else num_threads
+                schedule.append((chunk_info, (pu_type, threads)))
             all_schedules.append(schedule)
 
     return all_schedules
@@ -121,25 +121,20 @@ def show_schedule_timing(
     app_key: str,
 ) -> float:
     """Show timing for a schedule and return the max chunk time."""
-    # Remove hardware config loading, use passed device_info
-    pinnable_cores = device_info["pinnable_cores"]
-
     chunk_times = []
 
-    for chunk_index, ((start_stage, end_stage), pu_type) in enumerate(
+    for chunk_index, ((start_stage, end_stage), (pu_type, num_threads)) in enumerate(
         schedule, start=1
     ):
-        # Determine the backend, core_type, and num_threads
+        # Determine the backend and core_type
         if pu_type == "gpu":
-            # GPU => use Vulkan, with no distinct core_type or num_threads in the DB
             backend = "VK"
             core_type = None
-            num_threads = None
+            db_num_threads = None  # GPU doesn't use threads
         else:
-            # CPU => use OMP, with core_type = pu_type, and the maximum threads
             backend = "OMP"
             core_type = pu_type
-            num_threads = pinnable_cores[pu_type]
+            db_num_threads = num_threads
 
         # Sum the times for each stage in [start_stage..end_stage]
         total_time_ms = 0.0
@@ -167,9 +162,9 @@ def show_schedule_timing(
             else:
                 query += " AND core_type IS NULL"
 
-            if num_threads is not None:
+            if db_num_threads is not None:
                 query += " AND num_threads = ?"
-                params.append(num_threads)
+                params.append(db_num_threads)
             else:
                 query += " AND num_threads IS NULL"
 
@@ -194,7 +189,7 @@ def show_schedule_timing(
         # Print the chunk info
         print(
             f"Chunk {chunk_index} => stages {start_stage}-{end_stage}, "
-            f"PU={pu_type}, total_time={total_time_ms:.2f} ms"
+            f"PU={pu_type} (threads={num_threads}), total_time={total_time_ms:.2f} ms"
         )
 
     if chunk_times:
@@ -224,10 +219,12 @@ def evaluate_and_sort_schedules(
             schedule, device_info, cursor, device_key, app_key
         )
         schedule_times.append((schedule, max_chunk_time))
-    
+
     # Sort by max_chunk_time
     sorted_schedules = sorted(schedule_times, key=lambda x: x[1])
     return sorted_schedules
+
+
 
 
 def main():
@@ -260,33 +257,19 @@ def main():
         schedules = generate_schedules_with_chunks(device_info, app_info)
         print(f"Number of valid schedules: {len(schedules)}")
 
-        # Filter only the schedules with 4 chunks
-        schedules = [schedule for schedule in schedules if len(schedule) == 4]
-        print(f"Number of valid schedules with 4 chunks: {len(schedules)}")
-
         # Evaluate and sort all schedules
         print("\nEvaluating all schedules...")
         sorted_schedules = evaluate_and_sort_schedules(
             schedules, device_info, cursor, args.machine_name, args.app
         )
 
-        # Print the best 5 schedules
-        print("\nTop 5 Best Schedules:")
-        print("-" * 50)
-        for i, (schedule, max_time) in enumerate(sorted_schedules[:5], 1):
-            print(f"\nSchedule #{i} (Max chunk time: {max_time:.2f} ms):")
-            for chunk_info, pu_type in schedule:
-                start, end = chunk_info
-                print(f"  Stages {start}-{end}: {pu_type}")
-            print()
-
         # Write all schedules to a log file, now sorted by performance
         with open("schedules.log", "w") as f:
             for idx, (schedule, max_time) in enumerate(sorted_schedules, 1):
                 f.write(f"Schedule {idx} (Max chunk time: {max_time:.2f} ms):\n")
-                for chunk_info, pu_type in schedule:
+                for chunk_info, (pu_type, num_threads) in schedule:
                     start, end = chunk_info
-                    f.write(f"  Stages {start}-{end}: {pu_type}\n")
+                    f.write(f"  Stages {start}-{end}: {pu_type} (threads={num_threads})\n")
                 f.write("\n")
 
     finally:
