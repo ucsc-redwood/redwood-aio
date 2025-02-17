@@ -39,6 +39,8 @@ target("builtin-apps")
     })
 
     add_files({
+        "conf.cpp",
+
         -- cifar-dense implementations
         "cifar-dense/dense_appdata.cpp",
         "cifar-dense/omp/dense_kernel.cpp",
