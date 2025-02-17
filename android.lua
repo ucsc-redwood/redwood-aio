@@ -104,35 +104,125 @@ end
 -- Android deployment helper function
 -- ----------------------------------------------------------------------------
 
+-- function run_on_android(target)
+--     local exec_path = target:targetfile()
+--     local target_name = target:name()
+--     local remote_path = ANDROID_CONFIG.remote_base_path  -- .. "/" .. target_name
+  
+--     if not os.isfile(exec_path) then
+--         raise("Executable not found at: " .. exec_path)
+--     end
+
+--     -- Get connected devices
+--     local devices_output = try { function()
+--         return os.iorun("adb devices")
+--     end}
+
+--     if not devices_output then
+--         raise("Failed to get device list from adb")
+--     end
+
+--     -- Parse device list
+--     local devices = {}
+--     for line in devices_output:gmatch("[^\r\n]+") do
+--         if line:find("%s*device$") then
+--             local device_id = line:match("(%S+)%s+device")
+--             if device_id and not table.contains(ANDROID_CONFIG.ignored_devices, device_id) then
+--                 table.insert(devices, device_id)
+--             end
+--         end
+--     end
+
+--     if #devices == 0 then
+--         raise("No connected devices found!")
+--     end
+
+--     -- Run on each device
+--     import("core.base.option")
+--     local args = option.get("arguments") or {}
+
+--     for i, device_id in ipairs(devices) do
+--         print(string.format("[%d/%d] Running %s on device: %s", i, #devices, target_name, device_id))
+
+--         -- Deploy and execute
+--         local adb_commands = {
+--             {"-s", device_id, "push", exec_path, remote_path .. "/" .. target_name},
+--             {"-s", device_id, "shell", "chmod", "+x", remote_path .. "/" .. target_name},
+--         }
+
+--         -- Execute commands
+
+--         for _, cmd in ipairs(adb_commands) do
+--             if os.execv("adb", cmd) ~= 0 then
+--                 print(string.format("Warning: Failed to execute adb command on device %s", device_id))
+--             end
+--         end
+
+--         -- Run the binary with arguments
+--         local run_command = {"-s", device_id, "shell", remote_path .. "/" .. target_name}
+
+--         table.join2(run_command, args, {"--device=" .. device_id})
+--         if os.execv("adb", run_command) ~= 0 then
+--             print(string.format("Warning: Failed to run %s on device %s", target_name, device_id))
+--         end
+
+--         print()
+--     end
+-- end
+
+
+
 function run_on_android(target)
+    local function get_connected_devices()
+        local devices = {}
+        local devices_output = try { function() return os.iorun("adb devices") end }
+        if not devices_output then raise("Failed to get device list from adb") end
+
+        for line in devices_output:gmatch("[^\r\n]+") do
+            local device_id = line:match("^(%S+)%s+device$")
+            if device_id and not table.contains(ANDROID_CONFIG.ignored_devices, device_id) then
+                table.insert(devices, device_id)
+            end
+        end
+        return devices
+    end
+
+    local function deploy_and_run(device_id, exec_path, remote_path, target_name, args)
+        print(string.format("Deploying and running '%s' on device: %s", target_name, device_id))
+
+        local binary_path = string.format("%s/%s", remote_path, target_name)
+
+        -- Deploy binary
+        local adb_commands = {
+            {"-s", device_id, "push", exec_path, binary_path},
+            {"-s", device_id, "shell", "chmod", "+x", binary_path}
+        }
+
+        for _, cmd in ipairs(adb_commands) do
+            if os.execv("adb", cmd) ~= 0 then
+                print(string.format("[Error] Failed to execute adb command on device %s", device_id))
+                return
+            end
+        end
+
+        -- Run binary
+        local run_command = {"-s", device_id, "shell", binary_path}
+        table.join2(run_command, args, {"--device=" .. device_id})
+        if os.execv("adb", run_command) ~= 0 then
+            print(string.format("[Error] Failed to run %s on device %s", target_name, device_id))
+        end
+    end
+
+    -- Validate target file
     local exec_path = target:targetfile()
     local target_name = target:name()
-    local remote_path = ANDROID_CONFIG.remote_base_path  -- .. "/" .. target_name
-  
+    local remote_path = ANDROID_CONFIG.remote_base_path
     if not os.isfile(exec_path) then
         raise("Executable not found at: " .. exec_path)
     end
 
     -- Get connected devices
-    local devices_output = try { function()
-        return os.iorun("adb devices")
-    end}
-
-    if not devices_output then
-        raise("Failed to get device list from adb")
-    end
-
-    -- Parse device list
-    local devices = {}
-    for line in devices_output:gmatch("[^\r\n]+") do
-        if line:find("%s*device$") then
-            local device_id = line:match("(%S+)%s+device")
-            if device_id and not table.contains(ANDROID_CONFIG.ignored_devices, device_id) then
-                table.insert(devices, device_id)
-            end
-        end
-    end
-
+    local devices = get_connected_devices()
     if #devices == 0 then
         raise("No connected devices found!")
     end
@@ -140,35 +230,12 @@ function run_on_android(target)
     -- Run on each device
     import("core.base.option")
     local args = option.get("arguments") or {}
-
     for i, device_id in ipairs(devices) do
-        print(string.format("[%d/%d] Running %s on device: %s", i, #devices, target_name, device_id))
-
-        -- Deploy and execute
-        local adb_commands = {
-            {"-s", device_id, "push", exec_path, remote_path .. "/" .. target_name},
-            {"-s", device_id, "shell", "chmod", "+x", remote_path .. "/" .. target_name},
-        }
-
-        -- Execute commands
-
-        for _, cmd in ipairs(adb_commands) do
-            if os.execv("adb", cmd) ~= 0 then
-                print(string.format("Warning: Failed to execute adb command on device %s", device_id))
-            end
-        end
-
-        -- Run the binary with arguments
-        local run_command = {"-s", device_id, "shell", remote_path .. "/" .. target_name}
-
-        table.join2(run_command, args, {"--device=" .. device_id})
-        if os.execv("adb", run_command) ~= 0 then
-            print(string.format("Warning: Failed to run %s on device %s", target_name, device_id))
-        end
-
-        print()
+        print(string.format("\n[%d/%d] Processing device: %s", i, #devices, device_id))
+        deploy_and_run(device_id, exec_path, remote_path, target_name, args)
     end
 end
+
 
 -- ----------------------------------------------------------------------------
 -- Push All resources to the device ('tar' version)
