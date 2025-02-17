@@ -10,6 +10,8 @@ import time
 import json
 import glob
 import os
+import numpy as np
+from scipy import stats
 
 
 def load_mathematical_predictions() -> Dict[int, float]:
@@ -79,8 +81,20 @@ def calculate_prediction_accuracy(actual: float, predicted: float) -> Tuple[floa
         status = "slower"
     else:
         status = "faster"
-        diff_percent = abs(diff_percent)
     return diff_percent, status
+
+
+def create_console_histogram(data, bins=10, width=50):
+    """Create a simple console-based histogram"""
+    hist, bin_edges = np.histogram(data, bins=bins)
+    max_count = max(hist)
+
+    histogram = []
+    for count, edge in zip(hist, bin_edges[:-1]):
+        bar = "#" * int((count / max_count) * width)
+        histogram.append(f"{edge:6.2f}% | {bar} ({count})")
+
+    return "\n".join(histogram)
 
 
 def main():
@@ -103,12 +117,14 @@ def main():
             successful_runs.append(schedule_num)
             predicted = predictions.get(schedule_num)
             if predicted:
-                diff_percent, status = calculate_prediction_accuracy(
-                    avg_time, predicted
-                )
+                diff = calculate_prediction_accuracy(avg_time, predicted)[
+                    0
+                ]  # Just get the difference
                 print(f"Schedule {schedule_num} completed: {avg_time:.2f} ms")
                 print(f"  → Predicted: {predicted:.2f} ms")
-                print(f"  → {diff_percent:.1f}% {status} than predicted")
+                print(
+                    f"  → {abs(diff):.1f}% {'slower' if diff > 0 else 'faster'} than predicted"
+                )
             else:
                 print(
                     f"Schedule {schedule_num} completed: {avg_time:.2f} ms (no prediction available)"
@@ -131,42 +147,108 @@ def main():
         actual = results[schedule]
         predicted = predictions.get(schedule)
         if predicted:
-            diff_percent, status = calculate_prediction_accuracy(actual, predicted)
-            prediction_accuracy.append(diff_percent)
+            diff = calculate_prediction_accuracy(actual, predicted)[0]
+            prediction_accuracy.append(diff)
             print(f"Schedule {schedule}:")
             print(f"  Actual: {actual:.2f} ms")
             print(f"  Predicted: {predicted:.2f} ms")
-            print(f"  {diff_percent:.1f}% {status} than predicted")
+            print(
+                f"  {abs(diff):.1f}% {'slower' if diff > 0 else 'faster'} than predicted"
+            )
 
     print("\nFailed runs:")
     for schedule in failed_runs:
         print(f"Schedule {schedule}")
 
     if successful_runs:
-        best_schedule = min(successful_runs, key=lambda x: results[x])
-        worst_schedule = max(successful_runs, key=lambda x: results[x])
-        avg_time = sum(results[s] for s in successful_runs) / len(successful_runs)
+        actual_times = [results[s] for s in successful_runs]
+        prediction_differences = []
+        faster_than_predicted = []
+        slower_than_predicted = []
 
+        for schedule in successful_runs:
+            actual = results[schedule]
+            predicted = predictions.get(schedule)
+            if predicted:
+                diff = calculate_prediction_accuracy(actual, predicted)[0]
+                prediction_differences.append(diff)
+                if diff > 0:
+                    slower_than_predicted.append(diff)
+                else:
+                    faster_than_predicted.append(abs(diff))
+
+        # Basic Performance Statistics
         print("\nPerformance Summary:")
         print(f"Total schedules tested: {NUM_SCHEDULES}")
         print(f"Successful runs: {len(successful_runs)}")
         print(f"Failed runs: {len(failed_runs)}")
+
+        best_schedule = min(successful_runs, key=lambda x: results[x])
+        worst_schedule = max(successful_runs, key=lambda x: results[x])
+
+        print(f"\nExecution Time Statistics:")
         print(
             f"Best performing schedule: {best_schedule} ({results[best_schedule]:.2f} ms)"
         )
         print(
             f"Worst performing schedule: {worst_schedule} ({results[worst_schedule]:.2f} ms)"
         )
-        print(f"Average execution time: {avg_time:.2f} ms")
+        print(f"Mean execution time: {np.mean(actual_times):.2f} ms")
+        print(f"Median execution time: {np.median(actual_times):.2f} ms")
+        print(f"Standard deviation: {np.std(actual_times):.2f} ms")
+        print(f"95th percentile: {np.percentile(actual_times, 95):.2f} ms")
+        print(f"5th percentile: {np.percentile(actual_times, 5):.2f} ms")
 
-        if prediction_accuracy:
-            avg_prediction_error = sum(prediction_accuracy) / len(prediction_accuracy)
-            max_prediction_error = max(prediction_accuracy)
-            min_prediction_error = min(prediction_accuracy)
+        if prediction_differences:
             print("\nPrediction Accuracy Summary:")
-            print(f"Average prediction error: {avg_prediction_error:.1f}%")
-            print(f"Maximum prediction error: {max_prediction_error:.1f}%")
-            print(f"Minimum prediction error: {min_prediction_error:.1f}%")
+            print("Faster than predicted:")
+            if faster_than_predicted:
+                print(f"  Count: {len(faster_than_predicted)}")
+                print(f"  Mean error: {np.mean(faster_than_predicted):.1f}%")
+                print(f"  Max error: {max(faster_than_predicted):.1f}%")
+                print(f"  Min error: {min(faster_than_predicted):.1f}%")
+            else:
+                print("  No schedules were faster than predicted")
+
+            print("\nSlower than predicted:")
+            if slower_than_predicted:
+                print(f"  Count: {len(slower_than_predicted)}")
+                print(f"  Mean error: {np.mean(slower_than_predicted):.1f}%")
+                print(f"  Max error: {max(slower_than_predicted):.1f}%")
+                print(f"  Min error: {min(slower_than_predicted):.1f}%")
+            else:
+                print("  No schedules were slower than predicted")
+
+            print("\nOverall Prediction Statistics:")
+            print(f"Mean prediction error: {np.mean(prediction_differences):.1f}%")
+            print(f"Median prediction error: {np.median(prediction_differences):.1f}%")
+            print(f"Standard deviation: {np.std(prediction_differences):.1f}%")
+            print(f"Skewness: {stats.skew(prediction_differences):.2f}")
+            print(f"Kurtosis: {stats.kurtosis(prediction_differences):.2f}")
+
+            # Histogram of prediction errors
+            print("\nHistogram of Prediction Errors:")
+            print(
+                "(Negative % = faster than predicted, Positive % = slower than predicted)"
+            )
+            print(create_console_histogram(prediction_differences))
+
+            # Additional analysis
+            print("\nPrediction Reliability:")
+            within_5_percent = sum(abs(x) <= 5 for x in prediction_differences)
+            within_10_percent = sum(abs(x) <= 10 for x in prediction_differences)
+            within_20_percent = sum(abs(x) <= 20 for x in prediction_differences)
+
+            total_predictions = len(prediction_differences)
+            print(
+                f"Predictions within ±5%: {within_5_percent/total_predictions*100:.1f}%"
+            )
+            print(
+                f"Predictions within ±10%: {within_10_percent/total_predictions*100:.1f}%"
+            )
+            print(
+                f"Predictions within ±20%: {within_20_percent/total_predictions*100:.1f}%"
+            )
 
 
 if __name__ == "__main__":
