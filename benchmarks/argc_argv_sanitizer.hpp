@@ -16,12 +16,19 @@ inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(
   static std::vector<std::string> stored_strings;
   stored_strings.clear();  // Clear any previous strings
 
-  // Copy original arguments (excluding --device)
+  // Copy original arguments (excluding --device and its value)
   for (int i = 0; i < argc; ++i) {
     std::string arg(argv[i]);
-    if (arg.find("--device=") == std::string::npos) {
-      stored_strings.push_back(std::move(arg));
+    if (arg.find("--device=") != std::string::npos) {
+      // Skip --device=XXX format
+      continue;
     }
+    if (arg == "--device") {
+      // Skip both --device and its value
+      ++i;
+      continue;
+    }
+    stored_strings.push_back(std::move(arg));
   }
 
   // Add additional arguments

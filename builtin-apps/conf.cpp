@@ -69,9 +69,9 @@ DeviceRegistry::DeviceRegistry() {
                               {3, ProcessorType::kBigCore, true},
                           }));
 
-  // For "amd-minipc": 16 cores all of the same type.
-  devices_.emplace("amd-minipc",
-                   Device("amd-minipc",
+  // For "minipc": 16 cores all of the same type.
+  devices_.emplace("minipc",
+                   Device("minipc",
                           std::vector<Core>({
                               {0, ProcessorType::kLittleCore, true},
                               {1, ProcessorType::kLittleCore, true},
