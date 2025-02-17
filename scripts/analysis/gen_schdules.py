@@ -1,43 +1,41 @@
 import json
 from itertools import product, permutations
 import argparse
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 import sqlite3
 import os
 import sys
 
-# Define a type for a schedule entry: (core_type, num_threads)
-Schedule = List[Tuple[str, int]]
+# Define a type for a schedule entry: ((start_stage, end_stage), pu_type)
+Schedule = List[Tuple[Tuple[int, int], str]]
 
 DB_PATH = "data/benchmark_results.db"
 
 
-def generate_schedules_with_chunks(
+def load_configs(
     device_key: str,
     app_key: str,
     hardware_path: str = "data/hardware_config.json",
     application_path: str = "data/application_config.json",
-) -> List[Schedule]:
-    """
-    Generate all possible schedules subject to:
-      1) Stages are grouped into contiguous chunks.
-      2) Each chunk is assigned exactly one PU type.
-      3) No PU type is used more than once across chunks in a schedule.
-    """
-
-    # ----------------------------
-    # Load JSON files
-    # ----------------------------
+) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
+    """Load and return hardware and application configurations."""
     with open(hardware_path, "r") as f:
         hardware_data = json.load(f)
 
     with open(application_path, "r") as f:
         application_data = json.load(f)
 
-    # Get device & application info
     device_info = hardware_data[device_key]
     app_info = application_data[app_key]
 
+    return hardware_data, application_data, device_info, app_info
+
+
+def generate_schedules_with_chunks(
+    device_info: Dict[str, Any],
+    app_info: Dict[str, Any],
+) -> List[Schedule]:
+    """Generate all possible schedules with contiguous chunks."""
     # Number of stages in the application
     num_stages = app_info["num_stages"]
 
@@ -109,7 +107,7 @@ def generate_schedules_with_chunks(
             # We can store as a list of tuples: [((start, end), pu_type), ...]
             schedule = []
             for chunk_info, pu_type in zip(partition, pu_perm):
-                schedule.append((chunk_info, pu_type))
+                schedule.append(((chunk_info, pu_type)))
             all_schedules.append(schedule)
 
     return all_schedules
@@ -117,42 +115,15 @@ def generate_schedules_with_chunks(
 
 def show_schedule_timing(
     schedule: Schedule,
-    device_key: str,  # '3A021JEHN02756', '9b034f1b', 'ce0717178d7758b00b7e', 'jetson'
-    app_key: str,  # 'Tree', 'CifarDense', 'CifarSparse', etc.
-    hardware_path: str = "data/hardware_config.json",
-):
-    """
-    Given a schedule of chunks for (device_key, app_key), show:
-      - The total time for each chunk
-      - The maximum chunk time
-    A schedule is a list of ((start_stage, end_stage), pu_type).
-    """
-
-    # ----------------------------
-    # Load JSON files
-    # ----------------------------
-    with open(hardware_path, "r") as f:
-        hardware_data = json.load(f)
-
-    # Info for the selected device & application
-    device_info = hardware_data[device_key]
-
-    # For CPU PUs, we’ll pick the max threads from "pinnable_cores"
-    # e.g., device_info["pinnable_cores"]["little"] => 4
+    device_info: Dict[str, Any],
+    cursor: sqlite3.Cursor,
+    device_key: str,
+    app_key: str,
+) -> float:
+    """Show timing for a schedule and return the max chunk time."""
+    # Remove hardware config loading, use passed device_info
     pinnable_cores = device_info["pinnable_cores"]
 
-    # -------------------------------------------------------------------
-    # 2) Connect to the DB
-    # -------------------------------------------------------------------
-    if not os.path.exists(DB_PATH):
-        print(f"Error: Database file not found at {DB_PATH}")
-        sys.exit(1)
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    # -------------------------------------------------------------------
-    # 3) For each chunk in the schedule, sum up stage times
-    # -------------------------------------------------------------------
     chunk_times = []
 
     for chunk_index, ((start_stage, end_stage), pu_type) in enumerate(
@@ -217,7 +188,7 @@ def show_schedule_timing(
 
             total_time_ms += chunk_time_for_stage
 
-        # Store this chunk’s total time
+        # Store this chunk's total time
         chunk_times.append(total_time_ms)
 
         # Print the chunk info
@@ -226,23 +197,16 @@ def show_schedule_timing(
             f"PU={pu_type}, total_time={total_time_ms:.2f} ms"
         )
 
-    # -------------------------------------------------------------------
-    # 4) Print the maximum chunk time
-    # -------------------------------------------------------------------
     if chunk_times:
         max_chunk_time = max(chunk_times)
         print(f"Max chunk time: {max_chunk_time:.2f} ms")
+        return max_chunk_time
     else:
         print("No valid chunks to measure.")
-
-    # -------------------------------------------------------------------
-    # 5) Clean up
-    # -------------------------------------------------------------------
-    conn.close()
+        return 0.0
 
 
 def main():
-    # Parse command line arguments
     parser = argparse.ArgumentParser(
         description="Generate possible scheduling combinations."
     )
@@ -252,32 +216,47 @@ def main():
     parser.add_argument(
         "--app", required=True, help="Application name from application config"
     )
-
     args = parser.parse_args()
 
-    device_key = args.machine_name
-    app_key = args.app
+    # Load configurations once
+    hardware_data, application_data, device_info, app_info = load_configs(
+        args.machine_name, args.app
+    )
 
-    schedules = generate_schedules_with_chunks(device_key, app_key)
+    # Connect to database once
+    if not os.path.exists(DB_PATH):
+        print(f"Error: Database file not found at {DB_PATH}")
+        sys.exit(1)
 
-    print(f"Number of valid schedules: {len(schedules)}")
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
 
-    # Filter only the schedules with 4 chunks
-    schedules = [schedule for schedule in schedules if len(schedule) == 4]
+    try:
+        # Generate schedules using the loaded configs
+        schedules = generate_schedules_with_chunks(device_info, app_info)
+        print(f"Number of valid schedules: {len(schedules)}")
 
-    print(f"Number of valid schedules with 4 chunks: {len(schedules)}")
+        # Filter only the schedules with 4 chunks
+        schedules = [schedule for schedule in schedules if len(schedule) == 4]
+        print(f"Number of valid schedules with 4 chunks: {len(schedules)}")
 
-    # show the timing of first 5 schedules
-    for schedule in schedules[:5]:
-        show_schedule_timing(schedule, device_key, app_key)
+        # Show timing for first 5 schedules using the same cursor
+        for schedule in schedules[:5]:
+            show_schedule_timing(
+                schedule, device_info, cursor, args.machine_name, args.app
+            )
 
-    # Write all schedules to a log file
-    with open("schedules.log", "w") as f:
-        for idx, schedule in enumerate(schedules, 1):
-            f.write(f"Schedule {idx}:\n")
-            for stage_idx, core_type in enumerate(schedule, start=1):
-                f.write(f"  Stage {stage_idx}: {core_type}\n")
-            f.write("\n")
+        # Write all schedules to a log file
+        with open("schedules.log", "w") as f:
+            for idx, schedule in enumerate(schedules, 1):
+                f.write(f"Schedule {idx}:\n")
+                for chunk_info, pu_type in schedule:
+                    start, end = chunk_info
+                    f.write(f"  Stages {start}-{end}: {pu_type}\n")
+                f.write("\n")
+
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":
