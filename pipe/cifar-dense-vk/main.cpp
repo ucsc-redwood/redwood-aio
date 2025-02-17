@@ -11,6 +11,16 @@
 // Pipeline Instance (Best)
 // ---------------------------------------------------------------------
 
+void run_warmup(int schedule_id) {
+  auto tasks = init_tasks(20);
+  std::vector<Task> out_tasks;
+  out_tasks.reserve(tasks.size());
+
+  device_3A021JEHN02756::get_run_pipeline(schedule_id)(tasks, out_tasks);
+
+  cleanup(tasks);
+}
+
 void run_one_schedule(int schedule_id) {
   auto tasks = init_tasks(20);
   std::vector<Task> out_tasks;
@@ -30,15 +40,6 @@ void run_one_schedule(int schedule_id) {
             << std::endl;
 
   cleanup(tasks);
-}
-
-void run_all_schedules() {
-  const auto num_schedules = device_3A021JEHN02756::get_num_schedules();
-  for (auto i = 1; i <= num_schedules; ++i) {
-    // spdlog::info("Running schedule {}", i);
-    std::cout << "Running schedule " << i << std::endl;
-    run_one_schedule(i);
-  }
 }
 
 // ---------------------------------------------------------------------
@@ -195,6 +196,7 @@ int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   if (g_device_id == "3A021JEHN02756") {
+    run_warmup(which_schedule);
     run_one_schedule(which_schedule);
   } else if (g_device_id == "9b034f1b") {
     return 0;
