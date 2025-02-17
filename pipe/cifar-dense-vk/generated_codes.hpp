@@ -52,32 +52,6 @@
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_048.hpp"
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_049.hpp"
 #include "generated-code/3A021JEHN02756_CifarDense_schedule_050.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_051.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_052.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_053.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_054.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_055.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_056.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_057.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_058.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_059.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_060.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_061.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_062.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_063.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_064.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_065.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_066.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_067.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_068.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_069.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_070.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_071.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_072.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_073.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_074.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_075.hpp"
-#include "generated-code/3A021JEHN02756_CifarDense_schedule_076.hpp"
 #include "task.hpp"
 
 namespace device_3A021JEHN02756 {
@@ -113,19 +87,7 @@ static const RunPipelineFunc run_pipeline_table[] = {
     CifarDense_schedule_045::run_pipeline, CifarDense_schedule_046::run_pipeline,
     CifarDense_schedule_047::run_pipeline, CifarDense_schedule_048::run_pipeline,
     CifarDense_schedule_049::run_pipeline, CifarDense_schedule_050::run_pipeline,
-    CifarDense_schedule_051::run_pipeline, CifarDense_schedule_052::run_pipeline,
-    CifarDense_schedule_053::run_pipeline, CifarDense_schedule_054::run_pipeline,
-    CifarDense_schedule_055::run_pipeline, CifarDense_schedule_056::run_pipeline,
-    CifarDense_schedule_057::run_pipeline, CifarDense_schedule_058::run_pipeline,
-    CifarDense_schedule_059::run_pipeline, CifarDense_schedule_060::run_pipeline,
-    CifarDense_schedule_061::run_pipeline, CifarDense_schedule_062::run_pipeline,
-    CifarDense_schedule_063::run_pipeline, CifarDense_schedule_064::run_pipeline,
-    CifarDense_schedule_065::run_pipeline, CifarDense_schedule_066::run_pipeline,
-    CifarDense_schedule_067::run_pipeline, CifarDense_schedule_068::run_pipeline,
-    CifarDense_schedule_069::run_pipeline, CifarDense_schedule_070::run_pipeline,
-    CifarDense_schedule_071::run_pipeline, CifarDense_schedule_072::run_pipeline,
-    CifarDense_schedule_073::run_pipeline, CifarDense_schedule_074::run_pipeline,
-    CifarDense_schedule_075::run_pipeline, CifarDense_schedule_076::run_pipeline};
+};
 
 // Helper function to get the run_pipeline function for a given schedule ID (1-based indexing)
 [[nodiscard]] inline RunPipelineFunc get_run_pipeline(int schedule_id) {

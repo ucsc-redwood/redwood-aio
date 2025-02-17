@@ -6,6 +6,7 @@ target("pipe-cifar-dense-vk") do
     add_headerfiles({
         "run_stages.hpp",
         "task.hpp",
+        "generated_codes.hpp",
         "generated-code/*.hpp", -- generated code
     })
 

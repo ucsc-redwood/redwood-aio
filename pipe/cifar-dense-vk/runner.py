@@ -1,7 +1,7 @@
 # adb -s 3A021JEHN02756 shell /data/local/tmp/pipe-cifar-dense-vk -l info --device=3A021JEHN02756 -s 1
 
 
-NUM_SCHEDULES = 76
+NUM_SCHEDULES = 50
 
 import subprocess
 import re
@@ -15,18 +15,20 @@ import os
 def load_mathematical_predictions() -> Dict[int, float]:
     """Load all mathematical predictions from schedule JSON files"""
     predictions = {}
-    schedule_files = glob.glob("./scripts/schedules/3A021JEHN02756_CifarDense_schedule_*_*.json")
-    
+    schedule_files = glob.glob(
+        "./data/generated-schedules/3A021JEHN02756_CifarDense_schedule_*.json"
+    )
+
     for file_path in schedule_files:
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 data = json.load(f)
                 # Extract schedule number from filename
-                schedule_num = int(re.search(r'schedule_(\d+)_', file_path).group(1))
-                predictions[schedule_num] = data['max_chunk_time']
+                schedule_num = int(re.search(r"schedule_(\d+)_", file_path).group(1))
+                predictions[schedule_num] = data["max_chunk_time"]
         except Exception as e:
             print(f"Warning: Could not load predictions from {file_path}: {e}")
-    
+
     return predictions
 
 
@@ -80,40 +82,44 @@ def main():
     results: Dict[int, Optional[float]] = {}
     successful_runs = []
     failed_runs = []
-    
+
     # Load mathematical predictions
     predictions = load_mathematical_predictions()
-    
+
     print("Starting test runs...")
     print("-" * 50)
-    
+
     for schedule_num in range(1, NUM_SCHEDULES + 1):
         print(f"Running schedule {schedule_num}/{NUM_SCHEDULES}...")
         avg_time = run_command(schedule_num)
         results[schedule_num] = avg_time
-        
+
         if avg_time is not None:
             successful_runs.append(schedule_num)
             predicted = predictions.get(schedule_num)
             if predicted:
-                diff_percent, status = calculate_prediction_accuracy(avg_time, predicted)
+                diff_percent, status = calculate_prediction_accuracy(
+                    avg_time, predicted
+                )
                 print(f"Schedule {schedule_num} completed: {avg_time:.2f} ms")
                 print(f"  → Predicted: {predicted:.2f} ms")
                 print(f"  → {diff_percent:.1f}% {status} than predicted")
             else:
-                print(f"Schedule {schedule_num} completed: {avg_time:.2f} ms (no prediction available)")
+                print(
+                    f"Schedule {schedule_num} completed: {avg_time:.2f} ms (no prediction available)"
+                )
         else:
             failed_runs.append(schedule_num)
             print(f"Schedule {schedule_num} failed")
-        
+
         # Small delay between runs to avoid overwhelming the device
         time.sleep(1)
-    
+
     # Generate report
     print("\n" + "=" * 50)
     print("FINAL REPORT")
     print("=" * 50)
-    
+
     print("\nSuccessful runs with prediction comparison:")
     prediction_accuracy = []
     for schedule in successful_runs:
@@ -126,16 +132,16 @@ def main():
             print(f"  Actual: {actual:.2f} ms")
             print(f"  Predicted: {predicted:.2f} ms")
             print(f"  {diff_percent:.1f}% {status} than predicted")
-    
+
     print("\nFailed runs:")
     for schedule in failed_runs:
         print(f"Schedule {schedule}")
-    
+
     if successful_runs:
         best_schedule = min(successful_runs, key=lambda x: results[x])
         worst_schedule = max(successful_runs, key=lambda x: results[x])
         avg_time = sum(results[s] for s in successful_runs) / len(successful_runs)
-        
+
         print("\nPerformance Summary:")
         print(f"Total schedules tested: {NUM_SCHEDULES}")
         print(f"Successful runs: {len(successful_runs)}")
@@ -147,7 +153,7 @@ def main():
             f"Worst performing schedule: {worst_schedule} ({results[worst_schedule]:.2f} ms)"
         )
         print(f"Average execution time: {avg_time:.2f} ms")
-        
+
         if prediction_accuracy:
             avg_prediction_error = sum(prediction_accuracy) / len(prediction_accuracy)
             max_prediction_error = max(prediction_accuracy)
