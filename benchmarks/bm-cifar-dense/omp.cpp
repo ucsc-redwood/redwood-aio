@@ -8,7 +8,7 @@
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-dense/omp/dense_kernel.hpp"
-#include "resources_path.hpp"
+#include "builtin-apps/resources_path.hpp"
 
 static void run_baseline_unrestricted(cifar_dense::AppData& app_data, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
