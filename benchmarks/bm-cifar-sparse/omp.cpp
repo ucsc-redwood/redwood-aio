@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
 
 #undef REGISTER_STAGE
 
-  benchmark::Initialize(nullptr, nullptr);
+  benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
   return 0;

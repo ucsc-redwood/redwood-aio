@@ -56,23 +56,6 @@ BENCHMARK_DEFINE_F(VK_CifarDense, Baseline)
 
 BENCHMARK_REGISTER_F(VK_CifarDense, Baseline)->Unit(benchmark::kMillisecond);
 
-// static void VK_CifarDense_Baseline(benchmark::State& state) {
-//   auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
-//   cifar_dense::AppData app_data(mr);
-
-//   for (auto _ : state) {
-//     run_baseline_pinned(app_data);
-//   }
-// }
-
-// BENCHMARK(VK_CifarDense_Baseline)
-//     ->Unit(benchmark::kMillisecond)
-//     ;
-
-// ----------------------------------------------------------------
-// Individual stages
-// ----------------------------------------------------------------
-
 // ----------------------------------------------------------------
 // Stage 1
 // ----------------------------------------------------------------
