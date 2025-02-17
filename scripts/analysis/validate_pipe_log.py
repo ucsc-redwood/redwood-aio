@@ -97,10 +97,20 @@ def main():
     # For illustration, just print the final subset for each core if no issues:
     if not issues_found:
         print("No issues found. Summary of final subsets per core:")
+        # First print CPU cores
         for cid in sorted(core_stage_map.keys()):
             stage_subset = sorted(core_stage_map[cid])
             bset = ",".join(sorted(backend_map[cid]))
             print(f"  Core {cid} (backends={bset}) => stages {stage_subset}")
+
+        # Then print GPU stages if any were found
+        gpu_stages = set()
+        for line in open(args.logfile, "r"):
+            match = line_regex.match(line.strip())
+            if match and match.group("backend") == "vk":
+                gpu_stages.add(int(match.group("stage")))
+        if gpu_stages:
+            print(f"  GPU (backends=vk) => stages {sorted(gpu_stages)}")
     else:
         print("Finished checking. Issues were reported above.")
 
