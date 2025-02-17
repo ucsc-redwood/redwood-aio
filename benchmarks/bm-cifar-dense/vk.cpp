@@ -185,7 +185,7 @@ int main(int argc, char** argv) {
 
   const auto storage_location = helpers::get_benchmark_storage_location();
   const auto out_name =
-      std::format("{}/BM_CifarDense_OMP_{}.json", storage_location.string(), g_device_id);
+      std::format("{}/BM_CifarDense_VK_{}.json", storage_location.string(), g_device_id);
 
   auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
 

@@ -4,9 +4,11 @@
 #include <thread>
 #include <vector>
 
-#include "affinity.hpp"
-#include "app.hpp"
-#include "cifar-sparse/omp/sparse_kernel.hpp"
+#include "../argc_argv_sanitizer.hpp"
+#include "builtin-apps/affinity.hpp"
+#include "builtin-apps/app.hpp"
+#include "builtin-apps/cifar-sparse/omp/sparse_kernel.hpp"
+#include "builtin-apps/resources_path.hpp"
 
 static void run_baseline_unrestricted(cifar_sparse::AppData& app_data, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
@@ -117,7 +119,14 @@ int main(int argc, char** argv) {
 
 #undef REGISTER_STAGE
 
-  benchmark::Initialize(&argc, argv);
+  const auto storage_location = helpers::get_benchmark_storage_location();
+  const auto out_name =
+      std::format("{}/BM_CifarSparse_OMP_{}.json", storage_location.string(), g_device_id);
+
+  auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
+
+  benchmark::Initialize(&new_argc, new_argv.data());
+  if (benchmark::ReportUnrecognizedArguments(new_argc, new_argv.data())) return 1;
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
   return 0;

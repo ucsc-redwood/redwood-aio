@@ -4,11 +4,13 @@
 #include <algorithm>
 #include <thread>
 
-#include "affinity.hpp"
-#include "app.hpp"
-#include "tree/omp/func_sort.hpp"
-#include "tree/omp/tree_kernel.hpp"
-#include "tree/tree_appdata.hpp"
+#include "../argc_argv_sanitizer.hpp"
+#include "builtin-apps/affinity.hpp"
+#include "builtin-apps/app.hpp"
+#include "builtin-apps/resources_path.hpp"
+#include "builtin-apps/tree/omp/func_sort.hpp"
+#include "builtin-apps/tree/omp/tree_kernel.hpp"
+#include "builtin-apps/tree/tree_appdata.hpp"
 
 // ------------------------------------------------------------
 // Global variables
@@ -733,9 +735,15 @@ int main(int argc, char** argv) {
   RegisterStage7BigBenchmarkWithRange(g_big_cores);
 
   // Initialize and run benchmarks
-  benchmark::Initialize(&argc, argv);
+  const auto storage_location = helpers::get_benchmark_storage_location();
+  const auto out_name =
+      std::format("{}/BM_Tree_OMP_{}.json", storage_location.string(), g_device_id);
+
+  auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
+
+  benchmark::Initialize(&new_argc, new_argv.data());
+  if (benchmark::ReportUnrecognizedArguments(new_argc, new_argv.data())) return 1;
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
-
   return 0;
 }

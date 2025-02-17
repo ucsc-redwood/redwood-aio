@@ -3,9 +3,11 @@
 
 #include <CLI/CLI.hpp>
 
-#include "app.hpp"
-#include "cifar-sparse/sparse_appdata.hpp"
-#include "cifar-sparse/vulkan/vk_dispatcher.hpp"
+#include "../argc_argv_sanitizer.hpp"
+#include "builtin-apps/app.hpp"
+#include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
+#include "builtin-apps/cifar-sparse/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/resources_path.hpp"
 
 // ----------------------------------------------------------------
 // Baseline
@@ -180,9 +182,15 @@ int main(int argc, char** argv) {
   parse_args(argc, argv);
   spdlog::set_level(spdlog::level::off);
 
-  benchmark::Initialize(&argc, argv);
+  const auto storage_location = helpers::get_benchmark_storage_location();
+  const auto out_name =
+      std::format("{}/BM_CifarSparse_VK_{}.json", storage_location.string(), g_device_id);
+
+  auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
+
+  benchmark::Initialize(&new_argc, new_argv.data());
+  if (benchmark::ReportUnrecognizedArguments(new_argc, new_argv.data())) return 1;
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
-
   return 0;
 }
