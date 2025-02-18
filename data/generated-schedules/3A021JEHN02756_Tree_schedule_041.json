@@ -1,0 +1,45 @@
+{
+  "schedule": {
+    "schedule_id": "3A021JEHN02756_Tree_schedule_041",
+    "device_id": "3A021JEHN02756",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "big",
+        "threads": 2,
+        "stages": [
+          1
+        ]
+      },
+      {
+        "name": "chunk2",
+        "hardware": "medium",
+        "threads": 2,
+        "stages": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "chunk3",
+        "hardware": "gpu",
+        "threads": 0,
+        "stages": [
+          4,
+          5
+        ]
+      },
+      {
+        "name": "chunk4",
+        "hardware": "little",
+        "threads": 4,
+        "stages": [
+          6,
+          7
+        ]
+      }
+    ]
+  },
+  "total_time": 13.7523437056404,
+  "max_chunk_time": 5.2468403909762324
+}
