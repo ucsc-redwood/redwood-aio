@@ -112,6 +112,11 @@ void Singleton::process_stage_2(tree::AppData &app_data_ref) {
 
   seq->launch_kernel_async();
   seq->sync();
+
+#ifdef __ANDROID__
+  std::iota(
+      app_data_ref.u_morton_keys_sorted_s2.begin(), app_data_ref.u_morton_keys_sorted_s2.end(), 0);
+#endif
 }
 
 // ----------------------------------------------------------------------------
