@@ -93,62 +93,6 @@ def read_benchmarks(folder: str = "data/raw_bm_results") -> List[BenchmarkResult
     return results
 
 
-# def parse_run_name(input_str: str) -> ParsedRunName:
-#     """
-#     Parse benchmark run name string into components.
-
-#     Args:
-#         input_str: String like "Backend_Application/StageInfo[/NumThreads]"
-
-#     Returns:
-#         ParsedRunName object containing extracted components
-
-#     Raises:
-#         ValueError: If input string doesn't match expected format
-#     """
-#     segments = input_str.split("/")
-#     if len(segments) < 2:
-#         raise ValueError("Input must have at least two segments separated by '/'")
-
-#     try:
-#         backend, application = segments[0].split("_", 1)
-#     except ValueError:
-#         raise ValueError("First segment must be in the format 'Backend_Application'")
-
-#     stage = None
-#     core_type = None
-#     num_threads = None
-
-#     stage_segment = segments[1]
-#     if stage_segment.startswith("Baseline"):
-#         stage = 0
-#     elif stage_segment.startswith("Stage"):
-#         m = re.match(r"Stage(\d+)(?:_(\w+))?", stage_segment)
-#         if m:
-#             stage = int(m.group(1))
-#             core_candidate = m.group(2)
-#             if core_candidate in {"little", "small", "big"}:
-#                 core_type = core_candidate
-#         else:
-#             raise ValueError("Stage segment does not match expected format")
-#     else:
-#         raise ValueError("Stage segment must start with 'Baseline' or 'Stage'")
-
-#     if len(segments) > 2:
-#         thread_segment = segments[2]
-#         m = re.match(r"(\d+)", thread_segment)
-#         if m:
-#             num_threads = int(m.group(1))
-
-#     return ParsedRunName(
-#         backend=backend,
-#         application=application,
-#         stage=stage,
-#         core_type=core_type,
-#         num_threads=num_threads,
-#     )
-
-
 def parse_run_name(line: str) -> Optional[ParsedRunName]:
     """
     Parses a single line of the form:
@@ -236,7 +180,7 @@ def create_database_schema(cursor: sqlite3.Cursor) -> None:
         real_time REAL,
         time_unit TEXT,
         aggregate_name TEXT NULL,
-        UNIQUE(device, application, backend, stage, core_type, num_threads)
+        UNIQUE(device, application, backend, stage, core_type, num_threads, aggregate_name)
     )
     """
     )
@@ -255,7 +199,7 @@ def insert_benchmark_data(
             device, application, backend, stage, core_type, num_threads,
             name, run_name, run_type, repetitions, iterations, real_time, time_unit, aggregate_name
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(device, application, backend, stage, core_type, num_threads) 
+        ON CONFLICT(device, application, backend, stage, core_type, num_threads, aggregate_name) 
         DO UPDATE SET
             name = excluded.name,
             run_name = excluded.run_name,
