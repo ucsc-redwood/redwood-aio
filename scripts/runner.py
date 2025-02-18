@@ -12,16 +12,32 @@ import glob
 import os
 import numpy as np
 from scipy import stats
+import argparse
+from colorama import init, Fore, Style
+
+# Initialize colorama
+init()
 
 
-def load_mathematical_predictions() -> Dict[int, float]:
+def build_binary():
+    """Build the binary using xmake"""
+    print("Building binary with xmake...")
+    try:
+        subprocess.run(["xmake", "b", "pipe-cifar-dense-vk"], check=True)
+        print("Build successful")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Build failed: {e}")
+        return False
+
+
+def load_mathematical_predictions(device_id: str) -> Dict[int, float]:
     """Load all mathematical predictions from schedule JSON files"""
     predictions = {}
 
-    # e.g.,
-    #  3A021JEHN02756_CifarDense_schedule_001.json
+    # Update glob pattern to use device_id
     schedule_files = glob.glob(
-        "./data/generated-schedules/3A021JEHN02756_CifarDense_schedule_*.json"
+        f"./data/generated-schedules/{device_id}_CifarDense_schedule_*.json"
     )
 
     for file_path in schedule_files:
@@ -39,7 +55,7 @@ def load_mathematical_predictions() -> Dict[int, float]:
     return predictions
 
 
-def run_command(schedule_num: int) -> Optional[float]:
+def run_command(device_id: str, schedule_num: int) -> Optional[float]:
     """
     Run the command for a given schedule number and return the average time if successful.
     Returns None if the execution failed.
@@ -50,12 +66,14 @@ def run_command(schedule_num: int) -> Optional[float]:
             [
                 "adb",
                 "-s",
-                "3A021JEHN02756",
+                device_id,
                 "push",
                 "./build/android/arm64-v8a/release/pipe-cifar-dense-vk",
                 "/data/local/tmp/pipe-cifar-dense-vk",
             ],
             check=True,
+            stdout=subprocess.DEVNULL,  # Hide stdout
+            stderr=subprocess.DEVNULL,  # Hide stderr
         )
     except subprocess.CalledProcessError as e:
         print(f"Failed to push executable to device: {e}")
@@ -65,12 +83,12 @@ def run_command(schedule_num: int) -> Optional[float]:
     cmd = [
         "adb",
         "-s",
-        "3A021JEHN02756",
+        device_id,
         "shell",
         "/data/local/tmp/pipe-cifar-dense-vk",
         "-l",
         "info",
-        "--device=3A021JEHN02756",
+        f"--device={device_id}",
         "-s",
         str(schedule_num),
     ]
@@ -85,10 +103,12 @@ def run_command(schedule_num: int) -> Optional[float]:
             return float(time_match.group(1))
         return None
     except subprocess.TimeoutExpired:
-        print(f"Schedule {schedule_num} timed out")
+        print(f"{Fore.RED}Schedule {schedule_num} timed out{Style.RESET_ALL}")
         return None
     except Exception as e:
-        print(f"Schedule {schedule_num} failed with error: {str(e)}")
+        print(
+            f"{Fore.RED}Schedule {schedule_num} failed with error: {str(e)}{Style.RESET_ALL}"
+        )
         return None
 
 
@@ -116,40 +136,61 @@ def create_console_histogram(data, bins=10, width=50):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Run performance tests on a specific device"
+    )
+    parser.add_argument("device_id", help="Device ID (e.g., 3A021JEHN02756)")
+    parser.add_argument(
+        "--num-schedules",
+        type=int,
+        default=50,
+        help="Number of schedules to test (default: 50)",
+    )
+    args = parser.parse_args()
+
+    # Build the binary first
+    if not build_binary():
+        print("Exiting due to build failure")
+        return
+
     results: Dict[int, Optional[float]] = {}
     successful_runs = []
     failed_runs = []
 
-    # Load mathematical predictions
-    predictions = load_mathematical_predictions()
+    # Load mathematical predictions with device ID
+    predictions = load_mathematical_predictions(args.device_id)
 
-    print("Starting test runs...")
+    print(f"Starting test runs on device {args.device_id}...")
     print("-" * 50)
 
-    for schedule_num in range(1, NUM_SCHEDULES + 1):
-        print(f"Running schedule {schedule_num}/{NUM_SCHEDULES}...")
-        avg_time = run_command(schedule_num)
+    for schedule_num in range(1, args.num_schedules + 1):
+        print(f"Running schedule {schedule_num}/{args.num_schedules}...")
+        avg_time = run_command(args.device_id, schedule_num)
         results[schedule_num] = avg_time
 
         if avg_time is not None:
             successful_runs.append(schedule_num)
             predicted = predictions.get(schedule_num)
             if predicted:
-                diff = calculate_prediction_accuracy(avg_time, predicted)[
-                    0
-                ]  # Just get the difference
-                print(f"Schedule {schedule_num} completed: {avg_time:.2f} ms")
+                diff = calculate_prediction_accuracy(avg_time, predicted)[0]
+                print(f"\nSchedule {schedule_num}:")
+                print(f"  → Measured: {avg_time:.2f} ms")
                 print(f"  → Predicted: {predicted:.2f} ms")
-                print(
-                    f"  → {abs(diff):.1f}% {'slower' if diff > 0 else 'faster'} than predicted"
-                )
+                if diff > 0:
+                    print(
+                        f"  → {Fore.RED}{abs(diff):.1f}% slower than predicted{Style.RESET_ALL}"
+                    )
+                else:
+                    print(
+                        f"  → {Fore.GREEN}{abs(diff):.1f}% faster than predicted{Style.RESET_ALL}"
+                    )
             else:
-                print(
-                    f"Schedule {schedule_num} completed: {avg_time:.2f} ms (no prediction available)"
-                )
+                print(f"\nSchedule {schedule_num}:")
+                print(f"  → Measured: {avg_time:.2f} ms")
+                print("  → No prediction available")
         else:
             failed_runs.append(schedule_num)
-            print(f"Schedule {schedule_num} failed")
+            print(f"{Fore.RED}Schedule {schedule_num} failed{Style.RESET_ALL}")
 
         # Small delay between runs to avoid overwhelming the device
         time.sleep(1)
@@ -197,7 +238,7 @@ def main():
 
         # Basic Performance Statistics
         print("\nPerformance Summary:")
-        print(f"Total schedules tested: {NUM_SCHEDULES}")
+        print(f"Total schedules tested: {args.num_schedules}")
         print(f"Successful runs: {len(successful_runs)}")
         print(f"Failed runs: {len(failed_runs)}")
 
