@@ -29,24 +29,24 @@ class Singleton {
   void process_stage_6(tree::AppData &app_data_ref);
   void process_stage_7(tree::AppData &app_data_ref);
 
-  template <int stage>
-  void run_stage(tree::AppData &app_data) {
-    if constexpr (stage == 1) {
-      process_stage_1(app_data);
-    } else if constexpr (stage == 2) {
-      process_stage_2(app_data);
-    } else if constexpr (stage == 3) {
-      process_stage_3(app_data);
-    } else if constexpr (stage == 4) {
-      process_stage_4(app_data);
-    } else if constexpr (stage == 5) {
-      process_stage_5(app_data);
-    } else if constexpr (stage == 6) {
-      process_stage_6(app_data);
-    } else if constexpr (stage == 7) {
-      process_stage_7(app_data);
-    }
-  }
+  // template <int stage>
+  // void run_stage(tree::AppData &app_data) {
+  //   if constexpr (stage == 1) {
+  //     process_stage_1(app_data);
+  //   } else if constexpr (stage == 2) {
+  //     process_stage_2(app_data);
+  //   } else if constexpr (stage == 3) {
+  //     process_stage_3(app_data);
+  //   } else if constexpr (stage == 4) {
+  //     process_stage_4(app_data);
+  //   } else if constexpr (stage == 5) {
+  //     process_stage_5(app_data);
+  //   } else if constexpr (stage == 6) {
+  //     process_stage_6(app_data);
+  //   } else if constexpr (stage == 7) {
+  //     process_stage_7(app_data);
+  //   }
+  // }
 
  private:
   Singleton();

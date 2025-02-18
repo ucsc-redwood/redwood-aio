@@ -15,12 +15,19 @@ NUM_SCHEDULES = 50
 # Initialize colorama
 init()
 
+# Add at the top of the file with other constants
+APP_NAME_MAP = {
+    "CifarDense": "cifar-dense",
+    "CifarSparse": "cifar-sparse",
+    "Tree": "tree",
+}
 
-def build_binary():
+
+def build_binary(binary_name: str):
     """Build the binary using xmake"""
-    print("Building binary with xmake...")
+    print(f"Building binary {binary_name} with xmake...")
     try:
-        subprocess.run(["xmake", "b", "pipe-cifar-dense-vk"], check=True)
+        subprocess.run(["xmake", "b", binary_name], check=True)
         print("Build successful")
         return True
     except subprocess.CalledProcessError as e:
@@ -28,13 +35,13 @@ def build_binary():
         return False
 
 
-def load_mathematical_predictions(device_id: str) -> Dict[int, float]:
+def load_mathematical_predictions(device_id: str, app: str) -> Dict[int, float]:
     """Load all mathematical predictions from schedule JSON files"""
     predictions = {}
 
-    # Update glob pattern to use device_id
+    # Update glob pattern to use device_id and app
     schedule_files = glob.glob(
-        f"./data/generated-schedules/{device_id}_CifarDense_schedule_*.json"
+        f"./data/generated-schedules/{device_id}_{app}_schedule_*.json"
     )
 
     for file_path in schedule_files:
@@ -52,11 +59,15 @@ def load_mathematical_predictions(device_id: str) -> Dict[int, float]:
     return predictions
 
 
-def run_command(device_id: str, schedule_num: int) -> Optional[float]:
+def run_command(device_id: str, app: str, schedule_num: int) -> Optional[float]:
     """
     Run the command for a given schedule number and return the average time if successful.
     Returns None if the execution failed.
     """
+    app_name = APP_NAME_MAP[app]
+    binary_name = f"pipe-{app_name}-vk"
+    binary_path = f"./build/android/arm64-v8a/release/{binary_name}"
+
     # Push the executable to the device
     try:
         subprocess.run(
@@ -65,8 +76,8 @@ def run_command(device_id: str, schedule_num: int) -> Optional[float]:
                 "-s",
                 device_id,
                 "push",
-                "./build/android/arm64-v8a/release/pipe-cifar-dense-vk",
-                "/data/local/tmp/pipe-cifar-dense-vk",
+                binary_path,
+                f"/data/local/tmp/{binary_name}",
             ],
             check=True,
             stdout=subprocess.DEVNULL,  # Hide stdout
@@ -82,7 +93,7 @@ def run_command(device_id: str, schedule_num: int) -> Optional[float]:
         "-s",
         device_id,
         "shell",
-        "/data/local/tmp/pipe-cifar-dense-vk",
+        f"/data/local/tmp/{binary_name}",
         "-l",
         "info",
         f"--device={device_id}",
@@ -138,6 +149,12 @@ def main():
     )
     parser.add_argument("device_id", help="Device ID (e.g., 3A021JEHN02756)")
     parser.add_argument(
+        "--app",
+        choices=list(APP_NAME_MAP.keys()),  # Use the map keys for choices
+        default="CifarDense",
+        help="Application to test (default: CifarDense)",
+    )
+    parser.add_argument(
         "--num-schedules",
         type=int,
         default=50,
@@ -146,7 +163,9 @@ def main():
     args = parser.parse_args()
 
     # Build the binary first
-    if not build_binary():
+    app_name = APP_NAME_MAP[args.app]
+    binary_name = f"pipe-{app_name}-vk"  # e.g., pipe-cifar-dense-vk
+    if not build_binary(binary_name):
         print("Exiting due to build failure")
         return
 
@@ -154,15 +173,15 @@ def main():
     successful_runs = []
     failed_runs = []
 
-    # Load mathematical predictions with device ID
-    predictions = load_mathematical_predictions(args.device_id)
+    # Load mathematical predictions with device ID and app
+    predictions = load_mathematical_predictions(args.device_id, args.app)
 
-    print(f"Starting test runs on device {args.device_id}...")
+    print(f"Starting test runs for {args.app} on device {args.device_id}...")
     print("-" * 50)
 
     for schedule_num in range(1, args.num_schedules + 1):
         print(f"Running schedule {schedule_num}/{args.num_schedules}...")
-        avg_time = run_command(args.device_id, schedule_num)
+        avg_time = run_command(args.device_id, args.app, schedule_num)
         results[schedule_num] = avg_time
 
         if avg_time is not None:
@@ -228,44 +247,42 @@ def main():
 
         # Add new section for detailed performance analysis
         print(f"\n{Style.BRIGHT}Detailed Performance Analysis:{Style.RESET_ALL}")
-        
+
         # Performance Distribution
         perf_data = []
-        time_ranges = [
-            (0, 25), (25, 30), (30, 35), (35, float('inf'))
-        ]
-        
+        time_ranges = [(0, 25), (25, 30), (30, 35), (35, float("inf"))]
+
         for min_t, max_t in time_ranges:
             count = sum(1 for t in actual_times if min_t <= t < max_t)
             percentage = (count / len(actual_times)) * 100
             range_str = f"{min_t}-{max_t if max_t != float('inf') else '+'}"
-            perf_data.append([
-                f"{range_str} ms",
-                count,
-                f"{percentage:.1f}%"
-            ])
-        
+            perf_data.append([f"{range_str} ms", count, f"{percentage:.1f}%"])
+
         print("\nPerformance Distribution:")
-        print(tabulate(perf_data, 
-                      headers=["Time Range", "Count", "Percentage"], 
-                      tablefmt="simple"))
+        print(
+            tabulate(
+                perf_data,
+                headers=["Time Range", "Count", "Percentage"],
+                tablefmt="simple",
+            )
+        )
 
         # Stability Analysis
         print(f"\n{Style.BRIGHT}Stability Analysis:{Style.RESET_ALL}")
-        
+
         # Calculate coefficient of variation (CV)
         cv = (np.std(actual_times) / np.mean(actual_times)) * 100
-        
+
         # Calculate quartiles and IQR
         q1 = np.percentile(actual_times, 25)
         q3 = np.percentile(actual_times, 75)
         iqr = q3 - q1
-        
+
         # Calculate outliers
         lower_bound = q1 - 1.5 * iqr
         upper_bound = q3 + 1.5 * iqr
         outliers = [t for t in actual_times if t < lower_bound or t > upper_bound]
-        
+
         stability_data = [
             ["Coefficient of Variation", f"{cv:.1f}%"],
             ["Interquartile Range", f"{iqr:.2f} ms"],
@@ -321,12 +338,12 @@ def main():
 
             # Prediction Error Analysis
             print(f"\n{Style.BRIGHT}Prediction Error Analysis:{Style.RESET_ALL}")
-            
+
             # Calculate error statistics
             abs_errors = [abs(diff) for diff in prediction_differences]
             mean_abs_error = np.mean(abs_errors)
             rmse = np.sqrt(np.mean(np.square(prediction_differences)))
-            
+
             error_data = [
                 ["Mean Absolute Error", f"{mean_abs_error:.1f}%"],
                 ["Root Mean Square Error", f"{rmse:.1f}%"],
@@ -338,18 +355,27 @@ def main():
 
             # Correlation Analysis
             print(f"\n{Style.BRIGHT}Correlation Analysis:{Style.RESET_ALL}")
-            
+
             # Calculate correlation between predicted and actual times
-            predicted_times = [predictions[s] for s in successful_runs if s in predictions]
-            actual_times_corr = [results[s] for s in successful_runs if s in predictions]
-            
+            predicted_times = [
+                predictions[s] for s in successful_runs if s in predictions
+            ]
+            actual_times_corr = [
+                results[s] for s in successful_runs if s in predictions
+            ]
+
             correlation = np.corrcoef(predicted_times, actual_times_corr)[0, 1]
-            
+
             corr_data = [
                 ["Prediction-Actual Correlation", f"{correlation:.3f}"],
-                ["Correlation Strength", 
-                 "Strong" if abs(correlation) > 0.7 else 
-                 "Moderate" if abs(correlation) > 0.4 else "Weak"],
+                [
+                    "Correlation Strength",
+                    (
+                        "Strong"
+                        if abs(correlation) > 0.7
+                        else "Moderate" if abs(correlation) > 0.4 else "Weak"
+                    ),
+                ],
             ]
             print(tabulate(corr_data, tablefmt="simple"))
 
