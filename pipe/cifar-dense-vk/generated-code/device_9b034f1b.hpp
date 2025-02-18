@@ -409,7 +409,7 @@ namespace CifarDense_schedule_021 {
 
 constexpr const char* kScheduleId = "9b034f1b_CifarDense_schedule_021";
 
-void stage_group_9b034f1b_CifarDense_schedule_021_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_9b034f1b_CifarDense_schedule_021_chunk1(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 

@@ -2409,11 +2409,10 @@ namespace CifarDense_schedule_021 {
 static std::atomic<int> tasks_in_flight{0};
 static std::atomic<bool> done(false);
 
-void stage_group_9b034f1b_CifarDense_schedule_021_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
+void stage_group_9b034f1b_CifarDense_schedule_021_chunk1(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks) {
   for (auto& task : in_tasks) {
     run_gpu_stages<1, 9>(task.app_data);
-    tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
-    out_q.enqueue(task);
+    out_tasks.push_back(task);
   }
 }
 

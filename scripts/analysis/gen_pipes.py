@@ -33,7 +33,11 @@ def generate_schedule_header(schedule_obj: dict) -> str:
     num_chunks = len(chunks)
     for i, chunk in enumerate(chunks):
         chunk_name = chunk["name"]
-        if i == 0:
+        if num_chunks == 1:
+            lines.append(
+                f"void stage_group_{schedule_id}_{chunk_name}(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks);"
+            )
+        elif i == 0:
             lines.append(
                 f"void stage_group_{schedule_id}_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);"
             )
@@ -88,8 +92,19 @@ def generate_schedule_source(schedule_obj: dict) -> str:
             pt_enum = HARDWARE_MAP.get(hw_str, "ProcessorType::kUnknown")
             run_call = f"run_stages<{start_stage}, {end_stage}, {pt_enum}, {threads}>(task.app_data);"
 
-        if i == 0:
-            # First chunk: increment tasks_in_flight
+        if num_chunks == 1:
+            # Single chunk case: vector to vector
+            lines.append(
+                f"void stage_group_{schedule_id}_{chunk_name}(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks) {{"
+            )
+            lines.append("  for (auto& task : in_tasks) {")
+            lines.append(f"    {run_call}")
+            lines.append("    out_tasks.push_back(task);")
+            lines.append("  }")
+            lines.append("}")
+            lines.append("")
+        elif i == 0:
+            # First chunk of multi-chunk case
             lines.append(
                 f"void stage_group_{schedule_id}_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {{"
             )
@@ -101,7 +116,7 @@ def generate_schedule_source(schedule_obj: dict) -> str:
             lines.append("}")
             lines.append("")
         elif i == num_chunks - 1:
-            # Last chunk: decrement tasks_in_flight. If 0 => done=true
+            # Last chunk of multi-chunk case
             lines.append(
                 f"void stage_group_{schedule_id}_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {{"
             )
@@ -188,27 +203,6 @@ def generate_schedule_source(schedule_obj: dict) -> str:
             lines.append(
                 f"  std::thread {tvar}([&]() {{ stage_group_{schedule_id}_{chunk_name}(q_{i-1}{i}, q_{i}{i+1}); }});"
             )
-
-        # chunk_name = chunk["name"]
-        # tvar = f"t_{chunk_name}"
-        # thread_names.append(tvar)
-        # if i == 0:
-        #     if num_chunks > 1:
-        #         lines.append(
-        #             f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(q_0{1}));"
-        #         )
-        #     else:
-        #         lines.append(
-        #             f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(out_tasks));"
-        #         )
-        # elif i == num_chunks - 1:
-        #     lines.append(
-        #         f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(out_tasks));"
-        #     )
-        # else:
-        #     lines.append(
-        #         f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(q_{i}{i+1}));"
-        #     )
 
     lines.append("")
     for tvar in thread_names:
