@@ -3,43 +3,61 @@ import sqlite3
 import os
 import glob
 import re
-from typing import Optional
+from typing import Optional, List, Dict, Any, Tuple
+from dataclasses import dataclass
 
 
-def parse_filename(filename):
+@dataclass
+class ParsedRunName:
+    backend: str
+    application: str
+    stage: int
+    core_type: Optional[str]
+    num_threads: Optional[int]
+
+
+@dataclass
+class BenchmarkResult:
+    application: str
+    backend: str
+    device: str
+    data: Dict[str, Any]
+
+
+def parse_filename(filename: str) -> Tuple[str, str, str]:
     """
-    Given a filename like: BM_CifarDense_OMP_3A021JEHN02756.json
-    extract the application name, backend, and device name.
+    Parse benchmark filename to extract metadata.
 
-    Returns (application_name, backend, device_name).
+    Args:
+        filename: Filename like 'BM_CifarDense_OMP_3A021JEHN02756.json'
+
+    Returns:
+        Tuple of (application_name, backend, device_name)
+
+    Raises:
+        ValueError: If filename doesn't match expected format
     """
-    base = os.path.basename(filename)  # BM_CifarDense_OMP_3A021JEHN02756.json
-    root, _ = os.path.splitext(base)  # BM_CifarDense_OMP_3A021JEHN02756
-    parts = root.split("_")  # ["BM", "CifarDense", "OMP", "3A021JEHN02756"]
+    base = os.path.basename(filename)
+    root, _ = os.path.splitext(base)
+    parts = root.split("_")
 
     if len(parts) < 4:
-        # Adjust as needed if your filenames have a different pattern
         raise ValueError(f"Unexpected filename format: {filename}")
 
-    application_name = parts[1]  # e.g. CifarDense
-    backend = parts[2]  # e.g. OMP
-    device_name = parts[3]  # e.g. 3A021JEHN02756
-
-    return application_name, backend, device_name
+    return parts[1], parts[2], parts[3]
 
 
-def read_benchmarks(folder="data/raw_bm_results"):
+def read_benchmarks(folder: str = "data/raw_bm_results") -> List[BenchmarkResult]:
     """
-    Read and parse all JSON benchmark files under `folder`.
-    Returns a list of dictionaries, each containing:
-      - application
-      - backend
-      - device
-      - data (the JSON content)
+    Read and parse all JSON benchmark files under specified folder.
+
+    Args:
+        folder: Directory containing benchmark JSON files
+
+    Returns:
+        List of BenchmarkResult objects containing parsed data
     """
     results = []
-
-    # Use glob to find all .json files in the folder
     pattern = os.path.join(folder, "*.json")
     json_files = glob.glob(pattern)
 
@@ -48,129 +66,83 @@ def read_benchmarks(folder="data/raw_bm_results"):
         return results
 
     for file_path in json_files:
-        # Parse the filename for application, backend, and device
         try:
             application, backend, device = parse_filename(file_path)
-        except ValueError as e:
-            print(f"Error parsing filename {file_path}: {e}")
-            continue
-
-        # Load the JSON benchmark data
-        try:
             with open(file_path, "r") as f:
                 data = json.load(f)
-        except json.JSONDecodeError as e:
-            print(f"Error reading JSON from {file_path}: {e}")
-            print(f"Line {e.lineno}, column {e.colno}: {e.msg}")
+            results.append(
+                BenchmarkResult(
+                    application=application, backend=backend, device=device, data=data
+                )
+            )
+        except (ValueError, json.JSONDecodeError) as e:
+            print(f"Error processing {file_path}: {e}")
             continue
         except Exception as e:
             print(f"Unexpected error reading {file_path}: {e}")
             continue
 
-        # Store the data along with metadata
-        results.append(
-            {
-                "application": application,
-                "backend": backend,
-                "device": device,
-                "data": data,
-            }
-        )
-
     return results
 
 
-def parse_run_name(input_str):
+def parse_run_name(input_str: str) -> ParsedRunName:
     """
-    Parse an input string with the following possible format:
+    Parse benchmark run name string into components.
 
-      {Backend}_{Application}/{StageInfo}[/{NumThreads}]
-
-    Where:
-      - Backend is one of {OMP, CUDA, VK}
-      - Application is one of {CifarDense, CifarSparse, Tree}
-      - StageInfo is either:
-          "Baseline" optionally followed by a tail (e.g., "_median", "_cv", "_stddev")
-          OR
-          "StageX" optionally with an underscore and a core type (e.g., "Stage4_big")
-          In the case of "Baseline", stage is 0.
-      - NumThreads is an integer, optionally followed by tailing data (which are ignored).
-
-    Examples:
-      - "OMP_CifarDense/Baseline/2"               -> backend: "OMP",  application: "CifarDense", stage: 0, core_type: None, num_threads: 2
-      - "OMP_CifarSparse/Baseline/1_median"         -> backend: "OMP",  application: "CifarSparse", stage: 0, core_type: None, num_threads: 1
-      - "OMP_Tree/Stage2_big/1_cv"                  -> backend: "OMP",  application: "Tree", stage: 2, core_type: "big", num_threads: 1
-      - "VK_Tree/Stage6_cv"                         -> backend: "VK",   application: "Tree", stage: 6, core_type: None, num_threads: None
+    Args:
+        input_str: String like "Backend_Application/StageInfo[/NumThreads]"
 
     Returns:
-        dict: A dictionary with keys:
-            - 'backend'
-            - 'application'
-            - 'stage'
-            - 'core_type'
-            - 'num_threads'
+        ParsedRunName object containing extracted components
+
+    Raises:
+        ValueError: If input string doesn't match expected format
     """
-    # Split by '/'
     segments = input_str.split("/")
     if len(segments) < 2:
         raise ValueError("Input must have at least two segments separated by '/'")
 
-    # Parse the first segment: "Backend_Application"
     try:
         backend, application = segments[0].split("_", 1)
     except ValueError:
         raise ValueError("First segment must be in the format 'Backend_Application'")
 
-    # Initialize defaults
     stage = None
     core_type = None
     num_threads = None
 
-    # Parse the stage segment (second segment)
     stage_segment = segments[1]
     if stage_segment.startswith("Baseline"):
         stage = 0
     elif stage_segment.startswith("Stage"):
-        # Remove "Stage" and capture the stage number and optional core type.
-        # This regex captures one or more digits and an optional underscore followed by word characters.
         m = re.match(r"Stage(\d+)(?:_(\w+))?", stage_segment)
         if m:
             stage = int(m.group(1))
             core_candidate = m.group(2)
-            # Only assign core_type if it is one of the allowed types.
             if core_candidate in {"little", "small", "big"}:
                 core_type = core_candidate
         else:
-            raise ValueError(
-                "Stage segment does not match expected format (e.g., 'Stage4_big')"
-            )
+            raise ValueError("Stage segment does not match expected format")
     else:
         raise ValueError("Stage segment must start with 'Baseline' or 'Stage'")
 
-    # Parse the number of threads if the third segment exists.
     if len(segments) > 2:
         thread_segment = segments[2]
-        # Extract the leading number ignoring any tailing data (like _median, _cv, _stddev, etc.)
         m = re.match(r"(\d+)", thread_segment)
         if m:
             num_threads = int(m.group(1))
 
-    return {
-        "backend": backend,
-        "application": application,
-        "stage": stage,
-        "core_type": core_type,
-        "num_threads": num_threads,
-    }
+    return ParsedRunName(
+        backend=backend,
+        application=application,
+        stage=stage,
+        core_type=core_type,
+        num_threads=num_threads,
+    )
 
 
-def main():
-
-    # Connect to the SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect("./data/tmp.db")
-    cursor = conn.cursor()
-
-    # Create a table to store the benchmark results
+def create_database_schema(cursor: sqlite3.Cursor) -> None:
+    """Create the database schema if it doesn't exist."""
     cursor.execute(
         """
     CREATE TABLE IF NOT EXISTS benchmarks (
@@ -193,51 +165,75 @@ def main():
     """
     )
 
-    benchmarks = read_benchmarks("data/raw_bm_results")
+
+def insert_benchmark_data(
+    cursor: sqlite3.Cursor,
+    benchmark: BenchmarkResult,
+    parsed_run: ParsedRunName,
+    result: Dict[str, Any],
+) -> None:
+    """Insert a single benchmark result into the database."""
+    cursor.execute(
+        """
+        INSERT INTO benchmarks (
+            name, run_name, run_type, backend, application, device, 
+            stage, num_threads, core_type, repetitions, iterations, 
+            real_time, time_unit, aggregate_name
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            result["name"],
+            result["run_name"],
+            result["run_type"],
+            benchmark.backend,
+            benchmark.application,
+            benchmark.device,
+            parsed_run.stage,
+            parsed_run.num_threads,
+            parsed_run.core_type,
+            result["repetitions"],
+            result["iterations"],
+            result["real_time"],
+            result["time_unit"],
+            result.get("aggregate_name"),
+        ),
+    )
+
+
+def process_benchmarks(
+    benchmarks: List[BenchmarkResult], db_path: str = "./data/tmp.db"
+) -> None:
+    """
+    Process benchmark results and store them in the database.
+
+    Args:
+        benchmarks: List of benchmark results to process
+        db_path: Path to the SQLite database file
+    """
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    create_database_schema(cursor)
 
     for bm in benchmarks:
-        print(f"Processing {bm['application']} {bm['backend']} {bm['device']}...")
+        print(f"Processing {bm.application} {bm.backend} {bm.device}...")
 
-        for result in bm["data"]["benchmarks"]:
+        for result in bm.data["benchmarks"]:
             try:
-                parsed_run_name = parse_run_name(result["run_name"])
+                parsed_run = parse_run_name(result["run_name"])
+                insert_benchmark_data(cursor, bm, parsed_run, result)
             except ValueError as e:
                 print(f"Warning: {e}")
                 continue
 
-            # Get aggregate_name with .get() to handle missing key
-            aggregate_name = result.get("aggregate_name")
-
-            cursor.execute(
-                """
-            INSERT INTO benchmarks (
-                name, run_name, run_type, backend, application, device, stage, num_threads, core_type, repetitions, iterations, real_time, time_unit, aggregate_name
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-                (
-                    result["name"],
-                    result["run_name"],
-                    result["run_type"],
-                    bm["backend"],
-                    bm["application"],
-                    bm["device"],
-                    parsed_run_name["stage"],
-                    parsed_run_name["num_threads"],
-                    parsed_run_name["core_type"],
-                    result["repetitions"],
-                    result["iterations"],
-                    result["real_time"],
-                    result["time_unit"],
-                    aggregate_name,  # Using the .get() result from above
-                ),
-            )
-
-        # exit(0)
-
     conn.commit()
     conn.close()
-
     print("Benchmark data has been written to tmp.db")
+
+
+def main():
+    benchmarks = read_benchmarks("data/raw_bm_results")
+    process_benchmarks(benchmarks)
 
 
 if __name__ == "__main__":
