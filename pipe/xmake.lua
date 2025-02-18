@@ -23,3 +23,4 @@ rule_end()
 
 includes("cifar-dense-vk")
 includes("cifar-sparse-vk")
+includes("tree-vk")
