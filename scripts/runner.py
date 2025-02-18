@@ -1,19 +1,16 @@
-# adb -s 3A021JEHN02756 shell /data/local/tmp/pipe-cifar-dense-vk -l info --device=3A021JEHN02756 -s 1
-
-
-NUM_SCHEDULES = 50
-
 import subprocess
 import re
 from typing import Dict, Optional, Tuple
 import time
 import json
 import glob
-import os
 import numpy as np
 from scipy import stats
 import argparse
 from colorama import init, Fore, Style
+from tabulate import tabulate
+
+NUM_SCHEDULES = 50
 
 # Initialize colorama
 init()
@@ -94,7 +91,7 @@ def run_command(device_id: str, schedule_num: int) -> Optional[float]:
     ]
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
         output = result.stdout + result.stderr
 
         # Look for the average time pattern
@@ -196,118 +193,88 @@ def main():
         time.sleep(1)
 
     # Generate report
-    print("\n" + "=" * 50)
-    print("FINAL REPORT")
-    print("=" * 50)
-
-    print("\nSuccessful runs with prediction comparison:")
-    prediction_accuracy = []
-    for schedule in successful_runs:
-        actual = results[schedule]
-        predicted = predictions.get(schedule)
-        if predicted:
-            diff = calculate_prediction_accuracy(actual, predicted)[0]
-            prediction_accuracy.append(diff)
-            print(f"Schedule {schedule}:")
-            print(f"  Actual: {actual:.2f} ms")
-            print(f"  Predicted: {predicted:.2f} ms")
-            print(
-                f"  {abs(diff):.1f}% {'slower' if diff > 0 else 'faster'} than predicted"
-            )
-
-    print("\nFailed runs:")
-    for schedule in failed_runs:
-        print(f"Schedule {schedule}")
+    print(f"\n{Style.BRIGHT}{'='*50}")
+    print(f"{Fore.CYAN}FINAL REPORT{Style.RESET_ALL}")
+    print(f"{Style.BRIGHT}{'='*50}{Style.RESET_ALL}\n")
 
     if successful_runs:
+        # Summary Table
+        summary_data = [
+            ["Total schedules", args.num_schedules],
+            ["Successful runs", f"{Fore.GREEN}{len(successful_runs)}{Style.RESET_ALL}"],
+            ["Failed runs", f"{Fore.RED}{len(failed_runs)}{Style.RESET_ALL}"],
+        ]
+        print(f"{Style.BRIGHT}Test Summary:{Style.RESET_ALL}")
+        print(tabulate(summary_data, tablefmt="simple"))
+        print()
+
+        # Performance Statistics Table
         actual_times = [results[s] for s in successful_runs]
+        best_schedule = min(successful_runs, key=lambda x: results[x])
+        worst_schedule = max(successful_runs, key=lambda x: results[x])
+
+        stats_data = [
+            ["Best Schedule", f"{best_schedule} ({results[best_schedule]:.2f} ms)"],
+            ["Worst Schedule", f"{worst_schedule} ({results[worst_schedule]:.2f} ms)"],
+            ["Mean Time", f"{np.mean(actual_times):.2f} ms"],
+            ["Median Time", f"{np.median(actual_times):.2f} ms"],
+            ["Standard Deviation", f"{np.std(actual_times):.2f} ms"],
+            ["95th Percentile", f"{np.percentile(actual_times, 95):.2f} ms"],
+            ["5th Percentile", f"{np.percentile(actual_times, 5):.2f} ms"],
+        ]
+        print(f"{Style.BRIGHT}Performance Statistics:{Style.RESET_ALL}")
+        print(tabulate(stats_data, tablefmt="simple"))
+        print()
+
+        # Prediction Analysis
         prediction_differences = []
         faster_than_predicted = []
         slower_than_predicted = []
 
+        prediction_data = []
         for schedule in successful_runs:
             actual = results[schedule]
             predicted = predictions.get(schedule)
             if predicted:
                 diff = calculate_prediction_accuracy(actual, predicted)[0]
                 prediction_differences.append(diff)
+                status = (
+                    f"{Fore.RED}+{diff:.1f}%"
+                    if diff > 0
+                    else f"{Fore.GREEN}{diff:.1f}%{Style.RESET_ALL}"
+                )
+
+                prediction_data.append(
+                    [schedule, f"{actual:.2f}", f"{predicted:.2f}", status]
+                )
+
                 if diff > 0:
                     slower_than_predicted.append(diff)
                 else:
                     faster_than_predicted.append(abs(diff))
 
-        # Basic Performance Statistics
-        print("\nPerformance Summary:")
-        print(f"Total schedules tested: {args.num_schedules}")
-        print(f"Successful runs: {len(successful_runs)}")
-        print(f"Failed runs: {len(failed_runs)}")
-
-        best_schedule = min(successful_runs, key=lambda x: results[x])
-        worst_schedule = max(successful_runs, key=lambda x: results[x])
-
-        print(f"\nExecution Time Statistics:")
-        print(
-            f"Best performing schedule: {best_schedule} ({results[best_schedule]:.2f} ms)"
-        )
-        print(
-            f"Worst performing schedule: {worst_schedule} ({results[worst_schedule]:.2f} ms)"
-        )
-        print(f"Mean execution time: {np.mean(actual_times):.2f} ms")
-        print(f"Median execution time: {np.median(actual_times):.2f} ms")
-        print(f"Standard deviation: {np.std(actual_times):.2f} ms")
-        print(f"95th percentile: {np.percentile(actual_times, 95):.2f} ms")
-        print(f"5th percentile: {np.percentile(actual_times, 5):.2f} ms")
-
         if prediction_differences:
-            print("\nPrediction Accuracy Summary:")
-            print("Faster than predicted:")
-            if faster_than_predicted:
-                print(f"  Count: {len(faster_than_predicted)}")
-                print(f"  Mean error: {np.mean(faster_than_predicted):.1f}%")
-                print(f"  Max error: {max(faster_than_predicted):.1f}%")
-                print(f"  Min error: {min(faster_than_predicted):.1f}%")
-            else:
-                print("  No schedules were faster than predicted")
+            print(f"\n{Style.BRIGHT}Prediction Results:{Style.RESET_ALL}")
+            headers = ["Schedule", "Measured (ms)", "Predicted (ms)", "Difference"]
+            print(tabulate(prediction_data, headers=headers, tablefmt="simple"))
 
-            print("\nSlower than predicted:")
-            if slower_than_predicted:
-                print(f"  Count: {len(slower_than_predicted)}")
-                print(f"  Mean error: {np.mean(slower_than_predicted):.1f}%")
-                print(f"  Max error: {max(slower_than_predicted):.1f}%")
-                print(f"  Min error: {min(slower_than_predicted):.1f}%")
-            else:
-                print("  No schedules were slower than predicted")
-
-            print("\nOverall Prediction Statistics:")
-            print(f"Mean prediction error: {np.mean(prediction_differences):.1f}%")
-            print(f"Median prediction error: {np.median(prediction_differences):.1f}%")
-            print(f"Standard deviation: {np.std(prediction_differences):.1f}%")
-            print(f"Skewness: {stats.skew(prediction_differences):.2f}")
-            print(f"Kurtosis: {stats.kurtosis(prediction_differences):.2f}")
-
-            # Histogram of prediction errors
-            print("\nHistogram of Prediction Errors:")
-            print(
-                "(Negative % = faster than predicted, Positive % = slower than predicted)"
-            )
-            print(create_console_histogram(prediction_differences))
-
-            # Additional analysis
-            print("\nPrediction Reliability:")
+            print(f"\n{Style.BRIGHT}Prediction Accuracy Distribution:{Style.RESET_ALL}")
             within_5_percent = sum(abs(x) <= 5 for x in prediction_differences)
             within_10_percent = sum(abs(x) <= 10 for x in prediction_differences)
             within_20_percent = sum(abs(x) <= 20 for x in prediction_differences)
-
             total_predictions = len(prediction_differences)
-            print(
-                f"Predictions within ±5%: {within_5_percent/total_predictions*100:.1f}%"
-            )
-            print(
-                f"Predictions within ±10%: {within_10_percent/total_predictions*100:.1f}%"
-            )
-            print(
-                f"Predictions within ±20%: {within_20_percent/total_predictions*100:.1f}%"
-            )
+
+            accuracy_data = [
+                ["Within ±5%", f"{within_5_percent/total_predictions*100:.1f}%"],
+                ["Within ±10%", f"{within_10_percent/total_predictions*100:.1f}%"],
+                ["Within ±20%", f"{within_20_percent/total_predictions*100:.1f}%"],
+            ]
+            print(tabulate(accuracy_data, tablefmt="simple"))
+
+    if failed_runs:
+        print(f"\n{Style.BRIGHT}{Fore.RED}Failed Runs:{Style.RESET_ALL}")
+        for schedule in failed_runs:
+            print(f"  • Schedule {schedule}")
 
 
 if __name__ == "__main__":
