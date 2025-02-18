@@ -3,12 +3,14 @@ import argparse
 import sqlite3
 import os
 import sys
-import hashlib
 from pathlib import Path
 
 from dataclasses import dataclass
 from itertools import permutations
 from typing import List, Tuple, Dict, Any, Optional
+
+HARDWARE_PATH = "data/hardware_config.json"
+APPLICATION_PATH = "data/application_config.json"
 
 
 @dataclass
@@ -26,8 +28,8 @@ DB_PATH = "data/benchmark_results.db"
 def load_configs(
     device_key: str,
     app_key: str,
-    hardware_path: str = "data/hardware_config.json",
-    application_path: str = "data/application_config.json",
+    hardware_path: str = HARDWARE_PATH,
+    application_path: str = APPLICATION_PATH,
 ) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
     """Load and return hardware and application configurations."""
     with open(hardware_path, "r") as f:
@@ -175,12 +177,14 @@ def show_schedule_timing(
             # Prepare a parameterized query to find the record
             # matching device_key, app_key, backend, stage, etc.
             query = """
-                SELECT time_ms 
-                FROM benchmark_result
-                WHERE machine_name = ?
+                SELECT real_time 
+                FROM benchmarks
+                WHERE device = ?
                   AND application = ?
                   AND backend = ?
                   AND stage = ?
+                  AND run_type = 'aggregate'
+                  AND aggregate_name = 'mean'
             """
             params = [device_key, app_key, backend, stage_id]
 
@@ -273,8 +277,8 @@ def query_baseline(
     Query for baseline records (stage=0). Return (num_threads, best_time) with the lowest time.
     """
     query = """
-    SELECT num_threads, time_ms FROM benchmark_result
-    WHERE machine_name = ?
+    SELECT num_threads, real_time FROM benchmarks
+    WHERE device = ?
       AND application = ?
       AND stage = 0
       AND backend = 'OMP'
@@ -363,7 +367,7 @@ def main():
         description="Generate possible scheduling combinations."
     )
     parser.add_argument(
-        "--machine_name", required=True, help="Device ID from hardware config"
+        "--device", required=True, help="Device ID from hardware config"
     )
     parser.add_argument(
         "--app", required=True, help="Application name from application config"
@@ -377,7 +381,7 @@ def main():
 
     # Load configurations once
     hardware_data, application_data, device_info, app_info = load_configs(
-        args.machine_name, args.app
+        args.device, args.app
     )
 
     # Connect to database once
@@ -400,13 +404,11 @@ def main():
         # Evaluate and sort all schedules
         print("\nEvaluating all schedules...")
         schedules = evaluate_and_sort_schedules(
-            schedules, device_info, cursor, args.machine_name, args.app
+            schedules, device_info, cursor, args.device, args.app
         )
 
         # Query baseline
-        baseline_threads, baseline_time = query_baseline(
-            args.machine_name, args.app, conn
-        )
+        baseline_threads, baseline_time = query_baseline(args.device, args.app, conn)
 
         # filter out schedules whose max chunk time is greater than baseline time
         schedules = [
@@ -438,7 +440,7 @@ def main():
         schedules = schedules[:50]
 
         # After filtering schedules, write them to JSON files
-        write_schedules_to_json(schedules, args.machine_name, args.app, args.output_dir)
+        write_schedules_to_json(schedules, args.device, args.app, args.output_dir)
 
         print(f"Wrote {len(schedules)} schedules to {args.output_dir}")
 

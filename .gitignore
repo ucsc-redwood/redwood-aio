@@ -1,6 +1,8 @@
 # Project specific
 # ppl/vulkan/shaders/compiled_shaders/*.spv
 
+tmp/
+
 # Resources
 resources.tar.gz
 
