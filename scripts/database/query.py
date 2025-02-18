@@ -5,7 +5,7 @@ import sys
 from typing import Optional, List, Tuple, Any
 from dataclasses import dataclass
 
-DB_PATH = "data/tmp.db"
+DB_PATH = "data/benchmark_results.db"
 
 
 @dataclass

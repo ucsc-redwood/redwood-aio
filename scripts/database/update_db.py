@@ -6,6 +6,8 @@ import re
 from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass
 
+DB_PATH = "data/benchmark_results.db"
+
 
 @dataclass
 class ParsedRunName:
@@ -220,7 +222,7 @@ def insert_benchmark_data(
 
 
 def process_benchmarks(
-    benchmarks: List[BenchmarkResult], db_path: str = "./data/tmp.db"
+    benchmarks: List[BenchmarkResult], db_path: str = DB_PATH
 ) -> None:
     """
     Process benchmark results and store them in the database.
@@ -247,7 +249,7 @@ def process_benchmarks(
 
     conn.commit()
     conn.close()
-    print("Benchmark data has been written to tmp.db")
+    print("Benchmark data has been written to benchmark_results.db")
 
 
 def main():
