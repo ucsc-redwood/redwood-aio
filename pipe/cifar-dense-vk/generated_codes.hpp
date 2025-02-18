@@ -118,19 +118,6 @@ static const RunPipelineFunc run_pipeline_table[] = {
 
 }  // namespace device_ce0717178d7758b00b7e
 
-// // Helper function to get the run_pipeline function for a given schedule ID (1-based indexing)
-// [[nodiscard]] inline RunPipelineFunc get_run_pipeline(const std::string_view device_id,
-//                                                       int schedule_id) {
-//   if (device_id == "3A021JEHN02756") {
-//     return device_3A021JEHN02756::run_pipeline_table[schedule_id - 1];
-//   } else if (device_id == "9b034f1b") {
-//     return device_9b034f1b::run_pipeline_table[schedule_id - 1];
-//   } else if (device_id == "ce0717178d7758b00b7e") {
-//     return device_ce0717178d7758b00b7e::run_pipeline_table[schedule_id - 1];
-//   }
-//   return nullptr;
-// }
-
 template <int device_index>
 [[nodiscard]] constexpr RunPipelineFunc get_run_pipeline(int schedule_id) {
   if constexpr (device_index == 0) {
