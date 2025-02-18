@@ -35,15 +35,15 @@ def generate_schedule_header(schedule_obj: dict) -> str:
         chunk_name = chunk["name"]
         if i == 0:
             lines.append(
-                f"void stage_group_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);"
+                f"void stage_group_{schedule_id}_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);"
             )
         elif i == num_chunks - 1:
             lines.append(
-                f"void stage_group_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);"
+                f"void stage_group_{schedule_id}_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);"
             )
         else:
             lines.append(
-                f"void stage_group_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);"
+                f"void stage_group_{schedule_id}_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);"
             )
 
     lines.append("")
@@ -91,7 +91,7 @@ def generate_schedule_source(schedule_obj: dict) -> str:
         if i == 0:
             # First chunk: increment tasks_in_flight
             lines.append(
-                f"void stage_group_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {{"
+                f"void stage_group_{schedule_id}_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {{"
             )
             lines.append("  for (auto& task : in_tasks) {")
             lines.append(f"    {run_call}")
@@ -103,7 +103,7 @@ def generate_schedule_source(schedule_obj: dict) -> str:
         elif i == num_chunks - 1:
             # Last chunk: decrement tasks_in_flight. If 0 => done=true
             lines.append(
-                f"void stage_group_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {{"
+                f"void stage_group_{schedule_id}_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {{"
             )
             lines.append("  while (!done.load(std::memory_order_acquire)) {")
             lines.append("    Task task;")
@@ -135,7 +135,7 @@ def generate_schedule_source(schedule_obj: dict) -> str:
         else:
             # Intermediate chunks
             lines.append(
-                f"void stage_group_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {{"
+                f"void stage_group_{schedule_id}_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {{"
             )
             lines.append("  while (!done.load(std::memory_order_acquire)) {")
             lines.append("    Task task;")
@@ -174,19 +174,19 @@ def generate_schedule_source(schedule_obj: dict) -> str:
         if i == 0:
             if num_chunks > 1:
                 lines.append(
-                    f"  std::thread {tvar}(stage_group_{chunk_name}, std::ref(tasks), std::ref(q_0{1}));"
+                    f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(q_0{1}));"
                 )
             else:
                 lines.append(
-                    f"  std::thread {tvar}(stage_group_{chunk_name}, std::ref(tasks), std::ref(out_tasks));"
+                    f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(out_tasks));"
                 )
         elif i == num_chunks - 1:
             lines.append(
-                f"  std::thread {tvar}(stage_group_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(out_tasks));"
+                f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(out_tasks));"
             )
         else:
             lines.append(
-                f"  std::thread {tvar}(stage_group_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(q_{i}{i+1}));"
+                f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(q_{i}{i+1}));"
             )
 
     lines.append("")
