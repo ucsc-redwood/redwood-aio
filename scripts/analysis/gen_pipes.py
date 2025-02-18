@@ -174,20 +174,41 @@ def generate_schedule_source(schedule_obj: dict) -> str:
         if i == 0:
             if num_chunks > 1:
                 lines.append(
-                    f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(q_0{1}));"
+                    f"  std::thread {tvar}([&]() {{ stage_group_{schedule_id}_{chunk_name}(tasks, q_0{1}); }});"
                 )
             else:
                 lines.append(
-                    f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(out_tasks));"
+                    f"  std::thread {tvar}([&]() {{ stage_group_{schedule_id}_{chunk_name}(tasks, out_tasks); }});"
                 )
         elif i == num_chunks - 1:
             lines.append(
-                f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(out_tasks));"
+                f"  std::thread {tvar}([&]() {{ stage_group_{schedule_id}_{chunk_name}(q_{i-1}{i}, out_tasks); }});"
             )
         else:
             lines.append(
-                f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(q_{i}{i+1}));"
+                f"  std::thread {tvar}([&]() {{ stage_group_{schedule_id}_{chunk_name}(q_{i-1}{i}, q_{i}{i+1}); }});"
             )
+
+        # chunk_name = chunk["name"]
+        # tvar = f"t_{chunk_name}"
+        # thread_names.append(tvar)
+        # if i == 0:
+        #     if num_chunks > 1:
+        #         lines.append(
+        #             f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(q_0{1}));"
+        #         )
+        #     else:
+        #         lines.append(
+        #             f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(tasks), std::ref(out_tasks));"
+        #         )
+        # elif i == num_chunks - 1:
+        #     lines.append(
+        #         f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(out_tasks));"
+        #     )
+        # else:
+        #     lines.append(
+        #         f"  std::thread {tvar}(stage_group_{schedule_id}_{chunk_name}, std::ref(q_{i-1}{i}), std::ref(q_{i}{i+1}));"
+        #     )
 
     lines.append("")
     for tvar in thread_names:
