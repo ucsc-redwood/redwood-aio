@@ -44,6 +44,24 @@ def run_command(schedule_num: int) -> Optional[float]:
     Run the command for a given schedule number and return the average time if successful.
     Returns None if the execution failed.
     """
+    # Push the executable to the device
+    try:
+        subprocess.run(
+            [
+                "adb",
+                "-s",
+                "3A021JEHN02756",
+                "push",
+                "./build/android/arm64-v8a/release/pipe-cifar-dense-vk",
+                "/data/local/tmp/pipe-cifar-dense-vk",
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to push executable to device: {e}")
+        return None
+
+    # Run the executable
     cmd = [
         "adb",
         "-s",
