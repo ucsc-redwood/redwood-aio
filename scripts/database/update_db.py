@@ -24,6 +24,12 @@ class BenchmarkResult:
     data: Dict[str, Any]
 
 
+@dataclass
+class DatabaseStats:
+    new_entries: int = 0
+    updated_entries: int = 0
+
+
 def parse_filename(filename: str) -> Tuple[str, str, str]:
     """
     Parse benchmark filename to extract metadata.
@@ -143,24 +149,28 @@ def parse_run_name(input_str: str) -> ParsedRunName:
 
 def create_database_schema(cursor: sqlite3.Cursor) -> None:
     """Create the database schema if it doesn't exist."""
+    # First drop the existing table if we're recreating the schema
+    cursor.execute("DROP TABLE IF EXISTS benchmarks")
+
     cursor.execute(
         """
     CREATE TABLE IF NOT EXISTS benchmarks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        device TEXT,
+        application TEXT,
+        backend TEXT,
+        stage INTEGER,
+        core_type TEXT,
+        num_threads INTEGER,
         name TEXT,
         run_name TEXT,
         run_type TEXT,
-        backend TEXT,
-        application TEXT,
-        device TEXT,
-        stage INTEGER,
-        num_threads INTEGER,
-        core_type TEXT,
         repetitions INTEGER,
         iterations INTEGER,
         real_time REAL,
         time_unit TEXT,
-        aggregate_name TEXT NULL
+        aggregate_name TEXT NULL,
+        UNIQUE(device, application, backend, stage, core_type, num_threads)
     )
     """
     )
@@ -171,26 +181,62 @@ def insert_benchmark_data(
     benchmark: BenchmarkResult,
     parsed_run: ParsedRunName,
     result: Dict[str, Any],
-) -> None:
-    """Insert a single benchmark result into the database."""
+) -> bool:
+    """
+    Insert or update a single benchmark result in the database.
+
+    Returns:
+        bool: True if new entry was inserted, False if existing entry was updated
+    """
+    # First check if entry exists
+    cursor.execute(
+        """
+        SELECT COUNT(*) FROM benchmarks 
+        WHERE device = ? 
+        AND application = ? 
+        AND backend = ? 
+        AND stage = ? 
+        AND core_type = ? 
+        AND num_threads = ?
+        """,
+        (
+            benchmark.device,
+            benchmark.application,
+            benchmark.backend,
+            parsed_run.stage,
+            parsed_run.core_type,
+            parsed_run.num_threads,
+        ),
+    )
+    exists = cursor.fetchone()[0] > 0
+
     cursor.execute(
         """
         INSERT INTO benchmarks (
-            name, run_name, run_type, backend, application, device, 
-            stage, num_threads, core_type, repetitions, iterations, 
-            real_time, time_unit, aggregate_name
+            device, application, backend, stage, core_type, num_threads,
+            name, run_name, run_type, repetitions, iterations, real_time, time_unit, aggregate_name
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(device, application, backend, stage, core_type, num_threads) 
+        DO UPDATE SET
+            name = excluded.name,
+            run_name = excluded.run_name,
+            run_type = excluded.run_type,
+            repetitions = excluded.repetitions,
+            iterations = excluded.iterations,
+            real_time = excluded.real_time,
+            time_unit = excluded.time_unit,
+            aggregate_name = excluded.aggregate_name
         """,
         (
+            benchmark.device,
+            benchmark.application,
+            benchmark.backend,
+            parsed_run.stage,
+            parsed_run.core_type,
+            parsed_run.num_threads,
             result["name"],
             result["run_name"],
             result["run_type"],
-            benchmark.backend,
-            benchmark.application,
-            benchmark.device,
-            parsed_run.stage,
-            parsed_run.num_threads,
-            parsed_run.core_type,
             result["repetitions"],
             result["iterations"],
             result["real_time"],
@@ -198,6 +244,8 @@ def insert_benchmark_data(
             result.get("aggregate_name"),
         ),
     )
+
+    return not exists
 
 
 def process_benchmarks(
@@ -215,20 +263,49 @@ def process_benchmarks(
 
     create_database_schema(cursor)
 
+    # Track stats for each file
+    file_stats: Dict[str, DatabaseStats] = {}
+
     for bm in benchmarks:
         print(f"Processing {bm.application} {bm.backend} {bm.device}...")
+
+        file_key = f"{bm.application}_{bm.backend}_{bm.device}"
+        stats = DatabaseStats()
 
         for result in bm.data["benchmarks"]:
             try:
                 parsed_run = parse_run_name(result["run_name"])
-                insert_benchmark_data(cursor, bm, parsed_run, result)
+                is_new = insert_benchmark_data(cursor, bm, parsed_run, result)
+                if is_new:
+                    stats.new_entries += 1
+                else:
+                    stats.updated_entries += 1
             except ValueError as e:
                 print(f"Warning: {e}")
                 continue
 
+        file_stats[file_key] = stats
+
     conn.commit()
     conn.close()
-    print("Benchmark data has been written to tmp.db")
+
+    # Print final report
+    print("\nDatabase Update Report:")
+    print("-" * 60)
+    total_new = 0
+    total_updated = 0
+
+    for file_key, stats in file_stats.items():
+        print(f"\n{file_key}:")
+        print(f"  New entries: {stats.new_entries}")
+        print(f"  Updated entries: {stats.updated_entries}")
+        total_new += stats.new_entries
+        total_updated += stats.updated_entries
+
+    print("\nTotal Summary:")
+    print(f"Total new entries: {total_new}")
+    print(f"Total updated entries: {total_updated}")
+    print(f"Total processed: {total_new + total_updated}")
 
 
 def main():
