@@ -41,7 +41,7 @@ def read_benchmarks(folder="data/raw_bm_results"):
     # Use glob to find all .json files in the folder
     pattern = os.path.join(folder, "*.json")
     json_files = glob.glob(pattern)
-
+    
     if not json_files:
         print(f"Warning: No JSON files found in {folder}")
         return results
@@ -85,16 +85,14 @@ def main():
 
     # Process each benchmark file
     for bm in benchmarks:
-        print(
-            f"\nResults for {bm['application']} using {bm['backend']} on device {bm['device']}:"
-        )
-
-        # # Filter for aggregate results and print real_time
-        # for result in bm["data"]["benchmarks"]:
-        #     if result.get("run_type") == "aggregate":
-        #         name = result["name"]
-        #         real_time = result["real_time"]
-        #         print(f"{name}: {real_time:.4f} {result.get('time_unit', 'ms')}")
+        print(f"\nResults for {bm['application']} using {bm['backend']} on device {bm['device']}:")
+        
+        # Filter for aggregate results and print real_time
+        for result in bm['data']['benchmarks']:
+            if result.get('run_type') == 'aggregate':
+                name = result['name']
+                real_time = result['real_time']
+                print(f"{name}: {real_time:.4f} {result.get('time_unit', 'ms')}")
 
 
 if __name__ == "__main__":
