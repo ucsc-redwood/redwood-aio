@@ -5,8 +5,8 @@
     "chunks": [
       {
         "name": "chunk1",
-        "hardware": "little",
-        "threads": 4,
+        "hardware": "big",
+        "threads": 2,
         "stages": [
           1,
           2
@@ -20,28 +20,21 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ]
       },
       {
         "name": "chunk3",
-        "hardware": "big",
-        "threads": 2,
-        "stages": [
-          7,
-          8
-        ]
-      },
-      {
-        "name": "chunk4",
         "hardware": "medium",
         "threads": 2,
         "stages": [
+          8,
           9
         ]
       }
     ]
   },
-  "total_time": 69.919,
-  "max_chunk_time": 33.141
+  "total_time": 33.1446060837709,
+  "max_chunk_time": 29.94264819595266
 }

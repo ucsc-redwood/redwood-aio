@@ -8,9 +8,7 @@
         "hardware": "big",
         "threads": 2,
         "stages": [
-          1,
-          2,
-          3
+          1
         ]
       },
       {
@@ -18,8 +16,9 @@
         "hardware": "medium",
         "threads": 2,
         "stages": [
-          4,
-          5
+          2,
+          3,
+          4
         ]
       },
       {
@@ -27,6 +26,7 @@
         "hardware": "gpu",
         "threads": 0,
         "stages": [
+          5,
           6,
           7
         ]
@@ -42,6 +42,6 @@
       }
     ]
   },
-  "total_time": 80.85000000000001,
-  "max_chunk_time": 31.314
+  "total_time": 53.685541633050626,
+  "max_chunk_time": 27.38957179727331
 }

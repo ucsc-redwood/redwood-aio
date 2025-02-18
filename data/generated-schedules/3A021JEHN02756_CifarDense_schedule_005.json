@@ -5,36 +5,43 @@
     "chunks": [
       {
         "name": "chunk1",
-        "hardware": "big",
-        "threads": 2,
+        "hardware": "little",
+        "threads": 4,
         "stages": [
           1,
-          2,
-          3
+          2
         ]
       },
       {
         "name": "chunk2",
-        "hardware": "gpu",
-        "threads": 0,
+        "hardware": "medium",
+        "threads": 2,
         "stages": [
-          4,
-          5,
-          6
+          3,
+          4
         ]
       },
       {
         "name": "chunk3",
-        "hardware": "medium",
+        "hardware": "gpu",
+        "threads": 0,
+        "stages": [
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "name": "chunk4",
+        "hardware": "big",
         "threads": 2,
         "stages": [
-          7,
           8,
           9
         ]
       }
     ]
   },
-  "total_time": 79.724,
-  "max_chunk_time": 30.768
+  "total_time": 57.02294045698498,
+  "max_chunk_time": 27.078171667519783
 }
