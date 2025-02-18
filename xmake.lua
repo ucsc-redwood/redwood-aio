@@ -5,6 +5,18 @@ add_rules("mode.debug", "mode.release")
 set_languages("c++20")
 set_warnings("allextra")
 
+-- if is_plat("windows") then
+--     add_cxflags("-fexec-charset=UTF-8", {force = true})
+--     add_cxflags("-finput-charset=UTF-8", {force = true})
+
+--     if has_config("cuda") then
+--         -- Add UTF-8 support for CUDA compiler
+--         add_cuflags("-Xcompiler", "-fexec-charset=UTF-8", {force = true})
+--         -- Suppress CUDA architecture warning
+--         add_cuflags("-Wno-deprecated-gpu-targets", {force = true})
+--     end
+-- end
+
 -- For consistency across Windows, Linux
 if not is_plat("android") then
     set_toolchains("clang")
@@ -43,11 +55,11 @@ rule("common_flags")
         target:add("packages", "spdlog")
         target:add("packages", "glm")
 
-        -- if has cuda
-        if has_config("cuda") then
-            target:add("cuflags", "-Xcompiler", "-fopenmp", {force = true})
-            target:add("ldflags", "-fopenmp", {force = true})
-        end
+        -- -- if has cuda
+        -- if has_config("cuda") then
+        --     target:add("cuflags", "-Xcompiler", "-fopenmp", {force = true})
+        --     target:add("ldflags", "-fopenmp", {force = true})
+        -- end
     end)
 rule_end()
 
