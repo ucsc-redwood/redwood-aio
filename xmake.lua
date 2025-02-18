@@ -5,6 +5,10 @@ add_rules("mode.debug", "mode.release")
 set_languages("c++20")
 set_warnings("allextra")
 
+if is_plat("windows") then
+    add_cxflags("/utf-8")
+end
+
 -- For consistency across Windows, Linux
 if not is_plat("android") then
     set_toolchains("clang")

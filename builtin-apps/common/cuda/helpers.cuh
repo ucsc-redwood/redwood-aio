@@ -43,6 +43,6 @@ constexpr size_t div_up(const size_t a, const size_t b) { return (a + b - 1) / b
 // ----------------------------------------------------------------------------
 
 #define SETUP_DEFAULT_LAUNCH_PARAMS(TOTAL_ITER, BLOCK_SIZE)     \
-  static constexpr auto block_dim = dim3{BLOCK_SIZE, 1, 1};     \
+  static const auto block_dim = dim3{BLOCK_SIZE, 1, 1};         \
   static const auto grid_dim = div_up(TOTAL_ITER, block_dim.x); \
   static constexpr auto shared_mem = 0;
