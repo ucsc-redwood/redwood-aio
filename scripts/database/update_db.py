@@ -196,6 +196,8 @@ def main():
     benchmarks = read_benchmarks("data/raw_bm_results")
 
     for bm in benchmarks:
+        print(f"Processing {bm['application']} {bm['backend']} {bm['device']}...")
+
         for result in bm["data"]["benchmarks"]:
             try:
                 parsed_run_name = parse_run_name(result["run_name"])
