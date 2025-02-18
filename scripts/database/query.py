@@ -2,21 +2,123 @@ import sqlite3
 import argparse
 import os
 import sys
+from typing import Optional, List, Tuple, Any
+from dataclasses import dataclass
 
 DB_PATH = "data/tmp.db"
 
 
+@dataclass
+class QueryFilters:
+    device: Optional[str] = None
+    application: Optional[str] = None
+    backend: Optional[str] = None
+    stage: Optional[int] = None
+    core_type: Optional[str] = None
+    num_threads: Optional[int] = None
+
+
+def build_query(filters: QueryFilters) -> Tuple[str, List[Any]]:
+    """
+    Build SQL query string and parameters based on provided filters.
+
+    Args:
+        filters: QueryFilters object containing filter criteria
+
+    Returns:
+        Tuple of (query_string, parameters)
+    """
+    query = "SELECT * FROM benchmarks WHERE 1=1"
+    query += " AND run_type = 'aggregate'"
+    query += " AND aggregate_name = 'mean'"
+    params: List[Any] = []
+
+    # Apply filters if provided
+    if filters.device:
+        query += " AND device = ?"
+        params.append(filters.device)
+    if filters.application:
+        query += " AND application = ?"
+        params.append(filters.application)
+    if filters.backend:
+        query += " AND backend = ?"
+        params.append(filters.backend)
+    if filters.stage is not None:
+        query += " AND stage = ?"
+        params.append(filters.stage)
+    if filters.core_type:
+        query += " AND core_type = ?"
+        params.append(filters.core_type)
+    if filters.num_threads is not None:
+        query += " AND num_threads = ?"
+        params.append(filters.num_threads)
+
+    query += " ORDER BY device, application, backend, core_type, stage, num_threads"
+
+    return query, params
+
+
+def print_verbose_results(rows: List[Tuple], column_names: List[str]) -> None:
+    """
+    Print all columns of query results.
+
+    Args:
+        rows: List of database rows
+        column_names: List of column names
+    """
+    if not rows:
+        print("No matching records found.")
+        return
+
+    print(f"{' | '.join(column_names)}")
+    print("-" * 100)
+    for row in rows:
+        print(" | ".join(str(item) for item in row))
+
+
+def print_summary_results(rows: List[Tuple], column_names: List[str]) -> None:
+    """
+    Print summarized version of query results.
+
+    Args:
+        rows: List of database rows
+        column_names: List of column names
+    """
+    if not rows:
+        print("No matching records found.")
+        return
+
+    headers = [
+        "device",
+        "application",
+        "backend",
+        "stage",
+        "core_type",
+        "num_threads",
+        "real_time",
+    ]
+    col_indices = [column_names.index(col) for col in headers]
+
+    print(f"{' | '.join(headers)}")
+    print("-" * 50)
+    for row in rows:
+        values = [
+            str(row[i]) if i != col_indices[-1] else f"{float(row[i]):.4f}"
+            for i in col_indices
+        ]
+        print(" | ".join(values))
+
+
 def query_database(
-    device=None,
-    application=None,
-    backend=None,
-    stage=None,
-    core_type=None,
-    num_threads=None,
-    verbose=False,
-):
+    filters: QueryFilters,
+    verbose: bool = False,
+) -> None:
     """
     Query the database with optional filters and display the results.
+
+    Args:
+        filters: QueryFilters object containing filter criteria
+        verbose: Whether to show all columns in output
     """
     if not os.path.exists(DB_PATH):
         print(f"Error: Database file not found at {DB_PATH}")
@@ -25,79 +127,26 @@ def query_database(
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Base query
-    query = "SELECT * FROM benchmarks WHERE 1=1"
-    query += " AND run_type = 'aggregate'"
-    query += " AND aggregate_name = 'mean'"
-    params = []
-
-    # Apply filters if provided
-    if device:
-        query += " AND device = ?"
-        params.append(device)
-    if application:
-        query += " AND application = ?"
-        params.append(application)
-    if backend:
-        query += " AND backend = ?"
-        params.append(backend)
-    if stage is not None:
-        query += " AND stage = ?"
-        params.append(stage)
-    if core_type:
-        query += " AND core_type = ?"
-        params.append(core_type)
-    if num_threads is not None:
-        query += " AND num_threads = ?"
-        params.append(num_threads)
-
-    # Order results
-    query += " ORDER BY device, application, backend, core_type, stage, num_threads"
-
+    query, params = build_query(filters)
     cursor.execute(query, params)
     rows = cursor.fetchall()
-
-    # Get column names
     column_names = [description[0] for description in cursor.description]
 
     if verbose:
-        # Print the results
-        if rows:
-            print(f"{' | '.join(column_names)}")
-            print("-" * 100)
-            for row in rows:
-                print(" | ".join(str(item) for item in row))
-        else:
-            print("No matching records found.")
+        print_verbose_results(rows, column_names)
     else:
-        # Print just core_type, num_threads and real_time
-        if rows:
-            headers = [
-                "device",
-                "application",
-                "backend",
-                "stage",
-                "core_type",
-                "num_threads",
-                "real_time",
-            ]
-            col_indices = [column_names.index(col) for col in headers]
-
-            print(f"{' | '.join(headers)}")
-            print("-" * 50)
-            for row in rows:
-                values = [
-                    str(row[i]) if i != col_indices[-1] else f"{float(row[i]):.4f}"
-                    for i in col_indices
-                ]
-                print(" | ".join(values))
-        else:
-            print("No matching records found.")
+        print_summary_results(rows, column_names)
 
     conn.close()
 
 
-if __name__ == "__main__":
+def parse_arguments() -> Tuple[QueryFilters, bool]:
+    """
+    Parse command line arguments.
+
+    Returns:
+        Tuple of (QueryFilters, verbose_flag)
+    """
     parser = argparse.ArgumentParser(
         description="Query benchmark database with optional filters."
     )
@@ -115,12 +164,22 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    query_database(
+    filters = QueryFilters(
         device=args.device,
         application=args.application,
         backend=args.backend,
         stage=args.stage,
         core_type=args.core_type,
         num_threads=args.num_threads,
-        verbose=args.verbose,
     )
+
+    return filters, args.verbose
+
+
+def main():
+    filters, verbose = parse_arguments()
+    query_database(filters, verbose)
+
+
+if __name__ == "__main__":
+    main()
