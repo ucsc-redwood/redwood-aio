@@ -1,0 +1,40 @@
+{
+  "schedule": {
+    "schedule_id": "9b034f1b_CifarDense_schedule_043",
+    "device_id": "9b034f1b",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "little",
+        "threads": 3,
+        "stages": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "chunk2",
+        "hardware": "medium",
+        "threads": 2,
+        "stages": [
+          4
+        ]
+      },
+      {
+        "name": "chunk3",
+        "hardware": "gpu",
+        "threads": 0,
+        "stages": [
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  "total_time": 83.44748069746045,
+  "max_chunk_time": 63.7530758365366
+}

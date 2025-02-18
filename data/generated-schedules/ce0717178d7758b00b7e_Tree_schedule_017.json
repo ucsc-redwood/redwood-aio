@@ -1,0 +1,31 @@
+{
+  "schedule": {
+    "schedule_id": "ce0717178d7758b00b7e_Tree_schedule_017",
+    "device_id": "ce0717178d7758b00b7e",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "little",
+        "threads": 4,
+        "stages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "name": "chunk2",
+        "hardware": "big",
+        "threads": 4,
+        "stages": [
+          7
+        ]
+      }
+    ]
+  },
+  "total_time": 19.04478934523356,
+  "max_chunk_time": 14.17402920325753
+}
