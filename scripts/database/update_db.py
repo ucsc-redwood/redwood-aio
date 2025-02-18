@@ -93,50 +93,114 @@ def read_benchmarks(folder: str = "data/raw_bm_results") -> List[BenchmarkResult
     return results
 
 
-def parse_run_name(input_str: str) -> ParsedRunName:
-    """
-    Parse benchmark run name string into components.
+# def parse_run_name(input_str: str) -> ParsedRunName:
+#     """
+#     Parse benchmark run name string into components.
 
-    Args:
-        input_str: String like "Backend_Application/StageInfo[/NumThreads]"
+#     Args:
+#         input_str: String like "Backend_Application/StageInfo[/NumThreads]"
+
+#     Returns:
+#         ParsedRunName object containing extracted components
+
+#     Raises:
+#         ValueError: If input string doesn't match expected format
+#     """
+#     segments = input_str.split("/")
+#     if len(segments) < 2:
+#         raise ValueError("Input must have at least two segments separated by '/'")
+
+#     try:
+#         backend, application = segments[0].split("_", 1)
+#     except ValueError:
+#         raise ValueError("First segment must be in the format 'Backend_Application'")
+
+#     stage = None
+#     core_type = None
+#     num_threads = None
+
+#     stage_segment = segments[1]
+#     if stage_segment.startswith("Baseline"):
+#         stage = 0
+#     elif stage_segment.startswith("Stage"):
+#         m = re.match(r"Stage(\d+)(?:_(\w+))?", stage_segment)
+#         if m:
+#             stage = int(m.group(1))
+#             core_candidate = m.group(2)
+#             if core_candidate in {"little", "small", "big"}:
+#                 core_type = core_candidate
+#         else:
+#             raise ValueError("Stage segment does not match expected format")
+#     else:
+#         raise ValueError("Stage segment must start with 'Baseline' or 'Stage'")
+
+#     if len(segments) > 2:
+#         thread_segment = segments[2]
+#         m = re.match(r"(\d+)", thread_segment)
+#         if m:
+#             num_threads = int(m.group(1))
+
+#     return ParsedRunName(
+#         backend=backend,
+#         application=application,
+#         stage=stage,
+#         core_type=core_type,
+#         num_threads=num_threads,
+#     )
+
+
+def parse_run_name(line: str) -> Optional[ParsedRunName]:
+    """
+    Parses a single line of the form:
+        {Backend}_{Application}/{StageInfo}[/NumThreads]
+
+    Where:
+      - Backend ∈ {OMP, CUDA, VK}
+      - Application ∈ {CifarDense, CifarSparse, Tree}
+      - StageInfo is either 'Baseline' or 'StageN' (N in 1..9),
+        optionally with '_little', '_medium', or '_big'.
+      - num_threads is an integer in the third segment (if present).
+      - Any line containing 'std' is ignored (returns None).
 
     Returns:
-        ParsedRunName object containing extracted components
-
-    Raises:
-        ValueError: If input string doesn't match expected format
+        ParsedRunName if the line is valid, otherwise None.
     """
-    segments = input_str.split("/")
+    # If line contains 'std', ignore it
+    if "std" in line:
+        return None
+
+    segments = line.split("/")
     if len(segments) < 2:
-        raise ValueError("Input must have at least two segments separated by '/'")
+        return None  # Invalid format
 
-    try:
-        backend, application = segments[0].split("_", 1)
-    except ValueError:
-        raise ValueError("First segment must be in the format 'Backend_Application'")
+    # The first segment should be "Backend_Application"
+    first_segment = segments[0].split("_", 1)
+    if len(first_segment) != 2:
+        return None
+    backend, application = first_segment
 
+    second_segment = segments[1]
     stage = None
     core_type = None
-    num_threads = None
 
-    stage_segment = segments[1]
-    if stage_segment.startswith("Baseline"):
+    # Handle Baseline => stage = 0
+    if second_segment == "Baseline":
         stage = 0
-    elif stage_segment.startswith("Stage"):
-        m = re.match(r"Stage(\d+)(?:_(\w+))?", stage_segment)
-        if m:
-            stage = int(m.group(1))
-            core_candidate = m.group(2)
-            if core_candidate in {"little", "small", "big"}:
-                core_type = core_candidate
-        else:
-            raise ValueError("Stage segment does not match expected format")
     else:
-        raise ValueError("Stage segment must start with 'Baseline' or 'Stage'")
+        # Should match "Stage{N}" or "Stage{N}_{core_type}"
+        # N must be a digit 1..9, and core_type ∈ {little, medium, big}
+        match = re.match(r"Stage(\d)(?:_(little|medium|big))?$", second_segment)
+        if not match:
+            return None
+        stage = int(match.group(1))
+        if match.group(2):
+            core_type = match.group(2)
 
+    num_threads = None
+    # If there's a third segment, parse out the leading integer
     if len(segments) > 2:
-        thread_segment = segments[2]
-        m = re.match(r"(\d+)", thread_segment)
+        third_segment = segments[2]
+        m = re.match(r"(\d+)", third_segment)
         if m:
             num_threads = int(m.group(1))
 
@@ -242,7 +306,8 @@ def process_benchmarks(
         for result in bm.data["benchmarks"]:
             try:
                 parsed_run = parse_run_name(result["run_name"])
-                insert_benchmark_data(cursor, bm, parsed_run, result)
+                if parsed_run is not None:
+                    insert_benchmark_data(cursor, bm, parsed_run, result)
             except ValueError as e:
                 print(f"Warning: {e}")
                 continue
