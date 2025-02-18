@@ -181,35 +181,8 @@ def insert_benchmark_data(
     benchmark: BenchmarkResult,
     parsed_run: ParsedRunName,
     result: Dict[str, Any],
-) -> bool:
-    """
-    Insert or update a single benchmark result in the database.
-
-    Returns:
-        bool: True if new entry was inserted, False if existing entry was updated
-    """
-    # First check if entry exists
-    cursor.execute(
-        """
-        SELECT COUNT(*) FROM benchmarks 
-        WHERE device = ? 
-        AND application = ? 
-        AND backend = ? 
-        AND stage = ? 
-        AND core_type = ? 
-        AND num_threads = ?
-        """,
-        (
-            benchmark.device,
-            benchmark.application,
-            benchmark.backend,
-            parsed_run.stage,
-            parsed_run.core_type,
-            parsed_run.num_threads,
-        ),
-    )
-    exists = cursor.fetchone()[0] > 0
-
+) -> None:
+    """Insert or update a single benchmark result in the database."""
     cursor.execute(
         """
         INSERT INTO benchmarks (
@@ -245,8 +218,6 @@ def insert_benchmark_data(
         ),
     )
 
-    return not exists
-
 
 def process_benchmarks(
     benchmarks: List[BenchmarkResult], db_path: str = "./data/tmp.db"
@@ -263,49 +234,20 @@ def process_benchmarks(
 
     create_database_schema(cursor)
 
-    # Track stats for each file
-    file_stats: Dict[str, DatabaseStats] = {}
-
     for bm in benchmarks:
         print(f"Processing {bm.application} {bm.backend} {bm.device}...")
-
-        file_key = f"{bm.application}_{bm.backend}_{bm.device}"
-        stats = DatabaseStats()
 
         for result in bm.data["benchmarks"]:
             try:
                 parsed_run = parse_run_name(result["run_name"])
-                is_new = insert_benchmark_data(cursor, bm, parsed_run, result)
-                if is_new:
-                    stats.new_entries += 1
-                else:
-                    stats.updated_entries += 1
+                insert_benchmark_data(cursor, bm, parsed_run, result)
             except ValueError as e:
                 print(f"Warning: {e}")
                 continue
 
-        file_stats[file_key] = stats
-
     conn.commit()
     conn.close()
-
-    # Print final report
-    print("\nDatabase Update Report:")
-    print("-" * 60)
-    total_new = 0
-    total_updated = 0
-
-    for file_key, stats in file_stats.items():
-        print(f"\n{file_key}:")
-        print(f"  New entries: {stats.new_entries}")
-        print(f"  Updated entries: {stats.updated_entries}")
-        total_new += stats.new_entries
-        total_updated += stats.updated_entries
-
-    print("\nTotal Summary:")
-    print(f"Total new entries: {total_new}")
-    print(f"Total updated entries: {total_updated}")
-    print(f"Total processed: {total_new + total_updated}")
+    print("Benchmark data has been written to tmp.db")
 
 
 def main():
