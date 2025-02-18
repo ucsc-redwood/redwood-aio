@@ -143,6 +143,26 @@ def create_console_histogram(data, bins=10, width=50):
     return "\n".join(histogram)
 
 
+def get_available_schedules(device_id: str, app: str) -> list[int]:
+    """Get list of available schedule numbers from JSON files"""
+    schedule_files = glob.glob(
+        f"./data/generated-schedules/{device_id}_{app}_schedule_*.json"
+    )
+
+    if not schedule_files:
+        return []
+
+    schedule_nums = []
+    for file_path in schedule_files:
+        try:
+            schedule_num = int(re.search(r"schedule_(\d+)\.json", file_path).group(1))
+            schedule_nums.append(schedule_num)
+        except Exception:
+            continue
+
+    return sorted(schedule_nums)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Run performance tests on a specific device"
@@ -150,21 +170,39 @@ def main():
     parser.add_argument("device_id", help="Device ID (e.g., 3A021JEHN02756)")
     parser.add_argument(
         "--app",
-        choices=list(APP_NAME_MAP.keys()),  # Use the map keys for choices
-        default="CifarDense",
+        choices=list(APP_NAME_MAP.keys()),
+        required=True,
         help="Application to test (default: CifarDense)",
     )
     parser.add_argument(
         "--num-schedules",
         type=int,
-        default=50,
-        help="Number of schedules to test (default: 50)",
+        help="Number of schedules to test (default: all available)",
     )
     args = parser.parse_args()
 
+    # Get available schedules
+    available_schedules = get_available_schedules(args.device_id, args.app)
+    if not available_schedules:
+        print(
+            f"{Fore.RED}No schedule files found for {args.app} on device {args.device_id}{Style.RESET_ALL}"
+        )
+        return
+
+    max_schedule = max(available_schedules)
+    if args.num_schedules:
+        num_schedules = min(args.num_schedules, max_schedule)
+    else:
+        num_schedules = max_schedule
+
+    print(
+        f"Found {len(available_schedules)} schedule files (max schedule: {max_schedule})"
+    )
+    print(f"Will test {num_schedules} schedules")
+
     # Build the binary first
     app_name = APP_NAME_MAP[args.app]
-    binary_name = f"pipe-{app_name}-vk"  # e.g., pipe-cifar-dense-vk
+    binary_name = f"pipe-{app_name}-vk"
     if not build_binary(binary_name):
         print("Exiting due to build failure")
         return
@@ -175,12 +213,20 @@ def main():
 
     # Load mathematical predictions with device ID and app
     predictions = load_mathematical_predictions(args.device_id, args.app)
+    if not predictions:
+        print(f"{Fore.YELLOW}Warning: No predictions found{Style.RESET_ALL}")
 
     print(f"Starting test runs for {args.app} on device {args.device_id}...")
     print("-" * 50)
 
-    for schedule_num in range(1, args.num_schedules + 1):
-        print(f"Running schedule {schedule_num}/{args.num_schedules}...")
+    for schedule_num in range(1, num_schedules + 1):
+        if schedule_num not in available_schedules:
+            print(
+                f"{Fore.YELLOW}Schedule {schedule_num} not available, skipping{Style.RESET_ALL}"
+            )
+            continue
+
+        print(f"Running schedule {schedule_num}/{num_schedules}...")
         avg_time = run_command(args.device_id, args.app, schedule_num)
         results[schedule_num] = avg_time
 
@@ -219,7 +265,7 @@ def main():
     if successful_runs:
         # Summary Table
         summary_data = [
-            ["Total schedules", args.num_schedules],
+            ["Total schedules", num_schedules],
             ["Successful runs", f"{Fore.GREEN}{len(successful_runs)}{Style.RESET_ALL}"],
             ["Failed runs", f"{Fore.RED}{len(failed_runs)}{Style.RESET_ALL}"],
         ]
