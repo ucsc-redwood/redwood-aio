@@ -42,6 +42,12 @@ rule("common_flags")
         target:add("packages", "cli11")
         target:add("packages", "spdlog")
         target:add("packages", "glm")
+
+        -- if has cuda
+        if has_config("cuda") then
+            target:add("cuflags", "-Xcompiler", "-fopenmp", {force = true})
+            target:add("ldflags", "-fopenmp", {force = true})
+        end
     end)
 rule_end()
 
