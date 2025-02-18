@@ -6,7 +6,8 @@
 #include "generated_codes.hpp"
 #include "task.hpp"
 
-void run_warmup(int schedule_id) {
+template <int device_index>
+void run_warmup(const int schedule_id) {
   // disable logging for warmup
   spdlog::set_level(spdlog::level::off);
 
@@ -15,7 +16,7 @@ void run_warmup(int schedule_id) {
   out_tasks.reserve(tasks.size());
 
   // -------------------  run the pipeline  ------------------------------
-  device_3A021JEHN02756::get_run_pipeline(schedule_id)(tasks, out_tasks);
+  get_run_pipeline<device_index>(schedule_id)(tasks, out_tasks);
   // ---------------------------------------------------------------------
 
   cleanup(tasks);
@@ -28,7 +29,8 @@ void run_warmup(int schedule_id) {
 // Pipeline Instance (Best)
 // ---------------------------------------------------------------------
 
-void run_one_schedule(int schedule_id) {
+template <int device_index>
+void run_one_schedule(const int schedule_id) {
   auto tasks = init_tasks(20);
   std::vector<Task> out_tasks;
   out_tasks.reserve(tasks.size());
@@ -36,7 +38,7 @@ void run_one_schedule(int schedule_id) {
   auto start = std::chrono::high_resolution_clock::now();
 
   // -------------------  run the pipeline  ------------------------------
-  device_3A021JEHN02756::get_run_pipeline(schedule_id)(tasks, out_tasks);
+  get_run_pipeline<device_index>(schedule_id)(tasks, out_tasks);
   // ---------------------------------------------------------------------
 
   auto end = std::chrono::high_resolution_clock::now();
@@ -64,14 +66,12 @@ int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   if (g_device_id == "3A021JEHN02756") {
-    run_warmup(which_schedule);  // mostly just to compile the GPU shader
-
-    run_one_schedule(which_schedule);
-
+    run_warmup<0>(which_schedule);  // mostly just to compile the GPU shader
+    run_one_schedule<0>(which_schedule);
   } else if (g_device_id == "9b034f1b") {
-    return 0;
+    run_one_schedule<1>(which_schedule);
   } else if (g_device_id == "ce0717178d7758b00b7e") {
-    return 0;
+    run_one_schedule<2>(which_schedule);
   }
 
   return 0;
