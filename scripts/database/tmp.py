@@ -2,6 +2,8 @@ import json
 import sqlite3
 import os
 import glob
+import re
+from typing import Optional
 
 
 def parse_filename(filename):
@@ -78,43 +80,88 @@ def read_benchmarks(folder="data/raw_bm_results"):
     return results
 
 
-def parse_run_name(run_name):
+def parse_run_name(input_str):
     """
-    Given a run_name like: "OMP_CifarDense/Baseline/1", "OMP_CifarDense/Stage1_medium/1", "OMP_CifarDense/Stage4_little/4"
-    extract the stages, and the number of threads, and optional core_type ('little', 'medium', 'big')
+    Parse an input string with the following possible format:
 
-    if run_name is "OMP_CifarDense/Baseline/1", stages is 0, num_threads is 1, core_type is None
-    if run_name is "OMP_CifarDense/Stage1_medium/1", stages is 1, num_threads is 1, core_type is "medium"
-    if run_name is "OMP_CifarDense/Stage4_little/4", stages is 4, num_threads is 4, core_type is "little"
+      {Backend}_{Application}/{StageInfo}[/{NumThreads}]
 
-    Returns (stages, num_threads, core_type).
+    Where:
+      - Backend is one of {OMP, CUDA, VK}
+      - Application is one of {CifarDense, CifarSparse, Tree}
+      - StageInfo is either:
+          "Baseline" optionally followed by a tail (e.g., "_median", "_cv", "_stddev")
+          OR
+          "StageX" optionally with an underscore and a core type (e.g., "Stage4_big")
+          In the case of "Baseline", stage is 0.
+      - NumThreads is an integer, optionally followed by tailing data (which are ignored).
+
+    Examples:
+      - "OMP_CifarDense/Baseline/2"               -> backend: "OMP",  application: "CifarDense", stage: 0, core_type: None, num_threads: 2
+      - "OMP_CifarSparse/Baseline/1_median"         -> backend: "OMP",  application: "CifarSparse", stage: 0, core_type: None, num_threads: 1
+      - "OMP_Tree/Stage2_big/1_cv"                  -> backend: "OMP",  application: "Tree", stage: 2, core_type: "big", num_threads: 1
+      - "VK_Tree/Stage6_cv"                         -> backend: "VK",   application: "Tree", stage: 6, core_type: None, num_threads: None
+
+    Returns:
+        dict: A dictionary with keys:
+            - 'backend'
+            - 'application'
+            - 'stage'
+            - 'core_type'
+            - 'num_threads'
     """
-    # Split the run_name by '/'
-    parts = run_name.split("/")
+    # Split by '/'
+    segments = input_str.split("/")
+    if len(segments) < 2:
+        raise ValueError("Input must have at least two segments separated by '/'")
 
-    # The number of threads is the last part
-    num_threads = int(parts[-1])
+    # Parse the first segment: "Backend_Application"
+    try:
+        backend, application = segments[0].split("_", 1)
+    except ValueError:
+        raise ValueError("First segment must be in the format 'Backend_Application'")
 
-    # The stage part is the second element
-    stage_info = parts[1]
+    # Initialize defaults
+    stage = None
+    core_type = None
+    num_threads = None
 
-    if stage_info == "Baseline":
-        stages = 0
-        core_type = None
-    elif stage_info.startswith("Stage"):
-        # Remove the 'Stage' prefix
-        remainder = stage_info[len("Stage") :]
-        # Check if there's an underscore indicating a core_type
-        if "_" in remainder:
-            stage_str, core_type = remainder.split("_", 1)
-            stages = int(stage_str)
+    # Parse the stage segment (second segment)
+    stage_segment = segments[1]
+    if stage_segment.startswith("Baseline"):
+        stage = 0
+    elif stage_segment.startswith("Stage"):
+        # Remove "Stage" and capture the stage number and optional core type.
+        # This regex captures one or more digits and an optional underscore followed by word characters.
+        m = re.match(r"Stage(\d+)(?:_(\w+))?", stage_segment)
+        if m:
+            stage = int(m.group(1))
+            core_candidate = m.group(2)
+            # Only assign core_type if it is one of the allowed types.
+            if core_candidate in {"little", "small", "big"}:
+                core_type = core_candidate
         else:
-            stages = int(remainder)
-            core_type = None
+            raise ValueError(
+                "Stage segment does not match expected format (e.g., 'Stage4_big')"
+            )
     else:
-        raise ValueError("Unrecognized run_name format")
+        raise ValueError("Stage segment must start with 'Baseline' or 'Stage'")
 
-    return stages, num_threads, core_type
+    # Parse the number of threads if the third segment exists.
+    if len(segments) > 2:
+        thread_segment = segments[2]
+        # Extract the leading number ignoring any tailing data (like _median, _cv, _stddev, etc.)
+        m = re.match(r"(\d+)", thread_segment)
+        if m:
+            num_threads = int(m.group(1))
+
+    return {
+        "backend": backend,
+        "application": application,
+        "stage": stage,
+        "core_type": core_type,
+        "num_threads": num_threads,
+    }
 
 
 def main():
@@ -134,14 +181,14 @@ def main():
         backend TEXT,
         application TEXT,
         device TEXT,
-        stages INTEGER,
+        stage INTEGER,
         num_threads INTEGER,
         core_type TEXT,
         repetitions INTEGER,
         iterations INTEGER,
         real_time REAL,
         time_unit TEXT,
-        aggregate_name TEXT
+        aggregate_name TEXT NULL
     )
     """
     )
@@ -150,12 +197,19 @@ def main():
 
     for bm in benchmarks:
         for result in bm["data"]["benchmarks"]:
-            stages, num_threads, core_type = parse_run_name(result["run_name"])
+            try:
+                parsed_run_name = parse_run_name(result["run_name"])
+            except ValueError as e:
+                print(f"Warning: {e}")
+                continue
+
+            # Get aggregate_name with .get() to handle missing key
+            aggregate_name = result.get("aggregate_name")
 
             cursor.execute(
                 """
             INSERT INTO benchmarks (
-                name, run_name, run_type, backend, application, device, stages, num_threads, core_type, repetitions, iterations, real_time, time_unit, aggregate_name
+                name, run_name, run_type, backend, application, device, stage, num_threads, core_type, repetitions, iterations, real_time, time_unit, aggregate_name
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
@@ -165,14 +219,14 @@ def main():
                     bm["backend"],
                     bm["application"],
                     bm["device"],
-                    stages,
-                    num_threads,
-                    core_type,
+                    parsed_run_name["stage"],
+                    parsed_run_name["num_threads"],
+                    parsed_run_name["core_type"],
                     result["repetitions"],
                     result["iterations"],
                     result["real_time"],
                     result["time_unit"],
-                    result["aggregate_name"],
+                    aggregate_name,  # Using the .get() result from above
                 ),
             )
 
