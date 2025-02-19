@@ -13,7 +13,13 @@ namespace test_tree {
 // ----------------------------------------------------------------------------
 
 inline void verify_stage_1(tree::AppData &appdata) {
-  EXPECT_TRUE(std::ranges::all_of(appdata.u_morton_keys_s1, [](auto x) { return x != 0; }));
+  // EXPECT_TRUE(std::ranges::all_of(appdata.u_morton_keys_s1, [](auto x) { return x != 0; }));
+
+  // check if all morton codes are non-zero
+  for (uint32_t i = 0; i < appdata.get_n_input(); ++i) {
+    // std::cout << "morton[" << i << "] = " << appdata.u_morton_keys_s1[i] << std::endl;
+    EXPECT_NE(appdata.u_morton_keys_s1[i], 0);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -22,7 +28,11 @@ inline void verify_stage_1(tree::AppData &appdata) {
 
 inline void verify_stage_2(tree::AppData &appdata) {
   EXPECT_TRUE(std::ranges::all_of(appdata.u_morton_keys_sorted_s2, [](auto x) { return x != 0; }));
-  EXPECT_TRUE(std::ranges::is_sorted(appdata.u_morton_keys_sorted_s2));
+  // EXPECT_TRUE(std::ranges::is_sorted(appdata.u_morton_keys_sorted_s2));
+
+  for (uint32_t i = 0; i < appdata.get_n_input() - 1; ++i) {
+    EXPECT_LE(appdata.u_morton_keys_sorted_s2[i], appdata.u_morton_keys_sorted_s2[i + 1]);
+  }
 }
 
 // ----------------------------------------------------------------------------

@@ -20,16 +20,10 @@ TEST(Vulkan_Tree, Stage1) {
 
   tree::vulkan::Singleton::getInstance().process_stage_1(appdata, tmp_storage);
 
-  // print first 10 morton codes
-  for (int i = 0; i < 10; ++i) {
-    std::cout << "morton[" << i << "] = " << appdata.u_morton_keys_s1[i] << std::endl;
-  }
-
-  // check if all morton codes are non-zero
-  for (int i = 0; i < appdata.get_n_input(); ++i) {
-    std::cout << "morton[" << i << "] = " << appdata.u_morton_keys_s1[i] << std::endl;
-    EXPECT_NE(appdata.u_morton_keys_s1[i], 0);
-  }
+  // // print first 10 morton codes
+  // for (int i = 0; i < 10; ++i) {
+  //   std::cout << "morton[" << i << "] = " << appdata.u_morton_keys_s1[i] << std::endl;
+  // }
 
   test_tree::verify_stage_1(appdata);
 }
