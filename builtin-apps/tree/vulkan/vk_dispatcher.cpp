@@ -18,7 +18,7 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
   spdlog::info("Singleton instance created.");
 
   auto morton_algo = engine.make_algo("tree_morton")
-                         ->work_group_size(768, 1, 1)  // Morton uses 768 threads
+                         ->work_group_size(256, 1, 1)
                          ->num_sets(1)
                          ->num_buffers(2)
                          ->push_constant<MortonPushConstants>()
@@ -88,7 +88,7 @@ void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStor
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(
       seq->get_handle(),
-      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 768)), 1, 1});
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();

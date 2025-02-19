@@ -42,12 +42,12 @@ namespace shaders {
 #include "h/tree_naive_prefix_sum_spv.h"
 
 // Helper macro to create shader entry with proper naming convention
-#define SHADER_ENTRY(name)                                        \
-  {                                                               \
-    #name, {                                                      \
-      builtin_apps_common_vulkan_shaders_spv_##name##_spv,        \
-          builtin_apps_common_vulkan_shaders_spv_##name##_spv_len \
-    }                                                             \
+#define SHADER_ENTRY(name)                                         \
+  {                                                                \
+    #name, {                                                       \
+      builtin_apps_common_kiss_vk_shaders_spv_##name##_spv,        \
+          builtin_apps_common_kiss_vk_shaders_spv_##name##_spv_len \
+    }                                                              \
   }
 
 // Map of shader names to their binary data and size
