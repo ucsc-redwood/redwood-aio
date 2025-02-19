@@ -20,8 +20,6 @@ class Singleton {
 
   ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
-  void sync() { seq->sync(); }
-
   void process_stage_1(cifar_dense::AppData &app_data);
   void process_stage_2(cifar_dense::AppData &app_data);
   void process_stage_3(cifar_dense::AppData &app_data);

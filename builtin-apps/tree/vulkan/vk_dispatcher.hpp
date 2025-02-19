@@ -19,8 +19,6 @@ class Singleton {
 
   ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
-  void sync() { seq->sync(); }
-
   void process_stage_1(tree::AppData &app_data_ref);
   void process_stage_2(tree::AppData &app_data_ref);
   void process_stage_3(tree::AppData &app_data_ref, TmpStorage &tmp_storage);
