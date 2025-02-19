@@ -5,20 +5,8 @@ add_rules("mode.debug", "mode.release")
 set_languages("c++20")
 set_warnings("allextra")
 
--- if is_plat("windows") then
---     add_cxflags("-fexec-charset=UTF-8", {force = true})
---     add_cxflags("-finput-charset=UTF-8", {force = true})
-
---     if has_config("cuda") then
---         -- Add UTF-8 support for CUDA compiler
---         add_cuflags("-Xcompiler", "-fexec-charset=UTF-8", {force = true})
---         -- Suppress CUDA architecture warning
---         add_cuflags("-Wno-deprecated-gpu-targets", {force = true})
---     end
--- end
-
--- For consistency across Windows, Linux
 if not is_plat("android") then
+	-- Clang is better for cross-platform consistency
 	set_toolchains("clang")
 end
 
@@ -92,7 +80,7 @@ rule_end()
 -- ----------------------------------------------------------------
 
 includes("builtin-apps/common/vulkan") -- KISS-VK library
-includes("builtin-apps")
+includes("builtin-apps") -- the three applications
 includes("tests")
 includes("benchmarks")
 includes("pipe")
