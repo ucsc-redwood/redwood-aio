@@ -2,9 +2,7 @@
 #include "../tree_appdata.hpp"
 #include "tmp_storage.hpp"
 
-namespace tree {
-
-namespace vulkan {
+namespace tree::vulkan {
 
 class Singleton {
  public:
@@ -19,32 +17,32 @@ class Singleton {
 
   ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
-  void process_stage_1(tree::AppData &app_data_ref);
-  void process_stage_2(tree::AppData &app_data_ref);
-  void process_stage_3(tree::AppData &app_data_ref, TmpStorage &tmp_storage);
-  void process_stage_4(tree::AppData &app_data_ref);
-  void process_stage_5(tree::AppData &app_data_ref);
-  void process_stage_6(tree::AppData &app_data_ref);
-  void process_stage_7(tree::AppData &app_data_ref);
+  void process_stage_1(AppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_2(AppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_3(AppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_4(AppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_5(AppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_6(AppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_7(AppData &appdata, TmpStorage &tmp_storage);
 
-  // template <int stage>
-  // void run_stage(tree::AppData &app_data) {
-  //   if constexpr (stage == 1) {
-  //     process_stage_1(app_data);
-  //   } else if constexpr (stage == 2) {
-  //     process_stage_2(app_data);
-  //   } else if constexpr (stage == 3) {
-  //     process_stage_3(app_data);
-  //   } else if constexpr (stage == 4) {
-  //     process_stage_4(app_data);
-  //   } else if constexpr (stage == 5) {
-  //     process_stage_5(app_data);
-  //   } else if constexpr (stage == 6) {
-  //     process_stage_6(app_data);
-  //   } else if constexpr (stage == 7) {
-  //     process_stage_7(app_data);
-  //   }
-  // }
+  template <int stage>
+  void run_stage(AppData &appdata, TmpStorage &tmp_storage) {
+    if constexpr (stage == 1) {
+      process_stage_1(appdata, tmp_storage);
+    } else if constexpr (stage == 2) {
+      process_stage_2(appdata, tmp_storage);
+    } else if constexpr (stage == 3) {
+      process_stage_3(appdata, tmp_storage);
+    } else if constexpr (stage == 4) {
+      process_stage_4(appdata, tmp_storage);
+    } else if constexpr (stage == 5) {
+      process_stage_5(appdata, tmp_storage);
+    } else if constexpr (stage == 6) {
+      process_stage_6(appdata, tmp_storage);
+    } else if constexpr (stage == 7) {
+      process_stage_7(appdata, tmp_storage);
+    }
+  }
 
  private:
   Singleton();
@@ -105,6 +103,4 @@ class Singleton {
   };
 };
 
-}  // namespace vulkan
-
-}  // namespace tree
+}  // namespace tree::vulkan
