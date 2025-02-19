@@ -1,0 +1,32 @@
+
+[1/3] Processing device: 3A021JEHN02756
+Deploying and running 'test-omp-tree' on device: 3A021JEHN02756
+build/android/arm64-v8a/release/test-omp-tree: 1 file pushed, 0 skipped. 437.7 MB/s (2276480 bytes in 0.005s)
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from OMP_Tree
+[ RUN      ] OMP_Tree.Stage1
+[       OK ] OMP_Tree.Stage1 (56 ms)
+[----------] 1 test from OMP_Tree (56 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (56 ms total)
+[  PASSED  ] 1 test.
+
+[2/3] Processing device: 9b034f1b
+Deploying and running 'test-omp-tree' on device: 9b034f1b
+build/android/arm64-v8a/release/test-omp-tree: 1 file pushed, 0 skipped. 474.5 MB/s (2276480 bytes in 0.005s)
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from OMP_Tree
+[ RUN      ] OMP_Tree.Stage1
+[       OK ] OMP_Tree.Stage1 (25 ms)
+[----------] 1 test from OMP_Tree (25 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (26 ms total)
+[  PASSED  ] 1 test.
+
+[3/3] Processing device: ce0717178d7758b00b7e
+Deploying and running 'test-omp-tree' on device: ce0717178d7758b00b7e
+build/android/arm64-v8a/release/test-omp-tree: 1 file pushed, 0 skipped. 4121.0 MB/s (2276480 bytes in 0.001s)

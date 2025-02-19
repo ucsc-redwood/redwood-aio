@@ -6,13 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 
-namespace tree {
-
-namespace omp {
-
-// void bucket_sort(uint32_t *input_array, int dim, int n_buckets = 16);
-
-namespace v2 {
+namespace tree::omp {
 
 struct bucket {
   int n_elem;
@@ -103,6 +97,10 @@ inline void bucket_sort(
   // memcpy(A, B, sizeof(uint32_t) * dim);
 }
 
+// ----------------------------------------------------------------------------
+// Old working version
+// ----------------------------------------------------------------------------
+
 struct TempStorage {
   explicit TempStorage(const int n_buckets, const int num_threads) {
     global_n_elem = (int *)malloc(sizeof(int) * n_buckets);
@@ -125,8 +123,4 @@ struct TempStorage {
   struct bucket *buckets;
 };
 
-}  // namespace v2
-
-}  // namespace omp
-
-}  // namespace tree
+}  // namespace tree::omp
