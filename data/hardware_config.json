@@ -1,42 +1,42 @@
 {
-    "3A021JEHN02756": {
-        "name": "Google Pixel 7a",
-        "pinnable_cores": {
-            "little": 4,
-            "medium": 2,
-            "big": 2,
-            "gpu": 1
-        },
-        "description": "N/A"
+  "3A021JEHN02756": {
+    "name": "Google Pixel 7a",
+    "pinnable_cores": {
+      "little": 4,
+      "medium": 2,
+      "big": 2,
+      "gpu": 1
     },
-    "9b034f1b": {
-        "name": "OnePlus 11",
-        "pinnable_cores": {
-            "little": 3,
-            "medium": 2,
-            "big": 0,
-            "gpu": 1
-        },
-        "description": "N/A"
+    "description": "N/A"
+  },
+  "9b034f1b": {
+    "name": "OnePlus 11",
+    "pinnable_cores": {
+      "little": 3,
+      "medium": 2,
+      "big": 0,
+      "gpu": 1
     },
-    "ce0717178d7758b00b7e": {
-        "name": "Samsung Galaxy Note",
-        "pinnable_cores": {
-            "little": 4,
-            "medium": 0,
-            "big": 4,
-            "gpu": 1
-        },
-        "description": "N/A"
+    "description": "N/A"
+  },
+  "ce0717178d7758b00b7e": {
+    "name": "Samsung Galaxy Note",
+    "pinnable_cores": {
+      "little": 4,
+      "medium": 0,
+      "big": 4,
+      "gpu": 1
     },
-    "jetson": {
-        "name": "NVIDIA Jetson Orin Nano",
-        "pinnable_cores": {
-            "little": 6,
-            "medium": 0,
-            "big": 0,
-            "gpu": 1
-        },
-        "description": "N/A"
-    }
+    "description": "N/A"
+  },
+  "jetson": {
+    "name": "NVIDIA Jetson Orin Nano",
+    "pinnable_cores": {
+      "little": 6,
+      "medium": 0,
+      "big": 0,
+      "gpu": 1
+    },
+    "description": "N/A"
+  }
 }
