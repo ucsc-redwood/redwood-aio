@@ -2,7 +2,7 @@
 
 #include "algorithm.hpp"
 
-namespace vulkan {
+namespace kiss_vk {
 
 class Sequence {
  public:
@@ -41,4 +41,4 @@ class Sequence {
   vk::Fence fence_;
 };
 
-}  // namespace vulkan
+}  // namespace kiss_vk

@@ -1,4 +1,4 @@
-#include "../../common/vulkan/engine.hpp"
+#include "../../common/kiss-vk/engine.hpp"
 #include "../tree_appdata.hpp"
 #include "tmp_storage.hpp"
 
@@ -15,7 +15,7 @@ class Singleton {
     return instance;
   }
 
-  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
+  kiss_vk::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
   void process_stage_1(AppData &appdata, TmpStorage &tmp_storage);
   void process_stage_2(AppData &appdata, TmpStorage &tmp_storage);
@@ -48,9 +48,9 @@ class Singleton {
   Singleton();
   ~Singleton() { spdlog::info("Singleton instance destroyed."); }
 
-  ::vulkan::Engine engine;
-  std::shared_ptr<::vulkan::Sequence> seq;
-  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>> cached_algorithms;
+  kiss_vk::Engine engine;
+  std::shared_ptr<kiss_vk::Sequence> seq;
+  std::unordered_map<std::string, std::shared_ptr<kiss_vk::Algorithm>> cached_algorithms;
 
   // --------------------------------------------------------------------------
   // Temporary storages

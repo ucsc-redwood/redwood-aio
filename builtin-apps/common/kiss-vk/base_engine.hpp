@@ -2,7 +2,7 @@
 
 #include "vk.hpp"
 
-namespace vulkan {
+namespace kiss_vk {
 
 class BaseEngine {
  public:
@@ -41,4 +41,4 @@ class BaseEngine {
   PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr_;
 };
 
-}  // namespace vulkan
+}  // namespace kiss_vk

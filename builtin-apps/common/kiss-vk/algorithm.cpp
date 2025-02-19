@@ -3,7 +3,7 @@
 #include "shaders/all_shaders.hpp"
 #include "spdlog/spdlog.h"
 
-namespace vulkan {
+namespace kiss_vk {
 Algorithm::Algorithm(VulkanMemoryResource* mr_ptr, std::string shader_name)
     : device_ref_(mr_ptr->get_device()), shader_name_(std::move(shader_name)) {
   load_compiled_shader();
@@ -310,4 +310,4 @@ void Algorithm::create_pipeline() {
   spdlog::debug("Pipeline [{}] created successfully", shader_name_);
 }
 
-}  // namespace vulkan
+}  // namespace kiss_vk

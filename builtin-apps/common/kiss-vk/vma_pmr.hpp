@@ -8,14 +8,13 @@
 // Standard Library
 #include <memory_resource>
 #include <mutex>
-// #include <stdexcept>
 #include <unordered_map>
 
 #include "vk.hpp"
 
 extern VmaAllocator g_vma_allocator;
 
-namespace vulkan {
+namespace kiss_vk {
 
 // Structure to keep track of the buffer allocation details
 struct VulkanAllocationRecord {
@@ -63,4 +62,4 @@ class VulkanMemoryResource : public std::pmr::memory_resource {
   std::unordered_map<void *, VulkanAllocationRecord> allocations_;
 };
 
-}  // namespace vulkan
+}  // namespace kiss_vk

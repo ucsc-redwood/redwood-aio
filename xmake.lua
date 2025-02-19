@@ -79,7 +79,7 @@ rule_end()
 -- Projects
 -- ----------------------------------------------------------------
 
-includes("builtin-apps/common/vulkan") -- KISS-VK library
+includes("builtin-apps/common/kiss-vk") -- Keep-It-Simple-Stupid Vulkan library
 includes("builtin-apps") -- the three applications
 includes("tests")
 includes("benchmarks")

@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <utility>
 
-namespace vulkan {
+namespace kiss_vk {
 
 namespace shaders {
 
@@ -93,4 +93,4 @@ static const std::unordered_map<std::string, std::pair<const unsigned char*, siz
 
 }  // namespace shaders
 
-}  // namespace vulkan
+}  // namespace kiss_vk

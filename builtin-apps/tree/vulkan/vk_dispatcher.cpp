@@ -14,7 +14,7 @@ namespace vulkan {
 // Constructor
 // ----------------------------------------------------------------------------
 
-Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
+Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
   spdlog::info("Singleton instance created.");
 
   auto morton_algo = engine.make_algo("tree_morton")
@@ -88,7 +88,7 @@ void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStor
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(
       seq->get_handle(),
-      {static_cast<uint32_t>(::vulkan::div_ceil(appdata.get_n_input(), 768)), 1, 1});
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 768)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -166,7 +166,7 @@ void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStor
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(n, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(n, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -196,7 +196,7 @@ void Singleton::process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStor
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(
       seq->get_handle(),
-      {static_cast<uint32_t>(::vulkan::div_ceil(appdata.get_n_brt_nodes(), 512)), 1, 1});
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_brt_nodes(), 512)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -256,7 +256,7 @@ void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStor
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(
       seq->get_handle(),
-      {static_cast<uint32_t>(::vulkan::div_ceil(appdata.get_n_octree_nodes(), 256)), 1, 1});
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_octree_nodes(), 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();

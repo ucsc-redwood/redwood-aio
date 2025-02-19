@@ -1,5 +1,5 @@
 
-#include "../../common/vulkan/engine.hpp"
+#include "../../common/kiss-vk/engine.hpp"
 #include "../sparse_appdata.hpp"
 
 namespace cifar_sparse {
@@ -17,7 +17,7 @@ class Singleton {
     return instance;
   }
 
-  ::vulkan::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
+  kiss_vk::VulkanMemoryResource::memory_resource *get_mr() { return engine.get_mr(); }
 
   void process_stage_1(cifar_sparse::AppData &app_data);
   void process_stage_2(cifar_sparse::AppData &app_data);
@@ -56,9 +56,9 @@ class Singleton {
   Singleton();
   ~Singleton() { spdlog::info("Singleton instance destroyed."); }
 
-  ::vulkan::Engine engine;
-  std::shared_ptr<::vulkan::Sequence> seq;
-  std::unordered_map<std::string, std::shared_ptr<::vulkan::Algorithm>> algorithms;
+  kiss_vk::Engine engine;
+  std::shared_ptr<kiss_vk::Sequence> seq;
+  std::unordered_map<std::string, std::shared_ptr<kiss_vk::Algorithm>> algorithms;
 
   struct Conv2dPushConstants {
     uint32_t input_height;

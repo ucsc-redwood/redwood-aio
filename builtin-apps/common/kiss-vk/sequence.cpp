@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-namespace vulkan {
+namespace kiss_vk {
 
 Sequence::Sequence(const vk::Device device_ref,
                    const vk::Queue compute_queue_ref,
@@ -123,4 +123,4 @@ void Sequence::sync() const {
 //   cmd_end();
 // }
 
-}  // namespace vulkan
+}  // namespace kiss_vk

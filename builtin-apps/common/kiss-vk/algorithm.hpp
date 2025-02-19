@@ -3,7 +3,7 @@
 #include "vk.hpp"
 #include "vma_pmr.hpp"
 
-namespace vulkan {
+namespace kiss_vk {
 
 /**
  * @brief Calculate the ceiling of a division
@@ -129,4 +129,4 @@ class Algorithm final : public std::enable_shared_from_this<Algorithm> {
   } internal_;
 };
 
-}  // namespace vulkan
+}  // namespace kiss_vk

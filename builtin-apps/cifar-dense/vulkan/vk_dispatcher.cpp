@@ -6,7 +6,7 @@ namespace cifar_dense {
 
 namespace vulkan {
 
-Singleton::Singleton() : engine(::vulkan::Engine()), seq(engine.make_seq()) {
+Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
   spdlog::info("Singleton instance created.");
 
   auto conv2d_algo = engine.make_algo("cifar_conv2d")
@@ -77,7 +77,7 @@ void Singleton::process_stage_1(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -112,7 +112,7 @@ void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -155,7 +155,7 @@ void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -190,7 +190,7 @@ void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -233,7 +233,7 @@ void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -276,7 +276,7 @@ void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -319,7 +319,7 @@ void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -354,7 +354,7 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();
@@ -385,7 +385,7 @@ void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(::vulkan::div_ceil(total_iterations, 256)), 1, 1});
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
   seq->launch_kernel_async();

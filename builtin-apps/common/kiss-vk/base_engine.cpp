@@ -16,7 +16,7 @@ VmaAllocator g_vma_allocator = nullptr;
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
-namespace vulkan {
+namespace kiss_vk {
 
 // ----------------------------------------------------------------------------
 // Constructor
@@ -267,4 +267,4 @@ void BaseEngine::initialize_vma_allocator() const {
   }
 }
 
-}  // namespace vulkan
+}  // namespace kiss_vk

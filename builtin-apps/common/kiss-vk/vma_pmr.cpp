@@ -1,6 +1,6 @@
 #include "vma_pmr.hpp"
 
-namespace vulkan {
+namespace kiss_vk {
 
 void CHECK_VK_RESULT(VkResult result, const char *msg) {
   if (result != VK_SUCCESS) {
@@ -120,4 +120,4 @@ bool VulkanMemoryResource::do_is_equal(const std::pmr::memory_resource &other) c
   return dynamic_cast<const VulkanMemoryResource *>(&other) != nullptr;
 }
 
-}  // namespace vulkan
+}  // namespace kiss_vk

@@ -5,7 +5,7 @@
 #include "sequence.hpp"
 #include "vma_pmr.hpp"
 
-namespace vulkan {
+namespace kiss_vk {
 
 class Engine final : public BaseEngine {
  public:
@@ -46,4 +46,4 @@ class Engine final : public BaseEngine {
   std::unique_ptr<VulkanMemoryResource> mr_ptr_;
 };
 
-}  // namespace vulkan
+}  // namespace kiss_vk
