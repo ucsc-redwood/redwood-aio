@@ -102,7 +102,8 @@ inline void bucket_sort(
 // ----------------------------------------------------------------------------
 
 struct TempStorage {
-  explicit TempStorage(const int n_buckets, const int num_threads) {
+  explicit TempStorage(const int n_buckets, const int num_threads)
+      : n_buckets(n_buckets), num_threads(num_threads) {
     global_n_elem = (int *)malloc(sizeof(int) * n_buckets);
     global_starting_position = (int *)malloc(sizeof(int) * n_buckets);
     memset(global_n_elem, 0, sizeof(int) * n_buckets);
@@ -118,9 +119,17 @@ struct TempStorage {
     free(buckets);
   }
 
+  void reset() {
+    memset(global_n_elem, 0, sizeof(int) * n_buckets);
+    memset(global_starting_position, 0, sizeof(int) * n_buckets);
+  }
+
   int *global_n_elem;
   int *global_starting_position;
   struct bucket *buckets;
+
+  const int n_buckets;
+  const int num_threads;
 };
 
 }  // namespace tree::omp
