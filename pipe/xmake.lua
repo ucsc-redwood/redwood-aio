@@ -7,14 +7,14 @@
 add_requires("concurrentqueue")
 
 rule("pipe_config")
-    on_load(function (target)
-        target:set("kind", "binary")
-        target:set("group", "pipe")
+on_load(function(target)
+	target:set("kind", "binary")
+	target:set("group", "pipe")
 
-        target:add("includedirs", "$(projectdir)")
-        
-        target:add("packages", "concurrentqueue")
-    end)
+	target:add("includedirs", "$(projectdir)")
+
+	target:add("packages", "concurrentqueue")
+end)
 rule_end()
 
 -- ----------------------------------------------------------------

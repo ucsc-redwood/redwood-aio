@@ -4,39 +4,40 @@
 -- OMP benchmarks
 -- ------------------------------------------------------------
 
-target("bm-cifar-dense-omp") do
-    add_rules("benchmark_config", "common_flags", "run_on_android")
-    add_files({
-        "omp.cpp",
-    })
-    add_deps("builtin-apps")
+target("bm-cifar-dense-omp")
+do
+	add_rules("benchmark_config", "common_flags", "run_on_android")
+	add_files({
+		"omp.cpp",
+	})
+	add_deps("builtin-apps")
 end
-
 
 -- ------------------------------------------------------------
 -- VK benchmarks
 -- ------------------------------------------------------------
 
-target("bm-cifar-dense-vk") do
-    add_rules("benchmark_config", "common_flags", "vulkan_config", "run_on_android")
-    add_files({
-        "vk.cpp",
-    })
-    add_deps("builtin-apps", "builtin-apps-vulkan")
+target("bm-cifar-dense-vk")
+do
+	add_rules("benchmark_config", "common_flags", "vulkan_config", "run_on_android")
+	add_files({
+		"vk.cpp",
+	})
+	add_deps("builtin-apps", "builtin-apps-vulkan")
 end
-
 
 -- ------------------------------------------------------------
 -- CUDA benchmarks
 -- ------------------------------------------------------------
 
 if has_config("cuda") then
-    target("bm-cifar-dense-cu") do
-        add_rules("benchmark_config", "common_flags")
-        add_files({
-            "cuda.cu",
-        })
-        add_deps("builtin-apps", "builtin-apps-cuda")
-        add_cugencodes("native")
-    end
-end 
+	target("bm-cifar-dense-cu")
+	do
+		add_rules("benchmark_config", "common_flags")
+		add_files({
+			"cuda.cu",
+		})
+		add_deps("builtin-apps", "builtin-apps-cuda")
+		add_cugencodes("native")
+	end
+end
