@@ -25,11 +25,8 @@
     if (arg == "--device" && i + 1 < argc) {
       return true;
     }
-    if (arg == "-d" && i + 1 < argc) {
-      return true;
-    }
   }
-  std::cerr << "Error: --device or -d argument is required\n";
+  std::cerr << "Error: --device argument is required\n";
   std::exit(1);
   return false;
 }

@@ -23,12 +23,11 @@ inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(
       // Skip --device=XXX format
       continue;
     }
-    if (arg == "--device" || arg == "-d") {
+    if (arg == "--device") {
       // Skip both --device and its value
       ++i;
       continue;
     }
-    stored_strings.push_back(std::move(arg));
     stored_strings.push_back(std::move(arg));
   }
 
