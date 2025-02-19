@@ -228,44 +228,42 @@ def main():
 
         # Add new section for detailed performance analysis
         print(f"\n{Style.BRIGHT}Detailed Performance Analysis:{Style.RESET_ALL}")
-        
+
         # Performance Distribution
         perf_data = []
-        time_ranges = [
-            (0, 25), (25, 30), (30, 35), (35, float('inf'))
-        ]
-        
+        time_ranges = [(0, 25), (25, 30), (30, 35), (35, float("inf"))]
+
         for min_t, max_t in time_ranges:
             count = sum(1 for t in actual_times if min_t <= t < max_t)
             percentage = (count / len(actual_times)) * 100
             range_str = f"{min_t}-{max_t if max_t != float('inf') else '+'}"
-            perf_data.append([
-                f"{range_str} ms",
-                count,
-                f"{percentage:.1f}%"
-            ])
-        
+            perf_data.append([f"{range_str} ms", count, f"{percentage:.1f}%"])
+
         print("\nPerformance Distribution:")
-        print(tabulate(perf_data, 
-                      headers=["Time Range", "Count", "Percentage"], 
-                      tablefmt="simple"))
+        print(
+            tabulate(
+                perf_data,
+                headers=["Time Range", "Count", "Percentage"],
+                tablefmt="simple",
+            )
+        )
 
         # Stability Analysis
         print(f"\n{Style.BRIGHT}Stability Analysis:{Style.RESET_ALL}")
-        
+
         # Calculate coefficient of variation (CV)
         cv = (np.std(actual_times) / np.mean(actual_times)) * 100
-        
+
         # Calculate quartiles and IQR
         q1 = np.percentile(actual_times, 25)
         q3 = np.percentile(actual_times, 75)
         iqr = q3 - q1
-        
+
         # Calculate outliers
         lower_bound = q1 - 1.5 * iqr
         upper_bound = q3 + 1.5 * iqr
         outliers = [t for t in actual_times if t < lower_bound or t > upper_bound]
-        
+
         stability_data = [
             ["Coefficient of Variation", f"{cv:.1f}%"],
             ["Interquartile Range", f"{iqr:.2f} ms"],
@@ -321,12 +319,12 @@ def main():
 
             # Prediction Error Analysis
             print(f"\n{Style.BRIGHT}Prediction Error Analysis:{Style.RESET_ALL}")
-            
+
             # Calculate error statistics
             abs_errors = [abs(diff) for diff in prediction_differences]
             mean_abs_error = np.mean(abs_errors)
             rmse = np.sqrt(np.mean(np.square(prediction_differences)))
-            
+
             error_data = [
                 ["Mean Absolute Error", f"{mean_abs_error:.1f}%"],
                 ["Root Mean Square Error", f"{rmse:.1f}%"],
@@ -338,18 +336,27 @@ def main():
 
             # Correlation Analysis
             print(f"\n{Style.BRIGHT}Correlation Analysis:{Style.RESET_ALL}")
-            
+
             # Calculate correlation between predicted and actual times
-            predicted_times = [predictions[s] for s in successful_runs if s in predictions]
-            actual_times_corr = [results[s] for s in successful_runs if s in predictions]
-            
+            predicted_times = [
+                predictions[s] for s in successful_runs if s in predictions
+            ]
+            actual_times_corr = [
+                results[s] for s in successful_runs if s in predictions
+            ]
+
             correlation = np.corrcoef(predicted_times, actual_times_corr)[0, 1]
-            
+
             corr_data = [
                 ["Prediction-Actual Correlation", f"{correlation:.3f}"],
-                ["Correlation Strength", 
-                 "Strong" if abs(correlation) > 0.7 else 
-                 "Moderate" if abs(correlation) > 0.4 else "Weak"],
+                [
+                    "Correlation Strength",
+                    (
+                        "Strong"
+                        if abs(correlation) > 0.7
+                        else "Moderate" if abs(correlation) > 0.4 else "Weak"
+                    ),
+                ],
             ]
             print(tabulate(corr_data, tablefmt="simple"))
 
