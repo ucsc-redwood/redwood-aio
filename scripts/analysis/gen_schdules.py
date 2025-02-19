@@ -253,17 +253,16 @@ def schedule_to_json(
             "hardware": schedule.pu_types[i],
             "threads": schedule.pu_threads[i],
             "stages": stages,
+            "time": schedule.chunk_times[i],
         }
         chunks_json.append(chunk_json)
 
-    total_time = sum(schedule.chunk_times)
     return {
         "schedule": {
             "schedule_id": schedule_id,
             "device_id": device_id,
             "chunks": chunks_json,
         },
-        "total_time": total_time,
         "max_chunk_time": schedule.max_chunk_time,
     }
 
@@ -290,7 +289,9 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate possible scheduling combinations."
     )
-    parser.add_argument("--device", required=True, help="Device ID from hardware config")
+    parser.add_argument(
+        "--device", required=True, help="Device ID from hardware config"
+    )
     parser.add_argument("--app", required=True, help="Application name from app config")
     parser.add_argument(
         "--output_dir",
