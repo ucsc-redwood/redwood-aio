@@ -114,11 +114,24 @@ constexpr const char* get_processor_name(ProcessorType type) {
   }
 }
 
+// ----------------------------------------------------------------
 // Template for registering stage benchmarks
+// ----------------------------------------------------------------
+
 template <int stage, ProcessorType proc_type>
-void RegisterStageBenchmark(const std::vector<int>& cores) {
+void RegisterStageBenchmark() {
   const char* proc_name = get_processor_name(proc_type);
-  for (size_t i = 1; i <= cores.size(); ++i) {
+
+  size_t n_cores = 0;
+  if constexpr (proc_type == ProcessorType::kLittleCore) {
+    n_cores = g_little_cores.size();
+  } else if constexpr (proc_type == ProcessorType::kMediumCore) {
+    n_cores = g_medium_cores.size();
+  } else if constexpr (proc_type == ProcessorType::kBigCore) {
+    n_cores = g_big_cores.size();
+  }
+
+  for (size_t i = 1; i <= n_cores; ++i) {
     auto* benchmark = new StageFixture<stage, proc_type>();
     std::string name = "OMP_Tree/Stage" + std::to_string(stage) + "_" + proc_name;
 
@@ -127,25 +140,32 @@ void RegisterStageBenchmark(const std::vector<int>& cores) {
   }
 }
 
+// ----------------------------------------------------------------
 // Register all stage benchmarks for a processor type
+// ----------------------------------------------------------------
+
 template <ProcessorType proc_type>
-void RegisterAllStagesForProcessor(const std::vector<int>& cores) {
-  RegisterStageBenchmark<1, proc_type>(cores);
-  RegisterStageBenchmark<2, proc_type>(cores);
-  RegisterStageBenchmark<3, proc_type>(cores);
-  RegisterStageBenchmark<4, proc_type>(cores);
-  RegisterStageBenchmark<5, proc_type>(cores);
-  RegisterStageBenchmark<6, proc_type>(cores);
-  RegisterStageBenchmark<7, proc_type>(cores);
+void RegisterAllStagesForProcessor() {
+  RegisterStageBenchmark<1, proc_type>();
+  RegisterStageBenchmark<2, proc_type>();
+  RegisterStageBenchmark<3, proc_type>();
+  RegisterStageBenchmark<4, proc_type>();
+  RegisterStageBenchmark<5, proc_type>();
+  RegisterStageBenchmark<6, proc_type>();
+  RegisterStageBenchmark<7, proc_type>();
 }
+
+// ----------------------------------------------------------------
+// Main
+// ----------------------------------------------------------------
 
 int main(int argc, char** argv) {
   parse_args(argc, argv);
 
   // Register benchmarks for all processor types
-  RegisterAllStagesForProcessor<ProcessorType::kLittleCore>(g_little_cores);
-  RegisterAllStagesForProcessor<ProcessorType::kMediumCore>(g_medium_cores);
-  RegisterAllStagesForProcessor<ProcessorType::kBigCore>(g_big_cores);
+  RegisterAllStagesForProcessor<ProcessorType::kLittleCore>();
+  RegisterAllStagesForProcessor<ProcessorType::kMediumCore>();
+  RegisterAllStagesForProcessor<ProcessorType::kBigCore>();
 
   // Initialize and run benchmarks
   const auto storage_location = helpers::get_benchmark_storage_location();
