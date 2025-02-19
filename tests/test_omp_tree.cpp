@@ -136,15 +136,10 @@ TEST(OMP_Tree, Stage7) {
 // ----------------------------------------------------------------------------
 
 TEST(OMP_Tree, Stage1_MultiIteration) {
-  //   PREPARE_APPDATA;
+  for (int i = 0; i < 10; ++i) {
+    PREPARE_APPDATA;
 
-  const auto n_threads = std::thread::hardware_concurrency();
-  auto mr = std::pmr::new_delete_resource();
-  tree::AppData appdata(mr);
-  tree::omp::TempStorage tmp_storage(n_threads, n_threads);
-
-  for (int i = 0; i < 2; ++i) {
-#pragma omp parallel
+#pragma omp parallel num_threads(n_threads / 2)
     {
       tree::omp::run_stage<1>(appdata, tmp_storage);
       tree::omp::run_stage<2>(appdata, tmp_storage);
@@ -154,15 +149,15 @@ TEST(OMP_Tree, Stage1_MultiIteration) {
       tree::omp::run_stage<6>(appdata, tmp_storage);
       tree::omp::run_stage<7>(appdata, tmp_storage);
     }
-  }
 
-  //   test_tree::verify_stage_1(appdata);
-  //   test_tree::verify_stage_2(appdata);
-  //   test_tree::verify_stage_3(appdata);
-  //   test_tree::verify_stage_4(appdata);
-  //   test_tree::verify_stage_5(appdata);
-  //   test_tree::verify_stage_6(appdata);
-  //   test_tree::verify_stage_7(appdata);
+    test_tree::verify_stage_1(appdata);
+    test_tree::verify_stage_2(appdata);
+    test_tree::verify_stage_3(appdata);
+    test_tree::verify_stage_4(appdata);
+    test_tree::verify_stage_5(appdata);
+    test_tree::verify_stage_6(appdata);
+    test_tree::verify_stage_7(appdata);
+  }
 }
 
 // ----------------------------------------------------------------------------
