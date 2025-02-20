@@ -36,11 +36,11 @@ inline void log_kernel(const int stage, const void *appdata_addr) {
   }
 }
 
-#ifdef NDEBUG
-#define LOG_KERNEL(kernel_type, stage, appdata) ((void)0)
-#else
+// #ifdef NDEBUG
+// #define LOG_KERNEL(kernel_type, stage, appdata) ((void)0)
+// #else
 #define LOG_KERNEL(kernel_type, stage, appdata) log_kernel<kernel_type>(stage, appdata)
-#endif
+// #endif
 
 // Example usage:
 // In your kernel code:
