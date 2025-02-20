@@ -216,12 +216,13 @@ int main(int argc, char** argv) {
 
   // Where to save the results json file?
   const auto storage_location = helpers::get_benchmark_storage_location();
-  const auto out_name = storage_location.string() + "/BM_Tree_OMP_" + g_device_id + ".json";
+  const auto out_name = storage_location.string() + "/BM_Tree_CUDA_" + g_device_id + ".json";
 
   // Sanitize the arguments to pass to Google Benchmark
   auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
 
-  benchmark::Initialize(&argc, argv);
+  benchmark::Initialize(&new_argc, new_argv.data());
+  if (benchmark::ReportUnrecognizedArguments(new_argc, new_argv.data())) return 1;
   benchmark::RunSpecifiedBenchmarks();
   benchmark::Shutdown();
   return 0;
