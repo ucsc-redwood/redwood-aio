@@ -36,13 +36,15 @@ end
 
 -- --- Vulkan Tree ---
 
-target("test-tree-vk")
-do
-    add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
-	add_files({
-		"test_tree_vk.cpp",
-	})
-	add_deps("builtin-apps", "builtin-apps-vulkan")
+if has_config("use_vulkan") then
+	target("test-tree-vk")
+	do
+		add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
+		add_files({
+			"test_tree_vk.cpp",
+		})
+		add_deps("builtin-apps", "builtin-apps-vulkan")
+	end
 end
 
 -- --- CUDA Tree ---

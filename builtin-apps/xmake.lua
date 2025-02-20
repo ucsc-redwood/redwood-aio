@@ -61,30 +61,32 @@ end
 -- Vulkan Static Library
 -- ----------------------------------------------------------------------------
 
-target("builtin-apps-vulkan")
-do
-	set_kind("static")
-	set_group("static-libs")
-	add_rules("common_flags", "vulkan_config")
+if has_config("use_vulkan") then
+	target("builtin-apps-vulkan")
+	do
+		set_kind("static")
+		set_group("static-libs")
+		add_rules("common_flags", "vulkan_config")
 
-	add_deps("kiss-vk")
+		add_deps("kiss-vk")
 
-	-- add_includedirs("$(projectdir)")
+		-- add_includedirs("$(projectdir)")
 
-	add_headerfiles({
-		-- App specific headers
-		"cifar-sparse/vulkan/vk_dispatcher.hpp",
-		"cifar-dense/vulkan/vk_dispatcher.hpp",
-		"tree/vulkan/vk_dispatcher.hpp",
-		"tree/vulkan/tmp_storage.hpp",
-	})
+		add_headerfiles({
+			-- App specific headers
+			"cifar-sparse/vulkan/vk_dispatcher.hpp",
+			"cifar-dense/vulkan/vk_dispatcher.hpp",
+			"tree/vulkan/vk_dispatcher.hpp",
+			"tree/vulkan/tmp_storage.hpp",
+		})
 
-	add_files({
-		-- App specific implementations
-		"cifar-sparse/vulkan/vk_dispatcher.cpp",
-		"cifar-dense/vulkan/vk_dispatcher.cpp",
-		"tree/vulkan/vk_dispatcher.cpp",
-	})
+		add_files({
+			-- App specific implementations
+			"cifar-sparse/vulkan/vk_dispatcher.cpp",
+			"cifar-dense/vulkan/vk_dispatcher.cpp",
+			"tree/vulkan/vk_dispatcher.cpp",
+		})
+	end
 end
 
 -- ----------------------------------------------------------------------------

@@ -17,13 +17,15 @@ end
 -- VK benchmarks
 -- ------------------------------------------------------------
 
-target("bm-tree-vk")
-do
-	add_rules("benchmark_config", "common_flags", "vulkan_config", "run_on_android")
-	add_files({
-		"vk.cpp",
-	})
-	add_deps("builtin-apps", "builtin-apps-vulkan")
+if has_config("use_vulkan") then
+	target("bm-tree-vk")
+	do
+		add_rules("benchmark_config", "common_flags", "vulkan_config", "run_on_android")
+		add_files({
+			"vk.cpp",
+		})
+		add_deps("builtin-apps", "builtin-apps-vulkan")
+	end
 end
 
 -- ------------------------------------------------------------

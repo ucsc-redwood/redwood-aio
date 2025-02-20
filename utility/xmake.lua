@@ -1,10 +1,12 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
 -- ----------------------------------------------------------------
--- Utility
+-- Utility (Vulkan)
 -- ----------------------------------------------------------------
 
-add_requires("volk")
+if has_config("use_vulkan") then
+	add_requires("volk")
+end
 
 rule("utility_config")
 on_load(function(target)
@@ -16,27 +18,30 @@ rule_end()
 -- ----------------------------------------------------------------
 -- Utility Target: Find the current GPU's Warp Size
 -- ----------------------------------------------------------------
-
-target("query-warpsize")
-do
-	add_rules("utility_config", "vulkan_config", "run_on_android")
-	add_files({
-		"query_warpsize.cpp",
-	})
-	add_packages("volk")
+if has_config("use_vulkan") then
+	target("query-warpsize")
+	do
+		add_rules("utility_config", "vulkan_config", "run_on_android")
+		add_files({
+			"query_warpsize.cpp",
+		})
+		add_packages("volk")
+	end
 end
 
 -- ----------------------------------------------------------------
 -- Utility Target: Query the current CPU Information
 -- ----------------------------------------------------------------
 
-if is_plat("linux") or is_plat("android") then
-	target("query-cpuinfo")
-	do
-		add_rules("utility_config", "run_on_android")
-		add_files({
-			"query_cpuinfo.cpp",
-		})
+if has_config("use_vulkan") then
+	if is_plat("linux") or is_plat("android") then
+		target("query-cpuinfo")
+		do
+			add_rules("utility_config", "run_on_android")
+			add_files({
+				"query_cpuinfo.cpp",
+			})
+		end
 	end
 end
 
