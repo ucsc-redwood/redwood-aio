@@ -2,7 +2,7 @@
 #include <concurrentqueue.h>
 
 #include <atomic>
-#include <functional>
+#include <memory_resource>
 #include <thread>
 
 #include "builtin-apps/affinity.hpp"
@@ -17,6 +17,7 @@
 struct Task {
   tree::AppData* app_data;  // basically just a pointer
   tree::omp::TmpStorage* temp_storage;
+  tree::vulkan::TmpStorage* vulkan_storage;
 };
 
 [[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
@@ -24,10 +25,13 @@ struct Task {
 
   std::vector<Task> tasks(num_tasks);
 
+  constexpr auto n_inputs = 640 * 480;
+
   for (uint32_t i = 0; i < num_tasks; ++i) {
     tasks[i] = Task{
-        .app_data = new tree::AppData(mr),
+        .app_data = new tree::AppData(mr, n_inputs),
         .temp_storage = new tree::omp::TmpStorage(),
+        .vulkan_storage = new tree::vulkan::TmpStorage(mr, n_inputs),
     };
 
     const auto n_threads = std::thread::hardware_concurrency();
@@ -41,6 +45,7 @@ void cleanup(std::vector<Task>& tasks) {
   for (auto& task : tasks) {
     delete task.app_data;
     delete task.temp_storage;
+    delete task.vulkan_storage;
   }
 }
 
@@ -111,7 +116,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
     Task task;
     if (in_q.try_dequeue(task)) {
       // ---------------------------------------------------------------------
-
+      tree::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data, *task.vulkan_storage);
       // ---------------------------------------------------------------------
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
@@ -124,7 +129,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
     Task task;
     if (!in_q.try_dequeue(task)) break;
     // ---------------------------------------------------------------------
-
+    tree::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data, *task.vulkan_storage);
     // ---------------------------------------------------------------------
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
