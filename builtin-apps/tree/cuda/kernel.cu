@@ -16,26 +16,7 @@ namespace tree::cuda {
 // Globals, constants and aliases
 //---------------------------------------------------------------------
 
-// uint32_t *g_num_selected_out = nullptr;
-
 cub::CachingDeviceAllocator g_allocator(true);  // Caching allocator for device memory
-
-// struct TempStorage {
-//   struct {
-//     void *d_temp_storage = nullptr;
-//     size_t temp_storage_bytes = 0;
-//   } sort;
-
-//   struct {
-//     void *d_temp_storage = nullptr;
-//     size_t temp_storage_bytes = 0;
-//   } unique;
-
-//   struct {
-//     void *d_temp_storage = nullptr;
-//     size_t temp_storage_bytes = 0;
-//   } prefix_sum;
-// } tmp;
 
 TempStorage::TempStorage() {
   CubDebugExit(cudaMallocManaged(&u_num_selected_out, sizeof(uint32_t)));
@@ -59,32 +40,11 @@ TempStorage::~TempStorage() {
   }
 }
 
-// void warmup(AppData &app_data) {
-// }
-
-// void cleanup() {
-//   if (g_num_selected_out) {
-//     CubDebugExit(cudaFree(g_num_selected_out));
-//   }
-
-//   if (tmp.sort.d_temp_storage) {
-//     CubDebugExit(cudaFree(tmp.sort.d_temp_storage));
-//   }
-
-//   if (tmp.unique.d_temp_storage) {
-//     CubDebugExit(cudaFree(tmp.unique.d_temp_storage));
-//   }
-
-//   if (tmp.prefix_sum.d_temp_storage) {
-//     CubDebugExit(cudaFree(tmp.prefix_sum.d_temp_storage));
-//   }
-// }
-
 // ----------------------------------------------------------------------------
 // Stage 1 (input -> morton code)
 // ----------------------------------------------------------------------------
 
-void process_stage_1(AppData &app_data) {
+void process_stage_1(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto block_size = 256;
   const auto grid_size = cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
   constexpr auto s_mem = 0;
@@ -159,7 +119,7 @@ void process_stage_3(AppData &app_data, TempStorage &tmp) {
 // Stage 4 (build tree) (unique sorted morton code -> tree nodes)
 // ----------------------------------------------------------------------------
 
-void process_stage_4(AppData &app_data) {
+void process_stage_4(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto gridDim = 16;
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;
@@ -178,7 +138,7 @@ void process_stage_4(AppData &app_data) {
 // Stage 5 (edge count) (tree nodes -> edge count)
 // ----------------------------------------------------------------------------
 
-void process_stage_5(AppData &app_data) {
+void process_stage_5(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto gridDim = 16;
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;
@@ -221,7 +181,7 @@ void process_stage_6(AppData &app_data, TempStorage &tmp) {
 // Stage 7 (octree) (everything above -> octree)
 // ----------------------------------------------------------------------------
 
-void process_stage_7(AppData &app_data) {
+void process_stage_7(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto gridDim = 16;
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;

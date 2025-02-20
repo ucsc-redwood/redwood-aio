@@ -5,8 +5,6 @@
 namespace cifar_sparse {
 namespace cuda {
 
-void device_sync() { CUDA_CHECK(cudaDeviceSynchronize()); }
-
 // -----------------------------------------------------------------------------
 // Stage 1 (first conv2d)
 // -----------------------------------------------------------------------------
