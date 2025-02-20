@@ -5,6 +5,7 @@
 #include <random>
 
 #include "../../app.hpp"
+#include "../../debug_logger.hpp"
 
 namespace tree {
 
@@ -69,6 +70,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 1, &appdata);
+
   auto algo = cached_algorithms.at("morton").get();
 
   algo->update_descriptor_set(0,
@@ -100,6 +103,8 @@ void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStor
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_2(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 2, &appdata);
+
   auto algo = cached_algorithms.at("radixsort").get();
 
   algo->update_descriptor_set(0,
@@ -131,6 +136,8 @@ void Singleton::process_stage_2(tree::AppData &appdata, [[maybe_unused]] TmpStor
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
+
   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
                                      appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
                                      appdata.u_morton_keys_unique_s3.data());
@@ -145,6 +152,8 @@ void Singleton::process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStor
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 4, &appdata);
+
   const int32_t n = appdata.get_n_unique();
   auto algo = cached_algorithms.at("build_radix_tree").get();
 
@@ -178,6 +187,8 @@ void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStor
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 5, &appdata);
+
   auto algo = cached_algorithms.at("edge_count").get();
 
   algo->update_descriptor_set(0,
@@ -208,6 +219,8 @@ void Singleton::process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStor
 // ----------------------------------------------------------------------------
 
 void Singleton::process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 6, &appdata);
+
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
 
@@ -226,6 +239,8 @@ void Singleton::process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStor
 //----------------------------------------------------------------------------
 
 void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 7, &appdata);
+
   auto algo = cached_algorithms.at("build_octree").get();
 
   algo->update_descriptor_set(0,
