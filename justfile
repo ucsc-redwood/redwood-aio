@@ -1,6 +1,6 @@
 
 set-android:
-    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c -v
+    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c --use_vulkan=yes -v
 
 set-jetson:
     xmake f -p linux -a arm64 --use_cuda=yes -c -v 
