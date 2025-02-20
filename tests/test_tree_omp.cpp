@@ -11,7 +11,8 @@
   const auto n_threads = std::thread::hardware_concurrency(); \
   auto mr = std::pmr::new_delete_resource();                  \
   tree::AppData appdata(mr);                                  \
-  tree::omp::TempStorage tmp_storage(n_threads, n_threads);
+  tree::omp::TmpStorage tmp_storage;                          \
+  tmp_storage.allocate(n_threads, n_threads);
 
 // ----------------------------------------------------------------------------
 // Stage 1 Basic Correctness
