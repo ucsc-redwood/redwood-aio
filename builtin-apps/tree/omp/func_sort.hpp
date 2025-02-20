@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 
 namespace tree::omp {
 
@@ -121,6 +123,55 @@ struct TempStorage {
   int *global_n_elem;
   int *global_starting_position;
   struct bucket *buckets;
+};
+
+// ----------------------------------------------------------------------------
+// New version
+// ----------------------------------------------------------------------------
+
+struct TmpStorage {
+ public:
+  TmpStorage() = default;
+  ~TmpStorage() = default;
+
+  // Disallow copy if needed
+  TmpStorage(const TmpStorage &) = delete;
+  TmpStorage &operator=(const TmpStorage &) = delete;
+
+  // Allow move semantics
+  TmpStorage(TmpStorage &&) = default;
+  TmpStorage &operator=(TmpStorage &&) = default;
+
+  // Allocate memory for storage
+  void allocate(int n_buckets, int num_threads) {
+    m_n_buckets = n_buckets;
+    m_num_threads = num_threads;
+
+    global_n_elem.assign(n_buckets, 0);
+    global_starting_position.assign(n_buckets, 0);
+
+    // Each thread gets n_buckets, so total = n_buckets * num_threads
+    buckets.assign(n_buckets * num_threads, bucket{});  // Default-initialize buckets
+  }
+
+  // // Reset the contents
+  // void reset() {
+  //   std::fill(global_n_elem.begin(), global_n_elem.end(), 0);
+  //   std::fill(global_starting_position.begin(), global_starting_position.end(), 0);
+
+  //   // Reset all buckets
+  //   for (auto &b : buckets) {
+  //     b = bucket{};  // Re-initialize each bucket to default state
+  //   }
+  // }
+
+ private:
+  int m_n_buckets = 0;
+  int m_num_threads = 0;
+
+  std::vector<int> global_n_elem;
+  std::vector<int> global_starting_position;
+  std::vector<bucket> buckets;
 };
 
 }  // namespace tree::omp
