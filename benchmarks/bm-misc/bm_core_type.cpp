@@ -42,14 +42,14 @@ static void BM_HeavyFloatingPoint(benchmark::State& state) {
     bind_thread_to_cores({core_id});
   } catch (const std::exception& ex) {
     // If we can't pin to the core, skip the benchmark
-    state.SkipWithError(("Failed to pin to core " + std::to_string(core_id) +
-                         ": " + ex.what()).c_str());
+    state.SkipWithError(
+        ("Failed to pin to core " + std::to_string(core_id) + ": " + ex.what()).c_str());
     // Return immediately so we do no further work in this benchmark.
     return;
   } catch (...) {
     // Catch any other kind of exception
-    state.SkipWithError(("Failed to pin to core " + std::to_string(core_id) +
-                         " with unknown error").c_str());
+    state.SkipWithError(
+        ("Failed to pin to core " + std::to_string(core_id) + " with unknown error").c_str());
     return;
   }
 
@@ -72,12 +72,12 @@ static void BM_GraphBFS(benchmark::State& state) {
   try {
     bind_thread_to_cores({core_id});
   } catch (const std::exception& ex) {
-    state.SkipWithError(("Failed to pin to core " + std::to_string(core_id) +
-                         ": " + ex.what()).c_str());
+    state.SkipWithError(
+        ("Failed to pin to core " + std::to_string(core_id) + ": " + ex.what()).c_str());
     return;
   } catch (...) {
-    state.SkipWithError(("Failed to pin to core " + std::to_string(core_id) +
-                         " with unknown error").c_str());
+    state.SkipWithError(
+        ("Failed to pin to core " + std::to_string(core_id) + " with unknown error").c_str());
     return;
   }
 
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
   InitializeGraph();
 
   const auto num_cores = std::thread::hardware_concurrency();
-  
+
   // Register all HeavyFloat benchmarks first
   for (unsigned int core_id = 0; core_id < num_cores; ++core_id) {
     benchmark::RegisterBenchmark(("HeavyFloat/CoreID" + std::to_string(core_id)).c_str(),
@@ -125,8 +125,7 @@ int main(int argc, char** argv) {
 
   // Then register all GraphBFS benchmarks
   for (unsigned int core_id = 0; core_id < num_cores; ++core_id) {
-    benchmark::RegisterBenchmark(("GraphBFS/CoreID" + std::to_string(core_id)).c_str(),
-                                 BM_GraphBFS)
+    benchmark::RegisterBenchmark(("GraphBFS/CoreID" + std::to_string(core_id)).c_str(), BM_GraphBFS)
         ->Arg(core_id)
         ->Unit(benchmark::kMillisecond);
   }
