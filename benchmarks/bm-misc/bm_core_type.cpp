@@ -99,13 +99,18 @@ int main(int argc, char** argv) {
   // Initialize our graph data once
   InitializeGraph();
 
-  // For each core, register the two benchmarks (HeavyFloat and GraphBFS).
+  // Register all HeavyFloat benchmarks first
   const auto num_cores = std::thread::hardware_concurrency();
   for (unsigned int core_id = 0; core_id < num_cores; ++core_id) {
-    benchmark::RegisterBenchmark("HeavyFloat", BM_HeavyFloatingPoint)
+    benchmark::RegisterBenchmark(("HeavyFloat/CoreID" + std::to_string(core_id)).c_str(),
+                                 BM_HeavyFloatingPoint)
         ->Arg(core_id)
         ->Unit(benchmark::kMillisecond);
-    benchmark::RegisterBenchmark("GraphBFS", BM_GraphBFS)
+  }
+
+  // Then register all GraphBFS benchmarks
+  for (unsigned int core_id = 0; core_id < num_cores; ++core_id) {
+    benchmark::RegisterBenchmark(("GraphBFS/CoreID" + std::to_string(core_id)).c_str(), BM_GraphBFS)
         ->Arg(core_id)
         ->Unit(benchmark::kMillisecond);
   }
