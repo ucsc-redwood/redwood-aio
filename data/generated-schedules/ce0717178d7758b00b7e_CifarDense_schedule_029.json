@@ -8,35 +8,35 @@
         "hardware": "big",
         "threads": 4,
         "stages": [
-          1,
-          2,
-          3,
-          4
+          1
         ],
-        "time": 87.61904479645096
+        "time": 4.9339116749858185
       },
       {
         "name": "chunk2",
         "hardware": "gpu",
         "threads": 0,
         "stages": [
-          5,
-          6,
-          7,
-          8
+          2,
+          3,
+          4,
+          5
         ],
-        "time": 131.72467296215223
+        "time": 67.84340760293122
       },
       {
         "name": "chunk3",
         "hardware": "little",
         "threads": 4,
         "stages": [
+          6,
+          7,
+          8,
           9
         ],
-        "time": 0.037047117754537236
+        "time": 126.49408958569317
       }
     ]
   },
-  "max_chunk_time": 131.72467296215223
+  "max_chunk_time": 126.49408958569317
 }

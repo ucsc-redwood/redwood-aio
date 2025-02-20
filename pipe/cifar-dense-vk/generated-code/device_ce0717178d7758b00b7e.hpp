@@ -100,8 +100,6 @@ constexpr const char* kScheduleId = "ce0717178d7758b00b7e_CifarDense_schedule_04
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_047_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_047_chunk2(
-    moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_047_chunk3(
     moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
@@ -114,8 +112,6 @@ constexpr const char* kScheduleId = "ce0717178d7758b00b7e_CifarDense_schedule_04
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_048_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_048_chunk2(
-    moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_048_chunk3(
     moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
@@ -156,6 +152,8 @@ constexpr const char* kScheduleId = "ce0717178d7758b00b7e_CifarDense_schedule_03
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_036_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_036_chunk2(
+    moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_036_chunk3(
     moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
@@ -168,6 +166,8 @@ constexpr const char* kScheduleId = "ce0717178d7758b00b7e_CifarDense_schedule_04
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_044_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_044_chunk2(
+    moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_044_chunk3(
     moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
@@ -402,8 +402,6 @@ constexpr const char* kScheduleId = "ce0717178d7758b00b7e_CifarDense_schedule_02
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_028_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_028_chunk2(
-    moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_028_chunk3(
     moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
@@ -652,6 +650,8 @@ constexpr const char* kScheduleId = "ce0717178d7758b00b7e_CifarDense_schedule_04
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_043_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
 void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_043_chunk2(
+    moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_CifarDense_schedule_043_chunk3(
     moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);

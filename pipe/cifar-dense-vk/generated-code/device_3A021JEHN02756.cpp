@@ -17,7 +17,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 2, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<1, 1, ProcessorType::kLittleCore, 4>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -28,7 +28,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -37,7 +37,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -47,7 +47,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<5, 7>(task.app_data);
+      run_gpu_stages<5, 8>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -56,7 +56,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<5, 7>(task.app_data);
+    run_gpu_stages<5, 8>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -66,7 +66,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
+      run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -77,7 +77,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_005_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -117,7 +117,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_002_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 2, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<1, 1, ProcessorType::kBigCore, 2>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -128,7 +128,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_002_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -137,7 +137,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_002_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -147,7 +147,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_002_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<4, 7>(task.app_data);
+      run_gpu_stages<5, 7>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -156,7 +156,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_002_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<4, 7>(task.app_data);
+    run_gpu_stages<5, 7>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -394,7 +394,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_015_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 1, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<1, 2, ProcessorType::kLittleCore, 4>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -405,7 +405,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_015_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -414,7 +414,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_015_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -424,7 +424,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_015_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<5, 8>(task.app_data);
+      run_gpu_stages<4, 8>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -433,7 +433,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_015_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<5, 8>(task.app_data);
+    run_gpu_stages<4, 8>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -594,7 +594,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 2, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<1, 1, ProcessorType::kBigCore, 2>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -605,7 +605,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -614,7 +614,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -624,7 +624,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<5, 7>(task.app_data);
+      run_gpu_stages<5, 8>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -633,7 +633,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<5, 7>(task.app_data);
+    run_gpu_stages<5, 8>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -643,7 +643,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+      run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -654,7 +654,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_006_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -1271,7 +1271,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 1, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<1, 2, ProcessorType::kLittleCore, 4>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -1282,7 +1282,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -1291,7 +1291,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -1301,7 +1301,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<4, 8>(task.app_data);
+      run_gpu_stages<4, 7>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -1310,7 +1310,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<4, 8>(task.app_data);
+    run_gpu_stages<4, 7>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -1320,7 +1320,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
+      run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -1331,7 +1331,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_011_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -1948,7 +1948,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_001_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 2, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<1, 1, ProcessorType::kLittleCore, 4>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -1959,7 +1959,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_001_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -1968,7 +1968,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_001_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -1978,7 +1978,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_001_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<4, 7>(task.app_data);
+      run_gpu_stages<5, 7>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -1987,7 +1987,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_001_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<4, 7>(task.app_data);
+    run_gpu_stages<5, 7>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -2259,7 +2259,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_014_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -2268,7 +2268,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_014_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -2278,7 +2278,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_014_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<5, 7>(task.app_data);
+      run_gpu_stages<4, 8>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -2287,7 +2287,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_014_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<5, 7>(task.app_data);
+    run_gpu_stages<4, 8>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -2297,7 +2297,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_014_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+      run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -2308,7 +2308,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_014_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -3521,7 +3521,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_013_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -3530,7 +3530,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_013_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -3540,7 +3540,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_013_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<5, 7>(task.app_data);
+      run_gpu_stages<4, 8>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -3549,7 +3549,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_013_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<5, 7>(task.app_data);
+    run_gpu_stages<4, 8>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -3559,7 +3559,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_013_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
+      run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -3570,7 +3570,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_013_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -3798,7 +3798,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_003_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -3807,7 +3807,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_003_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -3817,7 +3817,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_003_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<4, 8>(task.app_data);
+      run_gpu_stages<5, 7>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -3826,7 +3826,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_003_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<4, 8>(task.app_data);
+    run_gpu_stages<5, 7>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -3836,7 +3836,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_003_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
+      run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -3847,7 +3847,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_003_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<9, 9, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<8, 9, ProcessorType::kBigCore, 2>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -3887,7 +3887,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_016_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 1, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<1, 2, ProcessorType::kBigCore, 2>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -3898,7 +3898,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_016_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -3907,7 +3907,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_016_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 4, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -3917,7 +3917,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_016_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<5, 8>(task.app_data);
+      run_gpu_stages<4, 8>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -3926,7 +3926,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_016_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<5, 8>(task.app_data);
+    run_gpu_stages<4, 8>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -4264,7 +4264,7 @@ static std::atomic<bool> done(false);
 void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk1(
     std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
-    run_stages<1, 1, ProcessorType::kBigCore, 2>(task.app_data);
+    run_stages<1, 2, ProcessorType::kBigCore, 2>(task.app_data);
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
   }
@@ -4275,7 +4275,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -4284,7 +4284,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<2, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -4294,7 +4294,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<4, 8>(task.app_data);
+      run_gpu_stages<4, 7>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -4303,7 +4303,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<4, 8>(task.app_data);
+    run_gpu_stages<4, 7>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -4313,7 +4313,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+      run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -4324,7 +4324,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_012_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
@@ -4606,7 +4606,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_004_chunk2(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+      run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -4615,7 +4615,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_004_chunk2(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<3, 3, ProcessorType::kMediumCore, 2>(task.app_data);
+    run_stages<3, 4, ProcessorType::kMediumCore, 2>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -4625,7 +4625,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_004_chunk3(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_gpu_stages<4, 8>(task.app_data);
+      run_gpu_stages<5, 7>(task.app_data);
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
@@ -4634,7 +4634,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_004_chunk3(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_gpu_stages<4, 8>(task.app_data);
+    run_gpu_stages<5, 7>(task.app_data);
     out_q.enqueue(task);
   }
 }
@@ -4644,7 +4644,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_004_chunk4(
   while (!done.load(std::memory_order_acquire)) {
     Task task;
     if (in_q.try_dequeue(task)) {
-      run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+      run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
       if (r == 0) done.store(true, std::memory_order_release);
@@ -4655,7 +4655,7 @@ void stage_group_3A021JEHN02756_CifarDense_schedule_004_chunk4(
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-    run_stages<9, 9, ProcessorType::kLittleCore, 4>(task.app_data);
+    run_stages<8, 9, ProcessorType::kLittleCore, 4>(task.app_data);
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
     if (r == 0) done.store(true, std::memory_order_release);
