@@ -66,9 +66,8 @@ BENCHMARK_REGISTER_F(OMP_Tree, Baseline)
 // ----------------------------------------------------------------
 
 template <int stage, ProcessorType processor_type>
-requires(stage >= 1 && stage <= 9) void run_stage(tree::AppData& appdata,
-                                                  tree::omp::TempStorage& temp_storage,
-                                                  const int n_threads) {
+  requires(stage >= 1 && stage <= 9)
+void run_stage(tree::AppData& appdata, tree::omp::TempStorage& temp_storage, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
     // Bind to core if needed:
