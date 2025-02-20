@@ -1,7 +1,4 @@
 #include <benchmark/benchmark.h>
-#include <spdlog/spdlog.h>
-
-#include <CLI/CLI.hpp>
 
 #include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"

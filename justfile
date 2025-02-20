@@ -47,3 +47,26 @@ cat-android-tmp:
     adb -s 3A021JEHN02756 shell "ls -la /data/local/tmp"
     adb -s 9b034f1b shell "ls -la /data/local/tmp"
     adb -s ce0717178d7758b00b7e shell "ls -la /data/local/tmp"
+
+#  ----------------------------------------------------------------------------
+#  Jetson Orin
+#  ----------------------------------------------------------------------------
+
+run-jetson-bm:
+    xmake r bm-tree-cu --device jetson 
+    xmake r bm-cifar-dense-cu --device jetson
+    xmake r bm-cifar-sparse-cu --device jetson
+    xmake r bm-tree-omp --device jetson 
+    xmake r bm-cifar-dense-omp --device jetson
+    xmake r bm-cifar-sparse-omp --device jetson
+
+#  ----------------------------------------------------------------------------
+#  Android
+#  ----------------------------------------------------------------------------
+
+run-android-bm:
+    python3 scripts/collect_android_results.py
+
+
+
+
