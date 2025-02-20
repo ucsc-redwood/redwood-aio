@@ -2,6 +2,7 @@
 
 #include <numeric>
 
+#include "../../debug_logger.hpp"
 #include "func_brt.hpp"
 #include "func_edge.hpp"
 #include "func_morton.hpp"
@@ -20,6 +21,8 @@ void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
   const int start = 0;
   const int end = appdata.get_n_input();
 
+  LOG_KERNEL(LogKernelType::kOMP, 1, &appdata);
+
 #pragma omp for
   for (int i = start; i < end; ++i) {
     appdata.u_morton_keys_s1[i] =
@@ -34,6 +37,8 @@ void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 void process_stage_2(tree::AppData &appdata, TmpStorage &temp_storage) {
   const auto num_threads = omp_get_num_threads();
   const auto num_buckets = num_threads;
+
+  LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
 
   bucket_sort(appdata.u_morton_keys_s1.data(),
               appdata.u_morton_keys_sorted_s2.data(),
@@ -54,6 +59,8 @@ void process_stage_2(tree::AppData &appdata, TmpStorage &temp_storage) {
 // ----------------------------------------------------------------------------
 
 void process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+  LOG_KERNEL(LogKernelType::kOMP, 3, &appdata);
+
   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
                                      appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
                                      appdata.u_morton_keys_unique_s3.data());
@@ -70,6 +77,8 @@ void process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 void process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
   const int start = 0;
   const int end = appdata.get_n_unique();
+
+  LOG_KERNEL(LogKernelType::kOMP, 4, &appdata);
 
 #pragma omp for
   for (int i = start; i < end; ++i) {
@@ -92,6 +101,8 @@ void process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
 
+  LOG_KERNEL(LogKernelType::kOMP, 5, &appdata);
+
   for (int i = start; i < end; ++i) {
     process_edge_count_i(i,
                          appdata.u_brt_prefix_n_s4.data(),
@@ -107,6 +118,8 @@ void process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 void process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
+
+  LOG_KERNEL(LogKernelType::kOMP, 6, &appdata);
 
   std::partial_sum(appdata.u_edge_count_s5.data() + start,
                    appdata.u_edge_count_s5.data() + end,
@@ -125,6 +138,8 @@ void process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
   // note: 1 here, skipping root
   const int start = 1;
   const int end = appdata.get_n_octree_nodes();
+
+  LOG_KERNEL(LogKernelType::kOMP, 7, &appdata);
 
 #pragma omp for
   for (int i = start; i < end; ++i) {
