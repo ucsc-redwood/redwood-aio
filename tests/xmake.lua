@@ -45,3 +45,16 @@ do
 	add_deps("builtin-apps", "builtin-apps-vulkan")
 end
 
+-- --- CUDA Tree ---
+
+if has_config("use_cuda") then
+	target("test-cuda-tree")
+	do
+		add_rules("test_config", "common_flags")
+		add_files({
+			"test_cu_tree.cu",
+		})
+		add_deps("builtin-apps", "builtin-apps-cuda")
+		add_cugencodes("native")
+	end
+end

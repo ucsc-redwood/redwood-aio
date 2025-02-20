@@ -91,8 +91,7 @@ end
 -- CUDA Static Library
 -- ----------------------------------------------------------------------------
 
--- if not is_plat("android") then
-if has_config("cuda") then
+if has_config("use_cuda") then
 	target("builtin-apps-cuda")
 	do
 		set_kind("static")

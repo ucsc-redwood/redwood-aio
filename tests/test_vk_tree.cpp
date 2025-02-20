@@ -2,9 +2,8 @@
 #include <omp.h>
 
 #include "builtin-apps/app.hpp"
-// #include "builtin-apps/tree/omp/tree_kernel.hpp"
 #include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
-#include "tests/verify_tree.hpp"
+#include "verify_tree.hpp"
 
 #define PREPARE_APPDATA                                      \
   auto mr = tree::vulkan::Singleton::getInstance().get_mr(); \
@@ -19,11 +18,6 @@ TEST(Vulkan_Tree, Stage1) {
   PREPARE_APPDATA;
 
   tree::vulkan::Singleton::getInstance().process_stage_1(appdata, tmp_storage);
-
-  // // print first 10 morton codes
-  // for (int i = 0; i < 10; ++i) {
-  //   std::cout << "morton[" << i << "] = " << appdata.u_morton_keys_s1[i] << std::endl;
-  // }
 
   test_tree::verify_stage_1(appdata);
 }
