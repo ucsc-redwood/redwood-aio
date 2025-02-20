@@ -29,6 +29,9 @@ struct Task {
         .app_data = new tree::AppData(mr),
         .temp_storage = new tree::omp::TmpStorage(),
     };
+
+    const auto n_threads = std::thread::hardware_concurrency();
+    tasks[i].temp_storage->allocate(n_threads, n_threads);
   }
 
   return tasks;

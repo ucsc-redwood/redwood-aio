@@ -8,7 +8,7 @@ set-jetson:
 
 # Set default configuration for PC
 set-default:
-    xmake f -p linux -a x86_64 -c
+    xmake f -p linux -a x86_64 -c --use_vulkan=yes --use_cuda=no
 
 # Convert raw google benchmark data (in ./data/raw_bm_results) to sqlite database
 raw-to-db:
