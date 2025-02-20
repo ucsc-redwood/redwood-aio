@@ -30,7 +30,7 @@ end
 -- CUDA benchmarks
 -- ------------------------------------------------------------
 
-if has_config("cuda") then
+if has_config("use_cuda") then
 	target("bm-cifar-dense-cu")
 	do
 		add_rules("benchmark_config", "common_flags")

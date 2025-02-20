@@ -25,22 +25,22 @@ rule_end()
 
 -- --- OpenMP Tree ---
 
-target("test-omp-tree")
+target("test-tree-omp")
 do
     add_rules("test_config", "common_flags", "run_on_android")
 	add_files({
-		"test_omp_tree.cpp",
+		"test_tree_omp.cpp",
 	})
 	add_deps("builtin-apps")
 end
 
 -- --- Vulkan Tree ---
 
-target("test-vk-tree")
+target("test-tree-vk")
 do
     add_rules("test_config", "common_flags", "vulkan_config", "run_on_android")
 	add_files({
-		"test_vk_tree.cpp",
+		"test_tree_vk.cpp",
 	})
 	add_deps("builtin-apps", "builtin-apps-vulkan")
 end
@@ -48,11 +48,11 @@ end
 -- --- CUDA Tree ---
 
 if has_config("use_cuda") then
-	target("test-cuda-tree")
+	target("test-tree-cu")
 	do
 		add_rules("test_config", "common_flags")
 		add_files({
-			"test_cu_tree.cu",
+			"test_tree_cu.cu",
 		})
 		add_deps("builtin-apps", "builtin-apps-cuda")
 		add_cugencodes("native")
