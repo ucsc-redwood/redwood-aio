@@ -10,14 +10,129 @@
 #include "builtin-apps/tree/omp/tree_kernel.hpp"
 #include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
 
+// /**
+//  * @brief Runs stages of the CIFAR dense network on specified processor cores with OpenMP
+//  * parallelization
+//  *
+//  * @tparam start_stage First stage to execute (must be >= 1)
+//  * @tparam end_stage Last stage to execute (must be <= 9)
+//  * @tparam processor_type Type of processor core to run on (kLittleCore, kMediumCore, or
+//  kBigCore)
+//  * @tparam num_threads Number of OpenMP threads to use
+//  * @param app_data Pointer to application data containing network state
+//  *
+//  * This template function executes the specified range of network stages using OpenMP
+//  * parallelization. It binds threads to the appropriate processor cores based on processor_type
+//  and
+//  * runs the stages in sequence using compile-time unrolling.
+//  */
+// template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
+//   requires ValidStageRange<start_stage, end_stage>
+// void run_stages(tree::AppData* app_data, tree::omp::TmpStorage* temp_storage) {
+// #pragma omp parallel num_threads(num_threads)
+//   {
+//     if constexpr (processor_type == ProcessorType::kLittleCore) {
+//       bind_thread_to_cores(g_little_cores);
+//     } else if constexpr (processor_type == ProcessorType::kMediumCore) {
+//       bind_thread_to_cores(g_medium_cores);
+//     } else if constexpr (processor_type == ProcessorType::kBigCore) {
+//       bind_thread_to_cores(g_big_cores);
+//     } else {
+//       assert(false);
+//     }
+
+//     // Generate a compile-time sequence for the range [start_stage, end_stage]
+//     []<std::size_t... I>(
+//         std::index_sequence<I...>, tree::AppData& data, tree::omp::TmpStorage& temp_storage) {
+//       // Each I is offset by (start_stage - 1)
+//       ((tree::omp::run_stage<start_stage + I>(data, temp_storage)), ...);
+//     }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data, *temp_storage);
+//   }
+// }
+
+template <int Start, int End>
+concept ValidStageRange = (Start >= 1) && (End <= 7) && (Start <= End);
+
+// Helper function that unfolds the stage calls.
+template <int Start, int... Is>
+void run_cpu_stages_impl(tree::AppData* app_data,
+                         tree::omp::TmpStorage* tmp_storage,
+                         std::integer_sequence<int, Is...>) {
+  // Expand the calls: run_stage<Start + 0>(), run_stage<Start + 1>(), ...
+  (tree::omp::run_stage<Start + Is>(*app_data, *tmp_storage), ...);
+}
+
+// Main interface
+template <int Start, int End, ProcessorType processor_type, int n_threads>
+  requires ValidStageRange<Start, End>
+void run_cpu_stages(tree::AppData* app_data, tree::omp::TmpStorage* tmp_storage) {
+  // Bind to the selected cores
+  if constexpr (processor_type == ProcessorType::kLittleCore) {
+    bind_thread_to_cores(g_little_cores);
+  } else if constexpr (processor_type == ProcessorType::kMediumCore) {
+    bind_thread_to_cores(g_medium_cores);
+  } else if constexpr (processor_type == ProcessorType::kBigCore) {
+    bind_thread_to_cores(g_big_cores);
+  } else {
+    static_assert([] { return false; }(), "Invalid processor type");
+  }
+
+#pragma omp parallel num_threads(n_threads)
+  {
+    // Generate the sequence [0, 1, 2, ..., (End-Start)]
+    // and expand the calls.
+    run_cpu_stages_impl<Start>(
+        app_data, tmp_storage, std::make_integer_sequence<int, End - Start + 1>{});
+  }
+}
+
+// Helper function that unfolds the stage calls.
+template <int Start, int... Is>
+void run_gpu_stages_impl(tree::AppData* app_data,
+                         tree::vulkan::TmpStorage* tmp_storage,
+                         std::integer_sequence<int, Is...>) {
+  // Expand the calls: run_stage<Start + 0>(), run_stage<Start + 1>(), ...
+  (tree::vulkan::Singleton::getInstance().run_stage<Start + Is>(*app_data, *tmp_storage), ...);
+}
+
+// Main interface
+template <int Start, int End>
+  requires ValidStageRange<Start, End>
+void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* tmp_storage) {
+  // Generate the sequence [0, 1, 2, ..., (End-Start)]
+  // and expand the calls.
+  run_gpu_stages_impl<Start>(
+      app_data, tmp_storage, std::make_integer_sequence<int, End - Start + 1>{});
+}
+
+// /**
+//  * @brief Runs stages of the CIFAR dense network on GPU using Vulkan
+//  *
+//  * @tparam start_stage First stage to execute (must be >= 1)
+//  * @tparam end_stage Last stage to execute (must be <= 9)
+//  * @param app_data Pointer to application data containing network state
+//  *
+//  * This template function executes the specified range of network stages on the GPU using Vulkan.
+//  * The stages are run in sequence using compile-time unrolling.
+//  */
+// template <int start_stage, int end_stage>
+//   requires ValidStageRange<start_stage, end_stage>
+// void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* temp_storage) {
+//   // Generate a compile-time sequence for the range [start_stage, end_stage]
+//   [&temp_storage]<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
+//     ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data, temp_storage)),
+//     ...);
+//   }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data, *temp_storage);
+// }
+
 // ---------------------------------------------------------------------
 // Task structure
 // ---------------------------------------------------------------------
 
 struct Task {
   tree::AppData* app_data;  // basically just a pointer
-  tree::omp::TmpStorage* temp_storage;
-  tree::vulkan::TmpStorage* vulkan_storage;
+  tree::omp::TmpStorage* omp_tmp_storage;
+  tree::vulkan::TmpStorage* vulkan_tmp_storage;
 };
 
 [[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
@@ -30,12 +145,12 @@ struct Task {
   for (uint32_t i = 0; i < num_tasks; ++i) {
     tasks[i] = Task{
         .app_data = new tree::AppData(mr, n_inputs),
-        .temp_storage = new tree::omp::TmpStorage(),
-        .vulkan_storage = new tree::vulkan::TmpStorage(mr, n_inputs),
+        .omp_tmp_storage = new tree::omp::TmpStorage(),
+        .vulkan_tmp_storage = new tree::vulkan::TmpStorage(mr, n_inputs),
     };
 
     const auto n_threads = std::thread::hardware_concurrency();
-    tasks[i].temp_storage->allocate(n_threads, n_threads);
+    tasks[i].omp_tmp_storage->allocate(n_threads, n_threads);
   }
 
   return tasks;
@@ -44,8 +159,8 @@ struct Task {
 void cleanup(std::vector<Task>& tasks) {
   for (auto& task : tasks) {
     delete task.app_data;
-    delete task.temp_storage;
-    delete task.vulkan_storage;
+    delete task.omp_tmp_storage;
+    delete task.vulkan_tmp_storage;
   }
 }
 
@@ -61,14 +176,7 @@ static std::atomic<bool> done(false);
 void chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
     // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_big_cores.size())
-    {
-      bind_thread_to_cores(g_big_cores);
-
-      tree::omp::run_stage<1>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<2>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<3>(*task.app_data, *task.temp_storage);
-    }
+    run_cpu_stages<1, 3, ProcessorType::kBigCore, 1>(task.app_data, task.omp_tmp_storage);
     // ---------------------------------------------------------------------
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
@@ -80,14 +188,7 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
     Task task;
     if (in_q.try_dequeue(task)) {
       // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_little_cores.size())
-      {
-        bind_thread_to_cores(g_little_cores);
-
-        tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
-        tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
-        tree::omp::run_stage<6>(*task.app_data, *task.temp_storage);
-      }
+      run_cpu_stages<4, 6, ProcessorType::kLittleCore, 1>(task.app_data, task.omp_tmp_storage);
       // ---------------------------------------------------------------------
       out_q.enqueue(task);
     } else {
@@ -98,14 +199,7 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
     Task task;
     if (!in_q.try_dequeue(task)) break;
     // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_little_cores.size())
-    {
-      bind_thread_to_cores(g_little_cores);
-
-      tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<6>(*task.app_data, *task.temp_storage);
-    }
+    run_cpu_stages<4, 6, ProcessorType::kLittleCore, 1>(task.app_data, task.omp_tmp_storage);
     // ---------------------------------------------------------------------
     out_q.enqueue(task);
   }
@@ -116,7 +210,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
     Task task;
     if (in_q.try_dequeue(task)) {
       // ---------------------------------------------------------------------
-      tree::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data, *task.vulkan_storage);
+      run_gpu_stages<7, 7>(task.app_data, task.vulkan_tmp_storage);
       // ---------------------------------------------------------------------
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
@@ -129,7 +223,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
     Task task;
     if (!in_q.try_dequeue(task)) break;
     // ---------------------------------------------------------------------
-    tree::vulkan::Singleton::getInstance().run_stage<7>(*task.app_data, *task.vulkan_storage);
+    run_gpu_stages<7, 7>(task.app_data, task.vulkan_tmp_storage);
     // ---------------------------------------------------------------------
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
