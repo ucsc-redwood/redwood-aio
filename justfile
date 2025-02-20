@@ -49,7 +49,7 @@ cat-android-tmp:
     adb -s ce0717178d7758b00b7e shell "ls -la /data/local/tmp"
 
 #  ----------------------------------------------------------------------------
-#  Jetson Orin
+#  Device-specific benchmarks
 #  ----------------------------------------------------------------------------
 
 run-jetson-bm:
@@ -59,6 +59,14 @@ run-jetson-bm:
     xmake r bm-tree-omp --device jetson 
     xmake r bm-cifar-dense-omp --device jetson
     xmake r bm-cifar-sparse-omp --device jetson
+
+run-minipc-bm:
+    xmake r bm-tree-cu --device minipc 
+    xmake r bm-cifar-dense-cu --device minipc
+    xmake r bm-cifar-sparse-cu --device minipc
+    xmake r bm-tree-omp --device minipc 
+    xmake r bm-cifar-dense-omp --device minipc
+    xmake r bm-cifar-sparse-omp --device minipc
 
 #  ----------------------------------------------------------------------------
 #  Android
