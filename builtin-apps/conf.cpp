@@ -1,19 +1,24 @@
 #include "conf.hpp"
 
 DeviceRegistry::DeviceRegistry() {
-  // For "pc": 8 cores split into LITTLE and MEDIUM
-  devices_.emplace("pc",
-                   Device("pc",
-                          std::vector<Core>{
-                              {8, ProcessorType::kLittleCore, true},
-                              {9, ProcessorType::kLittleCore, true},
-                              {10, ProcessorType::kLittleCore, true},
-                              {11, ProcessorType::kLittleCore, true},
-                              {1, ProcessorType::kMediumCore, true},
-                              {2, ProcessorType::kMediumCore, true},
-                              {3, ProcessorType::kMediumCore, true},
-                              {6, ProcessorType::kMediumCore, true},
-                          }));
+  // For "pc": 8 P cores and 12 E cores
+  devices_.emplace(
+      "pc",
+      Device("pc",
+             std::vector<Core>{
+                 {0, ProcessorType::kBigCore, true},     {1, ProcessorType::kBigCore, true},
+                 {2, ProcessorType::kBigCore, true},     {3, ProcessorType::kBigCore, true},
+                 {4, ProcessorType::kBigCore, true},     {5, ProcessorType::kBigCore, true},
+                 {6, ProcessorType::kBigCore, true},     {7, ProcessorType::kBigCore, true},
+                 {8, ProcessorType::kLittleCore, true},  {9, ProcessorType::kLittleCore, true},
+                 {10, ProcessorType::kLittleCore, true}, {11, ProcessorType::kLittleCore, true},
+                 {12, ProcessorType::kLittleCore, true}, {13, ProcessorType::kLittleCore, true},
+                 {14, ProcessorType::kLittleCore, true}, {15, ProcessorType::kLittleCore, true},
+                 {16, ProcessorType::kLittleCore, true}, {17, ProcessorType::kLittleCore, true},
+                 {18, ProcessorType::kLittleCore, true}, {19, ProcessorType::kLittleCore, true},
+                 {20, ProcessorType::kLittleCore, true}, {21, ProcessorType::kLittleCore, true},
+                 {22, ProcessorType::kLittleCore, true}, {23, ProcessorType::kLittleCore, true},
+             }));
 
   // For "jetson": 6 cores all of one type.
   devices_.emplace("jetson",
