@@ -33,6 +33,7 @@ void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TempStorage &temp_
 
 void process_stage_2(tree::AppData &appdata, TempStorage &temp_storage) {
   const auto num_threads = omp_get_num_threads();
+  const auto num_buckets = num_threads;
 
   bucket_sort(appdata.u_morton_keys_s1.data(),
               appdata.u_morton_keys_sorted_s2.data(),
@@ -40,10 +41,11 @@ void process_stage_2(tree::AppData &appdata, TempStorage &temp_storage) {
               temp_storage.global_starting_position,
               temp_storage.buckets,
               appdata.get_n_input(),
-              num_threads,
+              num_buckets,
               num_threads);
 
 #pragma omp barrier
+
   // by this point, 'u_morton_keys_sorted_s2' is sorted
 }
 
