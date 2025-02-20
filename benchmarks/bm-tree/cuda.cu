@@ -1,8 +1,10 @@
 #include <benchmark/benchmark.h>
 
+#include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"
+#include "builtin-apps/resources_path.hpp"
 #include "builtin-apps/tree/cuda/kernel.cuh"
 
 #define PREPARE_DATA                    \
@@ -209,7 +211,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
 BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond);
 
 int main(int argc, char** argv) {
+  parse_args(argc, argv);
   spdlog::set_level(spdlog::level::off);
+
+  // Where to save the results json file?
+  const auto storage_location = helpers::get_benchmark_storage_location();
+  const auto out_name = storage_location.string() + "/BM_Tree_OMP_" + g_device_id + ".json";
+
+  // Sanitize the arguments to pass to Google Benchmark
+  auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv, out_name);
 
   benchmark::Initialize(&argc, argv);
   benchmark::RunSpecifiedBenchmarks();

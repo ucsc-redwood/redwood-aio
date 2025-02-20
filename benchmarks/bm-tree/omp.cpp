@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
 
-#include <CLI/CLI.hpp>
 #include <thread>
 
 #include "../argc_argv_sanitizer.hpp"
