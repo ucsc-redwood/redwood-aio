@@ -9,6 +9,12 @@
 #include "builtin-apps/tree/tree_appdata.hpp"
 #include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
 
+#define PREPARE_DATA                                                 \
+  auto mr = tree::vulkan::Singleton::getInstance().get_mr();         \
+  auto app_data = std::make_unique<tree::AppData>(mr);               \
+  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input()); \
+  auto& vk = tree::vulkan::Singleton::getInstance();
+
 // ----------------------------------------------------------------
 // Baseline
 // ----------------------------------------------------------------
@@ -17,21 +23,16 @@ class VK_Tree : public benchmark::Fixture {};
 
 BENCHMARK_DEFINE_F(VK_Tree, Baseline)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
-
-  auto& vk = tree::vulkan::Singleton::getInstance();
+  PREPARE_DATA;
 
   for (auto _ : state) {
-    // spdlog::info("Iteration {}", i);
-    vk.process_stage_1(*app_data);
-    vk.process_stage_2(*app_data);
+    vk.process_stage_1(*app_data, tmp_storage);
+    vk.process_stage_2(*app_data, tmp_storage);
     vk.process_stage_3(*app_data, tmp_storage);
-    vk.process_stage_4(*app_data);
-    vk.process_stage_5(*app_data);
-    vk.process_stage_6(*app_data);
-    vk.process_stage_7(*app_data);
+    vk.process_stage_4(*app_data, tmp_storage);
+    vk.process_stage_5(*app_data, tmp_storage);
+    vk.process_stage_6(*app_data, tmp_storage);
+    vk.process_stage_7(*app_data, tmp_storage);
   }
 }
 
@@ -43,14 +44,10 @@ BENCHMARK_REGISTER_F(VK_Tree, Baseline)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage1)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
-
-  auto& vk = tree::vulkan::Singleton::getInstance();
+  PREPARE_DATA;
 
   for (auto _ : state) {
-    vk.process_stage_1(*app_data);
+    vk.process_stage_1(*app_data, tmp_storage);
   }
 }
 
@@ -62,16 +59,12 @@ BENCHMARK_REGISTER_F(VK_Tree, Stage1)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage2)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
+  PREPARE_DATA;
 
-  auto& vk = tree::vulkan::Singleton::getInstance();
-
-  vk.process_stage_1(*app_data);
+  vk.process_stage_1(*app_data, tmp_storage);
 
   for (auto _ : state) {
-    vk.process_stage_2(*app_data);
+    vk.process_stage_2(*app_data, tmp_storage);
   }
 }
 
@@ -83,14 +76,10 @@ BENCHMARK_REGISTER_F(VK_Tree, Stage2)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage3)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
+  PREPARE_DATA;
 
-  auto& vk = tree::vulkan::Singleton::getInstance();
-
-  vk.process_stage_1(*app_data);
-  vk.process_stage_2(*app_data);
+  vk.process_stage_1(*app_data, tmp_storage);
+  vk.process_stage_2(*app_data, tmp_storage);
 
   for (auto _ : state) {
     vk.process_stage_3(*app_data, tmp_storage);
@@ -105,18 +94,14 @@ BENCHMARK_REGISTER_F(VK_Tree, Stage3)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage4)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
+  PREPARE_DATA;
 
-  auto& vk = tree::vulkan::Singleton::getInstance();
-
-  vk.process_stage_1(*app_data);
-  vk.process_stage_2(*app_data);
+  vk.process_stage_1(*app_data, tmp_storage);
+  vk.process_stage_2(*app_data, tmp_storage);
   vk.process_stage_3(*app_data, tmp_storage);
 
   for (auto _ : state) {
-    vk.process_stage_4(*app_data);
+    vk.process_stage_4(*app_data, tmp_storage);
   }
 }
 
@@ -128,19 +113,15 @@ BENCHMARK_REGISTER_F(VK_Tree, Stage4)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage5)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
+  PREPARE_DATA;
 
-  auto& vk = tree::vulkan::Singleton::getInstance();
-
-  vk.process_stage_1(*app_data);
-  vk.process_stage_2(*app_data);
+  vk.process_stage_1(*app_data, tmp_storage);
+  vk.process_stage_2(*app_data, tmp_storage);
   vk.process_stage_3(*app_data, tmp_storage);
-  vk.process_stage_4(*app_data);
+  vk.process_stage_4(*app_data, tmp_storage);
 
   for (auto _ : state) {
-    vk.process_stage_5(*app_data);
+    vk.process_stage_5(*app_data, tmp_storage);
   }
 }
 
@@ -152,20 +133,16 @@ BENCHMARK_REGISTER_F(VK_Tree, Stage5)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage6)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
+  PREPARE_DATA;
 
-  auto& vk = tree::vulkan::Singleton::getInstance();
-
-  vk.process_stage_1(*app_data);
-  vk.process_stage_2(*app_data);
+  vk.process_stage_1(*app_data, tmp_storage);
+  vk.process_stage_2(*app_data, tmp_storage);
   vk.process_stage_3(*app_data, tmp_storage);
-  vk.process_stage_4(*app_data);
-  vk.process_stage_5(*app_data);
+  vk.process_stage_4(*app_data, tmp_storage);
+  vk.process_stage_5(*app_data, tmp_storage);
 
   for (auto _ : state) {
-    vk.process_stage_6(*app_data);
+    vk.process_stage_6(*app_data, tmp_storage);
   }
 }
 
@@ -178,21 +155,17 @@ BENCHMARK_REGISTER_F(VK_Tree, Stage6)->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(VK_Tree, Stage7)
 (benchmark::State& state) {
-  auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-  auto app_data = std::make_unique<tree::AppData>(mr);
-  tree::vulkan::TmpStorage tmp_storage(mr, app_data->get_n_input());
+  PREPARE_DATA;
 
-  auto& vk = tree::vulkan::Singleton::getInstance();
-
-  vk.process_stage_1(*app_data);
-  vk.process_stage_2(*app_data);
+  vk.process_stage_1(*app_data, tmp_storage);
+  vk.process_stage_2(*app_data, tmp_storage);
   vk.process_stage_3(*app_data, tmp_storage);
-  vk.process_stage_4(*app_data);
-  vk.process_stage_5(*app_data);
-  vk.process_stage_6(*app_data);
+  vk.process_stage_4(*app_data, tmp_storage);
+  vk.process_stage_5(*app_data, tmp_storage);
+  vk.process_stage_6(*app_data, tmp_storage);
 
   for (auto _ : state) {
-    vk.process_stage_7(*app_data);
+    vk.process_stage_7(*app_data, tmp_storage);
   }
 }
 
