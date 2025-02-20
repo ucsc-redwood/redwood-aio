@@ -88,9 +88,9 @@ void chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_
     {
       bind_thread_to_cores(g_big_cores);
 
-      tree::omp::run_stage<1>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<2>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<3>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<1>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<2>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<3>(*task.app_data, *task.temp_storage);
     }
     // ---------------------------------------------------------------------
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
@@ -107,9 +107,9 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
       {
         bind_thread_to_cores(g_medium_cores);
 
-        tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
-        tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
-        tree::omp::run_stage<6>(*task.app_data, *task.temp_storage);
+        // tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
+        // tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
+        // tree::omp::run_stage<6>(*task.app_data, *task.temp_storage);
       }
       // ---------------------------------------------------------------------
       out_q.enqueue(task);
@@ -125,9 +125,9 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
     {
       bind_thread_to_cores(g_medium_cores);
 
-      tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
-      tree::omp::run_stage<6>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<6>(*task.app_data, *task.temp_storage);
     }
     // ---------------------------------------------------------------------
     out_q.enqueue(task);
@@ -143,7 +143,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
       {
         bind_thread_to_cores(g_little_cores);
 
-        tree::omp::run_stage<7>(*task.app_data, *task.temp_storage);
+        // tree::omp::run_stage<7>(*task.app_data, *task.temp_storage);
       }
       // ---------------------------------------------------------------------
       out_tasks.push_back(task);
@@ -161,7 +161,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
     {
       bind_thread_to_cores(g_little_cores);
 
-      tree::omp::run_stage<7>(*task.app_data, *task.temp_storage);
+      // tree::omp::run_stage<7>(*task.app_data, *task.temp_storage);
     }
     // ---------------------------------------------------------------------
     out_tasks.push_back(task);

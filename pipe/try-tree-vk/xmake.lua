@@ -8,5 +8,5 @@ do
 		"main.cpp",
 	})
 
-	add_deps("builtin-apps", "builtin-apps-vulkan")
+	add_deps("builtin-apps-vulkan", "builtin-apps")
 end
