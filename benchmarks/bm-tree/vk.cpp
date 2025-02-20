@@ -169,7 +169,7 @@ BENCHMARK_DEFINE_F(VK_Tree, Stage7)
   }
 }
 
-BENCHMARK_REGISTER_F(VK_Tree, Stage7)->Unit(benchmark::kMillisecond)->Iterations(1);
+BENCHMARK_REGISTER_F(VK_Tree, Stage7)->Unit(benchmark::kMillisecond);
 
 // ----------------------------------------------------------------
 // Main
