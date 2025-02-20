@@ -72,9 +72,9 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
     Task task;
     if (in_q.try_dequeue(task)) {
       // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_medium_cores.size())
+#pragma omp parallel num_threads(g_little_cores.size())
       {
-        bind_thread_to_cores(g_medium_cores);
+        bind_thread_to_cores(g_little_cores);
 
         tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
         tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
@@ -89,10 +89,10 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-      // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_medium_cores.size())
+    // ---------------------------------------------------------------------
+#pragma omp parallel num_threads(g_little_cores.size())
     {
-      bind_thread_to_cores(g_medium_cores);
+      bind_thread_to_cores(g_little_cores);
 
       tree::omp::run_stage<4>(*task.app_data, *task.temp_storage);
       tree::omp::run_stage<5>(*task.app_data, *task.temp_storage);
@@ -108,12 +108,7 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
     Task task;
     if (in_q.try_dequeue(task)) {
       // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_little_cores.size())
-      {
-        bind_thread_to_cores(g_little_cores);
 
-        tree::omp::run_stage<7>(*task.app_data, *task.temp_storage);
-      }
       // ---------------------------------------------------------------------
       out_tasks.push_back(task);
       int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
@@ -125,13 +120,8 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_task
   while (true) {
     Task task;
     if (!in_q.try_dequeue(task)) break;
-      // ---------------------------------------------------------------------
-#pragma omp parallel num_threads(g_little_cores.size())
-    {
-      bind_thread_to_cores(g_little_cores);
+    // ---------------------------------------------------------------------
 
-      tree::omp::run_stage<7>(*task.app_data, *task.temp_storage);
-    }
     // ---------------------------------------------------------------------
     out_tasks.push_back(task);
     int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
