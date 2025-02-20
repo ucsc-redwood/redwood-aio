@@ -11,6 +11,9 @@ set-default:
 push-all-resources:
     xmake push-all-resources
 
+raw-to-db:
+    python3 scripts/database/update_db.py
+
 db-to-code:
     python3 scripts/analysis/gen_schdules.py --device 3A021JEHN02756 --app CifarDense --output_dir ./data/generated-schedules/
     python3 scripts/analysis/gen_schdules.py --device 3A021JEHN02756 --app CifarSparse --output_dir ./data/generated-schedules/

@@ -9,24 +9,16 @@
         "threads": 4,
         "stages": [
           1,
-          2
-        ],
-        "time": 4.815747795459927
-      },
-      {
-        "name": "chunk2",
-        "hardware": "big",
-        "threads": 4,
-        "stages": [
+          2,
           3,
           4,
           5,
           6,
           7
         ],
-        "time": 19.59627524553194
+        "time": 27.49853617619672
       }
     ]
   },
-  "max_chunk_time": 19.59627524553194
+  "max_chunk_time": 27.49853617619672
 }

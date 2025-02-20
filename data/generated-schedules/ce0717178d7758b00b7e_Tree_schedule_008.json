@@ -10,31 +10,31 @@
         "stages": [
           1
         ],
-        "time": 1.3841127345057915
+        "time": 1.3767599331423002
       },
       {
         "name": "chunk2",
         "hardware": "little",
         "threads": 4,
         "stages": [
-          2,
-          3,
-          4,
-          5
+          2
         ],
-        "time": 10.900939716654085
+        "time": 13.469352361817775
       },
       {
         "name": "chunk3",
         "hardware": "big",
         "threads": 4,
         "stages": [
+          3,
+          4,
+          5,
           6,
           7
         ],
-        "time": 5.645695496874956
+        "time": 19.83443994717934
       }
     ]
   },
-  "max_chunk_time": 10.900939716654085
+  "max_chunk_time": 19.83443994717934
 }

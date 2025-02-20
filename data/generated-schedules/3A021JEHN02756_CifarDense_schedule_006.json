@@ -8,20 +8,20 @@
         "hardware": "big",
         "threads": 2,
         "stages": [
-          1,
-          2
+          1
         ],
-        "time": 3.1238995691075324
+        "time": 2.4012986886255048
       },
       {
         "name": "chunk2",
         "hardware": "medium",
         "threads": 2,
         "stages": [
+          2,
           3,
           4
         ],
-        "time": 27.078171667519783
+        "time": 24.965698938742005
       },
       {
         "name": "chunk3",
@@ -30,21 +30,21 @@
         "stages": [
           5,
           6,
-          7
+          7,
+          8
         ],
-        "time": 23.43922449902166
+        "time": 25.55321087598108
       },
       {
         "name": "chunk4",
         "hardware": "little",
         "threads": 4,
         "stages": [
-          8,
           9
         ],
-        "time": 0.14832263906968451
+        "time": 0.058568337642254234
       }
     ]
   },
-  "max_chunk_time": 27.078171667519783
+  "max_chunk_time": 25.55321087598108
 }

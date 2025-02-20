@@ -25,8 +25,7 @@ namespace Tree_schedule_021 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_021";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_021_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_021_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_021_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_021_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -46,7 +45,8 @@ namespace Tree_schedule_014 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_014";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_014_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_014_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_014_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_014_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -66,7 +66,8 @@ namespace Tree_schedule_011 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_011";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_011_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_011_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_011_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_011_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -76,7 +77,8 @@ namespace Tree_schedule_017 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_017";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_017_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_017_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_017_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_017_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -96,7 +98,8 @@ namespace Tree_schedule_016 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_016";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_016_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_016_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_016_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_016_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -106,8 +109,7 @@ namespace Tree_schedule_013 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_013";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_013_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_013_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_013_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_013_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -139,8 +141,7 @@ namespace Tree_schedule_018 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_018";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_018_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_018_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_018_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_018_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -150,8 +151,7 @@ namespace Tree_schedule_022 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_022";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_022_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_022_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_022_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_022_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -204,7 +204,8 @@ namespace Tree_schedule_015 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_015";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_015_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_015_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_015_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_015_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -288,7 +289,8 @@ namespace Tree_schedule_009 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_009";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_009_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_009_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_009_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_009_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -318,8 +320,7 @@ namespace Tree_schedule_024 {
 
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_024";
 
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_024_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_024_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_024_chunk1(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -339,7 +340,9 @@ namespace Tree_schedule_019 {
 
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_019";
 
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_019_chunk1(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_019_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_019_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_019_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -381,8 +384,7 @@ namespace Tree_schedule_023 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_023";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_023_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_023_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_023_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_023_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 
@@ -458,8 +460,7 @@ namespace Tree_schedule_007 {
 constexpr const char* kScheduleId = "ce0717178d7758b00b7e_Tree_schedule_007";
 
 void stage_group_ce0717178d7758b00b7e_Tree_schedule_007_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_007_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q);
-void stage_group_ce0717178d7758b00b7e_Tree_schedule_007_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
+void stage_group_ce0717178d7758b00b7e_Tree_schedule_007_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);
 
 void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);
 

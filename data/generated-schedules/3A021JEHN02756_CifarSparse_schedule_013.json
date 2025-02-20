@@ -1,0 +1,42 @@
+{
+  "schedule": {
+    "schedule_id": "3A021JEHN02756_CifarSparse_schedule_013",
+    "device_id": "3A021JEHN02756",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "big",
+        "threads": 2,
+        "stages": [
+          1,
+          2
+        ],
+        "time": 0.24379828866755632
+      },
+      {
+        "name": "chunk2",
+        "hardware": "medium",
+        "threads": 2,
+        "stages": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "time": 0.2593027227565122
+      },
+      {
+        "name": "chunk3",
+        "hardware": "little",
+        "threads": 4,
+        "stages": [
+          9
+        ],
+        "time": 0.004782016421042793
+      }
+    ]
+  },
+  "max_chunk_time": 0.2593027227565122
+}

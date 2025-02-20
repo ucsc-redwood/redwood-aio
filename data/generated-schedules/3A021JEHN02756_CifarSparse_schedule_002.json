@@ -5,38 +5,38 @@
     "chunks": [
       {
         "name": "chunk1",
-        "hardware": "medium",
-        "threads": 2,
+        "hardware": "little",
+        "threads": 4,
         "stages": [
-          1,
-          2
+          1
         ],
-        "time": 0.21369838377019362
+        "time": 0.1919115210466106
       },
       {
         "name": "chunk2",
         "hardware": "big",
         "threads": 2,
         "stages": [
-          3,
-          4,
-          5,
-          6
+          2,
+          3
         ],
-        "time": 0.23219085087206628
+        "time": 0.2334522434516067
       },
       {
         "name": "chunk3",
-        "hardware": "little",
-        "threads": 4,
+        "hardware": "medium",
+        "threads": 2,
         "stages": [
+          4,
+          5,
+          6,
           7,
           8,
           9
         ],
-        "time": 0.14193301922694432
+        "time": 0.22071227759062317
       }
     ]
   },
-  "max_chunk_time": 0.23219085087206628
+  "max_chunk_time": 0.2334522434516067
 }
