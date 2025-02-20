@@ -2,7 +2,7 @@
 
 #include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-dense/cuda/cu_kernels.cuh"
+#include "builtin-apps/cifar-dense/cuda/cu_dense_kernel.cuh"
 #include "builtin-apps/cifar-dense/dense_appdata.hpp"
 #include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"
