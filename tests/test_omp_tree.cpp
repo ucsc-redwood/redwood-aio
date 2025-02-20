@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "builtin-apps/tree/omp/tree_kernel.hpp"
-#include "tests/verify_tree.hpp"
+#include "verify_tree.hpp"
 
 #define PREPARE_APPDATA                                       \
   const auto n_threads = std::thread::hardware_concurrency(); \

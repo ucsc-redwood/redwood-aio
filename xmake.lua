@@ -52,8 +52,24 @@ end)
 rule_end()
 
 -- ----------------------------------------------------------------
+-- CUDA configuration
+-- ----------------------------------------------------------------
+
+option("use_cuda")
+    set_description("CUDA backend")
+    set_showmenu(true)
+    set_values("yes", "no")
+option_end()
+
+-- ----------------------------------------------------------------
 -- Vulkan configuration
 -- ----------------------------------------------------------------
+
+option("use_vulkan")
+    set_description("Vulkan backend")
+    set_showmenu(true)
+    set_values("yes", "no")
+option_end()
 
 rule("vulkan_config")
 on_load(function(target)

@@ -3,6 +3,7 @@
 
 #include <CLI/CLI.hpp>
 
+#include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/tree/cuda/kernel.cuh"
 #include "builtin-apps/tree/tree_appdata.hpp"
