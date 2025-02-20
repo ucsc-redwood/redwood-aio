@@ -2,8 +2,12 @@
 
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
+#include "builtin-apps/tree/omp/func_sort.hpp"
 #include "builtin-apps/tree/omp/tree_kernel.hpp"
 #include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
+
+template <int Start, int End>
+concept ValidStageRange = Start >= 1 && End <= 9 && Start <= End;
 
 /**
  * @brief Runs stages of the CIFAR dense network on specified processor cores with OpenMP
@@ -20,13 +24,10 @@
  * runs the stages in sequence using compile-time unrolling.
  */
 template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
-void run_stages(tree::AppData* app_data) {
-  static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
-  static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
-
+  requires ValidStageRange<start_stage, end_stage>
+void run_stages(tree::AppData* app_data, tree::omp::TempStorage& temp_storage) {
 #pragma omp parallel num_threads(num_threads)
   {
-    // Bind to core if needed:
     if constexpr (processor_type == ProcessorType::kLittleCore) {
       bind_thread_to_cores(g_little_cores);
     } else if constexpr (processor_type == ProcessorType::kMediumCore) {
@@ -38,9 +39,9 @@ void run_stages(tree::AppData* app_data) {
     }
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]
-    []<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
+    [&temp_storage]<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
       // Each I is offset by (start_stage - 1)
-      ((tree::omp::run_stage<start_stage + I>(data)), ...);
+      ((tree::omp::run_stage<start_stage + I>(data, temp_storage)), ...);
     }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
   }
 }
@@ -56,12 +57,10 @@ void run_stages(tree::AppData* app_data) {
  * The stages are run in sequence using compile-time unrolling.
  */
 template <int start_stage, int end_stage>
-void run_gpu_stages(tree::AppData* app_data) {
-  static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
-  static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
-
+  requires ValidStageRange<start_stage, end_stage>
+void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage& temp_storage) {
   // Generate a compile-time sequence for the range [start_stage, end_stage]
-  []<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
-    ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data)), ...);
+  [&temp_storage]<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
+    ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data, temp_storage)), ...);
   }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
 }
