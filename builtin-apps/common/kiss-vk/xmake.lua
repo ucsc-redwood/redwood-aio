@@ -13,25 +13,27 @@ add_requires("vulkan-headers")
 add_requires("vulkan-hpp")
 add_requires("vulkan-memory-allocator")
 
-target("kiss-vk")
-do
-	set_kind("static")
-	add_rules("common_flags", "vulkan_config")
-	set_group("static-libs")
+if has_config("use_vulkan") then
+	target("kiss-vk")
+	do
+		set_kind("static")
+		add_rules("common_flags", "vulkan_config")
+		set_group("static-libs")
 
-	add_headerfiles({
-		"algorithm.hpp",
-		"base_engine.hpp",
-		"engine.hpp",
-		"sequence.hpp",
-		"vk.hpp",
-		"vma_pmr.hpp",
-	})
+		add_headerfiles({
+			"algorithm.hpp",
+			"base_engine.hpp",
+			"engine.hpp",
+			"sequence.hpp",
+			"vk.hpp",
+			"vma_pmr.hpp",
+		})
 
-	add_files({
-		"algorithm.cpp",
-		"base_engine.cpp",
-		"sequence.cpp",
-		"vma_pmr.cpp",
-	})
+		add_files({
+			"algorithm.cpp",
+			"base_engine.cpp",
+			"sequence.cpp",
+			"vma_pmr.cpp",
+		})
+	end
 end

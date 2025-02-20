@@ -14,6 +14,8 @@
   for (uint32_t i = 0; i < num_tasks; ++i) {
     tasks[i] = Task{
         .app_data = new tree::AppData(mr),
+        .temp_storage = new tree::omp::TempStorage(1, 1),
+        .vulkan_temp_storage = new tree::vulkan::TmpStorage(mr, 640 * 480),
     };
   }
 
