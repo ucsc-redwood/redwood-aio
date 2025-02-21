@@ -6,10 +6,11 @@
 // Task structure
 // ---------------------------------------------------------------------
 
-[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks) {
+[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
   auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
 
-  std::queue<Task> tasks;
+  std::vector<Task> tasks;
+  tasks.reserve(num_tasks + 1);  // +1 for sentinel
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
     Task task{
@@ -17,11 +18,11 @@
         .done = false,
     };
 
-    tasks.push(task);
+    tasks.push_back(task);
   }
 
   // create a sentinel task
-  tasks.push(Task{
+  tasks.push_back(Task{
       .app_data = nullptr,
       .done = true,
   });
@@ -29,11 +30,9 @@
   return tasks;
 }
 
-void cleanup(std::queue<Task>& tasks) {
-  while (!tasks.empty()) {
-    auto& task = tasks.front();
+void cleanup(std::vector<Task>& tasks) {
+  for (auto& task : tasks) {
     if (task.is_sentinel()) {
-      tasks.pop();
       continue;
     }
     delete task.app_data;

@@ -74,7 +74,7 @@ def run_schedule(device_id: str, app: str, schedule_num: int) -> RunResult:
     try:
         run_cmd = (
             f"adb -s {device_id} shell {device_path} "
-            f"-l info --device={device_id} -s {schedule_num}"
+            f"-l off --device={device_id} -s {schedule_num}"
         )
         # Capture output using subprocess directly for this command
         result = subprocess.run(

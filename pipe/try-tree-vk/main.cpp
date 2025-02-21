@@ -2,8 +2,8 @@
 #include <omp.h>
 
 // #include <queue>
-#include <vector>
 #include <thread>
+#include <vector>
 
 #include "run_stages.hpp"
 
@@ -89,7 +89,7 @@ void run_test_schedule() {
   constexpr auto num_tasks = 20;
   auto tasks = init_tasks(num_tasks);
   std::vector<Task> out_tasks;
-  out_tasks.reserve(num_tasks + 1); // +1 for sentinel
+  out_tasks.reserve(num_tasks + 1);  // +1 for sentinel
 
   auto start = std::chrono::high_resolution_clock::now();
 
