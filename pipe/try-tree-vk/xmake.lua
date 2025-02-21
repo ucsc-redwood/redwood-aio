@@ -3,6 +3,11 @@
 target("try-pipe-tree-vk")
 do
 	add_rules("pipe_config", "common_flags", "vulkan_config", "run_on_android")
+    
+	add_headerfiles({
+		"task.hpp",
+		"run_stages.hpp",
+	})
 
 	add_files({
 		"main.cpp",
