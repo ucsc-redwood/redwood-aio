@@ -14,7 +14,7 @@ DB_PATH = "data/benchmark_results.json"
 # Constants moved to top level
 ALL_BENCHMARKS = [
     "bm-cifar-dense-omp",
-    "bm-cifar-dense-vk", 
+    "bm-cifar-dense-vk",
     "bm-cifar-sparse-omp",
     "bm-cifar-sparse-vk",
     "bm-tree-omp",

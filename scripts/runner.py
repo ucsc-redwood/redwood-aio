@@ -1,434 +1,273 @@
-import subprocess
+#!/usr/bin/env python3
+from pathlib import Path
 import re
-from typing import Dict, Optional, Tuple
 import time
 import json
-import glob
-import numpy as np
-from scipy import stats
+from typing import Dict, Optional, List, NamedTuple
 import argparse
+import numpy as np
 from colorama import init, Fore, Style
 from tabulate import tabulate
+import subprocess
 
-NUM_SCHEDULES = 50
+from helpers import (
+    run_command,
+    ALL_DEVICES,
+    ALL_APPLICATIONS,
+    APPLICATION_NAME_MAP,
+    GENERATED_SCHEDULES_PATH,
+    interactive_select,
+    parse_schedule_range,
+)
 
-# Initialize colorama
+# Initialize colorama for colored output
 init()
 
-# Add at the top of the file with other constants
-APP_NAME_MAP = {
-    "CifarDense": "cifar-dense",
-    "CifarSparse": "cifar-sparse",
-    "Tree": "tree",
-}
+
+class RunResult(NamedTuple):
+    """Store results of a benchmark run."""
+
+    time: Optional[float]
+    error: Optional[str] = None
+
+    @property
+    def success(self) -> bool:
+        return self.time is not None
 
 
-def build_binary(binary_name: str):
-    """Build the binary using xmake"""
-    print(f"Building binary {binary_name} with xmake...")
-    try:
-        subprocess.run(["xmake", "b", binary_name], check=True)
-        print("Build successful")
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"Build failed: {e}")
-        return False
-
-
-def load_mathematical_predictions(device_id: str, app: str) -> Dict[int, float]:
-    """Load all mathematical predictions from schedule JSON files"""
+def load_predictions(device_id: str, app: str) -> Dict[int, float]:
+    """Load mathematical predictions from schedule JSON files."""
     predictions = {}
+    pattern = Path(GENERATED_SCHEDULES_PATH) / f"{device_id}_{app}_schedule_*.json"
 
-    # Update glob pattern to use device_id and app
-    schedule_files = glob.glob(
-        f"./data/generated-schedules/{device_id}_{app}_schedule_*.json"
-    )
-
-    for file_path in schedule_files:
+    for file_path in pattern.parent.glob(pattern.name):
         try:
-            with open(file_path, "r") as f:
-                data = json.load(f)
-                # Extract schedule number from filename, accounting for the hash
-                schedule_num = int(
-                    re.search(r"schedule_(\d+)\.json", file_path).group(1)
-                )
-                predictions[schedule_num] = data["max_chunk_time"]
+            schedule_num = int(
+                re.search(r"schedule_(\d+)\.json", file_path.name).group(1)
+            )
+            with open(file_path) as f:
+                predictions[schedule_num] = json.load(f)["max_chunk_time"]
         except Exception as e:
             print(f"Warning: Could not load predictions from {file_path}: {e}")
 
     return predictions
 
 
-def run_command(device_id: str, app: str, schedule_num: int) -> Optional[float]:
-    """
-    Run the command for a given schedule number and return the average time if successful.
-    Returns None if the execution failed.
-    """
-    app_name = APP_NAME_MAP[app]
+def run_schedule(device_id: str, app: str, schedule_num: int) -> RunResult:
+    """Run a single schedule and return its execution time."""
+    app_name = app.lower()
     binary_name = f"pipe-{app_name}-vk"
-    binary_path = f"./build/android/arm64-v8a/release/{binary_name}"
+    device_path = f"/data/local/tmp/{binary_name}"
 
-    # Push the executable to the device
+    # Push executable to device
     try:
-        subprocess.run(
-            [
-                "adb",
-                "-s",
-                device_id,
-                "push",
-                binary_path,
-                f"/data/local/tmp/{binary_name}",
-            ],
-            check=True,
-            stdout=subprocess.DEVNULL,  # Hide stdout
-            stderr=subprocess.DEVNULL,  # Hide stderr
+        push_cmd = (
+            f"adb -s {device_id} push "
+            f"./build/android/arm64-v8a/release/{binary_name} "
+            f"{device_path}"
         )
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to push executable to device: {e}")
-        return None
+        run_command(push_cmd)
+    except Exception as e:
+        return RunResult(None, f"Failed to push executable: {e}")
 
     # Run the executable
-    cmd = [
-        "adb",
-        "-s",
-        device_id,
-        "shell",
-        f"/data/local/tmp/{binary_name}",
-        "-l",
-        "info",
-        f"--device={device_id}",
-        "-s",
-        str(schedule_num),
-    ]
-
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+        run_cmd = (
+            f"adb -s {device_id} shell {device_path} "
+            f"-l info --device={device_id} -s {schedule_num}"
+        )
+        # Capture output using subprocess directly for this command
+        result = subprocess.run(
+            run_cmd, shell=True, capture_output=True, text=True, timeout=15
+        )
         output = result.stdout + result.stderr
 
-        # Look for the average time pattern
-        time_match = re.search(r"Average time per iteration: (\d+\.?\d*)", output)
-        if time_match:
-            return float(time_match.group(1))
-        return None
+        # Extract average time from output
+        if match := re.search(r"Average time per iteration: (\d+\.?\d*)", output):
+            return RunResult(float(match.group(1)))
+        return RunResult(None, "Could not find timing in output")
+
     except subprocess.TimeoutExpired:
-        print(f"{Fore.RED}Schedule {schedule_num} timed out{Style.RESET_ALL}")
-        return None
+        return RunResult(None, "Execution timed out")
     except Exception as e:
-        print(
-            f"{Fore.RED}Schedule {schedule_num} failed with error: {str(e)}{Style.RESET_ALL}"
-        )
-        return None
+        return RunResult(None, str(e))
 
 
-def calculate_prediction_accuracy(actual: float, predicted: float) -> Tuple[float, str]:
-    """Calculate the percentage difference between actual and predicted times"""
-    diff_percent = ((actual - predicted) / predicted) * 100
-    if diff_percent > 0:
-        status = "slower"
+def print_schedule_result(
+    schedule_num: int, result: RunResult, predicted: Optional[float] = None
+) -> None:
+    """Print the result of a single schedule run."""
+    print(f"\nSchedule {schedule_num}:")
+
+    if not result.success:
+        print(f"  {Fore.RED}→ Failed: {result.error}{Style.RESET_ALL}")
+        return
+
+    print(f"  → Measured: {result.time:.2f} ms")
+
+    if predicted:
+        diff = ((result.time - predicted) / predicted) * 100
+        status = "slower" if diff > 0 else "faster"
+        color = Fore.RED if status == "slower" else Fore.GREEN
+        print(f"  → Predicted: {predicted:.2f} ms")
+        print(f"  → {color}{abs(diff):.1f}% {status} than predicted{Style.RESET_ALL}")
     else:
-        status = "faster"
-    return diff_percent, status
+        print("  → No prediction available")
 
 
-def create_console_histogram(data, bins=10, width=50):
-    """Create a simple console-based histogram"""
-    hist, bin_edges = np.histogram(data, bins=bins)
-    max_count = max(hist)
+def generate_performance_report(
+    results: Dict[int, RunResult], predictions: Dict[int, float]
+) -> None:
+    """Generate and print detailed performance analysis report."""
+    successful_results = {k: r.time for k, r in results.items() if r.success}
+    if not successful_results:
+        print(f"\n{Fore.RED}No successful runs to report{Style.RESET_ALL}")
+        return
 
-    histogram = []
-    for count, edge in zip(hist, bin_edges[:-1]):
-        bar = "#" * int((count / max_count) * width)
-        histogram.append(f"{edge:6.2f}% | {bar} ({count})")
+    successful_times = list(successful_results.values())
 
-    return "\n".join(histogram)
+    # Basic statistics
+    stats_data = [
+        ["Total Runs", len(results)],
+        ["Successful Runs", len(successful_results)],
+        ["Failed Runs", len(results) - len(successful_results)],
+        ["Best Time", f"{min(successful_times):.2f} ms"],
+        ["Worst Time", f"{max(successful_times):.2f} ms"],
+        ["Mean Time", f"{np.mean(successful_times):.2f} ms"],
+        ["Median Time", f"{np.median(successful_times):.2f} ms"],
+        ["Std Dev", f"{np.std(successful_times):.2f} ms"],
+    ]
 
+    print(f"\n{Style.BRIGHT}Performance Statistics:{Style.RESET_ALL}")
+    print(tabulate(stats_data, tablefmt="simple"))
 
-def get_available_schedules(device_id: str, app: str) -> list[int]:
-    """Get list of available schedule numbers from JSON files"""
-    schedule_files = glob.glob(
-        f"./data/generated-schedules/{device_id}_{app}_schedule_*.json"
-    )
+    # Prediction accuracy
+    if predictions:
+        diffs = []
+        for schedule, time in successful_results.items():
+            if predicted := predictions.get(schedule):
+                diff = ((time - predicted) / predicted) * 100
+                diffs.append(diff)
 
-    if not schedule_files:
-        return []
+        if diffs:
+            accuracy_data = [
+                [
+                    "Within ±5%",
+                    f"{sum(abs(d) <= 5 for d in diffs)/len(diffs)*100:.1f}%",
+                ],
+                [
+                    "Within ±10%",
+                    f"{sum(abs(d) <= 10 for d in diffs)/len(diffs)*100:.1f}%",
+                ],
+                ["Mean Error", f"{np.mean(np.abs(diffs)):.1f}%"],
+                ["Max Error", f"{np.max(np.abs(diffs)):.1f}%"],
+            ]
 
-    schedule_nums = []
-    for file_path in schedule_files:
-        try:
-            schedule_num = int(re.search(r"schedule_(\d+)\.json", file_path).group(1))
-            schedule_nums.append(schedule_num)
-        except Exception:
-            continue
+            print(f"\n{Style.BRIGHT}Prediction Accuracy:{Style.RESET_ALL}")
+            print(tabulate(accuracy_data, tablefmt="simple"))
 
-    return sorted(schedule_nums)
+    # Print failed runs
+    failed = [(k, r.error) for k, r in results.items() if not r.success]
+    if failed:
+        print(f"\n{Style.BRIGHT}{Fore.RED}Failed Runs:{Style.RESET_ALL}")
+        for schedule, error in failed:
+            print(f"  • Schedule {schedule}: {error}")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run performance tests on a specific device"
-    )
-    parser.add_argument("device_id", help="Device ID (e.g., 3A021JEHN02756)")
-    parser.add_argument(
-        "--app",
-        choices=list(APP_NAME_MAP.keys()),
-        required=True,
-        help="Application to test (default: CifarDense)",
+        description="Run performance tests on Android devices"
     )
     parser.add_argument(
-        "--num-schedules",
-        type=int,
-        help="Number of schedules to test (default: all available)",
+        "--devices",
+        "-d",
+        help="Comma-separated list of device IDs (if not provided, interactive selection will be used)",
+    )
+    parser.add_argument(
+        "--application",
+        "-a",
+        help="Application to test (if not provided, interactive selection will be used)",
+        choices=ALL_APPLICATIONS,
+    )
+    parser.add_argument(
+        "--schedules",
+        "-s",
+        help="Schedule range to test (e.g. '1-5' or '1,3,5' or '1-3,5,7-9')",
     )
     args = parser.parse_args()
 
-    # Get available schedules
-    available_schedules = get_available_schedules(args.device_id, args.app)
-    if not available_schedules:
-        print(
-            f"{Fore.RED}No schedule files found for {args.app} on device {args.device_id}{Style.RESET_ALL}"
-        )
-        return
-
-    max_schedule = max(available_schedules)
-    if args.num_schedules:
-        num_schedules = min(args.num_schedules, max_schedule)
-    else:
-        num_schedules = max_schedule
-
-    print(
-        f"Found {len(available_schedules)} schedule files (max schedule: {max_schedule})"
+    # Select devices
+    devices = (
+        args.devices.split(",")
+        if args.devices
+        else interactive_select(ALL_DEVICES, "devices")
     )
-    print(f"Will test {num_schedules} schedules")
 
-    # Build the binary first
-    app_name = APP_NAME_MAP[args.app]
-    binary_name = f"pipe-{app_name}-vk"
-    if not build_binary(binary_name):
-        print("Exiting due to build failure")
-        return
+    # Select application (using original names from ALL_APPLICATIONS)
+    app = (
+        args.application
+        if args.application
+        else interactive_select(ALL_APPLICATIONS, "applications")[0]
+    )
 
-    results: Dict[int, Optional[float]] = {}
-    successful_runs = []
-    failed_runs = []
+    # Get canonical name for loading predictions
+    app_canonical = APPLICATION_NAME_MAP[app]
 
-    # Load mathematical predictions with device ID and app
-    predictions = load_mathematical_predictions(args.device_id, args.app)
-    if not predictions:
-        print(f"{Fore.YELLOW}Warning: No predictions found{Style.RESET_ALL}")
+    # Build binary using original name
+    binary_name = f"pipe-{app.lower()}-vk"
+    print(f"\nBuilding {binary_name}...")
+    run_command(f"xmake b {binary_name}")
 
-    print(f"Starting test runs for {args.app} on device {args.device_id}...")
-    print("-" * 50)
+    for device_id in devices:
+        print(f"\nProcessing device: {device_id}")
 
-    for schedule_num in range(1, num_schedules + 1):
-        if schedule_num not in available_schedules:
-            print(
-                f"{Fore.YELLOW}Schedule {schedule_num} not available, skipping{Style.RESET_ALL}"
-            )
+        # Load predictions using canonical name
+        print("Loading predictions...")
+        predictions = load_predictions(device_id, app_canonical)
+        if not predictions:
+            print(f"{Fore.YELLOW}Warning: No predictions found{Style.RESET_ALL}")
             continue
 
-        print(f"Running schedule {schedule_num}/{num_schedules}...")
-        avg_time = run_command(args.device_id, args.app, schedule_num)
-        results[schedule_num] = avg_time
+        # Determine schedules to run
+        available_schedules = sorted(predictions.keys())
+        if not available_schedules:
+            print(f"{Fore.RED}No schedule files found{Style.RESET_ALL}")
+            continue
 
-        if avg_time is not None:
-            successful_runs.append(schedule_num)
-            predicted = predictions.get(schedule_num)
-            if predicted:
-                diff = calculate_prediction_accuracy(avg_time, predicted)[0]
-                print(f"\nSchedule {schedule_num}:")
-                print(f"  → Measured: {avg_time:.2f} ms")
-                print(f"  → Predicted: {predicted:.2f} ms")
-                if diff > 0:
-                    print(
-                        f"  → {Fore.RED}{abs(diff):.1f}% slower than predicted{Style.RESET_ALL}"
-                    )
-                else:
-                    print(
-                        f"  → {Fore.GREEN}{abs(diff):.1f}% faster than predicted{Style.RESET_ALL}"
-                    )
-            else:
-                print(f"\nSchedule {schedule_num}:")
-                print(f"  → Measured: {avg_time:.2f} ms")
-                print("  → No prediction available")
+        # Parse schedule range if provided, otherwise use all available
+        schedule_ids = parse_schedule_range(args.schedules)
+        if not schedule_ids:
+            schedule_ids = set(available_schedules)
         else:
-            failed_runs.append(schedule_num)
-            print(f"{Fore.RED}Schedule {schedule_num} failed{Style.RESET_ALL}")
-
-        # Small delay between runs to avoid overwhelming the device
-        time.sleep(1)
-
-    # Generate report
-    print(f"\n{Style.BRIGHT}{'='*50}")
-    print(f"{Fore.CYAN}FINAL REPORT{Style.RESET_ALL}")
-    print(f"{Style.BRIGHT}{'='*50}{Style.RESET_ALL}\n")
-
-    if successful_runs:
-        # Summary Table
-        summary_data = [
-            ["Total schedules", num_schedules],
-            ["Successful runs", f"{Fore.GREEN}{len(successful_runs)}{Style.RESET_ALL}"],
-            ["Failed runs", f"{Fore.RED}{len(failed_runs)}{Style.RESET_ALL}"],
-        ]
-        print(f"{Style.BRIGHT}Test Summary:{Style.RESET_ALL}")
-        print(tabulate(summary_data, tablefmt="simple"))
-        print()
-
-        # Performance Statistics Table
-        actual_times = [results[s] for s in successful_runs]
-        best_schedule = min(successful_runs, key=lambda x: results[x])
-        worst_schedule = max(successful_runs, key=lambda x: results[x])
-
-        stats_data = [
-            ["Best Schedule", f"{best_schedule} ({results[best_schedule]:.2f} ms)"],
-            ["Worst Schedule", f"{worst_schedule} ({results[worst_schedule]:.2f} ms)"],
-            ["Mean Time", f"{np.mean(actual_times):.2f} ms"],
-            ["Median Time", f"{np.median(actual_times):.2f} ms"],
-            ["Standard Deviation", f"{np.std(actual_times):.2f} ms"],
-            ["95th Percentile", f"{np.percentile(actual_times, 95):.2f} ms"],
-            ["5th Percentile", f"{np.percentile(actual_times, 5):.2f} ms"],
-        ]
-        print(f"{Style.BRIGHT}Performance Statistics:{Style.RESET_ALL}")
-        print(tabulate(stats_data, tablefmt="simple"))
-        print()
-
-        # Add new section for detailed performance analysis
-        print(f"\n{Style.BRIGHT}Detailed Performance Analysis:{Style.RESET_ALL}")
-
-        # Performance Distribution
-        perf_data = []
-        time_ranges = [(0, 25), (25, 30), (30, 35), (35, float("inf"))]
-
-        for min_t, max_t in time_ranges:
-            count = sum(1 for t in actual_times if min_t <= t < max_t)
-            percentage = (count / len(actual_times)) * 100
-            range_str = f"{min_t}-{max_t if max_t != float('inf') else '+'}"
-            perf_data.append([f"{range_str} ms", count, f"{percentage:.1f}%"])
-
-        print("\nPerformance Distribution:")
-        print(
-            tabulate(
-                perf_data,
-                headers=["Time Range", "Count", "Percentage"],
-                tablefmt="simple",
-            )
-        )
-
-        # Stability Analysis
-        print(f"\n{Style.BRIGHT}Stability Analysis:{Style.RESET_ALL}")
-
-        # Calculate coefficient of variation (CV)
-        cv = (np.std(actual_times) / np.mean(actual_times)) * 100
-
-        # Calculate quartiles and IQR
-        q1 = np.percentile(actual_times, 25)
-        q3 = np.percentile(actual_times, 75)
-        iqr = q3 - q1
-
-        # Calculate outliers
-        lower_bound = q1 - 1.5 * iqr
-        upper_bound = q3 + 1.5 * iqr
-        outliers = [t for t in actual_times if t < lower_bound or t > upper_bound]
-
-        stability_data = [
-            ["Coefficient of Variation", f"{cv:.1f}%"],
-            ["Interquartile Range", f"{iqr:.2f} ms"],
-            ["Number of Outliers", len(outliers)],
-            ["Outlier Percentage", f"{(len(outliers)/len(actual_times))*100:.1f}%"],
-        ]
-        print(tabulate(stability_data, tablefmt="simple"))
-
-        # Prediction Analysis
-        prediction_differences = []
-        faster_than_predicted = []
-        slower_than_predicted = []
-
-        prediction_data = []
-        for schedule in successful_runs:
-            actual = results[schedule]
-            predicted = predictions.get(schedule)
-            if predicted:
-                diff = calculate_prediction_accuracy(actual, predicted)[0]
-                prediction_differences.append(diff)
-                status = (
-                    f"{Fore.RED}+{diff:.1f}%"
-                    if diff > 0
-                    else f"{Fore.GREEN}{diff:.1f}%{Style.RESET_ALL}"
+            # Validate schedule IDs are within range
+            max_schedule = max(available_schedules)
+            invalid_ids = [
+                sid for sid in schedule_ids if sid not in available_schedules
+            ]
+            if invalid_ids:
+                print(
+                    f"{Fore.RED}Invalid schedule IDs {invalid_ids}. "
+                    f"Must be between 1 and {max_schedule}{Style.RESET_ALL}"
                 )
+                continue
 
-                prediction_data.append(
-                    [schedule, f"{actual:.2f}", f"{predicted:.2f}", status]
-                )
+        print(f"Found {len(available_schedules)} schedule files")
+        print(f"Will test {len(schedule_ids)} schedules")
 
-                if diff > 0:
-                    slower_than_predicted.append(diff)
-                else:
-                    faster_than_predicted.append(abs(diff))
+        # Run schedules
+        results: Dict[int, RunResult] = {}
+        print(f"\nRunning tests for {app} on device {device_id}...")
 
-        if prediction_differences:
-            print(f"\n{Style.BRIGHT}Prediction Results:{Style.RESET_ALL}")
-            headers = ["Schedule", "Measured (ms)", "Predicted (ms)", "Difference"]
-            print(tabulate(prediction_data, headers=headers, tablefmt="simple"))
+        for schedule_num in sorted(schedule_ids):
+            print(f"\nRunning schedule {schedule_num}...")
+            result = run_schedule(device_id, app, schedule_num)
+            results[schedule_num] = result
+            print_schedule_result(schedule_num, result, predictions.get(schedule_num))
+            time.sleep(1)  # Brief pause between runs
 
-            print(f"\n{Style.BRIGHT}Prediction Accuracy Distribution:{Style.RESET_ALL}")
-            within_5_percent = sum(abs(x) <= 5 for x in prediction_differences)
-            within_10_percent = sum(abs(x) <= 10 for x in prediction_differences)
-            within_20_percent = sum(abs(x) <= 20 for x in prediction_differences)
-            total_predictions = len(prediction_differences)
-
-            accuracy_data = [
-                ["Within ±5%", f"{within_5_percent/total_predictions*100:.1f}%"],
-                ["Within ±10%", f"{within_10_percent/total_predictions*100:.1f}%"],
-                ["Within ±20%", f"{within_20_percent/total_predictions*100:.1f}%"],
-            ]
-            print(tabulate(accuracy_data, tablefmt="simple"))
-
-            # Prediction Error Analysis
-            print(f"\n{Style.BRIGHT}Prediction Error Analysis:{Style.RESET_ALL}")
-
-            # Calculate error statistics
-            abs_errors = [abs(diff) for diff in prediction_differences]
-            mean_abs_error = np.mean(abs_errors)
-            rmse = np.sqrt(np.mean(np.square(prediction_differences)))
-
-            error_data = [
-                ["Mean Absolute Error", f"{mean_abs_error:.1f}%"],
-                ["Root Mean Square Error", f"{rmse:.1f}%"],
-                ["Error Standard Deviation", f"{np.std(prediction_differences):.1f}%"],
-                ["Maximum Overprediction", f"{min(prediction_differences):.1f}%"],
-                ["Maximum Underprediction", f"{max(prediction_differences):.1f}%"],
-            ]
-            print(tabulate(error_data, tablefmt="simple"))
-
-            # Correlation Analysis
-            print(f"\n{Style.BRIGHT}Correlation Analysis:{Style.RESET_ALL}")
-
-            # Calculate correlation between predicted and actual times
-            predicted_times = [
-                predictions[s] for s in successful_runs if s in predictions
-            ]
-            actual_times_corr = [
-                results[s] for s in successful_runs if s in predictions
-            ]
-
-            correlation = np.corrcoef(predicted_times, actual_times_corr)[0, 1]
-
-            corr_data = [
-                ["Prediction-Actual Correlation", f"{correlation:.3f}"],
-                [
-                    "Correlation Strength",
-                    (
-                        "Strong"
-                        if abs(correlation) > 0.7
-                        else "Moderate" if abs(correlation) > 0.4 else "Weak"
-                    ),
-                ],
-            ]
-            print(tabulate(corr_data, tablefmt="simple"))
-
-    if failed_runs:
-        print(f"\n{Style.BRIGHT}{Fore.RED}Failed Runs:{Style.RESET_ALL}")
-        for schedule in failed_runs:
-            print(f"  • Schedule {schedule}")
+        # Generate final report
+        print(f"\n{Style.BRIGHT}Results for device {device_id}:{Style.RESET_ALL}")
+        generate_performance_report(results, predictions)
 
 
 if __name__ == "__main__":
