@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <queue>
 
 #include "generated-code/device_3A021JEHN02756.hpp"
 #include "generated-code/device_9b034f1b.hpp"
@@ -8,7 +8,7 @@
 #include "task.hpp"
 
 // Define function pointer type for run_pipeline
-using RunPipelineFunc = void (*)(std::vector<Task>&, std::vector<Task>&);
+using RunPipelineFunc = void (*)(std::queue<Task>&, std::queue<Task>&);
 
 namespace device_3A021JEHN02756 {
 

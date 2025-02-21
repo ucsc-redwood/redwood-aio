@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "builtin-apps/cifar-dense/dense_appdata.hpp"
 
 // ---------------------------------------------------------------------
@@ -8,8 +10,11 @@
 
 struct Task {
   cifar_dense::AppData* app_data;  // basically just a pointer
+  bool done = false;
+
+  [[nodiscard]] bool is_sentinel() const { return app_data == nullptr; }
 };
 
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks);
+[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks);
 
-void cleanup(std::vector<Task>& tasks);
+void cleanup(std::queue<Task>& tasks);
