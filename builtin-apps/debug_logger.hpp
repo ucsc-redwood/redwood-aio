@@ -68,14 +68,15 @@ void log_kernel_impl(const int stage, const void *appdata_addr) {
   // 7) (if OMP) n_threads (using omp_get_num_threads())
 
   if constexpr (kernel_type == LogKernelType::kOMP) {
-    int core_id = -1;
+    // int core_id = -1;
 
     // Get core ID on Linux
-    core_id = sched_getcpu();
+    // core_id = sched_getcpu();
+    uint64_t core_id = (uint64_t)pthread_self();
 
     file_logger->debug("[omp][Core: {}][Thread: {}/{}] [Stage: {}] [App: {:p}]",
                        core_id,
-                       omp_get_thread_num(),
+                       omp_get_thread_num() + 1,
                        omp_get_num_threads(),
                        stage,
                        appdata_addr);

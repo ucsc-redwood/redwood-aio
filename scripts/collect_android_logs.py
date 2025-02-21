@@ -22,6 +22,34 @@ def run_command(cmd):
         sys.exit(1)
 
 
+def get_num_schedules(device, application_name):
+    schedules_dir = "data/generated-schedules"
+    num_schedules = 0
+
+    # Map application names to their canonical form
+    APPLICATION_NAME_MAP = {
+        "tree": "Tree",
+        "cifar-sparse": "CifarSparse",
+        "cifar-dense": "CifarDense",
+    }
+
+    for each_file in os.listdir(schedules_dir):
+        # Split filename into parts
+        parts = each_file.split("_")
+
+        # Check if this is a valid schedule file for the given device and app
+        if (
+            len(parts) == 4
+            and parts[0] == device
+            and parts[1] == APPLICATION_NAME_MAP[application_name]
+            and parts[2] == "schedule"
+            and parts[3].endswith(".json")
+        ):
+            num_schedules += 1
+
+    return num_schedules
+
+
 def interactive_select(options, option_type):
     """
     Prompt the user to select options by number.
@@ -72,6 +100,29 @@ def log_filename(device, application_name, schedule_id):
     return f"logs-{device}-{app_name}-schedule-{schedule_id}.txt"
 
 
+def obtain_a_single_log(device, application_name, schedule_id):
+    executable_name = f"pipe-{application_name.lower()}-vk"
+
+    # Step 2: Run the executable on the device
+    run_exe_cmd = (
+        f"adb -s {device} shell /data/local/tmp/{executable_name} "
+        f"--device {device} "
+        f"--schedule {schedule_id} "
+        f"--log-level debug"
+    )
+    run_command(run_exe_cmd)
+
+    # Step 3: Pull the logs from the device
+    print(f"\n--- Collecting logs from device: {device} ---")
+    filename = log_filename(device, application_name, schedule_id)
+    pull_cmd = f"adb -s {device} pull /data/local/tmp/logs.txt {OUTPUT_DIR}/{filename}"
+    run_command(pull_cmd)
+
+    # Step 4: Remove the logs from the device
+    rm_cmd = f"adb -s {device} shell rm /data/local/tmp/logs.txt"
+    run_command(rm_cmd)
+
+
 def main():
     args = parse_args()
 
@@ -90,14 +141,10 @@ def main():
     print(f"Devices to collect logs from: {devices}")
     print(f"Application: {application_name}\n")
 
-    schedule_id = 1
+    num_schedules = get_num_schedules(devices[0], application_name)
+    print(f"Number of schedules: {num_schedules}")
 
     for device in devices:
-        print(f"\n--- Running on device: {device} ---")
-
-        # Create logs directory on device
-        # run_command(f"adb -s {device} shell mkdir -p /data/local/tmp/logs")
-
         # Step 1: Push the executable to the device
         executable_name = f"pipe-{application_name.lower()}-vk"
         push_cmd = (
@@ -107,24 +154,8 @@ def main():
         )
         run_command(push_cmd)
 
-        # Step 2: Run the executable on the device
-        run_exe_cmd = (
-            f"adb -s {device} shell /data/local/tmp/{executable_name} "
-            f"--device {device} "
-            f"--schedule {schedule_id} "
-            f"--log-level debug"
-        )
-        run_command(run_exe_cmd)
-
-        # Step 3: Pull the logs from the device
-        print(f"\n--- Collecting logs from device: {device} ---")
-        filename = log_filename(device, application_name, schedule_id)
-        pull_cmd = f"adb -s {device} pull /data/local/tmp/logs.txt {OUTPUT_DIR}/{filename}"
-        run_command(pull_cmd)
-
-        # Clean up
-        # run_command(f"adb -s {device} shell rm -rf /data/local/tmp/logs")
-        # run_command(f"adb -s {device} shell rm /data/local/tmp/{executable_name}")
+        for schedule_id in range(1, num_schedules + 1):
+            obtain_a_single_log(device, application_name, schedule_id)
 
 
 if __name__ == "__main__":
