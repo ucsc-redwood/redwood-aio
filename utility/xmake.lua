@@ -57,14 +57,4 @@ do
 	})
 end
 
--- ----------------------------------------------------------------
--- Utility Target: Query the cache line size of the current CPU
--- ----------------------------------------------------------------
 
-target("query-cacheline")
-do
-	add_rules("utility_config", "run_on_android")
-	add_files({
-		"query_cacheline.cpp",
-	})
-end
