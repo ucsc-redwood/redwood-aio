@@ -66,7 +66,7 @@ def run_schedule(device_id: str, app: str, schedule_num: int) -> RunResult:
             f"./build/android/arm64-v8a/release/{binary_name} "
             f"{device_path}"
         )
-        run_command(push_cmd)
+        run_command(push_cmd, hide_output=True)
     except Exception as e:
         return RunResult(None, f"Failed to push executable: {e}")
 

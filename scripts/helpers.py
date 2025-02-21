@@ -32,11 +32,25 @@ APPLICATION_NAME_MAP: Dict[str, str] = {
 }
 
 
-def run_command(cmd: str) -> None:
-    """Run a shell command and exit if it fails."""
+def run_command(cmd: str, hide_output: bool = False) -> None:
+    """Run a shell command and exit if it fails.
+
+    Args:
+        cmd: Command string to execute
+        hide_output: If True, suppress command output
+    """
     print(f"Executing: {cmd}")
     try:
-        subprocess.run(cmd, shell=True, check=True)
+        if hide_output:
+            subprocess.run(
+                cmd,
+                shell=True,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        else:
+            subprocess.run(cmd, shell=True, check=True)
     except subprocess.CalledProcessError:
         print(f"Error: Command failed: {cmd}", file=sys.stderr)
         sys.exit(1)

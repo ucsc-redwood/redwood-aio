@@ -35,8 +35,8 @@ def collect_log(device: str, app: str, schedule_id: int, output_dir: Path) -> No
 
     # Pull and cleanup logs
     output_file = output_dir / get_log_filename(device, app, schedule_id)
-    run_command(f"adb -s {device} pull {device_log} {output_file}")
-    run_command(f"adb -s {device} shell rm {device_log}")
+    run_command(f"adb -s {device} pull {device_log} {output_file}", hide_output=True)
+    run_command(f"adb -s {device} shell rm {device_log}", hide_output=True)
 
 
 def main():
@@ -82,7 +82,10 @@ def main():
     # Collect logs for each device and schedule
     for device in devices:
         exe_path = f"./build/android/arm64-v8a/release/{exe_name}"
-        run_command(f"adb -s {device} push {exe_path} /data/local/tmp/{exe_name}")
+        run_command(
+            f"adb -s {device} push {exe_path} /data/local/tmp/{exe_name}",
+            hide_output=True,
+        )
 
         for schedule_id in sorted(schedule_ids):
             collect_log(device, app, schedule_id, output_dir)

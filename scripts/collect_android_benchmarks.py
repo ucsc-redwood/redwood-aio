@@ -26,14 +26,17 @@ def run_benchmark(benchmark: str, device: str, output_dir: Path) -> None:
     # Push executable to device
     exe_path = f"./build/android/arm64-v8a/release/{benchmark}"
     device_path = f"/data/local/tmp/{benchmark}"
-    run_command(f"adb -s {device} push {exe_path} {device_path}")
+    run_command(f"adb -s {device} push {exe_path} {device_path}", hide_output=True)
 
     # Run benchmark
     run_command(f"adb -s {device} shell {device_path} --device {device}")
 
     # Pull results
     json_file = get_json_filename(benchmark, device)
-    run_command(f"adb -s {device} pull /data/local/tmp/{json_file} {output_dir}/")
+    run_command(
+        f"adb -s {device} pull /data/local/tmp/{json_file} {output_dir}/",
+        hide_output=True,
+    )
 
 
 def main():
