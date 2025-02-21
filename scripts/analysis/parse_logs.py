@@ -499,16 +499,53 @@ def print_summary(results: List[Dict], verbose: bool = False):
     )
 
 
+def parse_schedule_range(range_str: str) -> Set[int]:
+    """Parse schedule range string into a set of schedule IDs.
+
+    Accepts formats:
+    - Single number: "1"
+    - Comma-separated: "1,3,5"
+    - Range: "1-5"
+    - Mixed: "1-3,5,7-9"
+    """
+    schedule_ids = set()
+
+    # Split by comma
+    parts = range_str.split(",")
+
+    for part in parts:
+        if "-" in part:
+            # Handle range
+            try:
+                start, end = map(int, part.split("-"))
+                schedule_ids.update(range(start, end + 1))
+            except ValueError:
+                raise argparse.ArgumentTypeError(
+                    f"Invalid range format: {part}. Expected format: start-end"
+                )
+        else:
+            # Handle single number
+            try:
+                schedule_ids.add(int(part))
+            except ValueError:
+                raise argparse.ArgumentTypeError(
+                    f"Invalid schedule ID: {part}. Must be an integer"
+                )
+
+    return schedule_ids
+
+
 def main():
     """Process log files based on command line arguments."""
     parser = argparse.ArgumentParser(
         description="Verify execution logs against schedules"
     )
+    parser.add_argument("--device", help="Device ID to verify", required=True)
+    parser.add_argument("--app", help="Application name to verify", required=True)
     parser.add_argument(
-        "--device", help="Device ID to verify (default: all)", default=None
-    )
-    parser.add_argument(
-        "--app", help="Application name to verify (default: all)", default=None
+        "--schedules",
+        help="Schedule IDs to verify (e.g., '1-5' or '1,3,5' or '1-3,5,7-9')",
+        type=parse_schedule_range,
     )
     parser.add_argument(
         "-v", "--verbose", help="Show detailed output for failures", action="store_true"
@@ -516,18 +553,22 @@ def main():
     args = parser.parse_args()
 
     # Find matching log files
-    log_pattern = "data/logs/logs-*.txt"
-    if args.device:
-        log_pattern = f"data/logs/logs-{args.device}-*.txt"
+    log_pattern = f"data/logs/logs-{args.device}-{args.app}-schedule-*.txt"
     log_files = glob.glob(log_pattern)
 
     if not log_files:
         print_error("No log files found matching criteria")
         return
 
-    # Filter by application if specified
-    if args.app:
-        log_files = [f for f in log_files if f"-{args.app}-schedule-" in f]
+    # Filter by schedule IDs if specified
+    if args.schedules:
+        filtered_files = []
+        for log_path in log_files:
+            # Extract schedule ID from filename
+            match = re.search(r"-schedule-(\d+)\.txt$", log_path)
+            if match and int(match.group(1)) in args.schedules:
+                filtered_files.append(log_path)
+        log_files = filtered_files
 
     if not log_files:
         print_error("No log files found matching criteria after filtering")

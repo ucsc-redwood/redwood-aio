@@ -75,43 +75,6 @@ def interactive_select(options, option_type):
         return options
 
 
-def parse_schedule_range(range_str: str) -> set:
-    """Parse schedule range string into a set of schedule IDs.
-
-    Accepts formats:
-    - Single number: "1"
-    - Comma-separated: "1,3,5"
-    - Range: "1-5"
-    - Mixed: "1-3,5,7-9"
-    """
-    if not range_str:
-        return set()
-        
-    schedule_ids = set()
-    parts = range_str.split(",")
-
-    for part in parts:
-        if "-" in part:
-            # Handle range
-            try:
-                start, end = map(int, part.split("-"))
-                schedule_ids.update(range(start, end + 1))
-            except ValueError:
-                raise argparse.ArgumentTypeError(
-                    f"Invalid range format: {part}. Expected format: start-end"
-                )
-        else:
-            # Handle single number
-            try:
-                schedule_ids.add(int(part))
-            except ValueError:
-                raise argparse.ArgumentTypeError(
-                    f"Invalid schedule ID: {part}. Must be an integer"
-                )
-
-    return schedule_ids
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Collect logs from specified devices.")
     parser.add_argument(
@@ -125,12 +88,6 @@ def parse_args():
         "-a",
         type=str,
         help="Name of the application to collect logs from.",
-    )
-    parser.add_argument(
-        "--schedules",
-        "-s",
-        type=str,
-        help="Schedule IDs to collect (e.g., '1-5' or '1,3,5' or '1-3,5,7-9')",
     )
     return parser.parse_args()
 
@@ -187,17 +144,6 @@ def main():
     num_schedules = get_num_schedules(devices[0], application_name)
     print(f"Number of schedules: {num_schedules}")
 
-    # Parse schedule range if provided
-    schedule_ids = parse_schedule_range(args.schedules)
-    if not schedule_ids:
-        schedule_ids = set(range(1, num_schedules + 1))
-    else:
-        # Validate schedule IDs are within range
-        invalid_ids = [sid for sid in schedule_ids if sid < 1 or sid > num_schedules]
-        if invalid_ids:
-            print(f"Error: Invalid schedule IDs {invalid_ids}. Must be between 1 and {num_schedules}")
-            sys.exit(1)
-
     for device in devices:
         # Step 1: Push the executable to the device
         executable_name = f"pipe-{application_name.lower()}-vk"
@@ -208,7 +154,7 @@ def main():
         )
         run_command(push_cmd)
 
-        for schedule_id in sorted(schedule_ids):
+        for schedule_id in range(1, num_schedules + 1):
             obtain_a_single_log(device, application_name, schedule_id)
 
 
