@@ -1,6 +1,6 @@
 #include "task.hpp"
 
-#include "builtin-apps/cifar-dense/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/cifar-dense/vulkan/dispatchers.hpp"
 
 // ---------------------------------------------------------------------
 // Task structure

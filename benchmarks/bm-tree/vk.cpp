@@ -4,7 +4,7 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/resources_path.hpp"
 #include "builtin-apps/tree/tree_appdata.hpp"
-#include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/tree/vulkan/dispatchers.hpp"
 
 #define PREPARE_DATA                                                 \
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();         \

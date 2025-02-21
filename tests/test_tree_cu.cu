@@ -3,7 +3,7 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"
-#include "builtin-apps/tree/cuda/kernel.cuh"
+#include "builtin-apps/tree/cuda/dispatchers.cuh"
 #include "verify_tree.hpp"
 
 #define PREPARE_DATA                    \

@@ -78,16 +78,16 @@ if has_config("use_vulkan") then
 
 		add_headerfiles({
 			-- App specific headers
-			"cifar-sparse/vulkan/vk_dispatcher.hpp",
-			"cifar-dense/vulkan/dispatcher.hpp",
+			"cifar-sparse/vulkan/dispatchers.hpp",
+			"cifar-dense/vulkan/dispatchers.hpp",
 			"tree/vulkan/dispatchers.hpp",
 			"tree/vulkan/tmp_storage.hpp",
 		})
 
 		add_files({
 			-- App specific implementations
-			"cifar-sparse/vulkan/vk_dispatcher.cpp",
-			"cifar-dense/vulkan/dispatcher.cpp",
+			"cifar-sparse/vulkan/dispatchers.cpp",
+			"cifar-dense/vulkan/dispatchers.cpp",
 			"tree/vulkan/dispatchers.cpp",
 		})
 	end

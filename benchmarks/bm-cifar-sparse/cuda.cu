@@ -2,7 +2,7 @@
 
 #include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-sparse/cuda/cu_dispatcher.cuh"
+#include "builtin-apps/cifar-sparse/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
 #include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"

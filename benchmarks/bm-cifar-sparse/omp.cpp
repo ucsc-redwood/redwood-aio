@@ -7,7 +7,7 @@
 #include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-sparse/omp/sparse_kernel.hpp"
+#include "builtin-apps/cifar-sparse/omp/dispatchers.hpp"
 #include "builtin-apps/resources_path.hpp"
 
 static void run_baseline_unrestricted(cifar_sparse::AppData& app_data, const int n_threads) {

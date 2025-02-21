@@ -1,6 +1,6 @@
 #include "task.hpp"
 
-#include "builtin-apps/cifar-sparse/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/cifar-sparse/vulkan/dispatchers.hpp"
 
 // ---------------------------------------------------------------------
 // Task structure

@@ -4,7 +4,7 @@
 #include <memory_resource>
 #include <thread>
 
-#include "builtin-apps/tree/omp/tree_kernel.hpp"
+#include "builtin-apps/tree/omp/dispatchers.hpp"
 #include "verify_tree.hpp"
 
 #define PREPARE_APPDATA                                       \

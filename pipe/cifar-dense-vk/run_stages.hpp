@@ -2,8 +2,8 @@
 
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-dense/omp/dense_kernel.hpp"
-#include "builtin-apps/cifar-dense/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/cifar-dense/omp/dispatchers.hpp"
+#include "builtin-apps/cifar-dense/vulkan/dispatchers.hpp"
 
 /**
  * @brief Runs stages of the CIFAR dense network on specified processor cores with OpenMP

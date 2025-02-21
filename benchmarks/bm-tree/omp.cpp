@@ -6,7 +6,7 @@
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/resources_path.hpp"
-#include "builtin-apps/tree/omp/tree_kernel.hpp"
+#include "builtin-apps/tree/omp/dispatchers.hpp"
 #include "builtin-apps/tree/tree_appdata.hpp"
 
 // ------------------------------------------------------------

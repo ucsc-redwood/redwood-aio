@@ -2,7 +2,7 @@
 #include <omp.h>
 
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/tree/vulkan/dispatchers.hpp"
 #include "verify_tree.hpp"
 
 #define PREPARE_APPDATA                                      \

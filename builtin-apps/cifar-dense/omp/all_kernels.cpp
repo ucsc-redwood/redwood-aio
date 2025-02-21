@@ -1,5 +1,3 @@
-#include "dispatchers.hpp"
-
 #include <omp.h>
 #include <spdlog/spdlog.h>
 
@@ -7,6 +5,7 @@
 #include <cstdint>
 
 #include "../../debug_logger.hpp"
+#include "dispatchers.hpp"
 
 namespace cifar_dense {
 namespace omp {

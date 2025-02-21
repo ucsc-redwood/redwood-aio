@@ -3,7 +3,7 @@
 #include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
-#include "builtin-apps/cifar-sparse/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/cifar-sparse/vulkan/dispatchers.hpp"
 #include "builtin-apps/resources_path.hpp"
 
 // ----------------------------------------------------------------
