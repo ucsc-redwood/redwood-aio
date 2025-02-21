@@ -14,7 +14,8 @@ void process_stage_6(AppData &appdata, TmpStorage &temp_storage);
 void process_stage_7(AppData &appdata, TmpStorage &temp_storage);
 
 template <int Stage>
-requires(Stage >= 1 && Stage <= 7) void run_stage(AppData &appdata, TmpStorage &temp_storage) {
+  requires(Stage >= 1 && Stage <= 7)
+void run_stage(AppData &appdata, TmpStorage &temp_storage) {
   if constexpr (Stage == 1) {
     process_stage_1(appdata, temp_storage);
   } else if constexpr (Stage == 2) {
