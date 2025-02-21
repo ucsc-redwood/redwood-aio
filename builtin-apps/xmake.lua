@@ -110,14 +110,12 @@ if has_config("use_cuda") then
 			"common/cuda/helpers.cuh",
 
 			-- CIFAR sparse CUDA headers
-			"cifar-sparse/cuda/cu_kernels.cuh",
-			"cifar-sparse/cuda/cu_dispatcher.cuh",
+			"cifar-sparse/cuda/all_kernels.cuh",
+			"cifar-sparse/cuda/dispatchers.cuh",
 
 			-- CIFAR dense CUDA headers
 			"cifar-dense/cuda/all_kernels.cuh",
 			"cifar-dense/cuda/dispatchers.cuh",
-			"cifar-dense/cuda/cu_dense_kernel.cuh",
-			"cifar-dense/cuda/cu_kernels.cuh",
 
 			-- Tree CUDA headers
 			"tree/cuda/01_morton.cuh",
@@ -136,7 +134,6 @@ if has_config("use_cuda") then
 			"tree/cuda/common/helper_timer.hpp",
 			"tree/cuda/common.cuh",
 			"tree/cuda/func_morton.cuh",
-			"tree/cuda/kernel.cuh",
 			"tree/cuda/dispatchers.cuh",
 			"tree/cuda/temp_storage.cuh",
 		})
@@ -148,12 +145,10 @@ if has_config("use_cuda") then
 			-- CIFAR dense CUDA implementations
 			"cifar-dense/cuda/all_kernels.cu",
 			"cifar-dense/cuda/dispatchers.cu",
-			"cifar-dense/cuda/cu_dense_kernel.cu",
-			"cifar-dense/cuda/cu_kernels.cu",
 
 			-- CIFAR sparse CUDA implementations
-			"cifar-sparse/cuda/cu_dispatcher.cu",
-			"cifar-sparse/cuda/cu_kernels.cu",
+			"cifar-sparse/cuda/all_kernels.cu",
+			"cifar-sparse/cuda/dispatchers.cu",
 
 			-- Tree CUDA implementations
 			"tree/cuda/01_morton.cu",
@@ -163,7 +158,6 @@ if has_config("use_cuda") then
 			"tree/cuda/05_edge_count.cu",
 			"tree/cuda/06_prefix_sum.cu",
 			"tree/cuda/07_octree.cu",
-			"tree/cuda/kernel.cu",
 			"tree/cuda/dispatchers.cu",
 		})
 

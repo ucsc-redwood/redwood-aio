@@ -8,7 +8,7 @@
 #include "04_radix_tree.cuh"
 #include "05_edge_count.cuh"
 #include "07_octree.cuh"
-#include "kernel.cuh"
+#include "dispatchers.cuh"
 
 namespace tree::cuda {
 
