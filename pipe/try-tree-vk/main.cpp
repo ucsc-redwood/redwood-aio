@@ -1,8 +1,8 @@
 
 #include <concurrentqueue.h>
+#include <omp.h>
 
 #include <atomic>
-#include <memory_resource>
 #include <thread>
 
 #include "builtin-apps/affinity.hpp"
@@ -10,48 +10,15 @@
 #include "builtin-apps/tree/omp/dispatchers.hpp"
 #include "builtin-apps/tree/vulkan/dispatchers.hpp"
 
-// /**
-//  * @brief Runs stages of the CIFAR dense network on specified processor cores with OpenMP
-//  * parallelization
-//  *
-//  * @tparam start_stage First stage to execute (must be >= 1)
-//  * @tparam end_stage Last stage to execute (must be <= 9)
-//  * @tparam processor_type Type of processor core to run on (kLittleCore, kMediumCore, or
-//  kBigCore)
-//  * @tparam num_threads Number of OpenMP threads to use
-//  * @param app_data Pointer to application data containing network state
-//  *
-//  * This template function executes the specified range of network stages using OpenMP
-//  * parallelization. It binds threads to the appropriate processor cores based on processor_type
-//  and
-//  * runs the stages in sequence using compile-time unrolling.
-//  */
-// template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
-//   requires ValidStageRange<start_stage, end_stage>
-// void run_stages(tree::AppData* app_data, tree::omp::TmpStorage* temp_storage) {
-// #pragma omp parallel num_threads(num_threads)
-//   {
-//     if constexpr (processor_type == ProcessorType::kLittleCore) {
-//       bind_thread_to_cores(g_little_cores);
-//     } else if constexpr (processor_type == ProcessorType::kMediumCore) {
-//       bind_thread_to_cores(g_medium_cores);
-//     } else if constexpr (processor_type == ProcessorType::kBigCore) {
-//       bind_thread_to_cores(g_big_cores);
-//     } else {
-//       assert(false);
-//     }
+// ---------------------------------------------------------------------
+// New Design
+// ---------------------------------------------------------------------
 
-//     // Generate a compile-time sequence for the range [start_stage, end_stage]
-//     []<std::size_t... I>(
-//         std::index_sequence<I...>, tree::AppData& data, tree::omp::TmpStorage& temp_storage) {
-//       // Each I is offset by (start_stage - 1)
-//       ((tree::omp::run_stage<start_stage + I>(data, temp_storage)), ...);
-//     }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data, *temp_storage);
-//   }
-// }
+template <int Stage>
+concept ValidStage = (Stage >= 1) && (Stage <= 7);
 
 template <int Start, int End>
-concept ValidStageRange = (Start >= 1) && (End <= 7) && (Start <= End);
+concept ValidStageRange = ValidStage<Start> && ValidStage<End> && (Start <= End);
 
 // Helper function that unfolds the stage calls.
 template <int Start, int... Is>
@@ -73,8 +40,6 @@ void run_cpu_stages(tree::AppData* app_data, tree::omp::TmpStorage* tmp_storage)
     bind_thread_to_cores(g_medium_cores);
   } else if constexpr (processor_type == ProcessorType::kBigCore) {
     bind_thread_to_cores(g_big_cores);
-  } else {
-    static_assert([] { return false; }(), "Invalid processor type");
   }
 
 #pragma omp parallel num_threads(n_threads)
@@ -105,6 +70,33 @@ void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* tmp_stora
       app_data, tmp_storage, std::make_integer_sequence<int, End - Start + 1>{});
 }
 
+// ---------------------------------------------------------------------
+// Old working design
+// ---------------------------------------------------------------------
+
+// template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
+//   requires(start_stage <= end_stage) && (start_stage >= 1) && (end_stage <= 7)
+// void run_stages(tree::AppData* app_data, tree::omp::TmpStorage* omp_tmp_storage) {
+// #pragma omp parallel num_threads(num_threads)
+//   {
+//     // Bind to core if needed:
+//     if constexpr (processor_type == ProcessorType::kLittleCore) {
+//       bind_thread_to_cores(g_little_cores);
+//     } else if constexpr (processor_type == ProcessorType::kMediumCore) {
+//       bind_thread_to_cores(g_medium_cores);
+//     } else if constexpr (processor_type == ProcessorType::kBigCore) {
+//       bind_thread_to_cores(g_big_cores);
+//     }
+
+//     // Generate a compile-time sequence for the range [start_stage, end_stage]
+//     []<std::size_t... I>(
+//         std::index_sequence<I...>, tree::AppData& data, tree::omp::TmpStorage& omp_tmp_storage) {
+//       // Each I is offset by (start_stage - 1)
+//       ((tree::omp::run_stage<start_stage + I>(data, omp_tmp_storage)), ...);
+//     }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data, *omp_tmp_storage);
+//   }
+// }
+
 // /**
 //  * @brief Runs stages of the CIFAR dense network on GPU using Vulkan
 //  *
@@ -116,13 +108,16 @@ void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* tmp_stora
 //  * The stages are run in sequence using compile-time unrolling.
 //  */
 // template <int start_stage, int end_stage>
-//   requires ValidStageRange<start_stage, end_stage>
-// void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* temp_storage) {
+//   requires(start_stage <= end_stage) && (start_stage >= 1) && (end_stage <= 7)
+// void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* vulkan_tmp_storage) {
 //   // Generate a compile-time sequence for the range [start_stage, end_stage]
-//   [&temp_storage]<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
-//     ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data, temp_storage)),
-//     ...);
-//   }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data, *temp_storage);
+//   []<std::size_t... I>(std::index_sequence<I...>,
+//                        tree::AppData& data,
+//                        tree::vulkan::TmpStorage& vulkan_tmp_storage) {
+//     ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data,
+//     vulkan_tmp_storage)),
+//      ...);
+//   }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data, *vulkan_tmp_storage);
 // }
 
 // ---------------------------------------------------------------------
@@ -176,7 +171,7 @@ static std::atomic<bool> done(false);
 void chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   for (auto& task : in_tasks) {
     // ---------------------------------------------------------------------
-    run_cpu_stages<1, 3, ProcessorType::kBigCore, 1>(task.app_data, task.omp_tmp_storage);
+    run_cpu_stages<1, 3, ProcessorType::kBigCore, 2>(task.app_data, task.omp_tmp_storage);
     // ---------------------------------------------------------------------
     tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
     out_q.enqueue(task);
@@ -188,7 +183,7 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
     Task task;
     if (in_q.try_dequeue(task)) {
       // ---------------------------------------------------------------------
-      run_cpu_stages<4, 6, ProcessorType::kLittleCore, 1>(task.app_data, task.omp_tmp_storage);
+      run_cpu_stages<4, 6, ProcessorType::kLittleCore, 4>(task.app_data, task.omp_tmp_storage);
       // ---------------------------------------------------------------------
       out_q.enqueue(task);
     } else {
@@ -199,7 +194,7 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
     Task task;
     if (!in_q.try_dequeue(task)) break;
     // ---------------------------------------------------------------------
-    run_cpu_stages<4, 6, ProcessorType::kLittleCore, 1>(task.app_data, task.omp_tmp_storage);
+    run_cpu_stages<4, 6, ProcessorType::kLittleCore, 4>(task.app_data, task.omp_tmp_storage);
     // ---------------------------------------------------------------------
     out_q.enqueue(task);
   }
