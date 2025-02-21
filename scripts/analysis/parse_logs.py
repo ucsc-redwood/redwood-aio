@@ -18,6 +18,7 @@ COLOR_INFO = Fore.CYAN
 COLOR_HEADER = Fore.BLUE + Style.BRIGHT
 COLOR_RESET = Style.RESET_ALL
 
+
 def format_status(status: str) -> str:
     """Format a status string with appropriate color."""
     if status.lower() == "pass":
@@ -28,25 +29,31 @@ def format_status(status: str) -> str:
         return f"{COLOR_ERROR}{status}{COLOR_RESET}"
     return status
 
+
 def print_header(text: str):
     """Print a section header."""
     print(f"\n{COLOR_HEADER}=== {text} ==={COLOR_RESET}")
+
 
 def print_error(text: str):
     """Print an error message."""
     print(f"{COLOR_ERROR}ERROR: {text}{COLOR_RESET}")
 
+
 def print_warning(text: str):
     """Print a warning message."""
     print(f"{COLOR_WARNING}WARNING: {text}{COLOR_RESET}")
+
 
 def print_pass(text: str):
     """Print a pass message."""
     print(f"{COLOR_PASS}PASS: {text}{COLOR_RESET}")
 
+
 def print_info(text: str):
     """Print an info message."""
     print(f"{COLOR_INFO}{text}{COLOR_RESET}")
+
 
 def parse_log_lines(lines):
     """
@@ -125,11 +132,10 @@ def verify_log(parsed_data):
     all_apps = list(stages_for_app.keys())
     if len(all_apps) != 20:
         print_error(f"Expected 20 distinct app addresses, but found {len(all_apps)}.")
-        print(f"ERROR: Expected 20 distinct app addresses, but found {len(all_apps)}.")
-        print("Apps found:", all_apps)
+        print_error(f"Apps found: {all_apps}")
         errors_found += 1
     else:
-        print("PASS: Exactly 20 distinct app addresses found.")
+        print_pass("Exactly 20 distinct app addresses found.")
 
     # Check #2: Each app must get from 1..9
     for app, stage_tuples in stages_for_app.items():
@@ -412,7 +418,7 @@ def get_verification_result(log_path: str, verbose: bool = False) -> Dict:
 
 def print_summary(results: List[Dict], verbose: bool = False):
     """Print a summary of all verification results."""
-    print("\n=== FINAL VERIFICATION SUMMARY ===")
+    print_header("FINAL VERIFICATION SUMMARY")
 
     # Group results by device and application
     by_device: Dict[str, Dict[str, List[Dict]]] = {}
@@ -431,7 +437,7 @@ def print_summary(results: List[Dict], verbose: bool = False):
     total_error = 0
 
     for device in sorted(by_device.keys()):
-        print(f"\nDevice: {device}")
+        print(f"\n{COLOR_HEADER}Device: {device}{COLOR_RESET}")
         for app in sorted(by_device[device].keys()):
             results = by_device[device][app]
             passed = sum(1 for r in results if r["status"] == "pass")
@@ -442,31 +448,55 @@ def print_summary(results: List[Dict], verbose: bool = False):
             total_failed += failed
             total_error += error
 
-            print(f"  {app}:")
-            print(f"    Passed: {passed}, Failed: {failed}, Errors: {error}")
+            print(f"\n  {COLOR_INFO}{app}:{COLOR_RESET}")
+            print(
+                f"    Passed: {COLOR_PASS}{passed}{COLOR_RESET}, "
+                f"Failed: {COLOR_ERROR}{failed}{COLOR_RESET}, "
+                f"Errors: {COLOR_ERROR}{error}{COLOR_RESET}"
+            )
 
             # List failed/error schedules
             if failed > 0 or error > 0:
-                print("    Failed/Error schedules:")
+                print(f"\n    {COLOR_ERROR}Failed/Error schedules:{COLOR_RESET}")
                 for r in results:
                     if r["status"] != "pass":
-                        print(
-                            f"      Schedule {r['schedule_id']}: {r['status'].upper()}"
+                        status_color = (
+                            COLOR_ERROR if r["status"] == "error" else COLOR_WARNING
                         )
-                        print(f"        {r['errors']} errors, {r['warnings']} warnings")
+                        print(
+                            f"      Schedule {r['schedule_id']}: "
+                            f"{status_color}{r['status'].upper()}{COLOR_RESET}"
+                        )
+                        print(
+                            f"        {r['errors']} errors, "
+                            f"{COLOR_WARNING}{r['warnings']} warnings{COLOR_RESET}"
+                        )
 
                         # In verbose mode, show details for failed verifications
                         if verbose:
-                            print("\n      Detailed verification output:")
-                            # Indent the details for better readability
+                            print(
+                                f"\n      {COLOR_INFO}Detailed verification output:{COLOR_RESET}"
+                            )
                             details = r["details"].replace("\n", "\n        ")
+                            # Color the details output
+                            details = (
+                                details.replace(
+                                    "ERROR:", f"{COLOR_ERROR}ERROR:{COLOR_RESET}"
+                                )
+                                .replace(
+                                    "WARNING:", f"{COLOR_WARNING}WARNING:{COLOR_RESET}"
+                                )
+                                .replace("PASS:", f"{COLOR_PASS}PASS:{COLOR_RESET}")
+                            )
                             print(f"        {details}")
-                            print()  # Extra line for separation
+                            print()
 
-    print("\n=== OVERALL RESULTS ===")
-    print(f"Total Passed: {total_passed}")
-    print(f"Total Failed: {total_failed}")
-    print(f"Total Errors: {total_error}")
+    print_header("OVERALL RESULTS")
+    print(
+        f"Total Passed: {COLOR_PASS}{total_passed}{COLOR_RESET}\n"
+        f"Total Failed: {COLOR_ERROR}{total_failed}{COLOR_RESET}\n"
+        f"Total Errors: {COLOR_ERROR}{total_error}{COLOR_RESET}"
+    )
 
 
 def main():
@@ -492,7 +522,7 @@ def main():
     log_files = glob.glob(log_pattern)
 
     if not log_files:
-        print("No log files found matching criteria")
+        print_error("No log files found matching criteria")
         return
 
     # Filter by application if specified
@@ -500,15 +530,15 @@ def main():
         log_files = [f for f in log_files if f"-{args.app}-schedule-" in f]
 
     if not log_files:
-        print("No log files found matching criteria after filtering")
+        print_error("No log files found matching criteria after filtering")
         return
 
-    print(f"Found {len(log_files)} log files to process")
+    print_info(f"Found {len(log_files)} log files to process")
 
     # Process all matching files
     results = []
     for log_path in sorted(log_files):
-        print(f"\nProcessing: {log_path}")
+        print_info(f"\nProcessing: {log_path}")
         result = get_verification_result(log_path, verbose=args.verbose)
         results.append(result)
 

@@ -27,14 +27,16 @@ def parse_log_lines(lines):
     for line in lines:
         match = pattern.search(line)
         if match:
-            results.append({
-                "backend": match.group("backend"),
-                "core_id": match.group("core_id"),
-                "thread_idx": match.group("thread_idx"),
-                "num_threads": match.group("num_threads"),
-                "stage": match.group("stage"),
-                "app_address": match.group("app_address"),
-            })
+            results.append(
+                {
+                    "backend": match.group("backend"),
+                    "core_id": match.group("core_id"),
+                    "thread_idx": match.group("thread_idx"),
+                    "num_threads": match.group("num_threads"),
+                    "stage": match.group("stage"),
+                    "app_address": match.group("app_address"),
+                }
+            )
 
     return results
 
@@ -48,6 +50,7 @@ def verify_log(parsed_data):
     errors_found = 0
 
     from collections import defaultdict
+
     last_stage_for_app = defaultdict(lambda: 0)
     stages_for_app = defaultdict(list)
 
@@ -98,7 +101,10 @@ def verify_log(parsed_data):
                 errors_found += 1
             else:
                 # Double-check ascending
-                if any(stage_numbers[i] > stage_numbers[i + 1] for i in range(len(stage_numbers) - 1)):
+                if any(
+                    stage_numbers[i] > stage_numbers[i + 1]
+                    for i in range(len(stage_numbers) - 1)
+                ):
                     print(f"ERROR: App {app} has out-of-order stages: {stage_numbers}")
                     errors_found += 1
                 else:
@@ -106,7 +112,7 @@ def verify_log(parsed_data):
 
     print("\n--- FINAL REPORT ---")
     for app in sorted(stages_for_app.keys()):
-        desc = ", ".join(f"{s}({b})" for (s,b) in stages_for_app[app])
+        desc = ", ".join(f"{s}({b})" for (s, b) in stages_for_app[app])
         print(f"App: {app} => {desc}")
 
     if errors_found == 0:
@@ -141,9 +147,9 @@ def verify_log_against_schedule(parsed_logs, schedule):
     warnings_found = 0
 
     # Gather usage by core
-    stages_used_by_core = defaultdict(set)   # core_id -> set of stages
-    backends_used_by_core = defaultdict(set) # core_id -> set of backends
-    gpu_stages_encountered = set()           # For lines with vk/cuda & no core
+    stages_used_by_core = defaultdict(set)  # core_id -> set of stages
+    backends_used_by_core = defaultdict(set)  # core_id -> set of backends
+    gpu_stages_encountered = set()  # For lines with vk/cuda & no core
 
     for row in parsed_logs:
         stage = int(row["stage"])
@@ -222,7 +228,7 @@ def verify_log_against_schedule(parsed_logs, schedule):
             # Combine them if needed:
             all_gpu_stages = set(gpu_stages_encountered)
             for cid in stages_used_by_core:
-                if any(b in ("vk","cuda") for b in backends_used_by_core[cid]):
+                if any(b in ("vk", "cuda") for b in backends_used_by_core[cid]):
                     all_gpu_stages |= stages_used_by_core[cid]
 
             # Now see if chunk_stages is fully in all_gpu_stages
@@ -270,7 +276,9 @@ def verify_log_against_schedule(parsed_logs, schedule):
 
 if __name__ == "__main__":
     log_filename = "data/logs/logs-3A021JEHN02756-cifar-dense-schedule-1.txt"
-    schedule_filename = "data/generated-schedules/3A021JEHN02756_CifarDense_schedule_001.json"
+    schedule_filename = (
+        "data/generated-schedules/3A021JEHN02756_CifarDense_schedule_001.json"
+    )
 
     # Read log lines
     with open(log_filename, "r") as f:
