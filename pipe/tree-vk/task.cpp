@@ -1,6 +1,6 @@
 #include "task.hpp"
 
-#include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/tree/vulkan/dispatchers.hpp"
 
 // ---------------------------------------------------------------------
 // Task structure
