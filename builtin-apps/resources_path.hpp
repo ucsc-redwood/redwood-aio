@@ -5,6 +5,7 @@
 namespace helpers {
 
 constexpr const char* kBenchmarkResultsPath = "data/raw_bm_results";
+constexpr const char* kLogsPath = "data/logs";
 
 // ----------------------------------------------------------------------------
 // Helper function to get the path to the resources directory
@@ -47,6 +48,14 @@ constexpr const char* kBenchmarkResultsPath = "data/raw_bm_results";
   return "/data/local/tmp/";
 #else
   return get_project_root_path() / kBenchmarkResultsPath;
+#endif
+}
+
+[[nodiscard]] inline std::filesystem::path get_log_storage_location() {
+#if defined(__ANDROID__)
+  return "/data/local/tmp/";
+#else
+  return get_project_root_path() / kLogsPath;
 #endif
 }
 
