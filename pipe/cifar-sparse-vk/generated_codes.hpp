@@ -15,9 +15,21 @@ namespace device_3A021JEHN02756 {
 // Index 0 corresponds to schedule_001, etc.
 static const RunPipelineFunc run_pipeline_table[] = {CifarSparse_schedule_001::run_pipeline,
                                                      CifarSparse_schedule_002::run_pipeline,
-                                                     CifarSparse_schedule_003::run_pipeline};
+                                                     CifarSparse_schedule_003::run_pipeline,
+                                                     CifarSparse_schedule_004::run_pipeline,
+                                                     CifarSparse_schedule_005::run_pipeline,
+                                                     CifarSparse_schedule_006::run_pipeline,
+                                                     CifarSparse_schedule_007::run_pipeline,
+                                                     CifarSparse_schedule_008::run_pipeline,
+                                                     CifarSparse_schedule_009::run_pipeline,
+                                                     CifarSparse_schedule_010::run_pipeline,
+                                                     CifarSparse_schedule_011::run_pipeline,
+                                                     CifarSparse_schedule_012::run_pipeline,
+                                                     CifarSparse_schedule_013::run_pipeline,
+                                                     CifarSparse_schedule_014::run_pipeline,
+                                                     CifarSparse_schedule_015::run_pipeline};
 
-[[nodiscard]] constexpr int get_num_schedules() { return 3; }
+[[nodiscard]] constexpr int get_num_schedules() { return 15; }
 
 }  // namespace device_3A021JEHN02756
 

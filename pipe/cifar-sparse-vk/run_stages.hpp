@@ -4,7 +4,7 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-sparse/omp/dispatchers.hpp"
 #include "builtin-apps/cifar-sparse/vulkan/dispatchers.hpp"
-
+#include "task.hpp"
 /**
  * @brief Runs stages of the CIFAR dense network on specified processor cores with OpenMP
  * parallelization
@@ -20,7 +20,7 @@
  * runs the stages in sequence using compile-time unrolling.
  */
 template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
-void run_stages(cifar_sparse::AppData* app_data) {
+void run_cpu_stages(Task& task) {
   static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
   static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
 
@@ -41,7 +41,7 @@ void run_stages(cifar_sparse::AppData* app_data) {
     []<std::size_t... I>(std::index_sequence<I...>, cifar_sparse::AppData& data) {
       // Each I is offset by (start_stage - 1)
       ((cifar_sparse::omp::run_stage<start_stage + I>(data)), ...);
-    }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
+    }(std::make_index_sequence<end_stage - start_stage + 1>{}, *task.app_data);
   }
 }
 
@@ -56,12 +56,12 @@ void run_stages(cifar_sparse::AppData* app_data) {
  * The stages are run in sequence using compile-time unrolling.
  */
 template <int start_stage, int end_stage>
-void run_gpu_stages(cifar_sparse::AppData* app_data) {
+void run_gpu_stages(Task& task) {
   static_assert(start_stage >= 1 && end_stage <= 9, "Stage range out of bounds");
   static_assert(start_stage <= end_stage, "start_stage must be <= end_stage");
 
   // Generate a compile-time sequence for the range [start_stage, end_stage]
   []<std::size_t... I>(std::index_sequence<I...>, cifar_sparse::AppData& data) {
     ((cifar_sparse::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data)), ...);
-  }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
+  }(std::make_index_sequence<end_stage - start_stage + 1>{}, *task.app_data);
 }
