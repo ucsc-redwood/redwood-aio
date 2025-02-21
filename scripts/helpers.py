@@ -11,9 +11,18 @@ GENERATED_SCHEDULES_PATH = "data/generated-schedules"
 
 DB_PATH = "data/benchmark_results.json"
 
+# Constants moved to top level
+ALL_BENCHMARKS = [
+    "bm-cifar-dense-omp",
+    "bm-cifar-dense-vk", 
+    "bm-cifar-sparse-omp",
+    "bm-cifar-sparse-vk",
+    "bm-tree-omp",
+    "bm-tree-vk",
+]
 
-ALL_DEVICES: List[str] = ["3A021JEHN02756", "9b034f1b", "ce0717178d7758b00b7e"]
-ALL_APPLICATIONS: List[str] = ["tree", "cifar-dense", "cifar-sparse"]
+ALL_DEVICES = ["3A021JEHN02756", "9b034f1b", "ce0717178d7758b00b7e"]
+ALL_APPLICATIONS = ["tree", "cifar-dense", "cifar-sparse"]
 
 # Map application names to their canonical form
 APPLICATION_NAME_MAP: Dict[str, str] = {

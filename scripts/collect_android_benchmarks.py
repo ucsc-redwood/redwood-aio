@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+from pathlib import Path
 import argparse
 
 from helpers import (
@@ -10,107 +11,62 @@ from helpers import (
     run_command,
 )
 
-# Full list of benchmarks and devices
-ALL_BENCHMARKS = [
-    "bm-cifar-dense-omp",
-    "bm-cifar-dense-vk",
-    "bm-cifar-sparse-omp",
-    "bm-cifar-sparse-vk",
-    "bm-tree-omp",
-    "bm-tree-vk",
-]
 
-
-# Directory to save pulled results
-OUTPUT_DIR = RAW_BENCHMARK_PATH
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-
-def get_json_filename(benchmark, device):
-    """
-    Compute the expected JSON file name.
-
-    For benchmarks with four parts (e.g. bm-cifar-dense-omp), the file name is:
-      BM_<Part2><Part3>_<Part4>_<device>.json
-    For benchmarks with three parts (e.g. bm-tree-omp), the file name is:
-      BM_<Part2>_<Part3>_<device>.json
-    """
+def get_json_filename(benchmark: str, device: str) -> str:
+    """Generate benchmark JSON filename based on benchmark name and device."""
     parts = benchmark.split("-")
     if len(parts) == 4:
         return f"BM_{parts[1].capitalize()}{parts[2].capitalize()}_{parts[3].upper()}_{device}.json"
-    elif len(parts) == 3:
-        return f"BM_{parts[1].capitalize()}_{parts[2].upper()}_{device}.json"
-    else:
-        return f"{benchmark}_{device}.json"
+    return f"BM_{parts[1].capitalize()}_{parts[2].upper()}_{device}.json"
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Run benchmarks on specified devices. Use interactive selection if not provided."
-    )
-    parser.add_argument(
-        "--benchmarks",
-        "-b",
-        type=str,
-        help="Comma-separated list of benchmarks to run (if not provided, interactive selection will be used).",
-    )
-    parser.add_argument(
-        "--devices",
-        "-d",
-        type=str,
-        help="Comma-separated list of device IDs to run (if not provided, interactive selection will be used).",
-    )
-    return parser.parse_args()
+def run_benchmark(benchmark: str, device: str, output_dir: Path) -> None:
+    """Run a single benchmark on a device and collect results."""
+    print(f"\n--- Running {benchmark} on device: {device} ---")
+
+    # Push executable to device
+    exe_path = f"./build/android/arm64-v8a/release/{benchmark}"
+    device_path = f"/data/local/tmp/{benchmark}"
+    run_command(f"adb -s {device} push {exe_path} {device_path}")
+
+    # Run benchmark
+    run_command(f"adb -s {device} shell {device_path} --device {device}")
+
+    # Pull results
+    json_file = get_json_filename(benchmark, device)
+    run_command(f"adb -s {device} pull /data/local/tmp/{json_file} {output_dir}/")
 
 
 def main():
-    args = parse_args()
+    parser = argparse.ArgumentParser(description="Run Android benchmarks")
+    parser.add_argument("--benchmarks", "-b", help="Comma-separated benchmarks")
+    parser.add_argument("--devices", "-d", help="Comma-separated device IDs")
+    args = parser.parse_args()
 
-    # Use command-line arguments if provided; otherwise prompt interactively.
-    if args.benchmarks:
-        benchmarks = [b.strip() for b in args.benchmarks.split(",")]
-    else:
-        benchmarks = interactive_select(ALL_BENCHMARKS, "benchmarks")
+    # Select benchmarks and devices
+    benchmarks = (
+        args.benchmarks.split(",")
+        if args.benchmarks
+        else interactive_select(ALL_BENCHMARKS, "benchmarks")
+    )
+    devices = (
+        args.devices.split(",")
+        if args.devices
+        else interactive_select(ALL_DEVICES, "devices")
+    )
 
-    if args.devices:
-        devices = [d.strip() for d in args.devices.split(",")]
-    else:
-        devices = interactive_select(ALL_DEVICES, "devices")
+    print(f"\nRunning benchmarks: {benchmarks}")
+    print(f"On devices: {devices}\n")
 
-    print(f"\nBenchmarks to run: {benchmarks}")
-    print(f"Devices to run on: {devices}\n")
+    output_dir = Path(RAW_BENCHMARK_PATH)
+    output_dir.mkdir(exist_ok=True)
 
     for benchmark in benchmarks:
         print(f"\n=== Processing benchmark: {benchmark} ===")
-        # Step 1: Build the executable.
-        build_cmd = f"xmake b {benchmark}"
-        run_command(build_cmd)
+        run_command(f"xmake b {benchmark}")
 
         for device in devices:
-            print(f"\n--- Running on device: {device} ---")
-            # Step 2: Push the executable to the device.
-            push_cmd = (
-                f"adb -s {device} push "
-                f"./build/android/arm64-v8a/release/{benchmark} "
-                f"/data/local/tmp/{benchmark}"
-            )
-            run_command(push_cmd)
-
-            # Step 3: Run the executable on the device.
-            run_exe_cmd = (
-                f"adb -s {device} shell /data/local/tmp/{benchmark} "
-                f"--device {device}"
-            )
-            run_command(run_exe_cmd)
-
-            # Step 4: Pull the output JSON file.
-            json_filename = get_json_filename(benchmark, device)
-            pull_cmd = (
-                f"adb -s {device} pull "
-                f"/data/local/tmp/{json_filename} "
-                f"{OUTPUT_DIR}/"
-            )
-            run_command(pull_cmd)
+            run_benchmark(benchmark, device, output_dir)
 
 
 if __name__ == "__main__":
