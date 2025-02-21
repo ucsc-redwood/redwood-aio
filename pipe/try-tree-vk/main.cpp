@@ -1,7 +1,8 @@
 #include <concurrentqueue.h>
 #include <omp.h>
 
-#include <queue>
+// #include <queue>
+#include <vector>
 #include <thread>
 
 #include "run_stages.hpp"
@@ -12,12 +13,10 @@
 
 namespace TestSchedule {
 
-void chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
-  while (!in_tasks.empty()) {
-    auto& task = in_tasks.front();
+void chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
+  for (auto& task : in_tasks) {
     if (task.is_sentinel()) {
       out_q.enqueue(task);
-      in_tasks.pop();
       continue;
     }
 
@@ -26,7 +25,6 @@ void chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
-    in_tasks.pop();
   }
 }
 
@@ -49,11 +47,11 @@ void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue
   }
 }
 
-void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks) {
+void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {
   while (true) {
     if (Task task; in_q.try_dequeue(task)) {
       if (task.is_sentinel()) {
-        out_tasks.push(task);
+        out_tasks.push_back(task);
         break;
       }
 
@@ -61,14 +59,14 @@ void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks
       run_gpu_stages<7, 7>(task);
       // ---------------------------------------------------------------------
 
-      out_tasks.push(task);
+      out_tasks.push_back(task);
     } else {
       std::this_thread::yield();
     }
   }
 }
 
-void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
+void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
   moodycamel::ConcurrentQueue<Task> q_01;
   moodycamel::ConcurrentQueue<Task> q_12;
 
@@ -90,7 +88,8 @@ void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
 void run_test_schedule() {
   constexpr auto num_tasks = 20;
   auto tasks = init_tasks(num_tasks);
-  std::queue<Task> out_tasks;
+  std::vector<Task> out_tasks;
+  out_tasks.reserve(num_tasks + 1); // +1 for sentinel
 
   auto start = std::chrono::high_resolution_clock::now();
 
