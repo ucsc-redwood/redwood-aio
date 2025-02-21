@@ -2,7 +2,7 @@ import argparse
 import subprocess
 import sys
 import os
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 # hardcoded paths
 RAW_BENCHMARK_PATH = "data/raw-benchmarks"
@@ -56,29 +56,35 @@ def run_command(cmd: str, hide_output: bool = False) -> None:
         sys.exit(1)
 
 
-def interactive_select(options: List[str], option_type: str) -> List[str]:
+def interactive_select(options: List[str], option_type: str) -> str:
     """
-    Prompt the user to select options by number.
+    Prompt the user to select a single option by number.
 
-    options: list of strings (benchmarks or devices)
-    option_type: string to display (e.g. "benchmarks" or "devices")
-    Returns the list of selected options.
+    Args:
+        options: List of options to choose from
+        option_type: Type of option (e.g. "device" or "application")
+
+    Returns:
+        Selected option
     """
-    print(
-        f"Select {option_type} to run (enter numbers separated by commas, or press Enter for all):"
-    )
+    print(f"\nSelect {option_type} to use:")
     for i, option in enumerate(options):
         print(f"{i+1}: {option}")
-    selection = input("Enter your choices: ").strip()
-    if not selection:
-        return options
-    try:
-        indices = [int(x) - 1 for x in selection.split(",") if x.strip().isdigit()]
-        selected = [options[i] for i in indices if 0 <= i < len(options)]
-        return selected
-    except Exception:
-        print("Invalid selection, using all options.")
-        return options
+
+    while True:
+        selection = input("Enter your choice (1-{}): ".format(len(options))).strip()
+        if not selection:
+            print(f"Using first {option_type}: {options[0]}")
+            return options[0]
+
+        try:
+            index = int(selection) - 1
+            if 0 <= index < len(options):
+                return options[index]
+            else:
+                print(f"Please enter a number between 1 and {len(options)}")
+        except ValueError:
+            print("Please enter a valid number")
 
 
 def parse_schedule_range(range_str: str) -> set:
@@ -145,16 +151,23 @@ def get_num_schedules(device: str, application_name: str) -> int:
     return num_schedules
 
 
-def select_schedules(max_schedule: int, args_schedules: str | None) -> set[int]:
+def select_schedules(device: str, app: str, args_schedules: str | None) -> set[int]:
     """Interactively select schedules or parse from command line args.
 
     Args:
-        max_schedule: Maximum available schedule number
+        device: Device ID
+        app: Application name
         args_schedules: Schedule range string from command line args
 
     Returns:
         Set of selected schedule IDs
     """
+    # Get the actual number of schedules for this device-app pair
+    max_schedule = get_num_schedules(device, app)
+    if max_schedule == 0:
+        print(f"Error: No schedules found for {app} on device {device}")
+        sys.exit(1)
+
     if args_schedules:
         schedule_ids = parse_schedule_range(args_schedules)
     else:

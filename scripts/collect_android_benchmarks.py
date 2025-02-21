@@ -57,31 +57,24 @@ def main():
     args = parser.parse_args()
 
     # Select benchmarks and devices
-    benchmarks = (
-        args.benchmarks.split(",")
+    benchmark = (
+        args.benchmarks.split(",")[0]  # Take first if multiple provided
         if args.benchmarks
-        else interactive_select(ALL_BENCHMARKS, "benchmarks")
+        else interactive_select(ALL_BENCHMARKS, "benchmark")
     )
-    devices = (
-        args.devices.split(",")
-        if args.devices
-        else interactive_select(ALL_DEVICES, "devices")
-    )
+    device = args.device if args.device else interactive_select(ALL_DEVICES, "device")
 
-    print(f"\nRunning benchmarks: {benchmarks}")
-    print(f"On devices: {devices}\n")
+    print(f"\nRunning benchmark: {benchmark}")
+    print(f"On device: {device}\n")
 
     # Setup output directory
     output_dir = Path(RAW_BENCHMARK_PATH)
     output_dir.mkdir(exist_ok=True)
 
-    # Run benchmarks
-    for benchmark in benchmarks:
-        print(f"\n=== Processing benchmark: {benchmark} ===")
-        run_command(f"xmake b {benchmark}")
-
-        for device in devices:
-            run_benchmark(benchmark, device, output_dir)
+    # Run benchmark
+    print(f"\n=== Processing benchmark: {benchmark} ===")
+    run_command(f"xmake b {benchmark}")
+    run_benchmark(benchmark, device, output_dir)
 
 
 if __name__ == "__main__":

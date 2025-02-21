@@ -180,9 +180,9 @@ def main():
         description="Run performance tests on Android devices"
     )
     parser.add_argument(
-        "--devices",
+        "--device",
         "-d",
-        help="Comma-separated list of device IDs (if not provided, interactive selection will be used)",
+        help="Device ID (if not provided, interactive selection will be used)",
     )
     parser.add_argument(
         "--application",
@@ -197,72 +197,58 @@ def main():
     )
     args = parser.parse_args()
 
-    # Select devices
-    devices = (
-        args.devices.split(",")
-        if args.devices
-        else interactive_select(ALL_DEVICES, "devices")
-    )
-
-    # Select application (using original names from ALL_APPLICATIONS)
+    # Select single device and application
+    device = args.device if args.device else interactive_select(ALL_DEVICES, "device")
     app = (
         args.application
         if args.application
-        else interactive_select(ALL_APPLICATIONS, "applications")[0]
+        else interactive_select(ALL_APPLICATIONS, "application")
     )
 
-    # Get canonical name for loading predictions
-    app_canonical = APPLICATION_NAME_MAP[app]
+    print(f"\nRunning tests for {app} on device {device}")
 
-    # Build binary using original name
+    # Build executable if needed
     binary_name = f"pipe-{app.lower()}-vk"
-    print(f"\nBuilding {binary_name}...")
-    run_command(f"xmake b {binary_name}")
+    binary_path = Path(f"./build/android/arm64-v8a/release/{binary_name}")
+    if not binary_path.exists():
+        print(f"Building {binary_name}...")
+        run_command(f"xmake b {binary_name}")
 
-    for device_id in devices:
-        print(f"\nProcessing device: {device_id}")
+    # Load predictions using canonical name
+    print("Loading predictions...")
+    app_canonical = APPLICATION_NAME_MAP[app]
+    predictions = load_predictions(device, app_canonical)
+    if not predictions:
+        print(f"{Fore.YELLOW}Warning: No predictions found{Style.RESET_ALL}")
+        return
 
-        # Load predictions using canonical name
-        print("Loading predictions...")
-        predictions = load_predictions(device_id, app_canonical)
-        if not predictions:
-            print(f"{Fore.YELLOW}Warning: No predictions found{Style.RESET_ALL}")
-            continue
+    # Get schedules for this device-app pair
+    schedule_ids = select_schedules(device, app, args.schedules)
+    available_schedules = sorted(predictions.keys())
 
-        # Determine schedules to run
-        available_schedules = sorted(predictions.keys())
-        if not available_schedules:
-            print(f"{Fore.RED}No schedule files found{Style.RESET_ALL}")
-            continue
+    # Validate that selected schedules have predictions
+    invalid_ids = [sid for sid in schedule_ids if sid not in available_schedules]
+    if invalid_ids:
+        print(
+            f"{Fore.RED}No predictions available for schedules {invalid_ids}{Style.RESET_ALL}"
+        )
+        return
 
-        max_schedule = max(available_schedules)
-        schedule_ids = select_schedules(max_schedule, args.schedules)
+    print(f"Found {len(available_schedules)} schedule files")
+    print(f"Will test {len(schedule_ids)} schedules")
 
-        # Validate that selected schedules exist
-        invalid_ids = [sid for sid in schedule_ids if sid not in available_schedules]
-        if invalid_ids:
-            print(
-                f"{Fore.RED}Schedules {invalid_ids} not available for this device/app{Style.RESET_ALL}"
-            )
-            continue
+    # Run schedules
+    results: Dict[int, RunResult] = {}
+    for schedule_num in sorted(schedule_ids):
+        print(f"\nRunning schedule {schedule_num}...")
+        result = run_schedule(device, app, schedule_num)
+        results[schedule_num] = result
+        print_schedule_result(schedule_num, result, predictions.get(schedule_num))
+        time.sleep(1)
 
-        print(f"Found {len(available_schedules)} schedule files")
-        print(f"Will test {len(schedule_ids)} schedules")
-
-        # Run schedules
-        results: Dict[int, RunResult] = {}
-        print(f"\nRunning tests for {app} on device {device_id}...")
-
-        for schedule_num in sorted(schedule_ids):
-            print(f"\nRunning schedule {schedule_num}...")
-            result = run_schedule(device_id, app, schedule_num)
-            results[schedule_num] = result
-            print_schedule_result(schedule_num, result, predictions.get(schedule_num))
-            time.sleep(1)  # Brief pause between runs
-
-        # Generate final report
-        print(f"\n{Style.BRIGHT}Results for device {device_id}:{Style.RESET_ALL}")
-        generate_performance_report(results, predictions)
+    # Generate final report
+    print(f"\n{Style.BRIGHT}Results for {app} on device {device}:{Style.RESET_ALL}")
+    generate_performance_report(results, predictions)
 
 
 if __name__ == "__main__":

@@ -43,9 +43,9 @@ def collect_log(device: str, app: str, schedule_id: int, output_dir: Path) -> No
 def main():
     parser = argparse.ArgumentParser(description="Collect logs from Android devices")
     parser.add_argument(
-        "--devices",
+        "--device",
         "-d",
-        help="Comma-separated list of device IDs (if not provided, interactive selection will be used)",
+        help="Device ID (if not provided, interactive selection will be used)",
     )
     parser.add_argument(
         "--application",
@@ -60,43 +60,40 @@ def main():
     )
     args = parser.parse_args()
 
-    # Select devices and application
-    devices = (
-        args.devices.split(",")
-        if args.devices
-        else interactive_select(ALL_DEVICES, "devices")
-    )
+    # Select single device and application
+    device = args.device if args.device else interactive_select(ALL_DEVICES, "device")
     app = (
         args.application
         if args.application
-        else interactive_select(ALL_APPLICATIONS, "applications")[0]
+        else interactive_select(ALL_APPLICATIONS, "application")
     )
 
-    print(f"Collecting logs for {app} from devices: {devices}")
+    print(f"\nCollecting logs for {app} on device {device}")
 
-    # Determine schedules to collect
-    num_schedules = get_num_schedules(devices[0], app)
-    schedule_ids = select_schedules(num_schedules, args.schedules)
-
-    print(f"\nWill collect {len(schedule_ids)} schedules")
-
-    # Setup output directory and build executable
+    # Setup output directory
     output_dir = Path(RAW_LOGS_PATH)
     output_dir.mkdir(exist_ok=True)
 
+    # Build executable if needed
     exe_name = f"pipe-{app.lower()}-vk"
-    run_command(f"xmake b {exe_name}")
+    exe_path = Path(f"./build/android/arm64-v8a/release/{exe_name}")
+    if not exe_path.exists():
+        print(f"Building {exe_name}...")
+        run_command(f"xmake b {exe_name}")
 
-    # Collect logs for each device and schedule
-    for device in devices:
-        exe_path = f"./build/android/arm64-v8a/release/{exe_name}"
-        run_command(
-            f"adb -s {device} push {exe_path} /data/local/tmp/{exe_name}",
-            hide_output=True,
-        )
+    # Get schedules for this device-app pair
+    schedule_ids = select_schedules(device, app, args.schedules)
+    print(f"Will collect {len(schedule_ids)} schedules")
 
-        for schedule_id in sorted(schedule_ids):
-            collect_log(device, app, schedule_id, output_dir)
+    # Push executable
+    run_command(
+        f"adb -s {device} push {exe_path} /data/local/tmp/{exe_name}",
+        hide_output=True,
+    )
+
+    # Collect logs
+    for schedule_id in sorted(schedule_ids):
+        collect_log(device, app, schedule_id, output_dir)
 
 
 if __name__ == "__main__":
