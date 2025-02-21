@@ -20,7 +20,6 @@ do
 
 		-- cifar-sparse headers
 		"cifar-sparse/arg_max.hpp",
-		"cifar-sparse/csr.hpp",
 		"cifar-sparse/sparse_appdata.hpp",
 		"cifar-sparse/omp/dispatchers.hpp",
 		"cifar-sparse/omp/all_kernels.hpp",
@@ -39,6 +38,9 @@ do
 		"tree/omp/func_morton.hpp",
 		"tree/omp/func_octree.hpp",
 		"tree/omp/func_sort.hpp",
+
+		-- Add missing common header
+		"debug_logger.hpp",
 	})
 
 	add_files({
@@ -58,7 +60,6 @@ do
 		-- tree implementations
 		"tree/tree_appdata.cpp",
 		"tree/omp/dispatchers.cpp",
-		"tree/omp/all_kernels.cpp",
 	})
 end
 
@@ -75,13 +76,11 @@ if has_config("use_vulkan") then
 
 		add_deps("kiss-vk")
 
-		-- add_includedirs("$(projectdir)")
-
 		add_headerfiles({
 			-- App specific headers
 			"cifar-sparse/vulkan/vk_dispatcher.hpp",
 			"cifar-dense/vulkan/dispatcher.hpp",
-			"tree/vulkan/vk_dispatcher.hpp",
+			"tree/vulkan/dispatchers.hpp",
 			"tree/vulkan/tmp_storage.hpp",
 		})
 
@@ -89,7 +88,7 @@ if has_config("use_vulkan") then
 			-- App specific implementations
 			"cifar-sparse/vulkan/vk_dispatcher.cpp",
 			"cifar-dense/vulkan/dispatcher.cpp",
-			"tree/vulkan/vk_dispatcher.cpp",
+			"tree/vulkan/dispatchers.cpp",
 		})
 	end
 end
@@ -115,6 +114,8 @@ if has_config("use_cuda") then
 			"cifar-sparse/cuda/cu_dispatcher.cuh",
 
 			-- CIFAR dense CUDA headers
+			"cifar-dense/cuda/all_kernels.cuh",
+			"cifar-dense/cuda/dispatchers.cuh",
 			"cifar-dense/cuda/cu_dense_kernel.cuh",
 			"cifar-dense/cuda/cu_kernels.cuh",
 
@@ -136,6 +137,8 @@ if has_config("use_cuda") then
 			"tree/cuda/common.cuh",
 			"tree/cuda/func_morton.cuh",
 			"tree/cuda/kernel.cuh",
+			"tree/cuda/dispatchers.cuh",
+			"tree/cuda/temp_storage.cuh",
 		})
 
 		add_files({
@@ -143,6 +146,8 @@ if has_config("use_cuda") then
 			"common/cuda/cu_mem_resource.cu",
 
 			-- CIFAR dense CUDA implementations
+			"cifar-dense/cuda/all_kernels.cu",
+			"cifar-dense/cuda/dispatchers.cu",
 			"cifar-dense/cuda/cu_dense_kernel.cu",
 			"cifar-dense/cuda/cu_kernels.cu",
 
@@ -159,6 +164,7 @@ if has_config("use_cuda") then
 			"tree/cuda/06_prefix_sum.cu",
 			"tree/cuda/07_octree.cu",
 			"tree/cuda/kernel.cu",
+			"tree/cuda/dispatchers.cu",
 		})
 
 		-- Best CUDA library
