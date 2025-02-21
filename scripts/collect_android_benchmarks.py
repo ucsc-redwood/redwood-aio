@@ -15,7 +15,10 @@ def get_json_filename(benchmark: str, device: str) -> str:
     """Generate benchmark JSON filename based on benchmark name and device."""
     parts = benchmark.split("-")
     if len(parts) == 4:
-        return f"BM_{parts[1].capitalize()}{parts[2].capitalize()}_{parts[3].upper()}_{device}.json"
+        return (
+            f"BM_{parts[1].capitalize()}{parts[2].capitalize()}_"
+            f"{parts[3].upper()}_{device}.json"
+        )
     return f"BM_{parts[1].capitalize()}_{parts[2].upper()}_{device}.json"
 
 
@@ -29,7 +32,7 @@ def run_benchmark(benchmark: str, device: str, output_dir: Path) -> None:
     run_command(f"adb -s {device} push {exe_path} {device_path}", hide_output=True)
 
     # Run benchmark
-    run_command(f"adb -s {device} shell {device_path} --device {device}")
+    run_command(f"adb -s {device} shell {device_path} " f"--device {device}")
 
     # Pull results
     json_file = get_json_filename(benchmark, device)
@@ -40,9 +43,17 @@ def run_benchmark(benchmark: str, device: str, output_dir: Path) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run Android benchmarks")
-    parser.add_argument("--benchmarks", "-b", help="Comma-separated benchmarks")
-    parser.add_argument("--devices", "-d", help="Comma-separated device IDs")
+    parser = argparse.ArgumentParser(description="Run benchmarks on Android devices")
+    parser.add_argument(
+        "--benchmarks",
+        "-b",
+        help="Comma-separated list of benchmarks (if not provided, interactive selection will be used)",
+    )
+    parser.add_argument(
+        "--devices",
+        "-d",
+        help="Comma-separated list of device IDs (if not provided, interactive selection will be used)",
+    )
     args = parser.parse_args()
 
     # Select benchmarks and devices
@@ -60,9 +71,11 @@ def main():
     print(f"\nRunning benchmarks: {benchmarks}")
     print(f"On devices: {devices}\n")
 
+    # Setup output directory
     output_dir = Path(RAW_BENCHMARK_PATH)
     output_dir.mkdir(exist_ok=True)
 
+    # Run benchmarks
     for benchmark in benchmarks:
         print(f"\n=== Processing benchmark: {benchmark} ===")
         run_command(f"xmake b {benchmark}")

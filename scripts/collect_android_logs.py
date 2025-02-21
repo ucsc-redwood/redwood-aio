@@ -11,6 +11,7 @@ from helpers import (
     parse_schedule_range,
     get_num_schedules,
     RAW_LOGS_PATH,
+    select_schedules,
 )
 
 
@@ -40,11 +41,22 @@ def collect_log(device: str, app: str, schedule_id: int, output_dir: Path) -> No
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Collect Android logs")
-    parser.add_argument("--devices", "-d", help="Comma-separated device IDs")
-    parser.add_argument("--application", "-a", help="Application name")
+    parser = argparse.ArgumentParser(description="Collect logs from Android devices")
     parser.add_argument(
-        "--schedules", "-s", help="Schedule range (e.g. '1-5' or '1,3,5')"
+        "--devices",
+        "-d",
+        help="Comma-separated list of device IDs (if not provided, interactive selection will be used)",
+    )
+    parser.add_argument(
+        "--application",
+        "-a",
+        help="Application to test (if not provided, interactive selection will be used)",
+        choices=ALL_APPLICATIONS,
+    )
+    parser.add_argument(
+        "--schedules",
+        "-s",
+        help="Schedule range to test (e.g. '1-5' or '1,3,5' or '1-3,5,7-9')",
     )
     args = parser.parse_args()
 
@@ -54,23 +66,19 @@ def main():
         if args.devices
         else interactive_select(ALL_DEVICES, "devices")
     )
-    app = args.application or interactive_select(ALL_APPLICATIONS, "applications")[0]
+    app = (
+        args.application
+        if args.application
+        else interactive_select(ALL_APPLICATIONS, "applications")[0]
+    )
 
     print(f"Collecting logs for {app} from devices: {devices}")
 
     # Determine schedules to collect
     num_schedules = get_num_schedules(devices[0], app)
-    schedule_ids = parse_schedule_range(args.schedules) or set(
-        range(1, num_schedules + 1)
-    )
+    schedule_ids = select_schedules(num_schedules, args.schedules)
 
-    # Validate schedule IDs
-    invalid_ids = [sid for sid in schedule_ids if not 1 <= sid <= num_schedules]
-    if invalid_ids:
-        print(
-            f"Error: Invalid schedule IDs {invalid_ids}. Must be between 1 and {num_schedules}"
-        )
-        sys.exit(1)
+    print(f"\nWill collect {len(schedule_ids)} schedules")
 
     # Setup output directory and build executable
     output_dir = Path(RAW_LOGS_PATH)

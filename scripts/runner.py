@@ -18,6 +18,7 @@ from helpers import (
     GENERATED_SCHEDULES_PATH,
     interactive_select,
     parse_schedule_range,
+    select_schedules,
 )
 
 # Initialize colorama for colored output
@@ -234,22 +235,16 @@ def main():
             print(f"{Fore.RED}No schedule files found{Style.RESET_ALL}")
             continue
 
-        # Parse schedule range if provided, otherwise use all available
-        schedule_ids = parse_schedule_range(args.schedules)
-        if not schedule_ids:
-            schedule_ids = set(available_schedules)
-        else:
-            # Validate schedule IDs are within range
-            max_schedule = max(available_schedules)
-            invalid_ids = [
-                sid for sid in schedule_ids if sid not in available_schedules
-            ]
-            if invalid_ids:
-                print(
-                    f"{Fore.RED}Invalid schedule IDs {invalid_ids}. "
-                    f"Must be between 1 and {max_schedule}{Style.RESET_ALL}"
-                )
-                continue
+        max_schedule = max(available_schedules)
+        schedule_ids = select_schedules(max_schedule, args.schedules)
+
+        # Validate that selected schedules exist
+        invalid_ids = [sid for sid in schedule_ids if sid not in available_schedules]
+        if invalid_ids:
+            print(
+                f"{Fore.RED}Schedules {invalid_ids} not available for this device/app{Style.RESET_ALL}"
+            )
+            continue
 
         print(f"Found {len(available_schedules)} schedule files")
         print(f"Will test {len(schedule_ids)} schedules")

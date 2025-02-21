@@ -143,3 +143,46 @@ def get_num_schedules(device: str, application_name: str) -> int:
             num_schedules += 1
 
     return num_schedules
+
+
+def select_schedules(max_schedule: int, args_schedules: str | None) -> set[int]:
+    """Interactively select schedules or parse from command line args.
+
+    Args:
+        max_schedule: Maximum available schedule number
+        args_schedules: Schedule range string from command line args
+
+    Returns:
+        Set of selected schedule IDs
+    """
+    if args_schedules:
+        schedule_ids = parse_schedule_range(args_schedules)
+    else:
+        print("\nSelect schedules to run:")
+        print("1. All schedules")
+        print("2. Range of schedules")
+        choice = input("Enter your choice (default: 1): ").strip()
+
+        if choice == "2":
+            while True:
+                range_str = input(
+                    f"Enter schedule range (e.g. '1-5' or '1,3,5', max {max_schedule}): "
+                )
+                try:
+                    schedule_ids = parse_schedule_range(range_str)
+                    break
+                except argparse.ArgumentTypeError as e:
+                    print(f"Error: {e}")
+        else:
+            schedule_ids = set(range(1, max_schedule + 1))
+
+    # Validate schedule IDs
+    invalid_ids = [sid for sid in schedule_ids if not 1 <= sid <= max_schedule]
+    if invalid_ids:
+        print(
+            f"Error: Invalid schedule IDs {invalid_ids}. "
+            f"Must be between 1 and {max_schedule}"
+        )
+        sys.exit(1)
+
+    return schedule_ids
