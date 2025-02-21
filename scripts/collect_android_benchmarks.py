@@ -45,35 +45,36 @@ def run_benchmark(benchmark: str, device: str, output_dir: Path) -> None:
 def main():
     parser = argparse.ArgumentParser(description="Run benchmarks on Android devices")
     parser.add_argument(
-        "--benchmarks",
+        "--benchmark",
         "-b",
-        help="Comma-separated list of benchmarks (if not provided, interactive selection will be used)",
+        help="Benchmark to run",
+        choices=ALL_BENCHMARKS,
     )
     parser.add_argument(
-        "--devices",
+        "--device",
         "-d",
-        help="Comma-separated list of device IDs (if not provided, interactive selection will be used)",
+        help="Device to run on",
+        choices=ALL_DEVICES,
     )
     args = parser.parse_args()
 
     # Select benchmarks and devices
     benchmark = (
-        args.benchmarks.split(",")[0]  # Take first if multiple provided
-        if args.benchmarks
+        args.benchmark
+        if args.benchmark
         else interactive_select(ALL_BENCHMARKS, "benchmark")
     )
     device = args.device if args.device else interactive_select(ALL_DEVICES, "device")
 
-    print(f"\nRunning benchmark: {benchmark}")
-    print(f"On device: {device}\n")
+    print(f"\nRunning benchmark: {benchmark} on device: {device}")
 
     # Setup output directory
     output_dir = Path(RAW_BENCHMARK_PATH)
     output_dir.mkdir(exist_ok=True)
 
     # Run benchmark
-    print(f"\n=== Processing benchmark: {benchmark} ===")
     run_command(f"xmake b {benchmark}")
+
     run_benchmark(benchmark, device, output_dir)
 
 

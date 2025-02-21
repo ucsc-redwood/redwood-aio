@@ -17,7 +17,6 @@ from helpers import (
     APPLICATION_NAME_MAP,
     GENERATED_SCHEDULES_PATH,
     interactive_select,
-    parse_schedule_range,
     select_schedules,
 )
 
@@ -244,7 +243,7 @@ def main():
         result = run_schedule(device, app, schedule_num)
         results[schedule_num] = result
         print_schedule_result(schedule_num, result, predictions.get(schedule_num))
-        time.sleep(1)
+        time.sleep(2)
 
     # Generate final report
     print(f"\n{Style.BRIGHT}Results for {app} on device {device}:{Style.RESET_ALL}")

@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import argparse
-import sys
 
 from helpers import (
     ALL_DEVICES,
     ALL_APPLICATIONS,
     run_command,
     interactive_select,
-    parse_schedule_range,
-    get_num_schedules,
     RAW_LOGS_PATH,
     select_schedules,
 )
@@ -31,7 +28,8 @@ def collect_log(device: str, app: str, schedule_id: int, output_dir: Path) -> No
     # Run executable and collect logs
     run_command(
         f"adb -s {device} shell /data/local/tmp/{exe_name} "
-        f"--device {device} --schedule {schedule_id} --log-level debug"
+        f"--device {device} --schedule {schedule_id} --log-level debug "
+        f"--debug_filelogger"
     )
 
     # Pull and cleanup logs
@@ -46,6 +44,7 @@ def main():
         "--device",
         "-d",
         help="Device ID (if not provided, interactive selection will be used)",
+        choices=ALL_DEVICES,
     )
     parser.add_argument(
         "--application",
@@ -70,16 +69,16 @@ def main():
 
     print(f"\nCollecting logs for {app} on device {device}")
 
-    # Setup output directory
+    # Setup output directory (e.g., "data/raw_logs")
     output_dir = Path(RAW_LOGS_PATH)
     output_dir.mkdir(exist_ok=True)
 
     # Build executable if needed
     exe_name = f"pipe-{app.lower()}-vk"
     exe_path = Path(f"./build/android/arm64-v8a/release/{exe_name}")
-    if not exe_path.exists():
-        print(f"Building {exe_name}...")
-        run_command(f"xmake b {exe_name}")
+
+    # always build the executable
+    run_command(f"xmake b {exe_name}")
 
     # Get schedules for this device-app pair
     schedule_ids = select_schedules(device, app, args.schedules)
