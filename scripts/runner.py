@@ -181,12 +181,13 @@ def main():
     parser.add_argument(
         "--device",
         "-d",
-        help="Device ID (if not provided, interactive selection will be used)",
+        help="Device ID",
+        choices=ALL_DEVICES,
     )
     parser.add_argument(
         "--application",
         "-a",
-        help="Application to test (if not provided, interactive selection will be used)",
+        help="Application to test",
         choices=ALL_APPLICATIONS,
     )
     parser.add_argument(
@@ -206,12 +207,9 @@ def main():
 
     print(f"\nRunning tests for {app} on device {device}")
 
-    # Build executable if needed
+    # Build executable always
     binary_name = f"pipe-{app.lower()}-vk"
-    binary_path = Path(f"./build/android/arm64-v8a/release/{binary_name}")
-    if not binary_path.exists():
-        print(f"Building {binary_name}...")
-        run_command(f"xmake b {binary_name}")
+    run_command(f"xmake b {binary_name}")
 
     # Load predictions using canonical name
     print("Loading predictions...")

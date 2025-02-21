@@ -31,7 +31,7 @@ void run_warmup(const int schedule_id) {
 
 template <int device_index>
 void run_one_schedule(const int schedule_id) {
-  auto tasks = init_tasks(20);
+  auto tasks = init_tasks(40);
   std::vector<Task> out_tasks;
   out_tasks.reserve(tasks.size());
 
@@ -67,6 +67,9 @@ int main(int argc, char** argv) {
 
   if (g_device_id == "3A021JEHN02756") {
     run_warmup<0>(which_schedule);  // mostly just to compile the GPU shader
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
     run_one_schedule<0>(which_schedule);
   } else if (g_device_id == "9b034f1b") {
     run_one_schedule<1>(which_schedule);
