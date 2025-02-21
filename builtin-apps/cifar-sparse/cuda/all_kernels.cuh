@@ -4,8 +4,7 @@
 
 // #include "../csr.hpp"
 
-namespace cifar_sparse {
-namespace cuda {
+namespace cifar_sparse::cuda {
 
 // ----------------------------------------------------------------------------
 // Convolution 2D (Sparse)
@@ -60,5 +59,4 @@ __global__ void linear(const float* input_data,
                        const float* bias_data,
                        float* output_data);
 
-}  // namespace cuda
-}  // namespace cifar_sparse
+}  // namespace cifar_sparse::cuda

@@ -4,9 +4,33 @@
 
 #include "../../debug_logger.hpp"
 
-namespace cifar_sparse {
+namespace cifar_sparse::vulkan {
 
-namespace vulkan {
+struct Conv2dPushConstants {
+  uint32_t input_height;
+  uint32_t input_width;
+  uint32_t weight_output_channels;
+  uint32_t weight_input_channels;
+  uint32_t weight_height;
+  uint32_t weight_width;
+  uint32_t kernel_size;
+  uint32_t stride;
+  uint32_t padding;
+  bool relu;
+};
+
+struct MaxpoolPushConstants {
+  uint32_t input_channels;
+  uint32_t input_height;
+  uint32_t input_width;
+  uint32_t pool_size;
+  uint32_t stride;
+};
+
+struct LinearPushConstants {
+  uint32_t weight_matrix_rows;
+  uint32_t weight_matrix_cols;
+};
 
 // Input Image dimensions
 constexpr int kInputChannels = 3;
@@ -620,6 +644,4 @@ void Singleton::process_stage_9(cifar_sparse::AppData &app_data) {
   seq->sync();
 }
 
-}  // namespace vulkan
-
-}  // namespace cifar_sparse
+}  // namespace cifar_sparse::vulkan

@@ -1,9 +1,8 @@
 #include "../../common/cuda/helpers.cuh"
-#include "cu_dispatcher.cuh"
-#include "cu_kernels.cuh"
+#include "all_kernels.cuh"
+#include "dispatchers.cuh"
 
-namespace cifar_sparse {
-namespace cuda {
+namespace cifar_sparse::cuda {
 
 // -----------------------------------------------------------------------------
 // Stage 1 (first conv2d)
@@ -261,5 +260,4 @@ void process_stage_9(AppData &appdata) {
                                               appdata.u_linear_output.data());
 }
 
-}  // namespace cuda
-}  // namespace cifar_sparse
+}  // namespace cifar_sparse::cuda

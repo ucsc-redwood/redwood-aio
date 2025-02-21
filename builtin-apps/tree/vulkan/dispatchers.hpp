@@ -25,21 +25,22 @@ class Singleton {
   void process_stage_6(AppData &appdata, TmpStorage &tmp_storage);
   void process_stage_7(AppData &appdata, TmpStorage &tmp_storage);
 
-  template <int stage>
+  template <int Stage>
+    requires(Stage >= 1 && Stage <= 7)
   void run_stage(AppData &appdata, TmpStorage &tmp_storage) {
-    if constexpr (stage == 1) {
+    if constexpr (Stage == 1) {
       process_stage_1(appdata, tmp_storage);
-    } else if constexpr (stage == 2) {
+    } else if constexpr (Stage == 2) {
       process_stage_2(appdata, tmp_storage);
-    } else if constexpr (stage == 3) {
+    } else if constexpr (Stage == 3) {
       process_stage_3(appdata, tmp_storage);
-    } else if constexpr (stage == 4) {
+    } else if constexpr (Stage == 4) {
       process_stage_4(appdata, tmp_storage);
-    } else if constexpr (stage == 5) {
+    } else if constexpr (Stage == 5) {
       process_stage_5(appdata, tmp_storage);
-    } else if constexpr (stage == 6) {
+    } else if constexpr (Stage == 6) {
       process_stage_6(appdata, tmp_storage);
-    } else if constexpr (stage == 7) {
+    } else if constexpr (Stage == 7) {
       process_stage_7(appdata, tmp_storage);
     }
   }
@@ -59,48 +60,6 @@ class Singleton {
   // (n + 255) / 256;
   UsmVector<uint32_t> tmp_u_sums;
   UsmVector<uint32_t> tmp_u_prefix_sums;
-
-  struct LocalPushConstants {
-    uint32_t n_elements;
-  };
-
-  struct GlobalPushConstants {
-    uint32_t n_blocks;
-  };
-
-  // uint32_t warp_size;
-
-  // --------------------------------------------------------------------------
-  // Stage 1
-  // --------------------------------------------------------------------------
-
-  struct MortonPushConstants {
-    uint32_t n;
-    float min_coord;
-    float range;
-  };
-
-  // --------------------------------------------------------------------------
-  // Stage 2 - 6
-  // --------------------------------------------------------------------------
-
-  struct InputSizePushConstantsUnsigned {
-    uint32_t n;
-  };
-
-  struct InputSizePushConstantsSigned {
-    int32_t n;
-  };
-
-  // --------------------------------------------------------------------------
-  // Stage 7
-  // --------------------------------------------------------------------------
-
-  struct OctreePushConstants {
-    float min_coord;
-    float range;
-    int32_t n_brt_nodes;
-  };
 };
 
 }  // namespace tree::vulkan

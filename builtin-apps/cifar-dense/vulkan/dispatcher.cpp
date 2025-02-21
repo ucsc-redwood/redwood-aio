@@ -1,10 +1,39 @@
-#include "vk_dispatcher.hpp"
+#include "dispatcher.hpp"
 
 #include "../../debug_logger.hpp"
 
-namespace cifar_dense {
+namespace cifar_dense::vulkan {
 
-namespace vulkan {
+struct Conv2dPushConstants {
+  uint32_t input_height;
+  uint32_t input_width;
+  uint32_t weight_output_channels;
+  uint32_t weight_input_channels;
+  uint32_t weight_height;
+  uint32_t weight_width;
+  uint32_t bias_number_of_elements;
+  uint32_t kernel_size;
+  uint32_t stride;
+  uint32_t padding;
+  uint32_t output_height;
+  uint32_t output_width;
+  bool relu;
+};
+
+struct MaxpoolPushConstants {
+  uint32_t input_channels;
+  uint32_t input_height;
+  uint32_t input_width;
+  uint32_t pool_size;
+  uint32_t stride;
+  uint32_t output_height;
+  uint32_t output_width;
+};
+
+struct LinearPushConstants {
+  uint32_t in_features;
+  uint32_t out_features;
+};
 
 Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
   spdlog::info("Singleton instance created.");
@@ -16,7 +45,7 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
                          ->push_constant<Conv2dPushConstants>()
                          ->build();
 
-  algorithms.try_emplace("conv2d", std::move(conv2d_algo));
+  cached_algorithms.try_emplace("conv2d", std::move(conv2d_algo));
 
   auto maxpool2d_algo = engine.make_algo("cifar_maxpool2d")
                             ->work_group_size(256, 1, 1)
@@ -25,7 +54,7 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
                             ->push_constant<MaxpoolPushConstants>()
                             ->build();
 
-  algorithms.try_emplace("maxpool2d", std::move(maxpool2d_algo));
+  cached_algorithms.try_emplace("maxpool2d", std::move(maxpool2d_algo));
 
   auto linear_algo = engine.make_algo("cifar_linear")
                          ->work_group_size(256, 1, 1)
@@ -34,7 +63,7 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
                          ->push_constant<LinearPushConstants>()
                          ->build();
 
-  algorithms.try_emplace("linear", std::move(linear_algo));
+  cached_algorithms.try_emplace("linear", std::move(linear_algo));
 }
 
 inline void log_kernel(const int stage, const void *appdata_addr) {
@@ -47,7 +76,7 @@ void Singleton::process_stage_1(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 1, &app_data);
 
-  auto algo = algorithms.at("conv2d").get();
+  auto algo = cached_algorithms.at("conv2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -90,7 +119,7 @@ void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 2, &app_data);
 
-  auto algo = algorithms.at("maxpool2d").get();
+  auto algo = cached_algorithms.at("maxpool2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -125,7 +154,7 @@ void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 3, &app_data);
 
-  auto algo = algorithms.at("conv2d").get();
+  auto algo = cached_algorithms.at("conv2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -168,7 +197,7 @@ void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 4, &app_data);
 
-  auto algo = algorithms.at("maxpool2d").get();
+  auto algo = cached_algorithms.at("maxpool2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -203,7 +232,7 @@ void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 5, &app_data);
 
-  auto algo = algorithms.at("conv2d").get();
+  auto algo = cached_algorithms.at("conv2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -246,7 +275,7 @@ void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 6, &app_data);
 
-  auto algo = algorithms.at("conv2d").get();
+  auto algo = cached_algorithms.at("conv2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -289,7 +318,7 @@ void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 7, &app_data);
 
-  auto algo = algorithms.at("conv2d").get();
+  auto algo = cached_algorithms.at("conv2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -332,7 +361,7 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 8, &app_data);
 
-  auto algo = algorithms.at("maxpool2d").get();
+  auto algo = cached_algorithms.at("maxpool2d").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -366,7 +395,7 @@ void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
 
   LOG_KERNEL(LogKernelType::kVK, 9, &app_data);
 
-  auto algo = algorithms.at("linear").get();
+  auto algo = cached_algorithms.at("linear").get();
 
   algo->update_descriptor_set(0,
                               {
@@ -392,6 +421,4 @@ void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
   seq->sync();
 }
 
-}  // namespace vulkan
-
-}  // namespace cifar_dense
+}  // namespace cifar_dense::vulkan

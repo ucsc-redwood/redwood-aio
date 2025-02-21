@@ -1,8 +1,8 @@
 #include <cuda_runtime.h>
 
 #include "../../common/cuda/helpers.cuh"
-#include "cu_dense_kernel.cuh"
-#include "cu_kernels.cuh"
+#include "dispatchers.cuh"
+#include "kernels/cu_kernels.cuh"
 
 namespace cifar_dense::cuda {
 

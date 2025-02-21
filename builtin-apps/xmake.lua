@@ -22,16 +22,18 @@ do
 		"cifar-sparse/arg_max.hpp",
 		"cifar-sparse/csr.hpp",
 		"cifar-sparse/sparse_appdata.hpp",
-		"cifar-sparse/omp/sparse_kernel.hpp",
+		"cifar-sparse/omp/dispatchers.hpp",
+		"cifar-sparse/omp/all_kernels.hpp",
 
 		-- cifar-dense headers
 		"cifar-dense/arg_max.hpp",
 		"cifar-dense/dense_appdata.hpp",
-		"cifar-dense/omp/dense_kernel.hpp",
-
+		"cifar-dense/omp/dispatchers.hpp",
+		"cifar-dense/omp/all_kernels.hpp",
+		
 		-- tree headers
 		"tree/tree_appdata.hpp",
-		"tree/omp/tree_kernel.hpp",
+		"tree/omp/dispatchers.hpp",
 		"tree/omp/func_brt.hpp",
 		"tree/omp/func_edge.hpp",
 		"tree/omp/func_morton.hpp",
@@ -45,15 +47,18 @@ do
 
 		-- cifar-dense implementations
 		"cifar-dense/dense_appdata.cpp",
-		"cifar-dense/omp/dense_kernel.cpp",
+		"cifar-dense/omp/dispatchers.cpp",
+		"cifar-dense/omp/all_kernels.cpp",
 
 		-- cifar-sparse implementations
 		"cifar-sparse/sparse_appdata.cpp",
-		"cifar-sparse/omp/sparse_kernel.cpp",
+		"cifar-sparse/omp/dispatchers.cpp",
+		"cifar-sparse/omp/all_kernels.cpp",
 
 		-- tree implementations
 		"tree/tree_appdata.cpp",
-		"tree/omp/tree_kernel.cpp",
+		"tree/omp/dispatchers.cpp",
+		"tree/omp/all_kernels.cpp",
 	})
 end
 
@@ -75,7 +80,7 @@ if has_config("use_vulkan") then
 		add_headerfiles({
 			-- App specific headers
 			"cifar-sparse/vulkan/vk_dispatcher.hpp",
-			"cifar-dense/vulkan/vk_dispatcher.hpp",
+			"cifar-dense/vulkan/dispatcher.hpp",
 			"tree/vulkan/vk_dispatcher.hpp",
 			"tree/vulkan/tmp_storage.hpp",
 		})
@@ -83,7 +88,7 @@ if has_config("use_vulkan") then
 		add_files({
 			-- App specific implementations
 			"cifar-sparse/vulkan/vk_dispatcher.cpp",
-			"cifar-dense/vulkan/vk_dispatcher.cpp",
+			"cifar-dense/vulkan/dispatcher.cpp",
 			"tree/vulkan/vk_dispatcher.cpp",
 		})
 	end

@@ -2,9 +2,7 @@
 
 #include "../../base_appdata.hpp"
 
-namespace tree {
-
-namespace vulkan {
+namespace tree::vulkan {
 
 struct TmpStorage : BaseAppData {
   TmpStorage(std::pmr::memory_resource* mr, const size_t n_input)
@@ -23,6 +21,4 @@ struct TmpStorage : BaseAppData {
   UsmVector<uint32_t> u_prefix_sums;
 };
 
-}  // namespace vulkan
-
-}  // namespace tree
+}  // namespace tree::vulkan

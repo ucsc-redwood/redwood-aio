@@ -1,4 +1,4 @@
-#include "dense_kernel.hpp"
+#include "dispatchers.hpp"
 
 #include <omp.h>
 #include <spdlog/spdlog.h>

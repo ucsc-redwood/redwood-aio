@@ -2,7 +2,6 @@
 
 #include <omp.h>
 
-#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>

@@ -2,10 +2,9 @@
 
 #include <cfloat>
 
-#include "cu_kernels.cuh"
+#include "all_kernels.cuh"
 
-namespace cifar_sparse {
-namespace cuda {
+namespace cifar_sparse::cuda {
 
 // ----------------------------------------------------------------------------
 // Convolution 2D (Sparse)
@@ -239,4 +238,3 @@ __global__ void linear(const float* input_data,
 }
 
 }  // namespace cuda
-}  // namespace cifar_sparse

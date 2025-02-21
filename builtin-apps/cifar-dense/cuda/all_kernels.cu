@@ -1,4 +1,4 @@
-#include "cu_kernels.cuh"
+#include "all_kernels.cuh"
 
 namespace cifar_dense::cuda {
 
@@ -142,4 +142,4 @@ __global__ void linear(const float* __restrict__ input_data,
   output_data[global_idx] = sum;
 }
 
-}  // namespace cifar_dense::cuda
+}  // namespace cifar_dense::cuda::kernels

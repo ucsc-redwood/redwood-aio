@@ -1,15 +1,55 @@
-#include "vk_dispatcher.hpp"
+#include "dispatchers.hpp"
 
 #include <cstdint>
 #include <numeric>
-#include <random>
+// #include <random>
 
 #include "../../app.hpp"
 #include "../../debug_logger.hpp"
 
-namespace tree {
+namespace tree::vulkan {
 
-namespace vulkan {
+struct LocalPushConstants {
+  uint32_t n_elements;
+};
+
+struct GlobalPushConstants {
+  uint32_t n_blocks;
+};
+
+// uint32_t warp_size;
+
+// --------------------------------------------------------------------------
+// Stage 1
+// --------------------------------------------------------------------------
+
+struct MortonPushConstants {
+  uint32_t n;
+  float min_coord;
+  float range;
+};
+
+// --------------------------------------------------------------------------
+// Stage 2 - 6
+// --------------------------------------------------------------------------
+
+struct InputSizePushConstantsUnsigned {
+  uint32_t n;
+};
+
+struct InputSizePushConstantsSigned {
+  int32_t n;
+};
+
+// --------------------------------------------------------------------------
+// Stage 7
+// --------------------------------------------------------------------------
+
+struct OctreePushConstants {
+  float min_coord;
+  float range;
+  int32_t n_brt_nodes;
+};
 
 // ----------------------------------------------------------------------------
 // Constructor
@@ -278,6 +318,4 @@ void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStor
   seq->sync();
 }
 
-}  // namespace vulkan
-
-}  // namespace tree
+}  // namespace tree::vulkan

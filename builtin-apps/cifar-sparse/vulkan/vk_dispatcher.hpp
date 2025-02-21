@@ -30,6 +30,7 @@ class Singleton {
   void process_stage_9(cifar_sparse::AppData &app_data);
 
   template <int stage>
+    requires(stage >= 1 && stage <= 9)
   void run_stage(cifar_sparse::AppData &app_data) {
     if constexpr (stage == 1) {
       process_stage_1(app_data);
@@ -49,6 +50,8 @@ class Singleton {
       process_stage_8(app_data);
     } else if constexpr (stage == 9) {
       process_stage_9(app_data);
+    } else {
+      static_assert(false, "Invalid stage");
     }
   }
 
@@ -59,32 +62,6 @@ class Singleton {
   kiss_vk::Engine engine;
   std::shared_ptr<kiss_vk::Sequence> seq;
   std::unordered_map<std::string, std::shared_ptr<kiss_vk::Algorithm>> algorithms;
-
-  struct Conv2dPushConstants {
-    uint32_t input_height;
-    uint32_t input_width;
-    uint32_t weight_output_channels;
-    uint32_t weight_input_channels;
-    uint32_t weight_height;
-    uint32_t weight_width;
-    uint32_t kernel_size;
-    uint32_t stride;
-    uint32_t padding;
-    bool relu;
-  };
-
-  struct MaxpoolPushConstants {
-    uint32_t input_channels;
-    uint32_t input_height;
-    uint32_t input_width;
-    uint32_t pool_size;
-    uint32_t stride;
-  };
-
-  struct LinearPushConstants {
-    uint32_t weight_matrix_rows;
-    uint32_t weight_matrix_cols;
-  };
 };
 
 }  // namespace vulkan

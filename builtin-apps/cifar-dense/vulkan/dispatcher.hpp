@@ -3,9 +3,7 @@
 #include "../../common/kiss-vk/engine.hpp"
 #include "../dense_appdata.hpp"
 
-namespace cifar_dense {
-
-namespace vulkan {
+namespace cifar_dense::vulkan {
 
 class Singleton {
  public:
@@ -30,26 +28,29 @@ class Singleton {
   void process_stage_8(cifar_dense::AppData &app_data);
   void process_stage_9(cifar_dense::AppData &app_data);
 
-  template <int stage>
+  template <int Stage>
+    requires(Stage >= 1 && Stage <= 9)
   void run_stage(cifar_dense::AppData &app_data) {
-    if constexpr (stage == 1) {
+    if constexpr (Stage == 1) {
       process_stage_1(app_data);
-    } else if constexpr (stage == 2) {
+    } else if constexpr (Stage == 2) {
       process_stage_2(app_data);
-    } else if constexpr (stage == 3) {
+    } else if constexpr (Stage == 3) {
       process_stage_3(app_data);
-    } else if constexpr (stage == 4) {
+    } else if constexpr (Stage == 4) {
       process_stage_4(app_data);
-    } else if constexpr (stage == 5) {
+    } else if constexpr (Stage == 5) {
       process_stage_5(app_data);
-    } else if constexpr (stage == 6) {
+    } else if constexpr (Stage == 6) {
       process_stage_6(app_data);
-    } else if constexpr (stage == 7) {
+    } else if constexpr (Stage == 7) {
       process_stage_7(app_data);
-    } else if constexpr (stage == 8) {
+    } else if constexpr (Stage == 8) {
       process_stage_8(app_data);
-    } else if constexpr (stage == 9) {
+    } else if constexpr (Stage == 9) {
       process_stage_9(app_data);
+    } else {
+      static_assert(false, "Invalid stage");
     }
   }
 
@@ -59,40 +60,7 @@ class Singleton {
 
   kiss_vk::Engine engine;
   std::shared_ptr<kiss_vk::Sequence> seq;
-  std::unordered_map<std::string, std::shared_ptr<kiss_vk::Algorithm>> algorithms;
-
-  struct Conv2dPushConstants {
-    uint32_t input_height;
-    uint32_t input_width;
-    uint32_t weight_output_channels;
-    uint32_t weight_input_channels;
-    uint32_t weight_height;
-    uint32_t weight_width;
-    uint32_t bias_number_of_elements;
-    uint32_t kernel_size;
-    uint32_t stride;
-    uint32_t padding;
-    uint32_t output_height;
-    uint32_t output_width;
-    bool relu;
-  };
-
-  struct MaxpoolPushConstants {
-    uint32_t input_channels;
-    uint32_t input_height;
-    uint32_t input_width;
-    uint32_t pool_size;
-    uint32_t stride;
-    uint32_t output_height;
-    uint32_t output_width;
-  };
-
-  struct LinearPushConstants {
-    uint32_t in_features;
-    uint32_t out_features;
-  };
+  std::unordered_map<std::string, std::shared_ptr<kiss_vk::Algorithm>> cached_algorithms;
 };
 
-}  // namespace vulkan
-
-}  // namespace cifar_dense
+}  // namespace cifar_dense::vulkan
