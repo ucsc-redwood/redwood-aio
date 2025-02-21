@@ -142,4 +142,4 @@ __global__ void linear(const float* __restrict__ input_data,
   output_data[global_idx] = sum;
 }
 
-}  // namespace cifar_dense::cuda::kernels
+}  // namespace cifar_dense::cuda

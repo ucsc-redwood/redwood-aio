@@ -14,8 +14,7 @@ void process_stage_6(AppData &app_data, TempStorage &tmp);
 void process_stage_7(AppData &app_data, TempStorage &tmp);
 
 template <int Stage>
-  requires(Stage >= 1 && Stage <= 7)
-void run_stage(AppData &appdata, TempStorage &temp_storage) {
+requires(Stage >= 1 && Stage <= 7) void run_stage(AppData &appdata, TempStorage &temp_storage) {
   if constexpr (Stage == 1) {
     process_stage_1(appdata, temp_storage);
   } else if constexpr (Stage == 2) {
@@ -30,8 +29,6 @@ void run_stage(AppData &appdata, TempStorage &temp_storage) {
     process_stage_6(appdata, temp_storage);
   } else if constexpr (Stage == 7) {
     process_stage_7(appdata, temp_storage);
-  } else {
-    throw std::runtime_error("Invalid Stage");
   }
 }
 

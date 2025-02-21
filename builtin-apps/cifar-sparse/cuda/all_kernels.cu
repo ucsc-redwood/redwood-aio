@@ -237,4 +237,4 @@ __global__ void linear(const float* input_data,
   //   }
 }
 
-}  // namespace cuda
+}  // namespace cifar_sparse::cuda

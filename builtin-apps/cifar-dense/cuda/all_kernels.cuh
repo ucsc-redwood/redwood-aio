@@ -39,4 +39,4 @@ __global__ void linear(const float* __restrict__ input_data,
                        int input_size,
                        int output_size);
 
-}  // namespace cifar_dense::cuda::kernels
+}  // namespace cifar_dense::cuda

@@ -20,8 +20,7 @@ void process_stage_8(cifar_sparse::AppData &app_data);
 void process_stage_9(cifar_sparse::AppData &app_data);
 
 template <int Stage>
-  requires(Stage >= 1 && Stage <= 9)
-void run_stage(cifar_sparse::AppData &app_data) {
+requires(Stage >= 1 && Stage <= 9) void run_stage(cifar_sparse::AppData &app_data) {
   if constexpr (Stage == 1) {
     process_stage_1(app_data);
   } else if constexpr (Stage == 2) {
@@ -40,8 +39,6 @@ void run_stage(cifar_sparse::AppData &app_data) {
     process_stage_8(app_data);
   } else if constexpr (Stage == 9) {
     process_stage_9(app_data);
-  } else {
-    static_assert(false, "Invalid Stage");
   }
 }
 

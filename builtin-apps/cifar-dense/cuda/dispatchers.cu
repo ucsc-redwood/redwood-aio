@@ -4,7 +4,6 @@
 #include "all_kernels.cuh"
 #include "dispatchers.cuh"
 
-
 namespace cifar_dense::cuda {
 
 // -----------------------------------------------------------------------------
