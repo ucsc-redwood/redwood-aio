@@ -112,7 +112,8 @@ inline void process_radix_tree_i(const int i,
   const auto s_cutoff = (d == -1) ? i - 1 : n - i - 1;
   for (auto t = ceil_div_u32(l, 2); divisor <= max_divisor;
        divisor <<= 1, t = ceil_div_u32(l, divisor)) {
-    if (s + t <= s_cutoff && delta_u32(code_i, codes[i + (s + t) * d]) > delta_node) {
+    // Yanwen: 2025-2-25 Fix
+    if (s + (int)t <= s_cutoff && delta_u32(code_i, codes[i + (s + t) * d]) > delta_node) {
       s += t;
     }
   }

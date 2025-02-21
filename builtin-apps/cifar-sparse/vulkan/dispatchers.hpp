@@ -50,7 +50,7 @@ class Singleton {
       process_stage_8(app_data);
     } else if constexpr (stage == 9) {
       process_stage_9(app_data);
-    } 
+    }
   }
 
  private:
