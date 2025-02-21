@@ -4,115 +4,22 @@ import os
 import sys
 import argparse
 
-ALL_DEVICES = ["3A021JEHN02756", "9b034f1b", "ce0717178d7758b00b7e"]
-ALL_APPLICATIONS = ["tree", "cifar-dense", "cifar-sparse"]
+from helpers import (
+    ALL_DEVICES,
+    ALL_APPLICATIONS,
+    run_command,
+    interactive_select,
+    parse_schedule_range,
+    get_num_schedules,
+    RAW_LOGS_PATH,
+)
 
 # Directory to save pulled results
-OUTPUT_DIR = "./data/logs"
+OUTPUT_DIR = RAW_LOGS_PATH
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-def run_command(cmd):
-    """Run a shell command and exit if it fails."""
-    print(f"Executing: {cmd}")
-    try:
-        subprocess.run(cmd, shell=True, check=True)
-    except subprocess.CalledProcessError:
-        print(f"Error: Command failed: {cmd}", file=sys.stderr)
-        sys.exit(1)
-
-
-def get_num_schedules(device, application_name):
-    schedules_dir = "data/generated-schedules"
-    num_schedules = 0
-
-    # Map application names to their canonical form
-    APPLICATION_NAME_MAP = {
-        "tree": "Tree",
-        "cifar-sparse": "CifarSparse",
-        "cifar-dense": "CifarDense",
-    }
-
-    for each_file in os.listdir(schedules_dir):
-        # Split filename into parts
-        parts = each_file.split("_")
-
-        # Check if this is a valid schedule file for the given device and app
-        if (
-            len(parts) == 4
-            and parts[0] == device
-            and parts[1] == APPLICATION_NAME_MAP[application_name]
-            and parts[2] == "schedule"
-            and parts[3].endswith(".json")
-        ):
-            num_schedules += 1
-
-    return num_schedules
-
-
-def interactive_select(options, option_type):
-    """
-    Prompt the user to select options by number.
-
-    options: list of strings (benchmarks or devices)
-    option_type: string to display (e.g. "benchmarks" or "devices")
-    Returns the list of selected options.
-    """
-    print(
-        f"Select {option_type} to run (enter numbers separated by commas, or press Enter for all):"
-    )
-    for i, option in enumerate(options):
-        print(f"{i+1}: {option}")
-    selection = input("Enter your choices: ").strip()
-    if not selection:
-        return options
-    try:
-        indices = [int(x) - 1 for x in selection.split(",") if x.strip().isdigit()]
-        selected = [options[i] for i in indices if 0 <= i < len(options)]
-        return selected
-    except Exception:
-        print("Invalid selection, using all options.")
-        return options
-
-
-def parse_schedule_range(range_str: str) -> set:
-    """Parse schedule range string into a set of schedule IDs.
-
-    Accepts formats:
-    - Single number: "1"
-    - Comma-separated: "1,3,5"
-    - Range: "1-5"
-    - Mixed: "1-3,5,7-9"
-    """
-    if not range_str:
-        return set()
-        
-    schedule_ids = set()
-    parts = range_str.split(",")
-
-    for part in parts:
-        if "-" in part:
-            # Handle range
-            try:
-                start, end = map(int, part.split("-"))
-                schedule_ids.update(range(start, end + 1))
-            except ValueError:
-                raise argparse.ArgumentTypeError(
-                    f"Invalid range format: {part}. Expected format: start-end"
-                )
-        else:
-            # Handle single number
-            try:
-                schedule_ids.add(int(part))
-            except ValueError:
-                raise argparse.ArgumentTypeError(
-                    f"Invalid schedule ID: {part}. Must be an integer"
-                )
-
-    return schedule_ids
-
-
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Collect logs from specified devices.")
     parser.add_argument(
         "--devices",
@@ -121,7 +28,7 @@ def parse_args():
         help="Comma-separated list of device IDs to collect logs from (if not provided, interactive selection will be used).",
     )
     parser.add_argument(
-        "--application-name",
+        "--application",
         "-a",
         type=str,
         help="Name of the application to collect logs from.",
@@ -135,7 +42,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def log_filename(device, application_name, schedule_id):
+def gen_log_filename(device: str, application_name: str, schedule_id: int) -> str:
     # Ensure application_name is a single string, not a list
     app_name = (
         application_name[0] if isinstance(application_name, list) else application_name
@@ -143,7 +50,7 @@ def log_filename(device, application_name, schedule_id):
     return f"logs-{device}-{app_name}-schedule-{schedule_id}.txt"
 
 
-def obtain_a_single_log(device, application_name, schedule_id):
+def obtain_a_single_log(device: str, application_name: str, schedule_id: int) -> None:
     executable_name = f"pipe-{application_name.lower()}-vk"
 
     # Step 2: Run the executable on the device
@@ -157,7 +64,7 @@ def obtain_a_single_log(device, application_name, schedule_id):
 
     # Step 3: Pull the logs from the device
     print(f"\n--- Collecting logs from device: {device} ---")
-    filename = log_filename(device, application_name, schedule_id)
+    filename = gen_log_filename(device, application_name, schedule_id)
     pull_cmd = f"adb -s {device} pull /data/local/tmp/logs.txt {OUTPUT_DIR}/{filename}"
     run_command(pull_cmd)
 
@@ -175,8 +82,8 @@ def main():
     else:
         devices = interactive_select(ALL_DEVICES, "devices")
 
-    if args.application_name:
-        application_name = args.application_name
+    if args.application:
+        application_name = args.application
     else:
         # Take first selected application when using interactive selection
         application_name = interactive_select(ALL_APPLICATIONS, "applications")[0]
@@ -184,6 +91,7 @@ def main():
     print(f"Devices to collect logs from: {devices}")
     print(f"Application: {application_name}\n")
 
+    # Get the number of schedules
     num_schedules = get_num_schedules(devices[0], application_name)
     print(f"Number of schedules: {num_schedules}")
 
@@ -195,8 +103,14 @@ def main():
         # Validate schedule IDs are within range
         invalid_ids = [sid for sid in schedule_ids if sid < 1 or sid > num_schedules]
         if invalid_ids:
-            print(f"Error: Invalid schedule IDs {invalid_ids}. Must be between 1 and {num_schedules}")
+            print(
+                f"Error: Invalid schedule IDs {invalid_ids}. Must be between 1 and {num_schedules}"
+            )
             sys.exit(1)
+
+    # Step 0: Build the executable
+    build_cmd = f"xmake b pipe-{application_name.lower()}-vk"
+    run_command(build_cmd)
 
     for device in devices:
         # Step 1: Push the executable to the device
@@ -208,6 +122,7 @@ def main():
         )
         run_command(push_cmd)
 
+        # Step 2: Obtain the logs
         for schedule_id in sorted(schedule_ids):
             obtain_a_single_log(device, application_name, schedule_id)
 

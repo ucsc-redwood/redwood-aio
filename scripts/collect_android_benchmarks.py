@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-import subprocess
 import os
-import sys
 import argparse
+
+from helpers import (
+    ALL_DEVICES,
+    ALL_BENCHMARKS,
+    interactive_select,
+    RAW_BENCHMARK_PATH,
+    run_command,
+)
 
 # Full list of benchmarks and devices
 ALL_BENCHMARKS = [
@@ -14,21 +20,10 @@ ALL_BENCHMARKS = [
     "bm-tree-vk",
 ]
 
-ALL_DEVICES = ["3A021JEHN02756", "9b034f1b", "ce0717178d7758b00b7e"]
 
 # Directory to save pulled results
-OUTPUT_DIR = "./data/raw_bm_results"
+OUTPUT_DIR = RAW_BENCHMARK_PATH
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-
-def run_command(cmd):
-    """Run a shell command and exit if it fails."""
-    print(f"Executing: {cmd}")
-    try:
-        subprocess.run(cmd, shell=True, check=True)
-    except subprocess.CalledProcessError:
-        print(f"Error: Command failed: {cmd}", file=sys.stderr)
-        sys.exit(1)
 
 
 def get_json_filename(benchmark, device):
@@ -47,31 +42,6 @@ def get_json_filename(benchmark, device):
         return f"BM_{parts[1].capitalize()}_{parts[2].upper()}_{device}.json"
     else:
         return f"{benchmark}_{device}.json"
-
-
-def interactive_select(options, option_type):
-    """
-    Prompt the user to select options by number.
-
-    options: list of strings (benchmarks or devices)
-    option_type: string to display (e.g. "benchmarks" or "devices")
-    Returns the list of selected options.
-    """
-    print(
-        f"Select {option_type} to run (enter numbers separated by commas, or press Enter for all):"
-    )
-    for i, option in enumerate(options):
-        print(f"{i+1}: {option}")
-    selection = input("Enter your choices: ").strip()
-    if not selection:
-        return options
-    try:
-        indices = [int(x) - 1 for x in selection.split(",") if x.strip().isdigit()]
-        selected = [options[i] for i in indices if 0 <= i < len(options)]
-        return selected
-    except Exception:
-        print("Invalid selection, using all options.")
-        return options
 
 
 def parse_args():

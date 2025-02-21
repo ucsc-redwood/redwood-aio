@@ -1,11 +1,21 @@
 import argparse
 import subprocess
 import sys
+import os
 from typing import List, Dict
+
+# hardcoded paths
+RAW_BENCHMARK_PATH = "data/raw-benchmarks"
+RAW_LOGS_PATH = "data/logs"
+GENERATED_SCHEDULES_PATH = "data/generated-schedules"
+
+DB_PATH = "data/benchmark_results.json"
+
 
 ALL_DEVICES: List[str] = ["3A021JEHN02756", "9b034f1b", "ce0717178d7758b00b7e"]
 ALL_APPLICATIONS: List[str] = ["tree", "cifar-dense", "cifar-sparse"]
 
+# Map application names to their canonical form
 APPLICATION_NAME_MAP: Dict[str, str] = {
     "tree": "Tree",
     "cifar-sparse": "CifarSparse",
@@ -13,7 +23,7 @@ APPLICATION_NAME_MAP: Dict[str, str] = {
 }
 
 
-def run_adb_command(cmd: str):
+def run_command(cmd: str) -> None:
     """Run a shell command and exit if it fails."""
     print(f"Executing: {cmd}")
     try:
@@ -83,3 +93,30 @@ def parse_schedule_range(range_str: str) -> set:
                 )
 
     return schedule_ids
+
+
+def get_num_schedules(device: str, application_name: str) -> int:
+    """Get the number of schedules for a given device and application.
+
+    By looking at the files in the `GENERATED_SCHEDULES_PATH` directory.
+    We expect the files to be in the format `<device>_<application>_schedule_<id>.json`
+
+    """
+    schedules_dir = GENERATED_SCHEDULES_PATH
+    num_schedules = 0
+
+    for each_file in os.listdir(schedules_dir):
+        # Split filename into parts
+        parts = each_file.split("_")
+
+        # Check if this is a valid schedule file for the given device and app
+        if (
+            len(parts) == 4
+            and parts[0] == device
+            and parts[1] == APPLICATION_NAME_MAP[application_name]
+            and parts[2] == "schedule"
+            and parts[3].endswith(".json")
+        ):
+            num_schedules += 1
+
+    return num_schedules

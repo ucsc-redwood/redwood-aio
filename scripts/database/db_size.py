@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_PATH = "data/benchmark_results.db"
+from helpers import DB_PATH
 
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
