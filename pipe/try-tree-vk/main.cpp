@@ -1,8 +1,7 @@
-
 #include <concurrentqueue.h>
 #include <omp.h>
 
-#include <atomic>
+#include <queue>
 #include <thread>
 
 #include "builtin-apps/affinity.hpp"
@@ -123,36 +122,53 @@ void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage* tmp_stora
 // ---------------------------------------------------------------------
 // Task structure
 // ---------------------------------------------------------------------
-
 struct Task {
-  tree::AppData* app_data;  // basically just a pointer
-  tree::omp::TmpStorage* omp_tmp_storage;
-  tree::vulkan::TmpStorage* vulkan_tmp_storage;
+  tree::AppData* app_data = nullptr;
+  tree::omp::TmpStorage* omp_tmp_storage = nullptr;
+  tree::vulkan::TmpStorage* vulkan_tmp_storage = nullptr;
+  bool done = false;
+
+  [[nodiscard]] bool is_sentinel() const { return app_data == nullptr; }
 };
 
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
+[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks) {
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
 
-  std::vector<Task> tasks(num_tasks);
+  std::queue<Task> tasks;
 
   constexpr auto n_inputs = 640 * 480;
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
-    tasks[i] = Task{
+    Task task{
         .app_data = new tree::AppData(mr, n_inputs),
         .omp_tmp_storage = new tree::omp::TmpStorage(),
         .vulkan_tmp_storage = new tree::vulkan::TmpStorage(mr, n_inputs),
+        .done = false,
     };
 
     const auto n_threads = std::thread::hardware_concurrency();
-    tasks[i].omp_tmp_storage->allocate(n_threads, n_threads);
+    task.omp_tmp_storage->allocate(n_threads, n_threads);
+    tasks.push(task);
   }
+
+  // create a sentinel task
+  tasks.push(Task{
+      .app_data = nullptr,
+      .omp_tmp_storage = nullptr,
+      .vulkan_tmp_storage = nullptr,
+      .done = true,
+  });
 
   return tasks;
 }
 
-void cleanup(std::vector<Task>& tasks) {
-  for (auto& task : tasks) {
+void cleanup(std::queue<Task>& tasks) {
+  while (!tasks.empty()) {
+    auto& task = tasks.front();
+    if (task.is_sentinel()) {
+      tasks.pop();
+      continue;
+    }
     delete task.app_data;
     delete task.omp_tmp_storage;
     delete task.vulkan_tmp_storage;
@@ -165,73 +181,65 @@ void cleanup(std::vector<Task>& tasks) {
 
 namespace TestSchedule {
 
-static std::atomic<int> tasks_in_flight{0};
-static std::atomic<bool> done(false);
+void chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
+  while (!in_tasks.empty()) {
+    auto& task = in_tasks.front();
+    if (task.is_sentinel()) {
+      out_q.enqueue(task);
+      in_tasks.pop();
+      continue;
+    }
 
-void chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
-  for (auto& task : in_tasks) {
     // ---------------------------------------------------------------------
     run_cpu_stages<1, 3, ProcessorType::kBigCore, 2>(task.app_data, task.omp_tmp_storage);
     // ---------------------------------------------------------------------
-    tasks_in_flight.fetch_add(1, std::memory_order_relaxed);
+
     out_q.enqueue(task);
+    in_tasks.pop();
   }
 }
 
 void chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
-  while (!done.load(std::memory_order_acquire)) {
-    Task task;
-    if (in_q.try_dequeue(task)) {
+  while (true) {
+    if (Task task; in_q.try_dequeue(task)) {
+      if (task.is_sentinel()) {
+        out_q.enqueue(task);
+        break;
+      }
+
       // ---------------------------------------------------------------------
       run_cpu_stages<4, 6, ProcessorType::kLittleCore, 4>(task.app_data, task.omp_tmp_storage);
       // ---------------------------------------------------------------------
+
       out_q.enqueue(task);
     } else {
       std::this_thread::yield();
     }
   }
-  while (true) {
-    Task task;
-    if (!in_q.try_dequeue(task)) break;
-    // ---------------------------------------------------------------------
-    run_cpu_stages<4, 6, ProcessorType::kLittleCore, 4>(task.app_data, task.omp_tmp_storage);
-    // ---------------------------------------------------------------------
-    out_q.enqueue(task);
-  }
 }
 
-void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {
-  while (!done.load(std::memory_order_acquire)) {
-    Task task;
-    if (in_q.try_dequeue(task)) {
+void chunk3(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks) {
+  while (true) {
+    if (Task task; in_q.try_dequeue(task)) {
+      if (task.is_sentinel()) {
+        out_tasks.push(task);
+        break;
+      }
+
       // ---------------------------------------------------------------------
       run_gpu_stages<7, 7>(task.app_data, task.vulkan_tmp_storage);
       // ---------------------------------------------------------------------
-      out_tasks.push_back(task);
-      int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
-      if (r == 0) done.store(true, std::memory_order_release);
+
+      out_tasks.push(task);
     } else {
       std::this_thread::yield();
     }
   }
-  while (true) {
-    Task task;
-    if (!in_q.try_dequeue(task)) break;
-    // ---------------------------------------------------------------------
-    run_gpu_stages<7, 7>(task.app_data, task.vulkan_tmp_storage);
-    // ---------------------------------------------------------------------
-    out_tasks.push_back(task);
-    int r = tasks_in_flight.fetch_sub(1, std::memory_order_relaxed) - 1;
-    if (r == 0) done.store(true, std::memory_order_release);
-  }
 }
 
-void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
+void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
   moodycamel::ConcurrentQueue<Task> q_01;
   moodycamel::ConcurrentQueue<Task> q_12;
-
-  tasks_in_flight.store(0, std::memory_order_relaxed);
-  done.store(false, std::memory_order_relaxed);
 
   std::thread t_chunk1([&]() { chunk1(tasks, q_01); });
   std::thread t_chunk2([&]() { chunk2(q_01, q_12); });
@@ -249,9 +257,9 @@ void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
 // ---------------------------------------------------------------------
 
 void run_test_schedule() {
-  auto tasks = init_tasks(20);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(tasks.size());
+  constexpr auto num_tasks = 20;
+  auto tasks = init_tasks(num_tasks);
+  std::queue<Task> out_tasks;
 
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -262,7 +270,8 @@ void run_test_schedule() {
   auto end = std::chrono::high_resolution_clock::now();
 
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  double avg_time = duration.count() / static_cast<double>(tasks.size());
+  double avg_time = duration.count() / static_cast<double>(num_tasks);
+
   std::cout << "[schedule Test]: Average time per iteration: " << avg_time << " ms" << std::endl;
 
   cleanup(tasks);
@@ -281,6 +290,10 @@ int main(int argc, char** argv) {
   PARSE_ARGS_END;
 
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
+
+  if (g_device_id != "3A021JEHN02756") {
+    exit(0);
+  }
 
   run_test_schedule();
 
