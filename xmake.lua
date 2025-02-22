@@ -1,6 +1,6 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
-add_rules("mode.debug", "mode.release")
+add_rules("mode.debug", "mode.release", "mode.releasedbg")
 
 set_languages("c++20")
 set_warnings("allextra")

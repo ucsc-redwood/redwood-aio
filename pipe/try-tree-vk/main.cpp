@@ -60,6 +60,7 @@ void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
       }
 
       // ---------------------------------------------------------------------
+      run_cpu_stages<3, 5, ProcessorType::kBigCore, 2>(task);
       // run_gpu_stages<3, 5>(task);
       // ---------------------------------------------------------------------
 
