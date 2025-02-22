@@ -34,8 +34,6 @@ void run_cpu_stages(Task& task) {
       bind_thread_to_cores(g_medium_cores);
     } else if constexpr (processor_type == ProcessorType::kBigCore) {
       bind_thread_to_cores(g_big_cores);
-    } else {
-      assert(false);
     }
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]
