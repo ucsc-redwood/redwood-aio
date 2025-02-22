@@ -28,6 +28,9 @@ void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
     appdata.u_morton_keys_s1[i] =
         xyz_to_morton32(appdata.u_input_points_s0[i], tree::kMinCoord, tree::kRange);
   }
+
+#pragma omp barrier
+
 }
 
 // ----------------------------------------------------------------------------
@@ -68,6 +71,8 @@ void process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 
   appdata.set_n_unique(n_unique);
   appdata.set_n_brt_nodes(n_unique - 1);
+
+#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -91,6 +96,8 @@ void process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
                          appdata.u_brt_left_child_s4.data(),
                          appdata.u_brt_parents_s4.data());
   }
+
+#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -109,6 +116,8 @@ void process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
                          appdata.u_brt_parents_s4.data(),
                          appdata.u_edge_count_s5.data());
   }
+
+#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -129,7 +138,10 @@ void process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
   const auto num_octree_nodes = appdata.u_edge_offset_s6[end - 1];
 
   appdata.set_n_octree_nodes(num_octree_nodes);
+
+#pragma omp barrier
 }
+
 // ----------------------------------------------------------------------------
 // Stage 7 (everything -> octree)
 // ----------------------------------------------------------------------------
@@ -156,6 +168,8 @@ void process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
                      tree::kMinCoord,
                      tree::kRange);
   }
+
+#pragma omp barrier
 }
 
 }  // namespace omp

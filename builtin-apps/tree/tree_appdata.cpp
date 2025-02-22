@@ -76,9 +76,9 @@ AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input)
 
   const float total_mb = total_bytes / (1024.0f * 1024.0f);
 
-  spdlog::debug("Tree construction appdata allocated:");
-  spdlog::debug("\tInput size: {} points", n_input);
-  spdlog::debug("\tTotal memory: {:.2f} MB", total_mb);
+  spdlog::trace("Tree construction appdata allocated:");
+  spdlog::trace("\tInput size: {} points", n_input);
+  spdlog::trace("\tTotal memory: {:.2f} MB", total_mb);
 }
 
 }  // namespace tree
