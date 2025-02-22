@@ -30,7 +30,6 @@ void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
   }
 
 #pragma omp barrier
-
 }
 
 // ----------------------------------------------------------------------------

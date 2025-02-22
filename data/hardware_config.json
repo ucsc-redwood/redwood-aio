@@ -46,7 +46,9 @@
   "minipc": {
     "name": "AMD Mini PC",
     "pinnable_cores": {
-      "little": 4,
+      "big": 16,
+      "medium": 0,
+      "little": 0,
       "gpu": 1
     },
     "gpu_backend": "vulkan",
@@ -55,9 +57,9 @@
   "pc": {
     "name": "Nvidia PC",
     "pinnable_cores": {
-      "little": 4,
-      "medium": 4,
-      "big": 4,
+      "little": 12,
+      "medium": 0,
+      "big": 8,
       "gpu": 1
     },
     "gpu_backend": "cuda",

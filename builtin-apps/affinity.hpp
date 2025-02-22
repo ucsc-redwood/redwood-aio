@@ -44,7 +44,22 @@ inline void bind_thread_to_cores(const std::vector<int>& core_ids) {
 
   // sched_setaffinity for the current thread (pid=0).
   if (sched_setaffinity(0, sizeof(cpu_set_t), &cpuset) != 0) {
-    throw std::runtime_error("Failed to pin thread to cores on Linux");
+    // Print out the cpuset in a human readable way
+    std::string cores_str;
+    for (int i = 0; i < CPU_SETSIZE; i++) {
+      if (CPU_ISSET(i, &cpuset)) {
+        if (!cores_str.empty()) {
+          cores_str += ", ";
+        }
+        cores_str += std::to_string(i);
+      }
+    }
+
+    if (cores_str.empty()) {
+      cores_str = "<empty>";
+    }
+
+    throw std::runtime_error("Failed to pin thread to cores on Linux: " + cores_str);
   }
 #endif
 }
