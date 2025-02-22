@@ -6,6 +6,9 @@
 
 namespace cifar_sparse::cuda {
 
+// How many images to process per iteration together
+constexpr auto kNumBatches = 16;
+
 void process_stage_1(AppData &appdata);
 void process_stage_2(AppData &appdata);
 void process_stage_3(AppData &appdata);

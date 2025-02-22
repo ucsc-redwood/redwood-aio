@@ -6,6 +6,9 @@ namespace cifar_sparse {
 
 namespace vulkan {
 
+// How many images to process per iteration together
+constexpr auto kNumBatches = 16;
+
 class Singleton {
  public:
   // Delete copy constructor and assignment operator to prevent copies

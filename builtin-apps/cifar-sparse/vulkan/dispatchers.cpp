@@ -118,17 +118,15 @@ void Singleton::process_stage_1(cifar_sparse::AppData &app_data) {
   });
 
   //   seq->record_commands(algo, total_iterations);
-
   seq->cmd_begin();
-
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
   algo->record_dispatch(seq->get_handle(),
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
-
   seq->cmd_end();
 
   seq->launch_kernel_async();
+
   seq->sync();
 }
 
@@ -174,17 +172,19 @@ void Singleton::process_stage_2(cifar_sparse::AppData &app_data) {
       .stride = kPoolStride,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -245,17 +245,19 @@ void Singleton::process_stage_3(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 //----------------------------------------------------------------------------
@@ -304,17 +306,19 @@ void Singleton::process_stage_4(cifar_sparse::AppData &app_data) {
       .stride = kPoolStride,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -375,17 +379,19 @@ void Singleton::process_stage_5(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -446,17 +452,19 @@ void Singleton::process_stage_6(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -517,17 +525,19 @@ void Singleton::process_stage_7(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -576,17 +586,19 @@ void Singleton::process_stage_8(cifar_sparse::AppData &app_data) {
       .stride = kPoolStride,
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -631,17 +643,19 @@ void Singleton::process_stage_9(cifar_sparse::AppData &app_data) {
       .weight_matrix_cols = static_cast<uint32_t>(app_data.linear_weights.cols),
   });
 
-  seq->cmd_begin();
+  {
+    seq->cmd_begin();
 
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
 
-  seq->cmd_end();
+    seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+    seq->launch_kernel_async();
+    seq->sync();
+  }
 }
 
 }  // namespace cifar_sparse::vulkan

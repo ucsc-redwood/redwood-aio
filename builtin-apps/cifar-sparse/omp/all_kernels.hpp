@@ -10,6 +10,9 @@
 
 namespace cifar_sparse::omp {
 
+// How many images to process per iteration together
+constexpr auto kNumBatches = 16;
+
 // ----------------------------------------------------------------------------
 // Convolution 2D (Sparse)
 // ----------------------------------------------------------------------------
