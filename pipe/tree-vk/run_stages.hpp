@@ -2,9 +2,9 @@
 
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/tree/omp/func_sort.hpp"
-#include "builtin-apps/tree/omp/tree_kernel.hpp"
-#include "builtin-apps/tree/vulkan/vk_dispatcher.hpp"
+#include "builtin-apps/tree/omp/dispatchers.hpp"
+#include "builtin-apps/tree/vulkan/dispatchers.hpp"
+#include "task.hpp"
 
 template <int Start, int End>
 concept ValidStageRange = Start >= 1 && End <= 9 && Start <= End;
@@ -25,7 +25,7 @@ concept ValidStageRange = Start >= 1 && End <= 9 && Start <= End;
  */
 template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
   requires ValidStageRange<start_stage, end_stage>
-void run_stages(tree::AppData* app_data, tree::omp::TempStorage& temp_storage) {
+void run_cpu_stages(Task& task) {
 #pragma omp parallel num_threads(num_threads)
   {
     if constexpr (processor_type == ProcessorType::kLittleCore) {
@@ -39,10 +39,13 @@ void run_stages(tree::AppData* app_data, tree::omp::TempStorage& temp_storage) {
     }
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]
-    [&temp_storage]<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
+    []<std::size_t... I>(
+        std::index_sequence<I...>, tree::AppData& data, tree::omp::TmpStorage& tmp_storage) {
       // Each I is offset by (start_stage - 1)
-      ((tree::omp::run_stage<start_stage + I>(data, temp_storage)), ...);
-    }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
+      ((tree::omp::run_stage<start_stage + I>(data, tmp_storage)), ...);
+    }(std::make_index_sequence<end_stage - start_stage + 1>{},
+      *task.app_data,
+      *task.omp_tmp_storage);
   }
 }
 
@@ -58,9 +61,12 @@ void run_stages(tree::AppData* app_data, tree::omp::TempStorage& temp_storage) {
  */
 template <int start_stage, int end_stage>
   requires ValidStageRange<start_stage, end_stage>
-void run_gpu_stages(tree::AppData* app_data, tree::vulkan::TmpStorage& temp_storage) {
+void run_gpu_stages(Task& task) {
   // Generate a compile-time sequence for the range [start_stage, end_stage]
-  [&temp_storage]<std::size_t... I>(std::index_sequence<I...>, tree::AppData& data) {
-    ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data, temp_storage)), ...);
-  }(std::make_index_sequence<end_stage - start_stage + 1>{}, *app_data);
+  []<std::size_t... I>(
+      std::index_sequence<I...>, tree::AppData& data, tree::vulkan::TmpStorage& tmp_storage) {
+    ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data, tmp_storage)), ...);
+  }(std::make_index_sequence<end_stage - start_stage + 1>{},
+    *task.app_data,
+    *task.vulkan_tmp_storage);
 }

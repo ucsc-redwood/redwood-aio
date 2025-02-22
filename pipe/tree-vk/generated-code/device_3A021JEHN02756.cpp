@@ -21,7 +21,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -39,7 +40,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -108,7 +110,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -126,7 +129,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -195,7 +199,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -213,7 +218,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -282,7 +288,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -300,7 +307,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -369,7 +377,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -387,7 +396,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -456,7 +466,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -474,7 +485,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -543,7 +555,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -561,7 +574,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -630,7 +644,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -696,7 +711,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -714,7 +730,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -783,7 +800,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -801,7 +819,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -870,7 +889,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -888,7 +908,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -957,7 +978,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1023,7 +1045,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1089,7 +1112,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1107,7 +1131,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1176,7 +1201,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1242,7 +1268,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1260,7 +1287,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1329,7 +1357,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1395,7 +1424,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1461,7 +1491,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1527,7 +1558,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1593,7 +1625,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1704,7 +1737,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1770,7 +1804,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1788,7 +1823,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1857,7 +1893,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1875,7 +1912,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1944,7 +1982,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -1962,7 +2001,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2031,7 +2071,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2049,7 +2090,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2118,7 +2160,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2184,7 +2227,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2250,7 +2294,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2268,7 +2313,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2337,7 +2383,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2403,7 +2450,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2421,7 +2469,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2490,7 +2539,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2508,7 +2558,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2577,7 +2628,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2595,7 +2647,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2709,7 +2762,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2727,7 +2781,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2796,7 +2851,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2814,7 +2870,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2883,7 +2940,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2949,7 +3007,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -2967,7 +3026,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3036,7 +3096,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3054,7 +3115,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3123,7 +3185,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3189,7 +3252,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3207,7 +3271,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3276,7 +3341,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3294,7 +3360,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3363,7 +3430,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3381,7 +3449,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3450,7 +3519,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3516,7 +3586,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3534,7 +3605,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3603,7 +3675,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3669,7 +3742,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3687,7 +3761,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3756,7 +3831,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3774,7 +3850,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::Concurren
   }
 }
 
-void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
@@ -3843,7 +3920,8 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
+                  moodycamel::ConcurrentQueue<Task>& out_q) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {

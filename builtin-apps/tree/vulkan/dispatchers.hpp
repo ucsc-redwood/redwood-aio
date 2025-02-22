@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../common/kiss-vk/engine.hpp"
 #include "../tree_appdata.hpp"
 #include "tmp_storage.hpp"

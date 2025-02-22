@@ -1,29 +1,49 @@
 #include "task.hpp"
 
-#include "builtin-apps/tree/vulkan/dispatchers.hpp"
-
-// ---------------------------------------------------------------------
-// Task structure
-// ---------------------------------------------------------------------
-
+/**
+ * Initializes a vector of tasks and adds a sentinel task at the end.
+ * The sentinel task (with null pointers) is used to signal the end of
+ * the task stream to the pipeline stages.
+ */
 [[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
 
-  std::vector<Task> tasks(num_tasks);
+  std::vector<Task> tasks;
+  tasks.reserve(num_tasks + 1);  // +1 for sentinel
+
+  constexpr auto n_inputs = 640 * 480;
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
-    tasks[i] = Task{
-        .app_data = new tree::AppData(mr),
-        .temp_storage = new tree::omp::TempStorage(1, 1),
-        .vulkan_temp_storage = new tree::vulkan::TmpStorage(mr, 640 * 480),
+    Task task{
+        .app_data = new tree::AppData(mr, n_inputs),
+        .omp_tmp_storage = new tree::omp::TmpStorage(),
+        .vulkan_tmp_storage = new tree::vulkan::TmpStorage(mr, n_inputs),
+        .done = false,
     };
+
+    const auto n_threads = std::thread::hardware_concurrency();
+    task.omp_tmp_storage->allocate(n_threads, n_threads);
+    tasks.push_back(task);
   }
+
+  // create a sentinel task
+  tasks.push_back(Task{
+      .app_data = nullptr,
+      .omp_tmp_storage = nullptr,
+      .vulkan_tmp_storage = nullptr,
+      .done = true,
+  });
 
   return tasks;
 }
 
 void cleanup(std::vector<Task>& tasks) {
   for (auto& task : tasks) {
+    if (task.is_sentinel()) {
+      continue;
+    }
     delete task.app_data;
+    delete task.omp_tmp_storage;
+    delete task.vulkan_tmp_storage;
   }
 }
