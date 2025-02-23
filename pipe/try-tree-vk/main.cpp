@@ -22,6 +22,7 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
 
     // ---------------------------------------------------------------------
     run_cpu_stages<1, 1, ProcessorType::kBigCore, 2>(task);
+    // run_gpu_stages<1, 1>(task);
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
@@ -39,7 +40,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
       }
 
       // ---------------------------------------------------------------------
-      run_cpu_stages<2, 2, ProcessorType::kMediumCore, 2>(task);
+      // run_cpu_stages<2, 2, ProcessorType::kMediumCore, 2>(task);
+      run_gpu_stages<2, 2>(task);
       // ---------------------------------------------------------------------
 
       out_q.enqueue(task);
@@ -60,8 +62,8 @@ void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
       }
 
       // ---------------------------------------------------------------------
-      run_cpu_stages<3, 5, ProcessorType::kBigCore, 2>(task);
-      // run_gpu_stages<3, 5>(task);
+      // run_cpu_stages<3, 5, ProcessorType::kBigCore, 2>(task);
+      run_gpu_stages<3, 5>(task);
       // ---------------------------------------------------------------------
 
       out_q.enqueue(task);
@@ -82,6 +84,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& ou
 
       // ---------------------------------------------------------------------
       run_cpu_stages<6, 7, ProcessorType::kLittleCore, 4>(task);
+      // run_gpu_stages<6, 7>(task);
       // ---------------------------------------------------------------------
 
       out_tasks.push_back(task);
