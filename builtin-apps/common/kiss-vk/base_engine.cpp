@@ -97,6 +97,13 @@ void BaseEngine::request_validation_layer() {
   constexpr auto validationLayerName = "VK_LAYER_KHRONOS_validation";
 
   const auto availableLayers = vk::enumerateInstanceLayerProperties();
+
+  // Debug: Print all detected layers
+  spdlog::info("Available Vulkan Layers:");
+  for (const auto &layer : availableLayers) {
+    spdlog::info("- {}", layer.layerName.data());
+  }
+
   bool layerFound = std::ranges::any_of(availableLayers, [validationLayerName](const auto &layer) {
     return std::strcmp(layer.layerName.data(), validationLayerName) == 0;
   });

@@ -18,8 +18,12 @@ class Sequence {
   // void insert_compute_memory_barrier() const;
 
   // void record_commands(const Algorithm* algo, std::array<uint32_t, 3> grid_size) const;
-  void launch_kernel_async() const;
-  void sync() const;
+  [[deprecated("use submit() instead")]] void launch_kernel_async() const;
+  [[deprecated("use wait_for_fence() instead")]] void sync() const;
+
+  void submit() const;
+  void wait_for_fence() const;
+  void reset_fence() const;
 
   [[nodiscard]] vk::CommandBuffer get_handle() const { return handle_; }
 

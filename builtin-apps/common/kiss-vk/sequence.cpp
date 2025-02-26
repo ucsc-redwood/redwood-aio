@@ -106,6 +106,42 @@ void Sequence::sync() const {
     throw std::runtime_error("Failed to reset sequence");
   }
 }
+// ----------------------------------------------------------------------------
+// new names
+// ----------------------------------------------------------------------------
+
+void Sequence::submit() const {
+  spdlog::trace("Sequence::launch_kernel_async()");
+
+  const vk::SubmitInfo submit_info{
+      .commandBufferCount = 1,
+      .pCommandBuffers = &handle_,
+  };
+
+  compute_queue_ref_.submit(submit_info, fence_);
+}
+
+void Sequence::wait_for_fence() const {
+  spdlog::trace("Sequence::wait_for_fence()");
+
+  // if (device_ref_.waitForFences(1, &fence_, true, UINT64_MAX) != vk::Result::eSuccess) {
+  //   throw std::runtime_error("Failed to wait for fence");
+  // }
+
+  if (vk::Result result = device_ref_.waitForFences(1, &fence_, true, UINT64_MAX);
+      result != vk::Result::eSuccess) {
+    spdlog::error("waitForFences failed with error: {}", vk::to_string(result));
+    throw std::runtime_error("Failed to sync sequence");
+  }
+}
+
+void Sequence::reset_fence() const {
+  spdlog::trace("Sequence::reset_fence()");
+
+  if (device_ref_.resetFences(1, &fence_) != vk::Result::eSuccess) {
+    throw std::runtime_error("Failed to reset fence");
+  }
+}
 
 // void Sequence::record_commands(const Algorithm* algo,
 //                                const std::array<uint32_t, 3> grid_size) const {

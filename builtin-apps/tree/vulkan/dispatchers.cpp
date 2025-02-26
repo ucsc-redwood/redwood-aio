@@ -134,8 +134,9 @@ void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStor
       {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
 }
 
 // ----------------------------------------------------------------------------
@@ -147,28 +148,43 @@ void Singleton::process_stage_2(tree::AppData &appdata, [[maybe_unused]] TmpStor
 
   auto algo = cached_algorithms.at("radixsort").get();
 
-  algo->update_descriptor_set(0,
-                              {
-                                  engine.get_buffer_info(appdata.u_morton_keys_s1),
-                                  engine.get_buffer_info(appdata.u_morton_keys_sorted_s2),
-                              });
+  // algo->update_descriptor_set(0,
+  //                             {
+  //                                 engine.get_buffer_info(appdata.u_morton_keys_s1),
+  //                                 engine.get_buffer_info(appdata.u_morton_keys_sorted_s2),
+  //                             });
 
-  algo->update_push_constant(InputSizePushConstantsUnsigned{
-      .n = appdata.get_n_input(),
-  });
+  // algo->update_push_constant(InputSizePushConstantsUnsigned{
+  //     .n = appdata.get_n_input(),
+  // });
 
-  seq->cmd_begin();
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(), {1, 1, 1});  // Special case: single workgroup
-  seq->cmd_end();
+  // seq->cmd_begin();
+  // algo->record_bind_core(seq->get_handle(), 0);
+  // algo->record_bind_push(seq->get_handle());
+  // algo->record_dispatch(seq->get_handle(), {1, 1, 1});  // Special case: single workgroup
+  // seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  // seq->launch_kernel_async();
+  // seq->sync();
 
   // #ifdef __ANDROID__
-  std::iota(appdata.u_morton_keys_sorted_s2.begin(), appdata.u_morton_keys_sorted_s2.end(), 0);
+  // std::iota(appdata.u_morton_keys_sorted_s2.begin(), appdata.u_morton_keys_sorted_s2.end(), 0);
   // #endif
+
+  std::ranges::copy(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2.begin());
+  std::ranges::sort(appdata.u_morton_keys_sorted_s2);
+
+  // static bool once = false;
+  // if (!once) {
+  //   once = true;
+  //   // print the first 10 elements
+  //   for (int i = 0; i < 10; ++i) {
+  //     std::cout << appdata.u_morton_keys_sorted_s2[i] << " ";
+  //   }
+  //   std::cout << std::endl;
+  //   bool is_sorted = std::ranges::is_sorted(appdata.u_morton_keys_sorted_s2);
+  //   std::cout << "is_sorted: " << (is_sorted ? "true" : "false") << std::endl;
+  // }
 }
 
 // ----------------------------------------------------------------------------
@@ -197,6 +213,13 @@ void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStor
   const int32_t n = appdata.get_n_unique();
   auto algo = cached_algorithms.at("build_radix_tree").get();
 
+  // print first 10 appdata.u_morton_keys_unique_s3
+  for (int i = 0; i < 10; ++i) {
+    spdlog::trace("================= appdata.u_morton_keys_unique_s3[{}] = {}",
+                  i,
+                  appdata.u_morton_keys_unique_s3[i]);
+  }
+
   algo->update_descriptor_set(0,
                               {
                                   engine.get_buffer_info(appdata.u_morton_keys_unique_s3),
@@ -211,6 +234,17 @@ void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStor
       .n = n,
   });
 
+  // vk::CommandBufferBeginInfo
+  // cmd_buf.bindPipeline
+  // cmd_buf.bindDescriptorSets
+  // cmd_buf.pushConstants
+  // cmd_buf.dispatch
+  // end
+
+  // vk::SubmitInfo
+  // waitForFences
+  // resetFences
+
   seq->cmd_begin();
   algo->record_bind_core(seq->get_handle(), 0);
   algo->record_bind_push(seq->get_handle());
@@ -218,8 +252,11 @@ void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStor
                         {static_cast<uint32_t>(kiss_vk::div_ceil(n, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+
+  // seq->sync();
 }
 
 // ----------------------------------------------------------------------------
@@ -250,8 +287,9 @@ void Singleton::process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStor
       {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_brt_nodes(), 512)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
 }
 
 // ----------------------------------------------------------------------------
@@ -314,8 +352,9 @@ void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStor
       {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_octree_nodes(), 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
 }
 
 }  // namespace tree::vulkan

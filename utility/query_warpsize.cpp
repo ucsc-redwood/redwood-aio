@@ -59,6 +59,18 @@ int main() {
 
     std::cout << "Device: " << deviceProperties.deviceName << std::endl;
     std::cout << "  Subgroup Size (Warp Size): " << subgroupProperties.subgroupSize << std::endl;
+
+    // Print max work group limits
+    std::cout << "  Max Work Group Limits:" << std::endl;
+    std::cout << "    Max Work Group Count: " << deviceProperties.limits.maxComputeWorkGroupCount[0]
+              << " x " << deviceProperties.limits.maxComputeWorkGroupCount[1] << " x "
+              << deviceProperties.limits.maxComputeWorkGroupCount[2] << std::endl;
+    std::cout << "    Max Work Group Size: " << deviceProperties.limits.maxComputeWorkGroupSize[0]
+              << " x " << deviceProperties.limits.maxComputeWorkGroupSize[1] << " x "
+              << deviceProperties.limits.maxComputeWorkGroupSize[2] << std::endl;
+    std::cout << "    Max Work Group Invocations: "
+              << deviceProperties.limits.maxComputeWorkGroupInvocations << std::endl;
+    std::cout << std::endl;
   }
 
   // Cleanup
