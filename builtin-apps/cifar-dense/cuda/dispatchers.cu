@@ -6,6 +6,8 @@
 
 namespace cifar_dense::cuda {
 
+constexpr bool kAutoSync = true;
+
 // -----------------------------------------------------------------------------
 // Stage 1 (first conv2d)
 // -----------------------------------------------------------------------------
@@ -32,6 +34,10 @@ void process_stage_1(AppData &app_data) {
                                               kConv1OutHeight,
                                               kConv1OutWidth,
                                               kRelu);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -52,6 +58,10 @@ void process_stage_2(AppData &app_data) {
                                                  kStride,
                                                  kPool1OutHeight,
                                                  kPool1OutWidth);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -80,6 +90,10 @@ void process_stage_3(AppData &app_data) {
                                               kConv2OutHeight,
                                               kConv2OutWidth,
                                               kRelu);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -100,6 +114,10 @@ void process_stage_4(AppData &app_data) {
                                                  kStride,
                                                  kPool2OutHeight,
                                                  kPool2OutWidth);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -128,6 +146,10 @@ void process_stage_5(AppData &app_data) {
                                               kConv3OutHeight,
                                               kConv3OutWidth,
                                               kRelu);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -156,6 +178,10 @@ void process_stage_6(AppData &app_data) {
                                               kConv4OutHeight,
                                               kConv4OutWidth,
                                               kRelu);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -184,6 +210,10 @@ void process_stage_7(AppData &app_data) {
                                               kConv5OutHeight,
                                               kConv5OutWidth,
                                               kRelu);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -204,6 +234,10 @@ void process_stage_8(AppData &app_data) {
                                                  kStride,
                                                  kPool3OutHeight,
                                                  kPool3OutWidth);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -221,6 +255,10 @@ void process_stage_9(AppData &app_data) {
                                               app_data.u_linear_out.data(),
                                               kLinearInFeatures,
                                               kLinearOutFeatures);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 }  // namespace cifar_dense::cuda

@@ -33,7 +33,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Baseline)
     cifar_dense::cuda::run_stage<7>(appdata);
     cifar_dense::cuda::run_stage<8>(appdata);
     cifar_dense::cuda::run_stage<9>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -53,7 +53,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage1)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<1>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -74,7 +74,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage2)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<2>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -90,7 +90,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage3)
 
   cifar_dense::cuda::run_stage<1>(appdata);
   cifar_dense::cuda::run_stage<2>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   // warmup
   cifar_dense::cuda::run_stage<3>(appdata);
@@ -98,7 +98,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage3)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<3>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -115,14 +115,14 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage4)
   cifar_dense::cuda::run_stage<1>(appdata);
   cifar_dense::cuda::run_stage<2>(appdata);
   cifar_dense::cuda::run_stage<3>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   cifar_dense::cuda::run_stage<4>(appdata);
   CUDA_CHECK(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<4>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -140,7 +140,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage5)
   cifar_dense::cuda::run_stage<2>(appdata);
   cifar_dense::cuda::run_stage<3>(appdata);
   cifar_dense::cuda::run_stage<4>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   // warmup
   cifar_dense::cuda::run_stage<5>(appdata);
@@ -148,7 +148,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage5)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<5>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -167,7 +166,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage6)
   cifar_dense::cuda::run_stage<3>(appdata);
   cifar_dense::cuda::run_stage<4>(appdata);
   cifar_dense::cuda::run_stage<5>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   // warmup
   cifar_dense::cuda::run_stage<6>(appdata);
@@ -175,7 +174,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage6)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<6>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -195,7 +193,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage7)
   cifar_dense::cuda::run_stage<4>(appdata);
   cifar_dense::cuda::run_stage<5>(appdata);
   cifar_dense::cuda::run_stage<6>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   // warmup
   cifar_dense::cuda::run_stage<7>(appdata);
@@ -203,7 +201,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage7)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<7>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -224,7 +221,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage8)
   cifar_dense::cuda::run_stage<5>(appdata);
   cifar_dense::cuda::run_stage<6>(appdata);
   cifar_dense::cuda::run_stage<7>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   // warmup
   cifar_dense::cuda::run_stage<8>(appdata);
@@ -232,7 +229,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage8)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<8>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 
@@ -254,7 +250,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage9)
   cifar_dense::cuda::run_stage<6>(appdata);
   cifar_dense::cuda::run_stage<7>(appdata);
   cifar_dense::cuda::run_stage<8>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  // CUDA_CHECK(cudaDeviceSynchronize());
 
   // warmup
   cifar_dense::cuda::run_stage<9>(appdata);
@@ -262,7 +258,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage9)
 
   for (auto _ : state) {
     cifar_dense::cuda::run_stage<9>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
   }
 }
 

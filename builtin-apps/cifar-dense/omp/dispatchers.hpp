@@ -2,9 +2,7 @@
 
 #include "../dense_appdata.hpp"
 
-namespace cifar_dense {
-
-namespace omp {
+namespace cifar_dense::omp {
 
 // Stage processing functions
 void process_stage_1(cifar_dense::AppData &app_data);
@@ -41,6 +39,4 @@ void run_stage(cifar_dense::AppData &app_data) {
   }
 }
 
-}  // namespace omp
-
-}  // namespace cifar_dense
+}  // namespace cifar_dense::omp

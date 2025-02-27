@@ -1,8 +1,8 @@
 #pragma once
 
-namespace cifar_dense {
+#include <cstdint>
 
-namespace omp {
+namespace cifar_dense::omp {
 
 // Function declarations
 void conv2d_omp(const float *input_data,
@@ -43,6 +43,4 @@ void linear_omp(const float *input,
                 const int start,
                 const int end);
 
-}  // namespace omp
-
-}  // namespace cifar_dense
+}  // namespace cifar_dense::omp

@@ -9,9 +9,7 @@
 #include "func_octree.hpp"
 #include "func_sort.hpp"
 
-namespace tree {
-
-namespace omp {
+namespace tree::omp {
 
 // ----------------------------------------------------------------------------
 // Stage 1 (xyz -> morton)
@@ -171,6 +169,4 @@ void process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 #pragma omp barrier
 }
 
-}  // namespace omp
-
-}  // namespace tree
+}  // namespace tree::omp

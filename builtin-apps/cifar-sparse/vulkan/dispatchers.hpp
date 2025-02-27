@@ -2,9 +2,7 @@
 #include "../../common/kiss-vk/engine.hpp"
 #include "../sparse_appdata.hpp"
 
-namespace cifar_sparse {
-
-namespace vulkan {
+namespace cifar_sparse::vulkan {
 
 // How many images to process per iteration together
 constexpr auto kNumBatches = 16;
@@ -65,6 +63,4 @@ class Singleton {
   std::unordered_map<std::string, std::shared_ptr<kiss_vk::Algorithm>> algorithms;
 };
 
-}  // namespace vulkan
-
-}  // namespace cifar_sparse
+}  // namespace cifar_sparse::vulkan
