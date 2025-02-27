@@ -109,8 +109,9 @@ void Singleton::process_stage_1(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
@@ -144,8 +145,9 @@ void Singleton::process_stage_2(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
@@ -187,8 +189,9 @@ void Singleton::process_stage_3(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
@@ -222,8 +225,9 @@ void Singleton::process_stage_4(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
@@ -265,8 +269,9 @@ void Singleton::process_stage_5(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
@@ -308,8 +313,9 @@ void Singleton::process_stage_6(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
@@ -351,8 +357,9 @@ void Singleton::process_stage_7(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
@@ -386,8 +393,9 @@ void Singleton::process_stage_8(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
@@ -417,8 +425,9 @@ void Singleton::process_stage_9(cifar_dense::AppData &app_data) {
                         {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
   seq->cmd_end();
 
-  seq->launch_kernel_async();
-  seq->sync();
+  seq->submit();
+  seq->wait_for_fence();
+  seq->reset_fence();
 }
 
 }  // namespace cifar_dense::vulkan
