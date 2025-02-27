@@ -30,7 +30,8 @@ void run_warmup(const int schedule_id) {
 
 template <int device_index>
 void run_one_schedule(const int schedule_id) {
-  auto tasks = init_tasks(20);
+  constexpr auto num_tasks = 20;
+  auto tasks = init_tasks(num_tasks);
   std::queue<Task> out_tasks;
 
   auto start = std::chrono::high_resolution_clock::now();
@@ -42,7 +43,7 @@ void run_one_schedule(const int schedule_id) {
   auto end = std::chrono::high_resolution_clock::now();
 
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  double avg_time = duration.count() / static_cast<double>(tasks.size());
+  double avg_time = duration.count() / static_cast<double>(num_tasks);
   std::cout << "[schedule " << schedule_id << "]: Average time per iteration: " << avg_time << " ms"
             << std::endl;
 
