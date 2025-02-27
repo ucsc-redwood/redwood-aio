@@ -12,8 +12,7 @@ void run_warmup(const int schedule_id) {
   spdlog::set_level(spdlog::level::off);
 
   auto tasks = init_tasks(20);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(tasks.size());
+  std::queue<Task> out_tasks;
 
   // -------------------  run the pipeline  ------------------------------
   get_run_pipeline<device_index>(schedule_id)(tasks, out_tasks);
@@ -32,8 +31,7 @@ void run_warmup(const int schedule_id) {
 template <int device_index>
 void run_one_schedule(const int schedule_id) {
   auto tasks = init_tasks(20);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(tasks.size());
+  std::queue<Task> out_tasks;
 
   auto start = std::chrono::high_resolution_clock::now();
 

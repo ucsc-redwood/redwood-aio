@@ -1,15 +1,13 @@
 #include "task.hpp"
 
 /**
- * Initializes a vector of tasks and adds a sentinel task at the end.
+ * Initializes a queue of tasks and adds a sentinel task at the end.
  * The sentinel task (with null pointers) is used to signal the end of
  * the task stream to the pipeline stages.
  */
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
+[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks) {
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
-
-  std::vector<Task> tasks;
-  tasks.reserve(num_tasks + 1);  // +1 for sentinel
+  std::queue<Task> tasks;
 
   constexpr auto n_inputs = 640 * 480;
 
@@ -23,11 +21,11 @@
 
     const auto n_threads = std::thread::hardware_concurrency();
     task.omp_tmp_storage->allocate(n_threads, n_threads);
-    tasks.push_back(task);
+    tasks.push(task);
   }
 
   // create a sentinel task
-  tasks.push_back(Task{
+  tasks.push(Task{
       .app_data = nullptr,
       .omp_tmp_storage = nullptr,
       .vulkan_tmp_storage = nullptr,
@@ -37,13 +35,14 @@
   return tasks;
 }
 
-void cleanup(std::vector<Task>& tasks) {
-  for (auto& task : tasks) {
-    if (task.is_sentinel()) {
-      continue;
+void cleanup(std::queue<Task>& tasks) {
+  while (!tasks.empty()) {
+    auto& task = tasks.front();
+    if (!task.is_sentinel()) {
+      delete task.app_data;
+      delete task.omp_tmp_storage;
+      delete task.vulkan_tmp_storage;
     }
-    delete task.app_data;
-    delete task.omp_tmp_storage;
-    delete task.vulkan_tmp_storage;
+    tasks.pop();
   }
 }

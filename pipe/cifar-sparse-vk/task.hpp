@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
 
 // ---------------------------------------------------------------------
@@ -13,6 +15,6 @@ struct Task {
   [[nodiscard]] bool is_sentinel() const { return app_data == nullptr; }
 };
 
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks);
+[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks);
 
-void cleanup(std::vector<Task>& tasks);
+void cleanup(std::queue<Task>& tasks);
