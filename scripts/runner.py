@@ -10,7 +10,7 @@ from colorama import init, Fore, Style
 from tabulate import tabulate
 import subprocess
 
-from helpers import (
+from . import (
     run_command,
     ALL_DEVICES,
     ALL_APPLICATIONS,

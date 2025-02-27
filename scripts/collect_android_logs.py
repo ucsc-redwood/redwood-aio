@@ -2,7 +2,7 @@
 from pathlib import Path
 import argparse
 
-from helpers import (
+from . import (
     ALL_DEVICES,
     ALL_APPLICATIONS,
     run_command,

@@ -4,8 +4,14 @@ import os
 import sys
 from typing import Optional, List, Tuple, Any
 from dataclasses import dataclass
+from pathlib import Path
 
-DB_PATH = "data/benchmark_results.db"
+# Add scripts directory to Python path
+scripts_dir = str(Path(__file__).parent.parent)
+if scripts_dir not in sys.path:
+    sys.path.insert(0, scripts_dir)
+
+from helpers import DB_PATH
 
 
 @dataclass

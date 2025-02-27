@@ -7,7 +7,7 @@ import argparse
 from typing import Dict, List, Set
 from colorama import init, Fore, Style
 
-from helpers import RAW_LOGS_PATH
+from .. import RAW_LOGS_PATH
 
 # Initialize colorama
 init()

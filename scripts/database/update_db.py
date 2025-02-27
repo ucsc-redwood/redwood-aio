@@ -5,6 +5,13 @@ import glob
 import re
 from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass
+import sys
+from pathlib import Path
+
+# Add scripts directory to Python path
+scripts_dir = str(Path(__file__).parent.parent)
+if scripts_dir not in sys.path:
+    sys.path.insert(0, scripts_dir)
 
 from helpers import DB_PATH, RAW_BENCHMARK_PATH
 

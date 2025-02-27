@@ -9,9 +9,15 @@ from dataclasses import dataclass
 from itertools import permutations
 from typing import List, Tuple, Dict, Any, Optional
 
+# Add scripts directory to Python path
+scripts_dir = str(Path(__file__).parent.parent)
+if scripts_dir not in sys.path:
+    sys.path.insert(0, scripts_dir)
+
+from helpers import DB_PATH, GENERATED_SCHEDULES_PATH
+
 HARDWARE_PATH = "data/hardware_config.json"
 APPLICATION_PATH = "data/application_config.json"
-DB_PATH = "data/benchmark_results.db"
 
 
 @dataclass
