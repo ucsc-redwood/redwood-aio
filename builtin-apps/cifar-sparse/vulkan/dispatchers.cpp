@@ -117,17 +117,18 @@ void Singleton::process_stage_1(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  //   seq->record_commands(algo, total_iterations);
-  seq->cmd_begin();
-  algo->record_bind_core(seq->get_handle(), 0);
-  algo->record_bind_push(seq->get_handle());
-  algo->record_dispatch(seq->get_handle(),
-                        {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
-  seq->cmd_end();
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
+    seq->cmd_begin();
+    algo->record_bind_core(seq->get_handle(), 0);
+    algo->record_bind_push(seq->get_handle());
+    algo->record_dispatch(seq->get_handle(),
+                          {static_cast<uint32_t>(kiss_vk::div_ceil(total_iterations, 256)), 1, 1});
+    seq->cmd_end();
 
-  seq->submit();
-  seq->wait_for_fence();
-  seq->reset_fence();
+    seq->submit();
+    seq->wait_for_fence();
+    seq->reset_fence();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -172,7 +173,7 @@ void Singleton::process_stage_2(cifar_sparse::AppData &app_data) {
       .stride = kPoolStride,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -246,7 +247,7 @@ void Singleton::process_stage_3(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -308,7 +309,7 @@ void Singleton::process_stage_4(cifar_sparse::AppData &app_data) {
       .stride = kPoolStride,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -382,7 +383,7 @@ void Singleton::process_stage_5(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -456,7 +457,7 @@ void Singleton::process_stage_6(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -530,7 +531,7 @@ void Singleton::process_stage_7(cifar_sparse::AppData &app_data) {
       .relu = kRelu,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -592,7 +593,7 @@ void Singleton::process_stage_8(cifar_sparse::AppData &app_data) {
       .stride = kPoolStride,
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);
@@ -650,7 +651,7 @@ void Singleton::process_stage_9(cifar_sparse::AppData &app_data) {
       .weight_matrix_cols = static_cast<uint32_t>(app_data.linear_weights.cols),
   });
 
-  {
+  for (auto batch = 0; batch < kNumBatches; ++batch) {
     seq->cmd_begin();
 
     algo->record_bind_core(seq->get_handle(), 0);

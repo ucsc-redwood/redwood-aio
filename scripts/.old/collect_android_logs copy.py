@@ -7,8 +7,10 @@ import argparse
 ALL_DEVICES = ["3A021JEHN02756", "9b034f1b", "ce0717178d7758b00b7e"]
 ALL_APPLICATIONS = ["tree", "cifar-dense", "cifar-sparse"]
 
+from helpers import RAW_LOGS_PATH
+
 # Directory to save pulled results
-OUTPUT_DIR = "./data/logs"
+OUTPUT_DIR = RAW_LOGS_PATH
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 

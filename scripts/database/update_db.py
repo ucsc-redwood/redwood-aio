@@ -6,7 +6,9 @@ import re
 from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass
 
-DB_PATH = "data/benchmark_results.db"
+from helpers import DB_PATH, RAW_BENCHMARK_PATH
+
+# DB_PATH = "data/benchmark_results.db"
 
 
 @dataclass
@@ -55,7 +57,7 @@ def parse_filename(filename: str) -> Tuple[str, str, str]:
     return parts[1], parts[2], parts[3]
 
 
-def read_benchmarks(folder: str = "data/raw_bm_results") -> List[BenchmarkResult]:
+def read_benchmarks(folder: str) -> List[BenchmarkResult]:
     """
     Read and parse all JSON benchmark files under specified folder.
 
@@ -262,7 +264,7 @@ def process_benchmarks(
 
 
 def main():
-    benchmarks = read_benchmarks("data/raw_bm_results")
+    benchmarks = read_benchmarks(RAW_BENCHMARK_PATH)
     process_benchmarks(benchmarks)
 
 

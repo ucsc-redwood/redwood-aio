@@ -5,7 +5,7 @@ import os
 from typing import List, Dict, Tuple
 
 # hardcoded paths
-RAW_BENCHMARK_PATH = "data/raw-benchmarks"
+RAW_BENCHMARK_PATH = "data/raw_bm_results"
 RAW_LOGS_PATH = "data/logs"
 GENERATED_SCHEDULES_PATH = "data/generated-schedules"
 

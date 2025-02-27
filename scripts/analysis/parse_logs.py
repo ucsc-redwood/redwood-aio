@@ -7,6 +7,8 @@ import argparse
 from typing import Dict, List, Set
 from colorama import init, Fore, Style
 
+from helpers import RAW_LOGS_PATH
+
 # Initialize colorama
 init()
 
@@ -553,7 +555,7 @@ def main():
     args = parser.parse_args()
 
     # Find matching log files
-    log_pattern = f"data/logs/logs-{args.device}-{args.app}-schedule-*.txt"
+    log_pattern = f"{RAW_LOGS_PATH}/logs-{args.device}-{args.app}-schedule-*.txt"
     log_files = glob.glob(log_pattern)
 
     if not log_files:
