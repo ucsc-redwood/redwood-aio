@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import argparse
+import sys
 
-from . import (
+# Add scripts directory to Python path
+scripts_dir = str(Path(__file__).parent)
+if scripts_dir not in sys.path:
+    sys.path.insert(0, scripts_dir)
+
+from helpers import (
     ALL_DEVICES,
     ALL_APPLICATIONS,
     run_command,

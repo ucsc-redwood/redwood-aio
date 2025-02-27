@@ -9,8 +9,14 @@ import numpy as np
 from colorama import init, Fore, Style
 from tabulate import tabulate
 import subprocess
+import sys
 
-from . import (
+# Add scripts directory to Python path
+scripts_dir = str(Path(__file__).parent)
+if scripts_dir not in sys.path:
+    sys.path.insert(0, scripts_dir)
+
+from helpers import (
     run_command,
     ALL_DEVICES,
     ALL_APPLICATIONS,
