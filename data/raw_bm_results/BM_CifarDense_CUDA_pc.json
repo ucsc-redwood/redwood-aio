@@ -1,6 +1,6 @@
 {
   "context": {
-    "date": "2025-02-27T13:24:38-08:00",
+    "date": "2025-02-27T13:43:19-08:00",
     "host_name": "gentoo-gnome",
     "executable": "/home/doremy/Desktop/redwood-aio/build/linux/x86_64/release/bm-cifar-dense-cu",
     "num_cpus": 24,
@@ -32,7 +32,7 @@
         "num_sharing": 24
       }
     ],
-    "load_avg": [0.839355,0.922363,0.884766],
+    "load_avg": [2.63135,2.79248,2.06201],
     "library_version": "v1.9.1",
     "library_build_type": "release",
     "json_schema_version": 1
@@ -47,9 +47,9 @@
       "repetitions": 5,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 1023,
-      "real_time": 6.4846439002955603e-01,
-      "cpu_time": 6.4819482013685237e-01,
+      "iterations": 1014,
+      "real_time": 6.4618333727761124e-01,
+      "cpu_time": 6.4591149309664697e-01,
       "time_unit": "ms"
     },
     {
@@ -61,9 +61,9 @@
       "repetitions": 5,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 1023,
-      "real_time": 6.3814366471208084e-01,
-      "cpu_time": 6.3782479178885643e-01,
+      "iterations": 1014,
+      "real_time": 6.4291723372794840e-01,
+      "cpu_time": 6.4264886193293880e-01,
       "time_unit": "ms"
     },
     {
@@ -75,9 +75,9 @@
       "repetitions": 5,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 1023,
-      "real_time": 6.3992399511249598e-01,
-      "cpu_time": 6.3968382111436939e-01,
+      "iterations": 1014,
+      "real_time": 6.4277757988188222e-01,
+      "cpu_time": 6.4257405029585801e-01,
       "time_unit": "ms"
     },
     {
@@ -89,9 +89,9 @@
       "repetitions": 5,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 1023,
-      "real_time": 6.3983488856307946e-01,
-      "cpu_time": 6.3930402150537635e-01,
+      "iterations": 1014,
+      "real_time": 6.4337434615433031e-01,
+      "cpu_time": 6.4313285502958584e-01,
       "time_unit": "ms"
     },
     {
@@ -103,9 +103,9 @@
       "repetitions": 5,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 1023,
-      "real_time": 6.3989285141611307e-01,
-      "cpu_time": 6.3957207233626567e-01,
+      "iterations": 1014,
+      "real_time": 6.4341547830336054e-01,
+      "cpu_time": 6.4315128303747571e-01,
       "time_unit": "ms"
     },
     {
@@ -119,8 +119,8 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 5,
-      "real_time": 6.4125195796666523e-01,
-      "cpu_time": 6.4091590537634402e-01,
+      "real_time": 6.4373359506902650e-01,
+      "cpu_time": 6.4348370867850124e-01,
       "time_unit": "ms"
     },
     {
@@ -134,8 +134,8 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 5,
-      "real_time": 6.3989285141611307e-01,
-      "cpu_time": 6.3957207233626556e-01,
+      "real_time": 6.4337434615433042e-01,
+      "cpu_time": 6.4313285502958595e-01,
       "time_unit": "ms"
     },
     {
@@ -149,8 +149,8 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 5,
-      "real_time": 4.1018107242605049e-03,
-      "cpu_time": 4.1370180016218798e-03,
+      "real_time": 1.3974893403229604e-03,
+      "cpu_time": 1.3831295792437275e-03,
       "time_unit": "ms"
     },
     {
@@ -164,8 +164,8 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 5,
-      "real_time": 6.3965663937570914e-03,
-      "cpu_time": 6.4548530734194112e-03,
+      "real_time": 2.1709125498928011e-03,
+      "cpu_time": 2.1494399323398719e-03,
       "time_unit": "ms"
     },
     {
@@ -177,9 +177,9 @@
       "repetitions": 5,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 103009,
-      "real_time": 6.8439938354748096e-03,
-      "cpu_time": 6.8333898494306322e-03,
+      "iterations": 100906,
+      "real_time": 6.8963617822568185e-03,
+      "cpu_time": 6.8940449824589261e-03,
       "time_unit": "ms"
     },
     {
@@ -191,9 +191,9 @@
       "repetitions": 5,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 103009,
-      "real_time": 6.7833307478024994e-03,
-      "cpu_time": 6.7777047927850918e-03,
+      "iterations": 100906,
+      "real_time": 6.8569551662007412e-03,
+      "cpu_time": 6.8544240084831417e-03,
       "time_unit": "ms"
     },
     {
@@ -205,9 +205,9 @@
       "repetitions": 5,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 103009,
-      "real_time": 6.7970639749945902e-03,
-      "cpu_time": 6.7938176275859396e-03,
+      "iterations": 100906,
+      "real_time": 6.9244313222081404e-03,
+      "cpu_time": 6.9217488355499228e-03,
       "time_unit": "ms"
     },
     {
@@ -219,9 +219,9 @@
       "repetitions": 5,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 103009,
-      "real_time": 6.7812690832735395e-03,
-      "cpu_time": 6.7785902396877967e-03,
+      "iterations": 100906,
+      "real_time": 6.8578641309753391e-03,
+      "cpu_time": 6.8554555725130291e-03,
       "time_unit": "ms"
     },
     {
@@ -233,9 +233,9 @@
       "repetitions": 5,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 103009,
-      "real_time": 6.7916848333569244e-03,
-      "cpu_time": 6.7870443844712568e-03,
+      "iterations": 100906,
+      "real_time": 6.8698801756012628e-03,
+      "cpu_time": 6.8670863675103534e-03,
       "time_unit": "ms"
     },
     {
@@ -249,8 +249,8 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 5,
-      "real_time": 6.7994684949804736e-03,
-      "cpu_time": 6.7941093787921448e-03,
+      "real_time": 6.8810985154484612e-03,
+      "cpu_time": 6.8785519533030763e-03,
       "time_unit": "ms"
     },
     {
@@ -264,8 +264,8 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 5,
-      "real_time": 6.7916848333569226e-03,
-      "cpu_time": 6.7870443844712568e-03,
+      "real_time": 6.8698801756012628e-03,
+      "cpu_time": 6.8670863675103543e-03,
       "time_unit": "ms"
     },
     {
@@ -279,8 +279,8 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 5,
-      "real_time": 2.5692987959506987e-05,
-      "cpu_time": 2.2928741557644539e-05,
+      "real_time": 2.8979684862919985e-05,
+      "cpu_time": 2.8952827032299879e-05,
       "time_unit": "ms"
     },
     {
@@ -294,137 +294,7 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 5,
-      "real_time": 3.7786759330489068e-03,
-      "cpu_time": 3.3747972367381596e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "iteration",
-      "repetitions": 5,
-      "repetition_index": 0,
-      "threads": 1,
-      "iterations": 155915,
-      "real_time": 4.5047290895639186e-03,
-      "cpu_time": 4.5027031651861515e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "iteration",
-      "repetitions": 5,
-      "repetition_index": 1,
-      "threads": 1,
-      "iterations": 155915,
-      "real_time": 4.4867132989066076e-03,
-      "cpu_time": 4.4834154956226117e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "iteration",
-      "repetitions": 5,
-      "repetition_index": 2,
-      "threads": 1,
-      "iterations": 155915,
-      "real_time": 4.4979701696457137e-03,
-      "cpu_time": 4.4953133630503770e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "iteration",
-      "repetitions": 5,
-      "repetition_index": 3,
-      "threads": 1,
-      "iterations": 155915,
-      "real_time": 4.5017298078983917e-03,
-      "cpu_time": 4.4996004297213205e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "iteration",
-      "repetitions": 5,
-      "repetition_index": 4,
-      "threads": 1,
-      "iterations": 155915,
-      "real_time": 4.4905716704551251e-03,
-      "cpu_time": 4.4870345123945755e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2_mean",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "aggregate",
-      "repetitions": 5,
-      "threads": 1,
-      "aggregate_name": "mean",
-      "aggregate_unit": "time",
-      "iterations": 5,
-      "real_time": 4.4963428072939517e-03,
-      "cpu_time": 4.4936133931950083e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2_median",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "aggregate",
-      "repetitions": 5,
-      "threads": 1,
-      "aggregate_name": "median",
-      "aggregate_unit": "time",
-      "iterations": 5,
-      "real_time": 4.4979701696457137e-03,
-      "cpu_time": 4.4953133630503779e-03,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2_stddev",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "aggregate",
-      "repetitions": 5,
-      "threads": 1,
-      "aggregate_name": "stddev",
-      "aggregate_unit": "time",
-      "iterations": 5,
-      "real_time": 7.5503520814749550e-06,
-      "cpu_time": 8.1950784954679401e-06,
-      "time_unit": "ms"
-    },
-    {
-      "name": "CUDA_CifarDense/Stage2_cv",
-      "family_index": 2,
-      "per_family_instance_index": 0,
-      "run_name": "CUDA_CifarDense/Stage2",
-      "run_type": "aggregate",
-      "repetitions": 5,
-      "threads": 1,
-      "aggregate_name": "cv",
-      "aggregate_unit": "percentage",
-      "iterations": 5,
-      "real_time": 1.6792207367344854e-03,
-      "cpu_time": 1.8237168573242899e-03,
+      "real_time": 4.2114910574029604e-03,
+      "cpu_time": 4.2091456499644166e-03,
       "time_unit": "ms"
     }

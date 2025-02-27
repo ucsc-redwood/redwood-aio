@@ -8,6 +8,8 @@ namespace cifar_sparse::cuda {
 // Stage 1 (first conv2d)
 // -----------------------------------------------------------------------------
 
+constexpr bool kAutoSync = true;
+
 // Input Image dimensions
 constexpr int kInputChannels = 3;
 constexpr int kInputHeight = 32;
@@ -90,6 +92,10 @@ void process_stage_1(AppData &appdata) {
                                               kPadding,
                                               kRelu,
                                               appdata.u_conv1_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_2(AppData &appdata) {
@@ -106,6 +112,10 @@ void process_stage_2(AppData &appdata) {
                                                  kPoolSize,
                                                  kPoolStride,
                                                  appdata.u_pool1_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_3(AppData &appdata) {
@@ -130,6 +140,10 @@ void process_stage_3(AppData &appdata) {
                                               kPadding,
                                               kRelu,
                                               appdata.u_conv2_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_4(AppData &appdata) {
@@ -150,6 +164,10 @@ void process_stage_4(AppData &appdata) {
                                                  kPoolSize,
                                                  kPoolStride,
                                                  appdata.u_pool2_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_5(AppData &appdata) {
@@ -174,6 +192,10 @@ void process_stage_5(AppData &appdata) {
                                               kPadding,
                                               kRelu,
                                               appdata.u_conv3_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_6(AppData &appdata) {
@@ -198,6 +220,10 @@ void process_stage_6(AppData &appdata) {
                                               kPadding,
                                               kRelu,
                                               appdata.u_conv4_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_7(AppData &appdata) {
@@ -222,6 +248,10 @@ void process_stage_7(AppData &appdata) {
                                               kPadding,
                                               kRelu,
                                               appdata.u_conv5_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_8(AppData &appdata) {
@@ -242,6 +272,10 @@ void process_stage_8(AppData &appdata) {
                                                  kPoolSize,
                                                  kPoolStride,
                                                  appdata.u_pool3_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 void process_stage_9(AppData &appdata) {
@@ -258,6 +292,10 @@ void process_stage_9(AppData &appdata) {
                                               appdata.linear_weights.nnz,
                                               appdata.u_linear_bias.data(),
                                               appdata.u_linear_output.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 }  // namespace cifar_sparse::cuda

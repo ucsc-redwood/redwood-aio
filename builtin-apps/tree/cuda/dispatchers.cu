@@ -16,6 +16,8 @@ namespace tree::cuda {
 // Globals, constants and aliases
 //---------------------------------------------------------------------
 
+constexpr bool kAutoSync = true;
+
 cub::CachingDeviceAllocator g_allocator(true);  // Caching allocator for device memory
 
 TempStorage::TempStorage() {
@@ -55,6 +57,10 @@ void process_stage_1(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
       app_data.get_n_input(),
       tree::kMinCoord,
       tree::kRange);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -76,6 +82,10 @@ void process_stage_2(AppData &app_data, TempStorage &tmp) {
   // Sort data
   cub::DeviceRadixSort::SortKeys(
       tmp.sort.d_temp_storage, tmp.sort.temp_storage_bytes, d_keys_in, d_keys_out, num_items);
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -132,6 +142,10 @@ void process_stage_4(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
       app_data.u_brt_has_leaf_right_s4.data(),
       app_data.u_brt_left_child_s4.data(),
       app_data.u_brt_parents_s4.data());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -147,6 +161,10 @@ void process_stage_5(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
                                                                  app_data.u_brt_parents_s4.data(),
                                                                  app_data.u_edge_count_s5.data(),
                                                                  app_data.get_n_brt_nodes());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -199,6 +217,10 @@ void process_stage_7(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
       tree::kMinCoord,
       tree::kRange,
       app_data.get_n_brt_nodes());
+
+  if constexpr (kAutoSync) {
+    CUDA_CHECK(cudaDeviceSynchronize());
+  }
 }
 
 }  // namespace tree::cuda
