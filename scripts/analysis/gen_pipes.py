@@ -12,12 +12,11 @@ HARDWARE_MAP = {
     "gpu": "ProcessorType::kGPU",
 }
 
+
 def generate_schedule_header(schedule_obj: dict) -> str:
     """
     Generate the header declarations for each schedule.
-    We'll produce one chunk function for each chunk in the schedule,
-    plus a run_pipeline function. Each schedule is wrapped in a
-    sub-namespace inside the device namespace.
+    Using std::queue for first/last stage I/O instead of std::vector.
     """
     schedule_id = schedule_obj["schedule_id"]
     device_id = schedule_obj["device_id"]
@@ -25,7 +24,7 @@ def generate_schedule_header(schedule_obj: dict) -> str:
 
     # Derive sub-schedule name (if schedule_id starts with device_id + "_", remove that prefix)
     if schedule_id.startswith(device_id + "_"):
-        sub_schedule_id = schedule_id[len(device_id) + 1:]
+        sub_schedule_id = schedule_id[len(device_id) + 1 :]
     else:
         sub_schedule_id = schedule_id
 
@@ -40,19 +39,19 @@ def generate_schedule_header(schedule_obj: dict) -> str:
         chunk_name = chunk["name"]
         # Decide function signature based on position in pipeline
         if num_chunks == 1:
-            # Single-chunk schedule => vector -> vector
+            # Single-chunk schedule => queue -> queue
             lines.append(
-                f"void chunk_{chunk_name}(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks);"
+                f"void chunk_{chunk_name}(std::queue<Task>& in_tasks, std::queue<Task>& out_tasks);"
             )
         elif i == 0:
-            # First chunk => vector -> concurrent queue
+            # First chunk => queue -> concurrent queue
             lines.append(
-                f"void chunk_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);"
+                f"void chunk_{chunk_name}(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q);"
             )
         elif i == num_chunks - 1:
-            # Last chunk => concurrent queue -> vector
+            # Last chunk => concurrent queue -> queue
             lines.append(
-                f"void chunk_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks);"
+                f"void chunk_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks);"
             )
         else:
             # Intermediate chunk => concurrent queue -> concurrent queue
@@ -62,7 +61,7 @@ def generate_schedule_header(schedule_obj: dict) -> str:
 
     lines.append("")
     lines.append(
-        "void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks);"
+        "void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks);"
     )
     lines.append("")
     lines.append(f"}}  // namespace {sub_schedule_id}")
@@ -72,7 +71,7 @@ def generate_schedule_header(schedule_obj: dict) -> str:
 def generate_schedule_source(schedule_obj: dict) -> str:
     """
     Generate the .cpp definitions for each chunk, plus the run_pipeline function,
-    using std::vector for the first/last stage I/O and moodycamel::ConcurrentQueue
+    using std::queue for the first/last stage I/O and moodycamel::ConcurrentQueue
     with sentinel-based termination in between.
     """
     schedule_id = schedule_obj["schedule_id"]
@@ -81,7 +80,7 @@ def generate_schedule_source(schedule_obj: dict) -> str:
 
     # Derive sub-schedule name
     if schedule_id.startswith(device_id + "_"):
-        sub_schedule_id = schedule_id[len(device_id) + 1:]
+        sub_schedule_id = schedule_id[len(device_id) + 1 :]
     else:
         sub_schedule_id = schedule_id
 
@@ -107,55 +106,61 @@ def generate_schedule_source(schedule_obj: dict) -> str:
 
         # Build function bodies
         if num_chunks == 1:
-            # Single-chunk: vector->vector
+            # Single-chunk: queue->queue
             lines.append(
-                f"void chunk_{chunk_name}(std::vector<Task>& in_tasks, std::vector<Task>& out_tasks) {{"
+                f"void chunk_{chunk_name}(std::queue<Task>& in_tasks, std::queue<Task>& out_tasks) {{"
             )
-            lines.append("  for (auto& task : in_tasks) {")
+            lines.append("  while (!in_tasks.empty()) {")
+            lines.append("    auto& task = in_tasks.front();")
             lines.append("    if (task.is_sentinel()) {")
-            lines.append("      out_tasks.push_back(task);")
+            lines.append("      out_tasks.push(task);")
+            lines.append("      in_tasks.pop();")
             lines.append("      continue;")
             lines.append("    }")
             lines.append("")
             lines.append(f"    {run_call}")
             lines.append("")
-            lines.append("    out_tasks.push_back(task);")
+            lines.append("    out_tasks.push(task);")
+            lines.append("    in_tasks.pop();")
             lines.append("  }")
             lines.append("}")
             lines.append("")
         elif i == 0:
-            # First chunk: vector->moodycamel queue
+            # First chunk: queue->moodycamel queue
             lines.append(
-                f"void chunk_{chunk_name}(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {{"
+                f"void chunk_{chunk_name}(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {{"
             )
-            lines.append("  for (auto& task : in_tasks) {")
+            lines.append("  while (!in_tasks.empty()) {")
+            lines.append("    auto& task = in_tasks.front();")
             lines.append("    if (task.is_sentinel()) {")
             lines.append("      out_q.enqueue(task);")
+            lines.append("      in_tasks.pop();")
             lines.append("      continue;")
             lines.append("    }")
             lines.append("")
             lines.append(f"    {run_call}")
             lines.append("")
             lines.append("    out_q.enqueue(task);")
+            lines.append("    in_tasks.pop();")
             lines.append("  }")
             lines.append("}")
             lines.append("")
         elif i == num_chunks - 1:
-            # Last chunk: moodycamel queue->vector
+            # Last chunk: moodycamel queue->queue
             lines.append(
-                f"void chunk_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {{"
+                f"void chunk_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks) {{"
             )
             lines.append("  while (true) {")
             lines.append("    Task task;")
             lines.append("    if (in_q.try_dequeue(task)) {")
             lines.append("      if (task.is_sentinel()) {")
-            lines.append("        out_tasks.push_back(task);")
+            lines.append("        out_tasks.push(task);")
             lines.append("        break;")
             lines.append("      }")
             lines.append("")
             lines.append(f"      {run_call}")
             lines.append("")
-            lines.append("      out_tasks.push_back(task);")
+            lines.append("      out_tasks.push(task);")
             lines.append("    } else {")
             lines.append("      std::this_thread::yield();")
             lines.append("    }")
@@ -163,7 +168,7 @@ def generate_schedule_source(schedule_obj: dict) -> str:
             lines.append("}")
             lines.append("")
         else:
-            # Intermediate chunk: moodycamel queue->moodycamel queue
+            # Intermediate chunk => concurrent queue -> concurrent queue
             lines.append(
                 f"void chunk_{chunk_name}(moodycamel::ConcurrentQueue<Task>& in_q, moodycamel::ConcurrentQueue<Task>& out_q) {{"
             )
@@ -185,15 +190,15 @@ def generate_schedule_source(schedule_obj: dict) -> str:
             lines.append("}")
             lines.append("")
 
-    # run_pipeline
+    # run_pipeline signature changed to use queue
     lines.append(
-        "void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {"
+        "void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {"
     )
     for i in range(num_chunks - 1):
         lines.append(f"  moodycamel::ConcurrentQueue<Task> q_{i}{i+1};")
     lines.append("")
 
-    # Spawn threads
+    # Thread spawning remains the same
     thread_names = []
     for i, chunk in enumerate(chunks):
         chunk_name = chunk["name"]
@@ -201,7 +206,6 @@ def generate_schedule_source(schedule_obj: dict) -> str:
         thread_names.append(tvar)
 
         if num_chunks == 1:
-            # single chunk
             lines.append(
                 f"  std::thread {tvar}([&]() {{ chunk_{chunk_name}(tasks, out_tasks); }});"
             )
@@ -219,7 +223,6 @@ def generate_schedule_source(schedule_obj: dict) -> str:
             )
 
     lines.append("")
-    # Join threads
     for tvar in thread_names:
         lines.append(f"  {tvar}.join();")
 
@@ -289,11 +292,14 @@ def main():
         # Build header file
         hpp_lines = []
         hpp_lines.append(f"// Auto-generated aggregated header for device: {device_id}")
-        hpp_lines.append(f"// Contains all '{args.application}' schedules for device_{device_id}")
+        hpp_lines.append(
+            f"// Contains all '{args.application}' schedules for device_{device_id}"
+        )
         hpp_lines.append("")
         hpp_lines.append("#pragma once")
         hpp_lines.append("")
         hpp_lines.append("#include <vector>")
+        hpp_lines.append("#include <queue>")
         hpp_lines.append("#include <thread>")
         hpp_lines.append('#include "../task.hpp"')
         hpp_lines.append("#include <concurrentqueue.h>")
@@ -308,7 +314,9 @@ def main():
         # Build source file
         cpp_lines = []
         cpp_lines.append(f"// Auto-generated aggregated source for device: {device_id}")
-        cpp_lines.append(f"// Contains all '{args.application}' schedules for device_{device_id}")
+        cpp_lines.append(
+            f"// Contains all '{args.application}' schedules for device_{device_id}"
+        )
         cpp_lines.append(f'#include "{hpp_name}"')
         cpp_lines.append("")
         cpp_lines.append('#include "../run_stages.hpp"')
@@ -330,7 +338,9 @@ def main():
         with open(out_cpp_path, "w") as cf:
             cf.write(cpp_content)
 
-        print(f"[+] Wrote {hpp_name} and {cpp_name} for device {device_id} (app={args.application})")
+        print(
+            f"[+] Wrote {hpp_name} and {cpp_name} for device {device_id} (app={args.application})"
+        )
 
 
 if __name__ == "__main__":

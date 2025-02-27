@@ -2,8 +2,8 @@
 #include <omp.h>
 
 // #include <queue>
+#include <queue>
 #include <thread>
-#include <vector>
 
 #include "run_stages.hpp"
 
@@ -13,10 +13,12 @@
 
 namespace device_3A021JEHN02756 {
 
-void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
-  for (auto& task : in_tasks) {
+void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
+  while (!in_tasks.empty()) {
+    auto& task = in_tasks.front();
     if (task.is_sentinel()) {
       out_q.enqueue(task);
+      in_tasks.pop();
       continue;
     }
 
@@ -26,6 +28,7 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
+    in_tasks.pop();
   }
 }
 
@@ -73,12 +76,12 @@ void chunk_chunk3(moodycamel::ConcurrentQueue<Task>& in_q,
   }
 }
 
-void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {
+void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
       if (task.is_sentinel()) {
-        out_tasks.push_back(task);
+        out_tasks.push(task);
         break;
       }
 
@@ -87,14 +90,14 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& ou
       // run_gpu_stages<6, 7>(task);
       // ---------------------------------------------------------------------
 
-      out_tasks.push_back(task);
+      out_tasks.push(task);
     } else {
       std::this_thread::yield();
     }
   }
 }
 
-void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
+void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
   moodycamel::ConcurrentQueue<Task> q_01;
   moodycamel::ConcurrentQueue<Task> q_12;
   moodycamel::ConcurrentQueue<Task> q_23;
@@ -114,10 +117,12 @@ void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
 
 namespace device_minipc {
 
-void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
-  for (auto& task : in_tasks) {
+void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
+  while (!in_tasks.empty()) {
+    auto& task = in_tasks.front();
     if (task.is_sentinel()) {
       out_q.enqueue(task);
+      in_tasks.pop();
       continue;
     }
 
@@ -126,15 +131,16 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
+    in_tasks.pop();
   }
 }
 
-void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& out_tasks) {
+void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks) {
   while (true) {
     Task task;
     if (in_q.try_dequeue(task)) {
       if (task.is_sentinel()) {
-        out_tasks.push_back(task);
+        out_tasks.push(task);
         break;
       }
 
@@ -142,14 +148,14 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q, std::vector<Task>& ou
       run_gpu_stages<4, 7>(task);
       // ---------------------------------------------------------------------
 
-      out_tasks.push_back(task);
+      out_tasks.push(task);
     } else {
       std::this_thread::yield();
     }
   }
 }
 
-void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
+void run_pipeline(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
   moodycamel::ConcurrentQueue<Task> q_01;
 
   std::thread t_chunk1([&]() { chunk_chunk1(tasks, q_01); });
@@ -168,8 +174,7 @@ void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
 void run_test_schedule_3A021JEHN02756() {
   constexpr auto num_tasks = 20;
   auto tasks = init_tasks(num_tasks);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(num_tasks + 1);  // +1 for sentinel
+  std::queue<Task> out_tasks;
 
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -190,8 +195,7 @@ void run_test_schedule_3A021JEHN02756() {
 void run_test_schedule_minipc() {
   constexpr auto num_tasks = 20;
   auto tasks = init_tasks(num_tasks);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(num_tasks + 1);  // +1 for sentinel
+  std::queue<Task> out_tasks;
 
   auto start = std::chrono::high_resolution_clock::now();
 
