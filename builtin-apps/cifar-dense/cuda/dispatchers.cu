@@ -1,6 +1,7 @@
 #include <cuda_runtime.h>
 
 #include "../../common/cuda/helpers.cuh"
+#include "../../debug_logger.hpp"
 #include "all_kernels.cuh"
 #include "dispatchers.cuh"
 
@@ -16,6 +17,7 @@ void process_stage_1(AppData &app_data) {
   constexpr auto total_iterations = kConv1OutChannels * kConv1OutHeight * kConv1OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 1, &app_data);
 
   conv2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_image.data(),
                                               app_data.u_conv1_weights.data(),
@@ -48,6 +50,7 @@ void process_stage_2(AppData &app_data) {
   constexpr auto total_iterations = kConv1OutChannels * kPool1OutHeight * kPool1OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 2, &app_data);
 
   maxpool2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_conv1_out.data(),
                                                  app_data.u_pool1_out.data(),
@@ -72,6 +75,7 @@ void process_stage_3(AppData &app_data) {
   constexpr auto total_iterations = kConv2OutChannels * kConv2OutHeight * kConv2OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 3, &app_data);
 
   conv2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_pool1_out.data(),
                                               app_data.u_conv2_weights.data(),
@@ -104,6 +108,7 @@ void process_stage_4(AppData &app_data) {
   constexpr auto total_iterations = kConv2OutChannels * kPool2OutHeight * kPool2OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 4, &app_data);
 
   maxpool2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_conv2_out.data(),
                                                  app_data.u_pool2_out.data(),
@@ -128,6 +133,7 @@ void process_stage_5(AppData &app_data) {
   constexpr auto total_iterations = kConv3OutChannels * kConv3OutHeight * kConv3OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 5, &app_data);
 
   conv2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_pool2_out.data(),
                                               app_data.u_conv3_weights.data(),
@@ -160,6 +166,7 @@ void process_stage_6(AppData &app_data) {
   constexpr auto total_iterations = kConv4OutChannels * kConv4OutHeight * kConv4OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 6, &app_data);
 
   conv2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_conv3_out.data(),
                                               app_data.u_conv4_weights.data(),
@@ -192,6 +199,7 @@ void process_stage_7(AppData &app_data) {
   constexpr auto total_iterations = kConv5OutChannels * kConv5OutHeight * kConv5OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 7, &app_data);
 
   conv2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_conv4_out.data(),
                                               app_data.u_conv5_weights.data(),
@@ -224,6 +232,7 @@ void process_stage_8(AppData &app_data) {
   constexpr auto total_iterations = kConv5OutChannels * kPool3OutHeight * kPool3OutWidth;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 8, &app_data);
 
   maxpool2d<<<grid_dim, block_dim, shared_mem>>>(app_data.u_conv5_out.data(),
                                                  app_data.u_pool3_out.data(),
@@ -248,6 +257,7 @@ void process_stage_9(AppData &app_data) {
   constexpr auto total_iterations = kLinearOutFeatures;
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  LOG_KERNEL(LogKernelType::kCUDA, 9, &app_data);
 
   linear<<<grid_dim, block_dim, shared_mem>>>(app_data.u_pool3_out.data(),
                                               app_data.u_linear_weights.data(),
