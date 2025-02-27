@@ -10,6 +10,10 @@ set-jetson:
 set-default:
     xmake f -p linux -a x86_64 -c --use_vulkan=yes --use_cuda=no
 
+# Compile Vulkan shader (need xxd)
+compile-shader:
+    make
+
 # Convert raw google benchmark data (in ./data/raw_bm_results) to sqlite database
 raw-to-db:
     python3 scripts/database/update_db.py
