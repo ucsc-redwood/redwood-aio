@@ -15,6 +15,5 @@ do
 	})
 
 	add_deps("builtin-apps", "builtin-apps-cuda")
-
-    add_cugencodes("native")
+	add_cugencodes("native")
 end

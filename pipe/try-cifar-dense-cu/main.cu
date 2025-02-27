@@ -24,7 +24,7 @@ void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>&
     }
 
     // ---------------------------------------------------------------------
-    run_cpu_stages<1, 3, ProcessorType::kLittleCore, 6>(task);
+    run_cpu_stages<1, 3, ProcessorType::kBigCore, 8>(task);
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
@@ -80,7 +80,7 @@ void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>&
     }
 
     // ---------------------------------------------------------------------
-    run_cpu_stages<1, 3, ProcessorType::kLittleCore, 6>(task);
+    run_cpu_stages<1, 9, ProcessorType::kLittleCore, 6>(task);
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
@@ -98,8 +98,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
       }
 
       // ---------------------------------------------------------------------
-      run_gpu_stages<4, 7>(task);
-      cudaDeviceSynchronize();
+      // run_gpu_stages<4, 7>(task);
       // ---------------------------------------------------------------------
 
       out_tasks.push(task);
