@@ -5,6 +5,7 @@
 
 #include "../templates.hpp"
 #include "builtin-apps/app.hpp"
+#include "builtin-apps/common/cuda/helpers.cuh"
 #include "run_stages.hpp"
 #include "task.hpp"
 
@@ -42,7 +43,17 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
       }
 
       // ---------------------------------------------------------------------
-      run_gpu_stages<4, 7>(task);
+      cifar_dense::cuda::run_stage<4>(*task.app_data);
+      CUDA_CHECK(cudaDeviceSynchronize());
+
+      cifar_dense::cuda::run_stage<5>(*task.app_data);
+      CUDA_CHECK(cudaDeviceSynchronize());
+
+      cifar_dense::cuda::run_stage<6>(*task.app_data);
+      CUDA_CHECK(cudaDeviceSynchronize());
+
+      cifar_dense::cuda::run_stage<7>(*task.app_data);
+      CUDA_CHECK(cudaDeviceSynchronize());
       // ---------------------------------------------------------------------
 
       out_tasks.push(task);
@@ -80,7 +91,7 @@ void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>&
     }
 
     // ---------------------------------------------------------------------
-    run_cpu_stages<1, 9, ProcessorType::kLittleCore, 6>(task);
+    run_cpu_stages<1, 3, ProcessorType::kLittleCore, 6>(task);
     // ---------------------------------------------------------------------
 
     out_q.enqueue(task);
@@ -98,7 +109,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
       }
 
       // ---------------------------------------------------------------------
-      // run_gpu_stages<4, 7>(task);
+      run_gpu_stages<4, 9>(task);
       // ---------------------------------------------------------------------
 
       out_tasks.push(task);

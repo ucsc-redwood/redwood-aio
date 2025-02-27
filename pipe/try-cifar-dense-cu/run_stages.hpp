@@ -25,7 +25,7 @@ void run_cpu_stages(Task& task) {
     // Generate a compile-time sequence for the range [start_stage, end_stage]
     []<std::size_t... I>(std::index_sequence<I...>, cifar_dense::AppData & data) {
       // Each I is offset by (start_stage - 1)
-      ((cifar_dense::cuda::run_stage<start_stage + I>(data)), ...);
+      ((cifar_dense::omp::run_stage<start_stage + I>(data)), ...);
     }
     (std::make_index_sequence<end_stage - start_stage + 1>{}, *task.app_data);
   }
