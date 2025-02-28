@@ -1,4 +1,7 @@
+#include <concurrentqueue.h>
 #include <gtest/gtest.h>
+
+#include <queue>
 
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
@@ -12,6 +15,54 @@
   auto mr = cuda::CudaMemoryResource(); \
   cifar_dense::AppData appdata(&mr);    \
   CUDA_CHECK(cudaDeviceSynchronize());
+
+struct Task {
+  cifar_dense::AppData* app_data;  // basically just a pointer
+  bool done = false;
+
+  [[nodiscard]] bool is_sentinel() const { return app_data == nullptr; }
+};
+
+[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks);
+
+void cleanup(std::queue<Task>& tasks);
+
+/**
+ * Initializes a queue of tasks and adds a sentinel task at the end.
+ * The sentinel task (with null pointers) is used to signal the end of
+ * the task stream to the pipeline stages.
+ */
+[[nodiscard]] std::queue<Task> init_tasks(const size_t num_tasks) {
+  auto mr = cuda::CudaMemoryResource();
+  std::queue<Task> tasks;
+
+  for (uint32_t i = 0; i < num_tasks; ++i) {
+    Task task{
+        .app_data = new cifar_dense::AppData(&mr),
+        .done = false,
+    };
+
+    tasks.push(task);
+  }
+
+  // create a sentinel task
+  tasks.push(Task{
+      .app_data = nullptr,
+      .done = true,
+  });
+
+  return tasks;
+}
+
+void cleanup(std::queue<Task>& tasks) {
+  while (!tasks.empty()) {
+    auto& task = tasks.front();
+    if (!task.is_sentinel()) {
+      delete task.app_data;
+    }
+    tasks.pop();
+  }
+}
 
 // ----------------------------------------------------------------------------
 // Stages (OMP then CUDA)
@@ -146,11 +197,107 @@ TEST(CUDA_CIFAR_DENSE, Stage1234_CUDA_Then_OMP) {
   SUCCEED();
 }
 
-int main(int argc, char **argv) {
-  parse_args(argc, argv);
+// ----------------------------------------------------------------------------
+// Queue-based Pipeline
+// ----------------------------------------------------------------------------
 
-  spdlog::set_level(spdlog::level::debug);
+TEST(CUDA_CIFAR_DENSE, QueuePipeline) {
+  auto tasks = init_tasks(10);
+  std::queue<Task> out_tasks;
 
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  while (!tasks.empty()) {
+    auto& task = tasks.front();
+    if (task.is_sentinel()) {
+      out_tasks.push(task);
+      tasks.pop();
+      continue;
+    }
+
+#pragma omp parallel num_threads(g_little_cores.size())
+    {
+      bind_thread_to_cores(g_little_cores);
+      cifar_dense::omp::run_stage<1>(task.app_data);
+      cifar_dense::omp::run_stage<2>(task.app_data);
+      cifar_dense::omp::run_stage<3>(task.app_data);
+    }
+
+    cifar_dense::cuda::run_stage<4>(task.app_data);
+    cifar_dense::cuda::run_stage<5>(task.app_data);
+
+    out_tasks.push(task);
+  }
+
+  SUCCEED();
+
+  cleanup(tasks);
 }
+
+void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
+  while (!in_tasks.empty()) {
+    auto& task = in_tasks.front();
+    if (task.is_sentinel()) {
+      out_q.enqueue(task);
+      in_tasks.pop();
+      continue;
+    }
+
+    // ---------------------------------------------------------------------
+#pragma omp parallel num_threads(g_little_cores.size())
+    {
+      bind_thread_to_cores(g_little_cores);
+      cifar_dense::omp::run_stage<1>(task.app_data);
+      cifar_dense::omp::run_stage<2>(task.app_data);
+      cifar_dense::omp::run_stage<3>(task.app_data);
+    }
+    // ---------------------------------------------------------------------
+
+    out_q.enqueue(task);
+    in_tasks.pop();
+  }
+}
+
+void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out_tasks) {
+  while (true) {
+    Task task;
+    if (in_q.try_dequeue(task)) {
+      if (task.is_sentinel()) {
+        out_tasks.push(task);
+        break;
+      }
+
+      // ---------------------------------------------------------------------
+      cifar_dense::cuda::run_stage<4>(task.app_data);
+      cifar_dense::cuda::run_stage<5>(task.app_data);
+      // ---------------------------------------------------------------------
+
+      out_tasks.push(task);
+    } else {
+      std::this_thread::yield();
+    }
+  }
+
+  TEST(CUDA_CIFAR_DENSE, QueuePipeline_TwoThreads) {
+    auto tasks = init_tasks(10);
+    std::queue<Task> out_tasks;
+
+    moodycamel::ConcurrentQueue<Task> q_01;
+
+    std::thread t_chunk1([&]() { chunk_chunk1(tasks, q_01); });
+    std::thread t_chunk4([&]() { chunk_chunk4(q_01, out_tasks); });
+
+    t_chunk1.join();
+    t_chunk4.join();
+
+    SUCCEED();
+
+    cleanup(tasks);
+  }
+
+  int main(int argc, char** argv) {
+    parse_args(argc, argv);
+
+    spdlog::set_level(spdlog::level::debug);
+
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+  }

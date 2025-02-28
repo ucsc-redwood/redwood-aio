@@ -74,5 +74,6 @@ if has_config("use_cuda") then
 		})
 		add_deps("builtin-apps", "builtin-apps-cuda")
 		add_cugencodes("native")
+		add_packages("concurrentqueue")
 	end
 end
