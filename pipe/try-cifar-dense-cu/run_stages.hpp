@@ -53,7 +53,8 @@
 // //  * @param app_data Pointer to application data containing network state
 // //  *
 // //  * This template function executes the specified range of network stages using OpenMP
-// //  * parallelization. It binds threads to the appropriate processor cores based on processor_type
+// //  * parallelization. It binds threads to the appropriate processor cores based on
+// processor_type
 // //  and
 // //  * runs the stages in sequence using compile-time unrolling.
 // //  */
@@ -91,7 +92,8 @@
 // //  * @tparam end_stage Last stage to execute (must be <= 9)
 // //  * @param app_data Pointer to application data containing network state
 // //  *
-// //  * This template function executes the specified range of network stages on the GPU using CUDA.
+// //  * This template function executes the specified range of network stages on the GPU using
+// CUDA.
 // //  * The stages are run in sequence using compile-time unrolling.
 // //  */
 // // template <int start_stage, int end_stage>
