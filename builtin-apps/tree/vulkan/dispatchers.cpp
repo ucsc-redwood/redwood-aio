@@ -357,4 +357,43 @@ void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStor
   seq->wait_for_fence();
 }
 
+// ==============================================================
+// Safe Stage
+// ==============================================================
+
+// ----------------------------------------------------------------------------
+// Stage 1 (Input -> Morton)
+// ----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_1(SafeAppData &appdata,
+                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 1, &appdata);
+
+  auto algo = cached_algorithms.at("morton").get();
+
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_input_points_s0),
+                                  engine.get_buffer_info(appdata.u_morton_keys_s1_out),
+                              });
+
+  algo->update_push_constant(MortonPushConstants{
+      .n = static_cast<uint32_t>(appdata.get_n_input()),
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
+  });
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 256)), 1, 1});
+  seq->cmd_end();
+
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
+
 }  // namespace tree::vulkan

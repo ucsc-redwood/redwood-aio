@@ -12,13 +12,9 @@ int main(int argc, char** argv) {
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
 
   tree::SafeAppData safe_appdata(mr);
+  tree::vulkan::TmpStorage vulkan_tmp_storage(mr, safe_appdata.get_n_input());
 
-  //   print the num_octree_nodes
-  spdlog::info("num_octree_nodes = {}", safe_appdata.get_n_octree_nodes());
-
-  safe_appdata.set_n_octree_nodes(100);
-
-  spdlog::info("num_octree_nodes = {}", safe_appdata.get_n_octree_nodes());
+  tree::vulkan::Singleton::getInstance().process_safe_stage_1(safe_appdata, vulkan_tmp_storage);
 
   return 0;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../common/kiss-vk/engine.hpp"
+#include "../safe_tree_appdata.hpp"
 #include "../tree_appdata.hpp"
 #include "tmp_storage.hpp"
 
@@ -46,6 +47,14 @@ class Singleton {
       process_stage_7(appdata, tmp_storage);
     }
   }
+
+  void process_safe_stage_1(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_safe_stage_2(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_safe_stage_3(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_safe_stage_4(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_safe_stage_5(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_safe_stage_6(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_safe_stage_7(SafeAppData &appdata, TmpStorage &tmp_storage);
 
  private:
   Singleton();
