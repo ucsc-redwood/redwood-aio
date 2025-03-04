@@ -396,4 +396,109 @@ void Singleton::process_safe_stage_1(SafeAppData &appdata,
   seq->wait_for_fence();
 }
 
+// ----------------------------------------------------------------------------
+// Stage 2 (Morton -> Sorted Morton)
+// ----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_2(SafeAppData &appdata,
+                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 2, &appdata);
+
+  auto algo = cached_algorithms.at("radixsort").get();
+
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_morton_keys_s1),
+                                  engine.get_buffer_info(appdata.u_morton_keys_sorted_s2),
+                              });
+
+  algo->update_push_constant(InputSizePushConstantsUnsigned{
+      .n = appdata.get_n_input(),
+  });
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(), {1, 1, 1});  // Special case: single workgroup
+  seq->cmd_end();
+
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
+
+// ----------------------------------------------------------------------------
+// Stage 3 (Sorted Morton -> Unique Sorted Morton)
+// ----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_3(SafeAppData &appdata,
+                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
+
+  const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
+                                     appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
+                                     appdata.u_morton_keys_unique_s3_out.data());
+  const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3_out.data(), last);
+
+  appdata.set_n_unique(n_unique);
+  appdata.set_n_brt_nodes(n_unique - 1);
+}
+
+// ----------------------------------------------------------------------------
+// Stage 4 (Unique Sorted Morton -> BRT)
+// ----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_4(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 4, &appdata);
+
+  const int32_t n = appdata.get_n_unique();
+  auto algo = cached_algorithms.at("build_radix_tree").get();
+
+  // // print first 10 appdata.u_morton_keys_unique_s3
+  // for (int i = 0; i < 10; ++i) {
+  //   spdlog::trace("================= appdata.u_morton_keys_unique_s3[{}] = {}",
+  //                 i,
+  //                 appdata.u_morton_keys_unique_s3[i]);
+  // }
+
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_morton_keys_unique_s3),
+                                  engine.get_buffer_info(appdata.u_brt_prefix_n_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_has_leaf_left_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_has_leaf_right_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_left_child_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_parents_s4_out),
+                              });
+
+  algo->update_push_constant(InputSizePushConstantsSigned{
+      .n = n,
+  });
+
+  // vk::CommandBufferBeginInfo
+  // cmd_buf.bindPipeline
+  // cmd_buf.bindDescriptorSets
+  // cmd_buf.pushConstants
+  // cmd_buf.dispatch
+  // end
+
+  // vk::SubmitInfo
+  // waitForFences
+  // resetFences
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(),
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(n, 256)), 1, 1});
+  seq->cmd_end();
+
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+
+  // seq->sync();
+}
+
+
 }  // namespace tree::vulkan

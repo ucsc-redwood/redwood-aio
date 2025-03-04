@@ -7,6 +7,8 @@
 int main(int argc, char** argv) {
   parse_args(argc, argv);
 
+  spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
+
   tree::HostTreeManager::getInstance().initialize();
 
   auto mr = tree::vulkan::Singleton::getInstance().get_mr();
@@ -15,6 +17,9 @@ int main(int argc, char** argv) {
   tree::vulkan::TmpStorage vulkan_tmp_storage(mr, safe_appdata.get_n_input());
 
   tree::vulkan::Singleton::getInstance().process_safe_stage_1(safe_appdata, vulkan_tmp_storage);
-
+  tree::vulkan::Singleton::getInstance().process_safe_stage_2(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_safe_stage_3(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_safe_stage_4(safe_appdata, vulkan_tmp_storage);
+  
   return 0;
 }
