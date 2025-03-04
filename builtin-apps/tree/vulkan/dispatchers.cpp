@@ -500,5 +500,103 @@ void Singleton::process_safe_stage_4(SafeAppData &appdata, [[maybe_unused]] TmpS
   // seq->sync();
 }
 
+// ----------------------------------------------------------------------------
+// Stage 5 (BRT -> Edge Count)
+// ----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_5(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 5, &appdata);
+
+  auto algo = cached_algorithms.at("edge_count").get();
+
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_brt_prefix_n_s4),      // input
+                                  engine.get_buffer_info(appdata.u_brt_parents_s4),       // input
+                                  engine.get_buffer_info(appdata.u_edge_count_s5_out),    // output
+                              });
+
+  algo->update_push_constant(InputSizePushConstantsUnsigned{
+      .n = appdata.get_n_brt_nodes(),
+  });
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_brt_nodes(), 512)), 1, 1});
+  seq->cmd_end();
+
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
+
+// ----------------------------------------------------------------------------
+// Stage 6 (Edge Count -> Edge Offset, prefix sum)
+// ----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_6(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 6, &appdata);
+
+  const int start = 0;
+  const int end = appdata.get_n_brt_nodes();
+
+  std::partial_sum(appdata.u_edge_count_s5.data() + start,
+                   appdata.u_edge_count_s5.data() + end,
+                   appdata.u_edge_offset_s6_out.data() + start);
+
+  // num_octree node is the result of the partial sum
+  const auto num_octree_nodes = appdata.u_edge_offset_s6_out[end - 1];
+
+  // No-op since SafeAppData has const n_octree_nodes
+  appdata.set_n_octree_nodes(num_octree_nodes);
+}
+
+//----------------------------------------------------------------------------
+// Stage 7 (Edge Offset -> Octree)
+//----------------------------------------------------------------------------
+
+void Singleton::process_safe_stage_7(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+  LOG_KERNEL(LogKernelType::kVK, 7, &appdata);
+
+  auto algo = cached_algorithms.at("build_octree").get();
+
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_oct_children_s7_out),         // output
+                                  engine.get_buffer_info(appdata.u_oct_corner_s7_out),          // output
+                                  engine.get_buffer_info(appdata.u_oct_cell_size_s7_out),       // output
+                                  engine.get_buffer_info(appdata.u_oct_child_node_mask_s7_out), // output
+                                  engine.get_buffer_info(appdata.u_oct_child_leaf_mask_s7_out), // output
+                                  engine.get_buffer_info(appdata.u_edge_offset_s6),             // input
+                                  engine.get_buffer_info(appdata.u_edge_count_s5),              // input
+                                  engine.get_buffer_info(appdata.u_morton_keys_unique_s3),      // input
+                                  engine.get_buffer_info(appdata.u_brt_prefix_n_s4),           // input
+                                  engine.get_buffer_info(appdata.u_brt_parents_s4),            // input
+                                  engine.get_buffer_info(appdata.u_brt_left_child_s4),         // input
+                                  engine.get_buffer_info(appdata.u_brt_has_leaf_left_s4),      // input
+                                  engine.get_buffer_info(appdata.u_brt_has_leaf_right_s4),     // input
+                              });
+
+  algo->update_push_constant(OctreePushConstants{
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
+      .n_brt_nodes = static_cast<int32_t>(appdata.get_n_brt_nodes()),
+  });
+
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_octree_nodes(), 256)), 1, 1});
+  seq->cmd_end();
+
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
 
 }  // namespace tree::vulkan
