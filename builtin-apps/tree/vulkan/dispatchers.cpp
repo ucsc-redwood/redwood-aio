@@ -365,8 +365,7 @@ void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStor
 // Stage 1 (Input -> Morton)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_1(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_1(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 1, &appdata);
 
   auto algo = cached_algorithms.at("morton").get();
@@ -400,8 +399,7 @@ void Singleton::process_safe_stage_1(SafeAppData &appdata,
 // Stage 2 (Morton -> Sorted Morton)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_2(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_2(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 2, &appdata);
 
   auto algo = cached_algorithms.at("radixsort").get();
@@ -431,8 +429,7 @@ void Singleton::process_safe_stage_2(SafeAppData &appdata,
 // Stage 3 (Sorted Morton -> Unique Sorted Morton)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_3(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_3(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
 
   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
@@ -448,8 +445,7 @@ void Singleton::process_safe_stage_3(SafeAppData &appdata,
 // Stage 4 (Unique Sorted Morton -> BRT)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_4(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_4(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 4, &appdata);
 
   const int32_t n = appdata.get_n_unique();
@@ -505,8 +501,7 @@ void Singleton::process_safe_stage_4(SafeAppData &appdata,
 // Stage 5 (BRT -> Edge Count)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_5(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_5(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 5, &appdata);
 
   auto algo = cached_algorithms.at("edge_count").get();
@@ -539,8 +534,7 @@ void Singleton::process_safe_stage_5(SafeAppData &appdata,
 // Stage 6 (Edge Count -> Edge Offset, prefix sum)
 // ----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_6(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_6(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 6, &appdata);
 
   const int start = 0;
@@ -561,8 +555,7 @@ void Singleton::process_safe_stage_6(SafeAppData &appdata,
 // Stage 7 (Edge Offset -> Octree)
 //----------------------------------------------------------------------------
 
-void Singleton::process_safe_stage_7(SafeAppData &appdata,
-                                     [[maybe_unused]] TmpStorage &tmp_storage) {
+void Singleton::process_stage_7(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
   LOG_KERNEL(LogKernelType::kVK, 7, &appdata);
 
   auto algo = cached_algorithms.at("build_octree").get();

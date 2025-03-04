@@ -13,13 +13,13 @@ int main(int argc, char** argv) {
   tree::SafeAppData safe_appdata(mr);
   tree::vulkan::TmpStorage vulkan_tmp_storage(mr, safe_appdata.get_n_input());
 
-  tree::vulkan::Singleton::getInstance().process_safe_stage_1(safe_appdata, vulkan_tmp_storage);
-  tree::vulkan::Singleton::getInstance().process_safe_stage_2(safe_appdata, vulkan_tmp_storage);
-  tree::vulkan::Singleton::getInstance().process_safe_stage_3(safe_appdata, vulkan_tmp_storage);
-  tree::vulkan::Singleton::getInstance().process_safe_stage_4(safe_appdata, vulkan_tmp_storage);
-  tree::vulkan::Singleton::getInstance().process_safe_stage_5(safe_appdata, vulkan_tmp_storage);
-  tree::vulkan::Singleton::getInstance().process_safe_stage_6(safe_appdata, vulkan_tmp_storage);
-  tree::vulkan::Singleton::getInstance().process_safe_stage_7(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_1(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_2(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_3(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_4(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_5(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_6(safe_appdata, vulkan_tmp_storage);
+  tree::vulkan::Singleton::getInstance().process_stage_7(safe_appdata, vulkan_tmp_storage);
 
   return 0;
 }

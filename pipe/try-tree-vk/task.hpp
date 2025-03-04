@@ -9,7 +9,7 @@
 // Task structure
 // ---------------------------------------------------------------------
 struct Task {
-  tree::AppData* app_data = nullptr;
+  tree::SafeAppData* app_data = nullptr;
   tree::omp::TmpStorage* omp_tmp_storage = nullptr;
   tree::vulkan::TmpStorage* vulkan_tmp_storage = nullptr;
   bool done = false;
@@ -30,7 +30,7 @@ struct Task {
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
     Task task{
-        .app_data = new tree::AppData(mr, n_inputs),
+        .app_data = new tree::SafeAppData(mr),
         .omp_tmp_storage = new tree::omp::TmpStorage(),
         .vulkan_tmp_storage = new tree::vulkan::TmpStorage(mr, n_inputs),
         .done = false,
