@@ -122,14 +122,17 @@ class HostTreeManager {
   HostTreeManager(const HostTreeManager&) = delete;
   HostTreeManager& operator=(const HostTreeManager&) = delete;
 
-  // Initialize the tree data
-  void initialize();
-
   // Get the AppData
-  tree::AppData* getAppData() { return appdata_.get(); }
+  tree::AppData* getAppData() {
+    if (!appdata_) {
+      initialize();
+    }
+    return appdata_.get();
+  }
 
  private:
   HostTreeManager() = default;
+  void initialize();  // Made private since it's called automatically
   std::unique_ptr<tree::AppData> appdata_;
 };
 

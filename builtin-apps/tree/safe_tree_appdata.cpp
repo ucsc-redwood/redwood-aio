@@ -173,9 +173,6 @@ void HostTreeManager::initialize() {
   }
 }
 
-// Replace the global function with this wrapper
-void create_host_tree_appdata() { tree::HostTreeManager::getInstance().initialize(); }
-
 SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
     : BaseAppData(mr),
       // Get data from singleton

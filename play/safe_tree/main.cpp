@@ -3,8 +3,6 @@
 #include "builtin-apps/tree/safe_tree_appdata.hpp"
 
 int main() {
-  tree::HostTreeManager::getInstance().initialize();
-
   auto mr = std::pmr::new_delete_resource();
 
   tree::SafeAppData safe_appdata(mr);
