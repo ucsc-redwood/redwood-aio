@@ -1,0 +1,209 @@
+#include "safe_tree_appdata.hpp"
+
+#include <spdlog/spdlog.h>
+
+#include <algorithm>
+#include <memory_resource>
+#include <random>
+
+#include "omp/func_brt.hpp"
+#include "omp/func_edge.hpp"
+#include "omp/func_morton.hpp"
+#include "omp/func_octree.hpp"
+
+namespace tree {
+
+void HostTreeManager::initialize() {
+  const size_t n_input = 640 * 480;
+  constexpr bool kPrint = true;
+
+  auto mr = std::pmr::new_delete_resource();
+  appdata_ = std::make_unique<tree::AppData>(mr, n_input);
+
+  auto& appdata = *appdata_;
+
+  if (kPrint) {
+    // print first 10 points
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("point {} = ({}, {}, {}, {})",
+                   i,
+                   appdata.u_input_points_s0[i].x,
+                   appdata.u_input_points_s0[i].y,
+                   appdata.u_input_points_s0[i].z,
+                   appdata.u_input_points_s0[i].w);
+    }
+  }
+
+  // stage 1
+  {
+    const int start = 0;
+    const int end = appdata.get_n_input();
+
+    for (int i = start; i < end; ++i) {
+      appdata.u_morton_keys_s1[i] =
+          tree::omp::xyz_to_morton32(appdata.u_input_points_s0[i], tree::kMinCoord, tree::kRange);
+    }
+  }
+
+  // print first 10 points
+  if (kPrint) {
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("morton key {} = {}", i, appdata.u_morton_keys_s1[i]);
+    }
+  }
+
+  // stage 2
+  {
+    std::ranges::sort(appdata.u_morton_keys_s1);
+    std::ranges::copy(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2.begin());
+  }
+
+  // print first 10 points
+  if (kPrint) {
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("sorted morton key {} = {}", i, appdata.u_morton_keys_sorted_s2[i]);
+    }
+  }
+
+  // stage 3
+  {
+    const auto last =
+        std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
+                         appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
+                         appdata.u_morton_keys_unique_s3.data());
+    const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3.data(), last);
+
+    appdata.set_n_unique(n_unique);
+    appdata.set_n_brt_nodes(n_unique - 1);
+  }
+
+  if (kPrint) {
+    spdlog::info("n_unique = {}", appdata.get_n_unique());
+    spdlog::info("n_brt_nodes = {}", appdata.get_n_brt_nodes());
+  }
+
+  // stage 4
+  {
+    const int start = 0;
+    const int end = appdata.get_n_unique();
+    for (int i = start; i < end; ++i) {
+      tree::omp::process_radix_tree_i(i,
+                                      appdata.get_n_brt_nodes(),
+                                      appdata.u_morton_keys_unique_s3.data(),
+                                      appdata.u_brt_prefix_n_s4.data(),
+                                      appdata.u_brt_has_leaf_left_s4.data(),
+                                      appdata.u_brt_has_leaf_right_s4.data(),
+                                      appdata.u_brt_left_child_s4.data(),
+                                      appdata.u_brt_parents_s4.data());
+    }
+  }
+
+  if (kPrint) {
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("brt prefix n {} = {}", i, appdata.u_brt_prefix_n_s4[i]);
+    }
+  }
+
+  // stage 5 (brt -> edge count)
+  {
+    const int start = 0;
+    const int end = appdata.get_n_brt_nodes();
+
+    for (int i = start; i < end; ++i) {
+      tree::omp::process_edge_count_i(i,
+                                      appdata.u_brt_prefix_n_s4.data(),
+                                      appdata.u_brt_parents_s4.data(),
+                                      appdata.u_edge_count_s5.data());
+    }
+  }
+
+  if (kPrint) {
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("edge count {} = {}", i, appdata.u_edge_count_s5[i]);
+    }
+  }
+
+  // Stage 6 (edge count -> edge offset)
+  {
+    const int start = 0;
+    const int end = appdata.get_n_brt_nodes();
+
+    std::partial_sum(appdata.u_edge_count_s5.data() + start,
+                     appdata.u_edge_count_s5.data() + end,
+                     appdata.u_edge_offset_s6.data() + start);
+
+    // num_octree node is the result of the partial sum
+    const auto num_octree_nodes = appdata.u_edge_offset_s6[end - 1];
+
+    appdata.set_n_octree_nodes(num_octree_nodes);
+  }
+
+  if (kPrint) {
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("edge offset {} = {}", i, appdata.u_edge_offset_s6[i]);
+    }
+    spdlog::info("n_octree_nodes = {}", appdata.get_n_octree_nodes());
+  }
+
+  // stage 7 (everything -> octree)
+  {
+    const int start = 1;
+    const int end = appdata.get_n_octree_nodes();
+
+    for (int i = start; i < end; ++i) {
+      tree::omp::process_oct_node(i,
+                                  reinterpret_cast<int(*)[8]>(appdata.u_oct_children_s7.data()),
+                                  appdata.u_oct_corner_s7.data(),
+                                  appdata.u_oct_cell_size_s7.data(),
+                                  appdata.u_oct_child_node_mask_s7.data(),
+                                  appdata.u_edge_offset_s6.data(),
+                                  appdata.u_edge_count_s5.data(),
+                                  appdata.u_morton_keys_unique_s3.data(),
+                                  appdata.u_brt_prefix_n_s4.data(),
+                                  appdata.u_brt_parents_s4.data(),
+                                  tree::kMinCoord,
+                                  tree::kRange);
+    }
+  }
+
+  if (kPrint) {
+    for (size_t i = 0; i < 10; ++i) {
+      spdlog::info("octree node {} = {:08b}", i, appdata.u_oct_child_node_mask_s7[i]);
+    }
+  }
+}
+
+// Replace the global function with this wrapper
+void create_host_tree_appdata() { tree::HostTreeManager::getInstance().initialize(); }
+
+}  // namespace tree
+
+// namespace tree {
+
+// SafeAppData::SafeAppData(std::pmr::memory_resource* mr, const size_t n_input)
+//     : BaseAppData(mr),
+//       n_input(n_input),
+//       u_input_points_s0(n_input, mr),
+//       u_morton_keys_s1(n_input, mr),
+//       u_morton_keys_sorted_s2(n_input, mr),
+//       u_morton_keys_unique_s3(n_input, mr),
+//       u_brt_prefix_n_s4(n_input, mr),
+//       u_brt_has_leaf_left_s4(n_input, mr),
+//       u_brt_has_leaf_right_s4(n_input, mr),
+//       u_brt_left_child_s4(n_input, mr),
+//       u_brt_parents_s4(n_input, mr),
+//       u_edge_count_s5(n_input, mr),
+//       u_edge_offset_s6(n_input, mr),
+//       u_oct_children_s7(n_input * 8 * kMemoryRatio, mr),
+//       u_oct_corner_s7(n_input * kMemoryRatio, mr),
+//       u_oct_cell_size_s7(n_input * kMemoryRatio, mr),
+//       u_oct_child_node_mask_s7(n_input * kMemoryRatio, mr),
+//       u_oct_child_leaf_mask_s7(n_input * kMemoryRatio, mr) {
+//   std::mt19937 gen(114514);
+//   std::uniform_real_distribution dis(kMinCoord, kMinCoord + kRange);
+
+//   std::ranges::generate(u_input_points_s0,
+//                         [&]() { return glm::vec4(dis(gen), dis(gen), dis(gen), 1.0f); });
+// }
+
+// }  // namespace tree
