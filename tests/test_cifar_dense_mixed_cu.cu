@@ -28,7 +28,8 @@ void cleanup(std::queue<Task>& tasks);
 
 //   auto mr = cuda::CudaMemoryResource();
 
-cuda::CudaMemoryResource g_mr;
+// cuda::CudaMemoryResource g_mr;
+cuda::CudaMemoryResource_PinnedHost g_mr;
 
 /**
  * Initializes a queue of tasks and adds a sentinel task at the end.

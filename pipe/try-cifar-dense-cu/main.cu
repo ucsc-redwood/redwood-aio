@@ -28,15 +28,14 @@ void chunk_chunk1(std::vector<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>
     // ---------------------------------------------------------------------
     // run_cpu_stages<1, 3, ProcessorType::kBigCore, 8>(task);
 
-    #pragma omp parallel num_threads(8)
-      {
-        bind_thread_to_cores(g_big_cores);
+#pragma omp parallel num_threads(8)
+    {
+      bind_thread_to_cores(g_big_cores);
 
-        cifar_dense::omp::run_stage<1>(*task.app_data);
-        cifar_dense::omp::run_stage<2>(*task.app_data);
-        cifar_dense::omp::run_stage<3>(*task.app_data);
-      }
-
+      cifar_dense::omp::run_stage<1>(*task.app_data);
+      cifar_dense::omp::run_stage<2>(*task.app_data);
+      cifar_dense::omp::run_stage<3>(*task.app_data);
+    }
 
     // ---------------------------------------------------------------------
 

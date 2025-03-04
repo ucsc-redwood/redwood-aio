@@ -78,6 +78,8 @@ void* CudaMemoryResource_PinnedHost::do_allocate(std::size_t bytes, std::size_t)
 void CudaMemoryResource_PinnedHost::do_deallocate(void* p, std::size_t, std::size_t) {
   spdlog::trace("CudaMemoryResource_PinnedHost::do_deallocate ptr = {}", p);
 
+  CUDA_CHECK(cudaFreeHost(p));
+
   // auto it = d_h_map_.find(p);
   // if (it != d_h_map_.end()) {
   //   CUDA_CHECK(cudaFreeHost(it->second));

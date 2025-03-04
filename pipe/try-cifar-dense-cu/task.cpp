@@ -5,6 +5,12 @@
 #include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 
 // ---------------------------------------------------------------------
+// Global Variables
+// ---------------------------------------------------------------------
+
+cuda::CudaMemoryResource_PinnedHost g_mr;
+
+// ---------------------------------------------------------------------
 // Task structure
 // ---------------------------------------------------------------------
 
@@ -14,13 +20,12 @@
  * the task stream to the pipeline stages.
  */
 [[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks) {
-  auto mr = cuda::CudaMemoryResource();
   std::vector<Task> tasks;
   tasks.reserve(num_tasks + 1);  // Reserve space including sentinel
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
     tasks.push_back(Task{
-        .app_data = std::make_unique<cifar_dense::AppData>(&mr),
+        .app_data = std::make_unique<cifar_dense::AppData>(&g_mr),
         .done = false,
     });
   }
