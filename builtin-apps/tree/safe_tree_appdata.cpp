@@ -15,14 +15,14 @@ namespace tree {
 
 void HostTreeManager::initialize() {
   const size_t n_input = 640 * 480;
-  constexpr bool kPrint = true;
+  constexpr bool kPrint = false;
 
   auto mr = std::pmr::new_delete_resource();
   appdata_ = std::make_unique<tree::AppData>(mr, n_input);
 
   auto& appdata = *appdata_;
 
-  if (kPrint) {
+  if constexpr (kPrint) {
     // print first 10 points
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("point {} = ({}, {}, {}, {})",
@@ -46,7 +46,7 @@ void HostTreeManager::initialize() {
   }
 
   // print first 10 points
-  if (kPrint) {
+  if constexpr (kPrint) {
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("morton key {} = {}", i, appdata.u_morton_keys_s1[i]);
     }
@@ -59,7 +59,7 @@ void HostTreeManager::initialize() {
   }
 
   // print first 10 points
-  if (kPrint) {
+  if constexpr (kPrint) {
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("sorted morton key {} = {}", i, appdata.u_morton_keys_sorted_s2[i]);
     }
@@ -77,7 +77,7 @@ void HostTreeManager::initialize() {
     appdata.set_n_brt_nodes(n_unique - 1);
   }
 
-  if (kPrint) {
+  if constexpr (kPrint) {
     spdlog::info("n_unique = {}", appdata.get_n_unique());
     spdlog::info("n_brt_nodes = {}", appdata.get_n_brt_nodes());
   }
@@ -98,7 +98,7 @@ void HostTreeManager::initialize() {
     }
   }
 
-  if (kPrint) {
+  if constexpr (kPrint) {
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("brt prefix n {} = {}", i, appdata.u_brt_prefix_n_s4[i]);
     }
@@ -117,7 +117,7 @@ void HostTreeManager::initialize() {
     }
   }
 
-  if (kPrint) {
+  if constexpr (kPrint) {
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("edge count {} = {}", i, appdata.u_edge_count_s5[i]);
     }
@@ -138,7 +138,7 @@ void HostTreeManager::initialize() {
     appdata.set_n_octree_nodes(num_octree_nodes);
   }
 
-  if (kPrint) {
+  if constexpr (kPrint) {
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("edge offset {} = {}", i, appdata.u_edge_offset_s6[i]);
     }
@@ -166,7 +166,7 @@ void HostTreeManager::initialize() {
     }
   }
 
-  if (kPrint) {
+  if constexpr (kPrint) {
     for (size_t i = 0; i < 10; ++i) {
       spdlog::info("octree node {} = {:08b}", i, appdata.u_oct_child_node_mask_s7[i]);
     }
@@ -175,6 +175,42 @@ void HostTreeManager::initialize() {
 
 // Replace the global function with this wrapper
 void create_host_tree_appdata() { tree::HostTreeManager::getInstance().initialize(); }
+
+SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
+    : BaseAppData(mr),
+      // Get data from singleton
+      n_input(HostTreeManager::getInstance().getAppData()->get_n_input()),
+      n_unique(HostTreeManager::getInstance().getAppData()->get_n_unique()),
+      n_brt_nodes(HostTreeManager::getInstance().getAppData()->get_n_brt_nodes()),
+      n_octree_nodes(HostTreeManager::getInstance().getAppData()->get_n_octree_nodes()),
+      // Copy vectors from singleton
+      u_input_points_s0(HostTreeManager::getInstance().getAppData()->u_input_points_s0, mr),
+      u_morton_keys_s1(HostTreeManager::getInstance().getAppData()->u_morton_keys_s1, mr),
+      u_morton_keys_sorted_s2(HostTreeManager::getInstance().getAppData()->u_morton_keys_sorted_s2,
+                              mr),
+      u_morton_keys_unique_s3(HostTreeManager::getInstance().getAppData()->u_morton_keys_unique_s3,
+                              mr),
+      u_brt_prefix_n_s4(HostTreeManager::getInstance().getAppData()->u_brt_prefix_n_s4, mr),
+      u_brt_has_leaf_left_s4(HostTreeManager::getInstance().getAppData()->u_brt_has_leaf_left_s4,
+                             mr),
+      u_brt_has_leaf_right_s4(HostTreeManager::getInstance().getAppData()->u_brt_has_leaf_right_s4,
+                              mr),
+      u_brt_left_child_s4(HostTreeManager::getInstance().getAppData()->u_brt_left_child_s4, mr),
+      u_brt_parents_s4(HostTreeManager::getInstance().getAppData()->u_brt_parents_s4, mr),
+      u_edge_count_s5(HostTreeManager::getInstance().getAppData()->u_edge_count_s5, mr),
+      u_edge_offset_s6(HostTreeManager::getInstance().getAppData()->u_edge_offset_s6, mr),
+      u_oct_children_s7(HostTreeManager::getInstance().getAppData()->u_oct_children_s7, mr),
+      u_oct_corner_s7(HostTreeManager::getInstance().getAppData()->u_oct_corner_s7, mr),
+      u_oct_cell_size_s7(HostTreeManager::getInstance().getAppData()->u_oct_cell_size_s7, mr),
+      u_oct_child_node_mask_s7(
+          HostTreeManager::getInstance().getAppData()->u_oct_child_node_mask_s7, mr),
+      u_oct_child_leaf_mask_s7(
+          HostTreeManager::getInstance().getAppData()->u_oct_child_leaf_mask_s7, mr) {
+  if (!HostTreeManager::getInstance().getAppData()) {
+    throw std::runtime_error(
+        "Tree data not initialized. Call HostTreeManager::getInstance().initialize() first.");
+  }
+}
 
 }  // namespace tree
 
