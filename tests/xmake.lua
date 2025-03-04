@@ -23,15 +23,17 @@ rule_end()
 -- Utility targets
 -- ----------------------------------------------------------------
 
-target("test-unified-memory")
-do
-	add_rules("test_config", "common_flags")
-	add_files({
-		"test_unified_memory.cu",
-	})
-	add_packages("concurrentqueue")
-	add_cugencodes("native")
-end
+if has_config("use_cuda") then
+	target("test-unified-memory")
+	do
+		add_rules("test_config", "common_flags")
+		add_files({
+			"test_unified_memory.cu",
+		})
+		add_packages("concurrentqueue")
+		add_cugencodes("native")
+	end
+end 
 
 -- ----------------------------------------------------------------
 -- Test targets
