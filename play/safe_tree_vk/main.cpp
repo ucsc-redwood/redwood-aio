@@ -23,7 +23,6 @@ int main(int argc, char** argv) {
   tree::vulkan::Singleton::getInstance().process_safe_stage_5(safe_appdata, vulkan_tmp_storage);
   tree::vulkan::Singleton::getInstance().process_safe_stage_6(safe_appdata, vulkan_tmp_storage);
   tree::vulkan::Singleton::getInstance().process_safe_stage_7(safe_appdata, vulkan_tmp_storage);
-  
 
   return 0;
 }
