@@ -186,10 +186,13 @@ SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
       // Copy vectors from singleton
       u_input_points_s0(HostTreeManager::getInstance().getAppData()->u_input_points_s0, mr),
       u_morton_keys_s1(HostTreeManager::getInstance().getAppData()->u_morton_keys_s1, mr),
+      u_morton_keys_s1_out(n_input, mr),  // Same size as input
       u_morton_keys_sorted_s2(HostTreeManager::getInstance().getAppData()->u_morton_keys_sorted_s2,
                               mr),
+      u_morton_keys_sorted_s2_out(n_input, mr),  // Same size as input
       u_morton_keys_unique_s3(HostTreeManager::getInstance().getAppData()->u_morton_keys_unique_s3,
                               mr),
+      u_morton_keys_unique_s3_out(n_input, mr),  // Same size as input
       u_brt_prefix_n_s4(HostTreeManager::getInstance().getAppData()->u_brt_prefix_n_s4, mr),
       u_brt_has_leaf_left_s4(HostTreeManager::getInstance().getAppData()->u_brt_has_leaf_left_s4,
                              mr),
@@ -197,15 +200,28 @@ SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
                               mr),
       u_brt_left_child_s4(HostTreeManager::getInstance().getAppData()->u_brt_left_child_s4, mr),
       u_brt_parents_s4(HostTreeManager::getInstance().getAppData()->u_brt_parents_s4, mr),
+      u_brt_prefix_n_s4_out(n_input, mr),        // Same size as input
+      u_brt_has_leaf_left_s4_out(n_input, mr),   // Same size as input
+      u_brt_has_leaf_right_s4_out(n_input, mr),  // Same size as input
+      u_brt_left_child_s4_out(n_input, mr),      // Same size as input
+      u_brt_parents_s4_out(n_input, mr),         // Same size as input
       u_edge_count_s5(HostTreeManager::getInstance().getAppData()->u_edge_count_s5, mr),
+      u_edge_count_s5_out(n_input, mr),  // Same size as input
       u_edge_offset_s6(HostTreeManager::getInstance().getAppData()->u_edge_offset_s6, mr),
+      u_edge_offset_s6_out(n_input, mr),  // Same size as input
       u_oct_children_s7(HostTreeManager::getInstance().getAppData()->u_oct_children_s7, mr),
       u_oct_corner_s7(HostTreeManager::getInstance().getAppData()->u_oct_corner_s7, mr),
       u_oct_cell_size_s7(HostTreeManager::getInstance().getAppData()->u_oct_cell_size_s7, mr),
       u_oct_child_node_mask_s7(
           HostTreeManager::getInstance().getAppData()->u_oct_child_node_mask_s7, mr),
       u_oct_child_leaf_mask_s7(
-          HostTreeManager::getInstance().getAppData()->u_oct_child_leaf_mask_s7, mr) {
+          HostTreeManager::getInstance().getAppData()->u_oct_child_leaf_mask_s7, mr),
+      // Initialize output vectors with same sizes as their input counterparts
+      u_oct_children_s7_out(n_input * 8 * kMemoryRatio, mr),  // 8x for children
+      u_oct_corner_s7_out(n_input * kMemoryRatio, mr),
+      u_oct_cell_size_s7_out(n_input * kMemoryRatio, mr),
+      u_oct_child_node_mask_s7_out(n_input * kMemoryRatio, mr),
+      u_oct_child_leaf_mask_s7_out(n_input * kMemoryRatio, mr) {
   if (!HostTreeManager::getInstance().getAppData()) {
     throw std::runtime_error(
         "Tree data not initialized. Call HostTreeManager::getInstance().initialize() first.");

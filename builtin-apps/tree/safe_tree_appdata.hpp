@@ -26,33 +26,33 @@ struct SafeAppData final : BaseAppData {
   // --------------------------------------------------------------------------
   // Stage 1: xyz -> morton
   // --------------------------------------------------------------------------
-  UsmVector<glm::vec4> u_input_points_s0;
-  UsmVector<uint32_t> u_morton_keys_s1;
+  const UsmVector<glm::vec4> u_input_points_s0;
+  const UsmVector<uint32_t> u_morton_keys_s1;
 
   UsmVector<uint32_t> u_morton_keys_s1_out;
 
   // --------------------------------------------------------------------------
   // Stage 2: morton -> sorted morton
   // --------------------------------------------------------------------------
-  UsmVector<uint32_t> u_morton_keys_sorted_s2;
+  const UsmVector<uint32_t> u_morton_keys_sorted_s2;
 
   UsmVector<uint32_t> u_morton_keys_sorted_s2_out;
 
   // --------------------------------------------------------------------------
   // Stage 3: sorted morton -> unique morton
   // --------------------------------------------------------------------------
-  UsmVector<uint32_t> u_morton_keys_unique_s3;
+  const UsmVector<uint32_t> u_morton_keys_unique_s3;
 
   UsmVector<uint32_t> u_morton_keys_unique_s3_out;
 
   // --------------------------------------------------------------------------
   // Stage 4: unique morton -> Binary Radix Tree (BRT)
   // --------------------------------------------------------------------------
-  UsmVector<uint8_t> u_brt_prefix_n_s4;
-  UsmVector<uint8_t> u_brt_has_leaf_left_s4;
-  UsmVector<uint8_t> u_brt_has_leaf_right_s4;
-  UsmVector<int32_t> u_brt_left_child_s4;
-  UsmVector<int32_t> u_brt_parents_s4;
+  const UsmVector<uint8_t> u_brt_prefix_n_s4;
+  const UsmVector<uint8_t> u_brt_has_leaf_left_s4;
+  const UsmVector<uint8_t> u_brt_has_leaf_right_s4;
+  const UsmVector<int32_t> u_brt_left_child_s4;
+  const UsmVector<int32_t> u_brt_parents_s4;
 
   UsmVector<uint8_t> u_brt_prefix_n_s4_out;
   UsmVector<uint8_t> u_brt_has_leaf_left_s4_out;
@@ -63,25 +63,25 @@ struct SafeAppData final : BaseAppData {
   // --------------------------------------------------------------------------
   // Stage 5: BRT -> edge count
   // --------------------------------------------------------------------------
-  UsmVector<int32_t> u_edge_count_s5;
+  const UsmVector<int32_t> u_edge_count_s5;
 
   UsmVector<int32_t> u_edge_count_s5_out;
 
   // --------------------------------------------------------------------------
   // Stage 6: edge count -> edge offset
   // --------------------------------------------------------------------------
-  UsmVector<int32_t> u_edge_offset_s6;
+  const UsmVector<int32_t> u_edge_offset_s6;
 
   UsmVector<int32_t> u_edge_offset_s6_out;
 
   // --------------------------------------------------------------------------
   // Stage 7: Build Octree
   // --------------------------------------------------------------------------
-  UsmVector<int32_t> u_oct_children_s7;  // 8 * sizeof
-  UsmVector<glm::vec4> u_oct_corner_s7;
-  UsmVector<float> u_oct_cell_size_s7;
-  UsmVector<int32_t> u_oct_child_node_mask_s7;
-  UsmVector<int32_t> u_oct_child_leaf_mask_s7;
+  const UsmVector<int32_t> u_oct_children_s7;  // 8 * sizeof
+  const UsmVector<glm::vec4> u_oct_corner_s7;
+  const UsmVector<float> u_oct_cell_size_s7;
+  const UsmVector<int32_t> u_oct_child_node_mask_s7;
+  const UsmVector<int32_t> u_oct_child_leaf_mask_s7;
 
   UsmVector<int32_t> u_oct_children_s7_out;
   UsmVector<glm::vec4> u_oct_corner_s7_out;
