@@ -20,10 +20,11 @@ namespace device_pc {
 
 void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   while (!in_tasks.empty()) {
-    auto& task = in_tasks.front();
+    auto task = std::move(in_tasks.front());
+    in_tasks.pop();
+
     if (task.is_sentinel()) {
-      out_q.enqueue(task);
-      in_tasks.pop();
+      out_q.enqueue(std::move(task));
       continue;
     }
 
@@ -31,8 +32,7 @@ void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>&
     // run_cpu_stages<1, 3, ProcessorType::kBigCore, 8>(task);
     // ---------------------------------------------------------------------
 
-    out_q.enqueue(task);
-    in_tasks.pop();
+    out_q.enqueue(std::move(task));
   }
 }
 
@@ -41,7 +41,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
     Task task;
     if (in_q.try_dequeue(task)) {
       if (task.is_sentinel()) {
-        out_tasks.push(task);
+        out_tasks.push(std::move(task));
         break;
       }
 
@@ -59,7 +59,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
       // CUDA_CHECK(cudaDeviceSynchronize());
       // ---------------------------------------------------------------------
 
-      out_tasks.push(task);
+      out_tasks.push(std::move(task));
     } else {
       std::this_thread::yield();
     }
@@ -86,10 +86,11 @@ namespace device_jetson {
 
 void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>& out_q) {
   while (!in_tasks.empty()) {
-    auto& task = in_tasks.front();
+    auto task = std::move(in_tasks.front());
+    in_tasks.pop();
+
     if (task.is_sentinel()) {
-      out_q.enqueue(task);
-      in_tasks.pop();
+      out_q.enqueue(std::move(task));
       continue;
     }
 
@@ -107,8 +108,7 @@ void chunk_chunk1(std::queue<Task>& in_tasks, moodycamel::ConcurrentQueue<Task>&
 
     // ---------------------------------------------------------------------
 
-    out_q.enqueue(task);
-    in_tasks.pop();
+    out_q.enqueue(std::move(task));
   }
 }
 
@@ -117,7 +117,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
     Task task;
     if (in_q.try_dequeue(task)) {
       if (task.is_sentinel()) {
-        out_tasks.push(task);
+        out_tasks.push(std::move(task));
         break;
       }
 
@@ -130,7 +130,7 @@ void chunk_chunk4(moodycamel::ConcurrentQueue<Task>& in_q, std::queue<Task>& out
 
       // ---------------------------------------------------------------------
 
-      out_tasks.push(task);
+      out_tasks.push(std::move(task));
     } else {
       std::this_thread::yield();
     }

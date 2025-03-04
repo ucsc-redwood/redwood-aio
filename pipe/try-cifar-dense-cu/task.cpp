@@ -1,5 +1,7 @@
 #include "task.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include "builtin-apps/common/cuda/cu_mem_resource.cuh"
 
 // ---------------------------------------------------------------------
@@ -17,11 +19,11 @@
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
     Task task{
-        .app_data = new cifar_dense::AppData(&mr),
+        .app_data = std::make_unique<cifar_dense::AppData>(&mr),
         .done = false,
     };
 
-    tasks.push(task);
+    tasks.push(std::move(task));
   }
 
   // create a sentinel task
@@ -34,11 +36,18 @@
 }
 
 void cleanup(std::queue<Task>& tasks) {
+  spdlog::trace("cleanup, tasks.size() = {}", tasks.size());
+
   while (!tasks.empty()) {
-    auto& task = tasks.front();
-    if (!task.is_sentinel()) {
-      delete task.app_data;
-    }
+    // // Create a copy of the pointer values before popping
+    const void* task_ptr = static_cast<const void*>(&tasks.front());
+    const void* app_data_ptr = static_cast<const void*>(tasks.front().app_data.get());
+    
+    // // Log before destroying the task
+    spdlog::trace("cleaning up task, task = {}, task.app_data = {}", 
+                  task_ptr, app_data_ptr);
+    
+
     tasks.pop();
   }
 }

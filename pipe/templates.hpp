@@ -5,6 +5,26 @@
 #include <iostream>
 #include <queue>
 
+/**
+ * @brief Run a pipelined schedule with initialization, pipeline execution, and cleanup
+ * 
+ * Example usage:
+ * @code
+ * // Run pipeline for PC device
+ * run_pipelined_schedule<Task>(init_tasks, device_pc::run_pipeline, cleanup);
+ * 
+ * // Run pipeline for Jetson device 
+ * run_pipelined_schedule<Task>(init_tasks, device_jetson::run_pipeline, cleanup);
+ * @endcode
+ * 
+ * The pipeline takes:
+ * - An initialization function that creates the task queue
+ * - A pipeline function that processes tasks through stages
+ * - A cleanup function to free resources
+ * 
+ * It measures and reports average execution time per task.
+ */
+
 template <typename Task>
 void run_pipelined_schedule(std::function<std::queue<Task>(size_t)> init_func,
                             std::function<void(std::queue<Task>&, std::queue<Task>&)> pipeline_func,
@@ -26,5 +46,5 @@ void run_pipelined_schedule(std::function<std::queue<Task>(size_t)> init_func,
 
   std::cout << "[schedule]: Average time per iteration: " << avg_time << " ms" << std::endl;
 
-  cleanup_func(tasks);
+  cleanup_func(out_tasks);
 }
