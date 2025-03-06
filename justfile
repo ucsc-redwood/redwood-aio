@@ -1,3 +1,7 @@
+#  ----------------------------------------------------------------------------
+#  Setup Configuration
+#  ----------------------------------------------------------------------------
+
 # Set configuration for Android devices (on a machine using ADB)
 set-android:
     xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c -v --use_vulkan=yes --use_cuda=no -m release
@@ -10,9 +14,17 @@ set-jetson:
 set-default:
     xmake f -p linux -a x86_64 -c -v --use_vulkan=no --use_cuda=yes -m release
 
+#  ----------------------------------------------------------------------------
+#  Compile Shaders
+#  ----------------------------------------------------------------------------
+
 # Compile Vulkan shader (need xxd)
 compile-shader:
     make
+
+#  ----------------------------------------------------------------------------
+#  Benchmark Related
+#  ----------------------------------------------------------------------------
 
 # Convert raw google benchmark data (in ./data/raw_bm_results) to sqlite database
 raw-to-db:
@@ -83,13 +95,11 @@ run-minipc-bm:
 #  ----------------------------------------------------------------------------
 
 run-android-bm:
-    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark CifarDense
-    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark CifarSparse
-    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark Tree
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-tree-vk
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-dense-vk
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-sparse-vk
 
-    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark CifarDense
-    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark CifarSparse
-    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark Tree
+
 
 
 
