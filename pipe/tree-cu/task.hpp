@@ -2,6 +2,7 @@
 
 #include <queue>
 
+#include "builtin-apps/tree/cuda/temp_storage.cuh"
 #include "builtin-apps/tree/omp/func_sort.hpp"
 #include "builtin-apps/tree/tree_appdata.hpp"
 
@@ -12,6 +13,7 @@
 struct Task {
   tree::AppData* app_data;  // basically just a pointer
   tree::omp::TmpStorage* omp_tmp_storage = nullptr;
+  tree::cuda::TempStorage* cuda_tmp_storage = nullptr;
 
   bool done = false;
 

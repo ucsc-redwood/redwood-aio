@@ -21,6 +21,7 @@ cuda::CudaMemoryResource_PinnedHost g_mr;
     Task task{
         .app_data = new tree::AppData(&g_mr),
         .omp_tmp_storage = new tree::omp::TmpStorage(),
+        .cuda_tmp_storage = new tree::cuda::TempStorage(),
         .done = false,
     };
 
@@ -31,6 +32,7 @@ cuda::CudaMemoryResource_PinnedHost g_mr;
   tasks.push(Task{
       .app_data = nullptr,
       .omp_tmp_storage = nullptr,
+      .cuda_tmp_storage = nullptr,
       .done = true,
   });
 
@@ -45,6 +47,7 @@ void cleanup(std::queue<Task>& tasks) {
     if (!task.is_sentinel()) {
       delete task.app_data;
       delete task.omp_tmp_storage;
+      delete task.cuda_tmp_storage;
     }
     tasks.pop();
   }
