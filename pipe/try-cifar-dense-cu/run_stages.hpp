@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../templates.hpp"
+#include "../concepts.hpp"
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"

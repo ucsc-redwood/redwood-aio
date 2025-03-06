@@ -29,5 +29,6 @@ if has_config("use_vulkan") then
 end
 
 if has_config("use_cuda") then
-	includes("try-cifar-dense-cu")
+	-- includes("try-cifar-dense-cu")
+	includes("cifar-dense-cu")
 end

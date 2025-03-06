@@ -7,6 +7,8 @@ do
 	add_headerfiles({
 		"task.hpp",
 		"run_stages.hpp",
+		"../concepts.hpp",
+		"../templates.hpp",
 		"generated-code/device_jetson_CifarDense_all.hpp",
 	})
 
