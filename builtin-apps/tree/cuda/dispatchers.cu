@@ -10,6 +10,8 @@
 #include "07_octree.cuh"
 #include "dispatchers.cuh"
 
+#include "../../debug_logger.hpp"
+
 namespace tree::cuda {
 
 //---------------------------------------------------------------------
@@ -51,6 +53,8 @@ void process_stage_1(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   const auto grid_size = cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
   constexpr auto s_mem = 0;
 
+  LOG_KERNEL(LogKernelType::kCUDA, 1, &app_data);
+
   ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
       app_data.u_input_points_s0.data(),
       app_data.u_morton_keys_s1.data(),
@@ -71,6 +75,8 @@ void process_stage_2(AppData &app_data, TempStorage &tmp) {
   uint32_t *d_keys_in = app_data.u_morton_keys_s1.data();
   uint32_t *d_keys_out = app_data.u_morton_keys_sorted_s2.data();
   uint32_t num_items = app_data.get_n_input();
+
+  LOG_KERNEL(LogKernelType::kCUDA, 2, &app_data);
 
   // Get temporary storage size
 
@@ -96,6 +102,8 @@ void process_stage_3(AppData &app_data, TempStorage &tmp) {
   uint32_t *d_in = app_data.u_morton_keys_sorted_s2.data();
   uint32_t *d_out = app_data.u_morton_keys_unique_s3.data();
   uint32_t num_items = app_data.get_n_input();
+
+  LOG_KERNEL(LogKernelType::kCUDA, 3, &app_data);
 
   // Allocate temporary storage
   CubDebugExit(cub::DeviceSelect::Unique(tmp.unique.d_temp_storage,
@@ -134,6 +142,8 @@ void process_stage_4(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;
 
+  LOG_KERNEL(LogKernelType::kCUDA, 4, &app_data);
+
   ::cuda::kernels::k_BuildRadixTree<<<gridDim, blockDim, sharedMem>>>(
       app_data.get_n_unique(),
       app_data.u_morton_keys_unique_s3.data(),
@@ -157,6 +167,8 @@ void process_stage_5(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;
 
+  LOG_KERNEL(LogKernelType::kCUDA, 5, &app_data);
+
   ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(app_data.u_brt_prefix_n_s4.data(),
                                                                  app_data.u_brt_parents_s4.data(),
                                                                  app_data.u_edge_count_s5.data(),
@@ -172,6 +184,8 @@ void process_stage_5(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
 // ----------------------------------------------------------------------------
 
 void process_stage_6(AppData &app_data, TempStorage &tmp) {
+  LOG_KERNEL(LogKernelType::kCUDA, 6, &app_data);
+
   cub::DeviceScan::InclusiveSum(tmp.prefix_sum.d_temp_storage,
                                 tmp.prefix_sum.temp_storage_bytes,
                                 app_data.u_edge_count_s5.data(),
@@ -203,6 +217,8 @@ void process_stage_7(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
   constexpr auto gridDim = 16;
   constexpr auto blockDim = 512;
   constexpr auto sharedMem = 0;
+
+  LOG_KERNEL(LogKernelType::kCUDA, 7, &app_data);
 
   ::cuda::kernels::k_MakeOctNodes<<<gridDim, blockDim, sharedMem>>>(
       reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7.data()),
