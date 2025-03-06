@@ -9,12 +9,15 @@ from codegen_common import (
     build_single_hpp_content,
 )
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--schedule_file", required=True,
-                        help="Path to a single .json schedule file.")
-    parser.add_argument("--out_dir", required=True,
-                        help="Directory to place the generated .hpp file.")
+    parser.add_argument(
+        "--schedule_file", required=True, help="Path to a single .json schedule file."
+    )
+    parser.add_argument(
+        "--out_dir", required=True, help="Directory to place the generated .hpp file."
+    )
     args = parser.parse_args()
 
     schedule_path = Path(args.schedule_file)
@@ -25,19 +28,23 @@ def main():
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Parse from filename
     try:
-        device_id, application_name, schedule_id = parse_schedule_filename(schedule_path.name)
+        device_id, application_name, schedule_id = parse_schedule_filename(
+            schedule_path.name
+        )
     except ValueError as e:
         print(f"Error: {e}")
         return
 
+    # Read and validate the JSON
     try:
         schedule_obj, _ = read_schedule_file(schedule_path)
     except ValueError as e:
         print(f"Error: {e}")
         return
 
-    # Now generate the pipeline code
+    # Generate code
     pipeline_code = generate_run_pipeline_code(schedule_obj)
 
     # Build final .hpp content
@@ -45,16 +52,17 @@ def main():
         device_id=device_id,
         schedule_id=schedule_id,
         application_name=application_name,
-        pipeline_code=pipeline_code
+        pipeline_code=pipeline_code,
     )
 
-    # Write .hpp
+    # Write out
     out_hpp_name = f"{schedule_id}.hpp"
     out_hpp_path = out_dir / out_hpp_name
     with open(out_hpp_path, "w") as f:
         f.write(hpp_content)
 
     print(f"[+] Wrote {out_hpp_path}")
+
 
 if __name__ == "__main__":
     main()

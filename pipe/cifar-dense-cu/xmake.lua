@@ -7,6 +7,7 @@ do
 	add_headerfiles({
 		"task.hpp",
 		"run_stages.hpp",
+		"generated-code/device_jetson_CifarDense_all.hpp",
 	})
 
 	add_files({
