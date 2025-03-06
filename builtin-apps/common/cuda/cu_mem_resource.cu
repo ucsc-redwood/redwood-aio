@@ -28,36 +28,8 @@ bool CudaMemoryResource::do_is_equal(const memory_resource& other) const noexcep
 }
 
 // ----------------------------------------------------------------------------
-// Pinned host memory
+// Pinned host memory 
 // ----------------------------------------------------------------------------
-
-// #include <cuda_runtime.h>
-// #include <iostream>
-
-// int main() {
-//     float *h_ptr, *d_ptr;
-//     size_t size = 1024 * sizeof(float);
-
-//     // Allocate pinned memory
-//     cudaHostAlloc((void **)&h_ptr, size, cudaHostAllocMapped);
-
-//     // Get device pointer to the same host memory
-//     cudaHostGetDevicePointer(&d_ptr, h_ptr, 0);
-
-//     // Initialize data on host
-//     for (int i = 0; i < 1024; i++) {
-//         h_ptr[i] = static_cast<float>(i);
-//     }
-
-//     // Kernel can use d_ptr, which is mapped to the same memory as h_ptr
-//     // kernel<<<blocks, threads>>>(d_ptr);
-
-//     // Free pinned memory
-//     cudaFreeHost(h_ptr);
-
-//     std::cout << "Pinned memory allocated and freed successfully!" << std::endl;
-//     return 0;
-// }
 
 void* CudaMemoryResource_PinnedHost::do_allocate(std::size_t bytes, std::size_t) {
   void* h_ptr = nullptr;
@@ -79,12 +51,6 @@ void CudaMemoryResource_PinnedHost::do_deallocate(void* p, std::size_t, std::siz
   spdlog::trace("CudaMemoryResource_PinnedHost::do_deallocate ptr = {}", p);
 
   CUDA_CHECK(cudaFreeHost(p));
-
-  // auto it = d_h_map_.find(p);
-  // if (it != d_h_map_.end()) {
-  //   CUDA_CHECK(cudaFreeHost(it->second));
-  //   d_h_map_.erase(it);
-  // }
 }
 
 bool CudaMemoryResource_PinnedHost::do_is_equal(const memory_resource& other) const noexcept {
