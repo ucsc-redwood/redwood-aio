@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import argparse
-from . import (
+from helpers import (
     ALL_DEVICES,
     ALL_BENCHMARKS,
     interactive_select,

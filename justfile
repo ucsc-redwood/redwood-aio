@@ -1,14 +1,14 @@
 # Set configuration for Android devices (on a machine using ADB)
 set-android:
-    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c -v --use_vulkan=yes --use_cuda=no -m releasedbg
+    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c -v --use_vulkan=yes --use_cuda=no -m release
 
 # Set configuration for NVIDIA Jetson Orin
 set-jetson:
-    xmake f -p linux -a arm64 --use_cuda=yes --use_vulkan=no -c -v -m releasedbg
+    xmake f -p linux -a arm64 --use_cuda=yes --use_vulkan=no -c -v -m release
 
 # Set default configuration for PC
 set-default:
-    xmake f -p linux -a x86_64 -c -v --use_vulkan=no --use_cuda=yes -m releasedbg
+    xmake f -p linux -a x86_64 -c -v --use_vulkan=no --use_cuda=yes -m release
 
 # Compile Vulkan shader (need xxd)
 compile-shader:
@@ -27,9 +27,6 @@ db-to-schedules:
     python3 scripts/analysis/gen_schedules.py --device 9b034f1b --app CifarSparse 
     python3 scripts/analysis/gen_schedules.py --device 9b034f1b --app Tree 
     
-    python3 scripts/analysis/gen_schedules.py --device ce0717178d7758b00b7e --app CifarDense 
-    python3 scripts/analysis/gen_schedules.py --device ce0717178d7758b00b7e --app CifarSparse 
-    python3 scripts/analysis/gen_schedules.py --device ce0717178d7758b00b7e --app Tree 
 
 # python3 scripts/codegen/multi_schedule.py --in_dir data/generated-schedules/ --out_dir pipe/cifar-dense-cu/generated-code/ --device jetson --application CifarDense
 
@@ -86,7 +83,13 @@ run-minipc-bm:
 #  ----------------------------------------------------------------------------
 
 run-android-bm:
-    python3 scripts/collect_android_results.py
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark CifarDense
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark CifarSparse
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark Tree
+
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark CifarDense
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark CifarSparse
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark Tree
 
 
 
