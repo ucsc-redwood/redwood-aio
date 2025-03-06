@@ -10,22 +10,22 @@ namespace cuda {
 // Unified memory
 // ----------------------------------------------------------------------------
 
-void* CudaMemoryResource::do_allocate(std::size_t bytes, std::size_t) {
-  void* ptr = nullptr;
-  CUDA_CHECK(cudaMallocManaged(&ptr, bytes));
-  spdlog::trace("CudaMemoryResource::do_allocate allocating {} bytes, ptr = {}", bytes, ptr);
-  return ptr;
-}
+// void* CudaMemoryResource::do_allocate(std::size_t bytes, std::size_t) {
+//   void* ptr = nullptr;
+//   CUDA_CHECK(cudaMallocManaged(&ptr, bytes));
+//   spdlog::trace("CudaMemoryResource::do_allocate allocating {} bytes, ptr = {}", bytes, ptr);
+//   return ptr;
+// }
 
-void CudaMemoryResource::do_deallocate(void* p, std::size_t, std::size_t) {
-  spdlog::trace("CudaMemoryResource::do_deallocate  ptr = {}", p);
+// void CudaMemoryResource::do_deallocate(void* p, std::size_t, std::size_t) {
+//   spdlog::trace("CudaMemoryResource::do_deallocate  ptr = {}", p);
 
-  CUDA_CHECK(cudaFree(p));
-}
+//   CUDA_CHECK(cudaFree(p));
+// }
 
-bool CudaMemoryResource::do_is_equal(const memory_resource& other) const noexcept {
-  return dynamic_cast<const CudaMemoryResource*>(&other) != nullptr;
-}
+// bool CudaMemoryResource::do_is_equal(const memory_resource& other) const noexcept {
+//   return dynamic_cast<const CudaMemoryResource*>(&other) != nullptr;
+// }
 
 // ----------------------------------------------------------------------------
 // Pinned host memory

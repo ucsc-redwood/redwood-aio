@@ -8,7 +8,7 @@
 #include "builtin-apps/tree/cuda/dispatchers.cuh"
 
 #define PREPARE_DATA                    \
-  auto mr = cuda::CudaMemoryResource(); \
+  auto mr = cuda::CudaMemoryResource_PinnedHost(); \
   tree::AppData appdata(&mr);           \
   tree::cuda::TempStorage tmp_storage;  \
   CUDA_CHECK(cudaDeviceSynchronize());
