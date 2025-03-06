@@ -6,6 +6,7 @@ do
 
 	add_headerfiles({
 		"task.hpp",
+		"run_stages.hpp",
 	})
 
 	add_files({

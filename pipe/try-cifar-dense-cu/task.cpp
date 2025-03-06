@@ -25,7 +25,8 @@ cuda::CudaMemoryResource_PinnedHost g_mr;
 
   for (uint32_t i = 0; i < num_tasks; ++i) {
     tasks.push_back(Task{
-        .app_data = std::make_unique<cifar_dense::AppData>(&g_mr),
+        // .app_data = std::make_unique<cifar_dense::AppData>(&g_mr),
+        .app_data = new cifar_dense::AppData(&g_mr),
         .done = false,
     });
   }
@@ -39,19 +40,61 @@ cuda::CudaMemoryResource_PinnedHost g_mr;
   return tasks;
 }
 
-void cleanup(std::vector<Task>& tasks) {
+// ---------------------------------------------------------------------
+// Queue version
+// ---------------------------------------------------------------------
+
+[[nodiscard]] std::queue<Task> init_tasks_queue(const size_t num_tasks) {
+  std::queue<Task> tasks;
+
+  for (uint32_t i = 0; i < num_tasks; ++i) {
+    Task t{
+        // .app_data = std::make_unique<cifar_dense::AppData>(&g_mr),
+        .app_data = new cifar_dense::AppData(&g_mr),
+        .done = false,
+    };
+
+    tasks.push(std::move(t));
+  }
+
+  tasks.push(Task{
+      .app_data = nullptr,
+      .done = true,
+  });
+
+  return tasks;
+}
+
+void cleanup(std::queue<Task>& tasks) {
   spdlog::trace("cleanup, tasks.size() = {}", tasks.size());
 
-  // for (auto& task : tasks) {
-  //   const void* task_ptr = static_cast<const void*>(&task);
-  //   const void* app_data_ptr = static_cast<const void*>(task.app_data.get());
+  while (!tasks.empty()) {
+    auto& task = tasks.front();
+    if (task.is_sentinel()) {
+      tasks.pop();
+      continue;
+    }
 
-  //   spdlog::trace("cleaning up task, task = {}, task.app_data = {}", task_ptr, app_data_ptr);
+    delete task.app_data;
+    task.app_data = nullptr;
 
-  //   // if (!task.is_sentinel()) {
-  //   //   task.app_data.reset();
-  //   // }
-  // }
-
-  tasks.clear();
+    tasks.pop();
+  }
 }
+
+// void cleanup(std::vector<Task>& tasks) {
+//   spdlog::trace("cleanup, tasks.size() = {}", tasks.size());
+
+//   // for (auto& task : tasks) {
+//   //   const void* task_ptr = static_cast<const void*>(&task);
+//   //   const void* app_data_ptr = static_cast<const void*>(task.app_data.get());
+
+//   //   spdlog::trace("cleaning up task, task = {}, task.app_data = {}", task_ptr, app_data_ptr);
+
+//   //   // if (!task.is_sentinel()) {
+//   //   //   task.app_data.reset();
+//   //   // }
+//   // }
+
+//   tasks.clear();
+// }

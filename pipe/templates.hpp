@@ -42,8 +42,7 @@ concept ValidProcessorType =
 template <typename Task>
 void run_pipelined_schedule(
     std::function<std::vector<Task>(size_t)> init_func,
-    std::function<void(std::vector<Task>&, std::vector<Task>&)> pipeline_func,
-    [[maybe_unused]] std::function<void(std::vector<Task>&)> cleanup_func = nullptr) {
+    std::function<void(std::vector<Task>&, std::vector<Task>&)> pipeline_func) {
   constexpr auto num_tasks = 20;
   auto tasks = init_func(num_tasks);
   std::vector<Task> out_tasks;
@@ -74,7 +73,7 @@ template <typename Task>
 void run_pipelined_schedule(
     std::function<std::queue<Task>(size_t)> init_func,
     std::function<void(std::queue<Task>&, std::queue<Task>&)> pipeline_func,
-    [[maybe_unused]] std::function<void(std::queue<Task>&)> cleanup_func = nullptr) {
+    std::function<void(std::queue<Task>&)> cleanup_func) {
   constexpr auto num_tasks = 20;
   auto in_q = init_func(num_tasks);
   std::queue<Task> out_q;
@@ -92,6 +91,9 @@ void run_pipelined_schedule(
 
   std::cout << "[schedule]: Average time per iteration: " << avg_time << " ms" << std::endl;
 
-  //   cleanup_func(out_q);
-  out_q.clear();
+    cleanup_func(out_q);
+  //   out_q.clear();
+//   while (!out_q.empty()) {
+    // out_q.pop();
+//   }
 }
