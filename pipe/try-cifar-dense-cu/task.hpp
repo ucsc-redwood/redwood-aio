@@ -18,9 +18,8 @@ struct Task {
   [[nodiscard]] bool is_sentinel() const { return done; }
 };
 
-[[nodiscard]] std::vector<Task> init_tasks(const size_t num_tasks);
-
-// void cleanup(std::vector<Task>& tasks);
+[[deprecated("Use init_tasks_queue instead")]] [[nodiscard]] std::vector<Task> init_tasks(
+    const size_t num_tasks);
 
 [[nodiscard]] std::queue<Task> init_tasks_queue(const size_t num_tasks);
 void cleanup(std::queue<Task>& tasks);

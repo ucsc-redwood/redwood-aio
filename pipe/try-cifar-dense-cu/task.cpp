@@ -81,20 +81,3 @@ void cleanup(std::queue<Task>& tasks) {
     tasks.pop();
   }
 }
-
-// void cleanup(std::vector<Task>& tasks) {
-//   spdlog::trace("cleanup, tasks.size() = {}", tasks.size());
-
-//   // for (auto& task : tasks) {
-//   //   const void* task_ptr = static_cast<const void*>(&task);
-//   //   const void* app_data_ptr = static_cast<const void*>(task.app_data.get());
-
-//   //   spdlog::trace("cleaning up task, task = {}, task.app_data = {}", task_ptr, app_data_ptr);
-
-//   //   // if (!task.is_sentinel()) {
-//   //   //   task.app_data.reset();
-//   //   // }
-//   // }
-
-//   tasks.clear();
-// }
