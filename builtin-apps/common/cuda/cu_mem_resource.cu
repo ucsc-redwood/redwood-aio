@@ -28,7 +28,7 @@ bool CudaMemoryResource::do_is_equal(const memory_resource& other) const noexcep
 }
 
 // ----------------------------------------------------------------------------
-// Pinned host memory 
+// Pinned host memory
 // ----------------------------------------------------------------------------
 
 void* CudaMemoryResource_PinnedHost::do_allocate(std::size_t bytes, std::size_t) {

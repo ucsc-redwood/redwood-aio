@@ -138,17 +138,17 @@ def show_schedule_timing(
             backends = ["VK", "CUDA"]
             core_type = None
             db_num_threads = None
-            total_time_ms = float('inf')  # Initialize with infinity
-            
+            total_time_ms = float("inf")  # Initialize with infinity
+
             # Try each backend and use the better timing
             for backend in backends:
                 current_total_time = 0.0
                 valid_timing = True
-                
+
                 for stage_id in range(start_stage, end_stage + 1):
                     if stage_id == 0:
                         continue
-                    
+
                     query = """
                         SELECT real_time
                         FROM benchmarks
@@ -162,18 +162,18 @@ def show_schedule_timing(
                     """
                     cursor.execute(query, [device_key, app_key, backend, stage_id])
                     row = cursor.fetchone()
-                    
+
                     if row and row[0] is not None:
                         current_total_time += float(row[0])
                     else:
                         valid_timing = False
                         break
-                
+
                 if valid_timing and current_total_time < total_time_ms:
                     total_time_ms = current_total_time
-            
+
             # If no valid timing found for any backend
-            if total_time_ms == float('inf'):
+            if total_time_ms == float("inf"):
                 print(
                     f"Warning: No 'mean' record found for device={device_key}, "
                     f"app={app_key}, stages={start_stage}-{end_stage}, PU={pu_type} "
@@ -184,7 +184,7 @@ def show_schedule_timing(
             backend = "OMP"
             core_type = pu_type
             db_num_threads = num_threads
-            
+
             # Original CPU timing logic
             total_time_ms = 0.0
             for stage_id in range(start_stage, end_stage + 1):
@@ -202,10 +202,12 @@ def show_schedule_timing(
                       AND core_type = ?
                       AND num_threads = ?
                 """
-                cursor.execute(query, [device_key, app_key, backend, stage_id, 
-                                    core_type, db_num_threads])
+                cursor.execute(
+                    query,
+                    [device_key, app_key, backend, stage_id, core_type, db_num_threads],
+                )
                 row = cursor.fetchone()
-                
+
                 if row and row[0] is not None:
                     total_time_ms += float(row[0])
                 else:
