@@ -126,6 +126,17 @@ def main():
     )
     lines.append("}")
     lines.append("")
+
+  # Add the additional get_run_pipeline_func function
+    lines.append("[[nodiscard]] inline RunPipelineFunc get_run_pipeline_func(const int schedule_id) {")
+    lines.append("    if (schedule_id < 1 || schedule_id > get_num_schedules()) {")
+    lines.append('        spdlog::error("Invalid schedule ID: {}", schedule_id);')
+    lines.append('        throw std::invalid_argument("Invalid schedule ID");')
+    lines.append("    }")
+    lines.append("    return run_pipeline_table[schedule_id - 1];")
+    lines.append("}")
+    lines.append("")
+
     lines.append(f"}}  // namespace device_{device_filter}")
     lines.append("")
 
