@@ -9,7 +9,7 @@
 #include "builtin-apps/resources_path.hpp"
 
 #define PREPARE_DATA                    \
-  auto mr = cuda::CudaMemoryResource(); \
+  auto mr = cuda::CudaMemoryResource_PinnedHost(); \
   cifar_dense::AppData appdata(&mr);    \
   CUDA_CHECK(cudaDeviceSynchronize());
 

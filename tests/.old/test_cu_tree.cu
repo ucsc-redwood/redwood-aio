@@ -15,7 +15,7 @@ std::string device_id;
 static void manual_visualized_test(size_t n_input) {
   spdlog::set_level(spdlog::level::debug);
 
-  auto mr = cuda::CudaMemoryResource();
+  auto mr = cuda::CudaMemoryResource_PinnedHost();
   tree::AppData appdata(&mr, n_input);
   tree::cuda::TempStorage tmp;
 
