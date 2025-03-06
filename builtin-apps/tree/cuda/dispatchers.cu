@@ -4,13 +4,12 @@
 #include <cub/util_math.cuh>
 
 #include "../../common/cuda/helpers.cuh"
+#include "../../debug_logger.hpp"
 #include "01_morton.cuh"
 #include "04_radix_tree.cuh"
 #include "05_edge_count.cuh"
 #include "07_octree.cuh"
 #include "dispatchers.cuh"
-
-#include "../../debug_logger.hpp"
 
 namespace tree::cuda {
 

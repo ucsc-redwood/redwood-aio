@@ -1,7 +1,7 @@
 #include "../../common/cuda/helpers.cuh"
+#include "../../debug_logger.hpp"
 #include "all_kernels.cuh"
 #include "dispatchers.cuh"
-#include "../../debug_logger.hpp"
 
 namespace cifar_sparse::cuda {
 
