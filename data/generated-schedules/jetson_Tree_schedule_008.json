@@ -8,25 +8,25 @@
         "hardware": "little",
         "threads": 6,
         "stages": [
-          1,
-          2
+          1
         ],
-        "time": 8.166008384738564
+        "time": 0.4970073470179737
       },
       {
         "name": "chunk2",
         "hardware": "gpu",
         "threads": 0,
         "stages": [
+          2,
           3,
           4,
           5,
           6,
           7
         ],
-        "time": 0.0
+        "time": 10.863321268745198
       }
     ]
   },
-  "max_chunk_time": 8.166008384738564
+  "max_chunk_time": 10.863321268745198
 }
