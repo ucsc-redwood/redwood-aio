@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from pathlib import Path
+import re
 
 from codegen_common import (
     parse_schedule_filename,
@@ -25,17 +26,18 @@ def main():
         print(f"Error: schedule file not found: {schedule_path}")
         return
 
+    # Extract device and application from path components
+    try:
+        device_id = schedule_path.parent.parent.name
+        application_name = schedule_path.parent.name
+        schedule_num = int(re.search(r"schedule_(\d+)", schedule_path.stem).group(1))
+        schedule_id = f"{device_id}_{application_name}_schedule_{schedule_num:03d}"
+    except (IndexError, AttributeError) as e:
+        print(f"Error: Invalid path structure: {e}")
+        return
+
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    # Parse from filename
-    try:
-        device_id, application_name, schedule_id = parse_schedule_filename(
-            schedule_path.name
-        )
-    except ValueError as e:
-        print(f"Error: {e}")
-        return
 
     # Read and validate the JSON
     try:

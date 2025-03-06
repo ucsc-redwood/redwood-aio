@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from pathlib import Path
+import re
 
 from codegen_common import (
     parse_schedule_filename,
@@ -35,7 +36,7 @@ def main():
     )
     args = parser.parse_args()
 
-    in_dir = Path(args.in_dir)
+    in_dir = Path(args.in_dir) / args.device / args.application
     if not in_dir.is_dir():
         print(f"Error: input directory not found: {in_dir}")
         return
@@ -51,18 +52,8 @@ def main():
     # We'll store a dict: { schedule_id : generated_code }
     schedules_code = {}
 
-    # Collect matching schedules
-    for json_file in in_dir.glob("*.json"):
-        try:
-            d_id, a_name, sch_id = parse_schedule_filename(json_file.name)
-        except ValueError:
-            continue
-
-        if d_id != device_filter:
-            continue
-        if a_name != app_filter:
-            continue
-
+    # Collect matching schedules - simplified since we're already in device/app directory
+    for json_file in in_dir.glob("schedule_*.json"):
         try:
             schedule_obj, _ = read_schedule_file(json_file)
         except ValueError as e:
@@ -70,7 +61,10 @@ def main():
             continue
 
         code = generate_run_pipeline_code(schedule_obj)
-        schedules_code[sch_id] = code
+        # Extract schedule number from filename for consistent ordering
+        schedule_num = int(re.search(r"schedule_(\d+)", json_file.stem).group(1))
+        schedule_id = f"{args.device}_{args.application}_schedule_{schedule_num:03d}"
+        schedules_code[schedule_id] = code
 
     if not schedules_code:
         print(

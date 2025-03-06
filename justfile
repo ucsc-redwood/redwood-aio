@@ -21,6 +21,8 @@ raw-to-db:
 db-to-schedules:
     python3 scripts/analysis/gen_schedules.py  --device jetson --app Tree --output_dir ./data/generated-schedules/
 
+# python3 scripts/codegen/multi_schedule.py --in_dir data/generated-schedules/ --out_dir pipe/cifar-dense-cu/generated-code/ --device jetson --application CifarDense
+
 # Generate pipeline code from sqlite database (in ./data/generated-schedules)
 db-to-code:
     python3 scripts/analysis/gen_schedules.py --device 3A021JEHN02756 --app CifarDense --output_dir ./data/generated-schedules/

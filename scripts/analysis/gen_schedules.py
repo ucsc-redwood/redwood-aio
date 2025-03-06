@@ -311,13 +311,15 @@ def write_schedules_to_json(
     app_name: str,
     output_dir: str,
 ) -> None:
-    output_path = Path(output_dir)
+    """Write schedule JSON files to device/application subdirectories."""
+    # Create device/application subdirectories
+    output_path = Path(output_dir) / device_id / app_name
     output_path.mkdir(parents=True, exist_ok=True)
 
     for idx, schedule in enumerate(schedules, 1):
         schedule_id = f"{device_id}_{app_name}_schedule_{idx:03d}"
         schedule_json = schedule_to_json(schedule, schedule_id, device_id)
-        filename = f"{schedule_id}.json"
+        filename = f"schedule_{idx:03d}.json"  # Simplified filename since it's in app/device dir
         file_path = output_path / filename
         with open(file_path, "w") as f:
             json.dump(schedule_json, f, indent=2)
