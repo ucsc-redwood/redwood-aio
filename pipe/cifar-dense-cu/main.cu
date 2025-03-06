@@ -18,14 +18,12 @@ int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   if (g_device_id == "jetson") {
-    run_pipelined_schedule<Task>(init_tasks_queue, device_jetson::run_pipeline_table[0], cleanup);
-  }
+    run_warmup<Task>(
+        init_tasks_queue, device_jetson::run_pipeline_table[which_schedule - 1], cleanup);
 
-  // if (g_device_id == "pc") {
-  //   run_pipelined_schedule<Task>(init_tasks_queue, device_pc::run_pipeline_queue, cleanup);
-  // } else if (g_device_id == "jetson") {
-  //   run_pipelined_schedule<Task>(init_tasks_queue, device_jetson::run_pipeline_queue, cleanup);
-  // }
+    run_pipelined_schedule<Task>(
+        init_tasks_queue, device_jetson::run_pipeline_table[which_schedule - 1], cleanup);
+  }
 
   return 0;
 }
