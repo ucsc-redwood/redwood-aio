@@ -1,14 +1,14 @@
 # Set configuration for Android devices (on a machine using ADB)
 set-android:
-    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c --use_vulkan=yes --use_cuda=no -v
+    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c -v --use_vulkan=yes --use_cuda=no -m releasedbg
 
 # Set configuration for NVIDIA Jetson Orin
 set-jetson:
-    xmake f -p linux -a arm64 --use_cuda=yes --use_vulkan=no -c -v 
+    xmake f -p linux -a arm64 --use_cuda=yes --use_vulkan=no -c -v -m releasedbg
 
 # Set default configuration for PC
 set-default:
-    xmake f -p linux -a x86_64 -c --use_vulkan=yes --use_cuda=no
+    xmake f -p linux -a x86_64 -c -v --use_vulkan=no --use_cuda=yes -m releasedbg
 
 # Compile Vulkan shader (need xxd)
 compile-shader:
