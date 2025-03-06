@@ -5,8 +5,8 @@ do
 	add_rules("pipe_config", "common_flags")
 
 	add_headerfiles({
-		-- "task.hpp",
-		-- "run_stages.hpp",
+		"task.hpp",
+		"run_stages.hpp",
 		"../concepts.hpp",
 		"../templates.hpp",
 		"generated-code/all_schedules.hpp",
@@ -14,7 +14,7 @@ do
 
 	add_files({
 		"main.cu",
-		-- "task.cpp",
+		"task.cpp",
 	})
 
 	add_deps("builtin-apps", "builtin-apps-cuda")
