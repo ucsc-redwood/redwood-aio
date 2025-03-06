@@ -99,73 +99,6 @@ void run_pipelined_schedule(std::function<std::queue<Task>(size_t)> init_func,
 // Building Block Functions
 // ---------------------------------------------------------------------
 
-// template <typename TaskType, typename Callable>
-// void chunk_first(std::queue<TaskType>& in_tasks,
-//                  moodycamel::ConcurrentQueue<TaskType>& out_q,
-//                  Callable stage_func) {
-//   while (!in_tasks.empty()) {
-//     TaskType& task = in_tasks.front();
-//     if (task.is_sentinel()) {
-//       // pass sentinel on
-//       out_q.enqueue(task);
-//       in_tasks.pop();
-//       continue;
-//     }
-//     // ---------------------------------------------------------------------
-//     // Call the user-provided function that does the stage work
-//     stage_func(task);
-//     // ---------------------------------------------------------------------
-
-//     out_q.enqueue(std::move(task));
-//     in_tasks.pop();
-//   }
-// }
-
-// template <typename TaskType, typename Callable>
-// void chunk_middle(moodycamel::ConcurrentQueue<TaskType>& in_q,
-//                   moodycamel::ConcurrentQueue<TaskType>& out_q,
-//                   Callable stage_func) {
-//   while (true) {
-//     TaskType task;
-//     if (in_q.try_dequeue(task)) {
-//       if (task.is_sentinel()) {
-//         // pass sentinel on
-//         out_q.enqueue(task);
-//         break;
-//       }
-//       // ---------------------------------------------------------------------
-//       stage_func(task);
-//       // ---------------------------------------------------------------------
-
-//       out_q.enqueue(std::move(task));
-//     } else {
-//       std::this_thread::yield();
-//     }
-//   }
-// }
-
-// template <typename TaskType, typename Callable>
-// void chunk_last(moodycamel::ConcurrentQueue<TaskType>& in_q,
-//                 std::queue<TaskType>& out_tasks,
-//                 Callable stage_func) {
-//   while (true) {
-//     TaskType task;
-//     if (in_q.try_dequeue(task)) {
-//       if (task.is_sentinel()) {
-//         out_tasks.push(task);
-//         break;
-//       }
-//       // ---------------------------------------------------------------------
-//       stage_func(task);
-//       // ---------------------------------------------------------------------
-
-//       out_tasks.push(task);
-//     } else {
-//       std::this_thread::yield();
-//     }
-//   }
-// }
-
 template <typename TaskType, typename Callable>
 void chunk_first(std::queue<TaskType>& in_tasks,
                  moodycamel::ConcurrentQueue<TaskType>& out_q,
@@ -234,5 +167,29 @@ void chunk_last(moodycamel::ConcurrentQueue<TaskType>& in_q,
     } else {
       std::this_thread::yield();
     }
+  }
+}
+
+template <typename TaskType, typename Callable>
+void chunk_single(std::queue<TaskType>& in_tasks,
+                  std::queue<TaskType>& out_tasks,
+                  Callable stage_func) {
+  while (!in_tasks.empty()) {
+    // Move the front element out of the queue, then pop
+    TaskType task = std::move(in_tasks.front());
+    in_tasks.pop();
+
+    if (task.is_sentinel()) {
+      // Pass the sentinel along
+      out_tasks.push(std::move(task));
+      continue;
+    }
+
+    // ---------------------------------------------------------------------
+    // Call the user-provided function that does the stage work
+    stage_func(task);
+    // ---------------------------------------------------------------------
+
+    out_tasks.push(std::move(task));
   }
 }
