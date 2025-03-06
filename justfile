@@ -18,6 +18,9 @@ compile-shader:
 raw-to-db:
     python3 scripts/database/update_db.py
 
+db-to-schedules:
+    python3 scripts/analysis/gen_schedules.py  --device jetson --app Tree --output_dir ./data/generated-schedules/
+
 # Generate pipeline code from sqlite database (in ./data/generated-schedules)
 db-to-code:
     python3 scripts/analysis/gen_schedules.py --device 3A021JEHN02756 --app CifarDense --output_dir ./data/generated-schedules/

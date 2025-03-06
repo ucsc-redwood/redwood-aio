@@ -1,0 +1,32 @@
+{
+  "schedule": {
+    "schedule_id": "jetson_Tree_schedule_003",
+    "device_id": "jetson",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "gpu",
+        "threads": 0,
+        "stages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "time": 0.0
+      },
+      {
+        "name": "chunk2",
+        "hardware": "little",
+        "threads": 6,
+        "stages": [
+          7
+        ],
+        "time": 0.6479198625094669
+      }
+    ]
+  },
+  "max_chunk_time": 0.6479198625094669
+}
