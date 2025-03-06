@@ -9,7 +9,7 @@ RAW_BENCHMARK_PATH = "data/raw_bm_results"
 RAW_LOGS_PATH = "data/logs"
 GENERATED_SCHEDULES_PATH = "data/generated-schedules"
 
-DB_PATH = "data/benchmark_results.json"
+DB_PATH = "data/benchmark_results.db"
 
 # Constants moved to top level
 ALL_BENCHMARKS = [
