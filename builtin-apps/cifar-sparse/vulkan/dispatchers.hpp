@@ -5,7 +5,7 @@
 namespace cifar_sparse::vulkan {
 
 // How many images to process per iteration together
-constexpr auto kNumBatches = 16;
+constexpr auto kNumBatches = 1;
 
 class Singleton {
  public:
