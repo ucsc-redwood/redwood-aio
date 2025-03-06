@@ -42,6 +42,15 @@ class Engine final : public BaseEngine {
     };
   }
 
+  template <typename T>
+  [[nodiscard]] vk::DescriptorBufferInfo get_buffer_info(const std::pmr::vector<T>& vec) const {
+    return vk::DescriptorBufferInfo{
+        .buffer = get_buffer(const_cast<void*>(static_cast<const void*>(vec.data()))),
+        .offset = 0,
+        .range = vec.size() * sizeof(T),
+    };
+  }
+
  private:
   std::unique_ptr<VulkanMemoryResource> mr_ptr_;
 };

@@ -3,68 +3,8 @@
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/tree/omp/dispatchers.hpp"
+#include "builtin-apps/tree/safe_tree_appdata.hpp"
 #include "task.hpp"
-
-// // ---------------------------------------------------------------------
-// // New Design
-// // ---------------------------------------------------------------------
-
-// template <int Stage>
-// concept ValidStage = (Stage >= 1) && (Stage <= 7);
-
-// template <int Start, int End>
-// concept ValidStageRange = ValidStage<Start> && ValidStage<End> && (Start <= End);
-
-// // Helper function that unfolds the stage calls.
-// template <int Start, int... Is>
-// void run_cpu_stages_impl(tree::AppData* app_data,
-//                          tree::omp::TmpStorage* tmp_storage,
-//                          std::integer_sequence<int, Is...>) {
-//   // Expand the calls: run_stage<Start + 0>(), run_stage<Start + 1>(), ...
-//   (tree::omp::run_stage<Start + Is>(*app_data, *tmp_storage), ...);
-// }
-
-// // Main interface
-// template <int Start, int End, ProcessorType processor_type, int n_threads>
-//   requires ValidStageRange<Start, End>
-// void run_cpu_stages(Task& task) {
-//   // Bind to the selected cores
-//   if constexpr (processor_type == ProcessorType::kLittleCore) {
-//     bind_thread_to_cores(g_little_cores);
-//   } else if constexpr (processor_type == ProcessorType::kMediumCore) {
-//     bind_thread_to_cores(g_medium_cores);
-//   } else if constexpr (processor_type == ProcessorType::kBigCore) {
-//     bind_thread_to_cores(g_big_cores);
-//   }
-
-// #pragma omp parallel num_threads(n_threads)
-//   {
-//     // Generate the sequence [0, 1, 2, ..., (End-Start)]
-//     // and expand the calls.
-//     run_cpu_stages_impl<Start>(
-//         task.app_data, task.omp_tmp_storage, std::make_integer_sequence<int, End - Start + 1>{});
-//   }
-// }
-
-// // Helper function that unfolds the stage calls.
-// template <int Start, int... Is>
-// void run_gpu_stages_impl(tree::AppData* app_data,
-//                          tree::vulkan::TmpStorage* tmp_storage,
-//                          std::integer_sequence<int, Is...>) {
-//   // Expand the calls: run_stage<Start + 0>(), run_stage<Start + 1>(), ...
-//   (tree::vulkan::Singleton::getInstance().run_stage<Start + Is>(*app_data, *tmp_storage), ...);
-// }
-
-// // Main interface
-// template <int Start, int End>
-//   requires ValidStageRange<Start, End>
-// void run_gpu_stages(Task& task) {
-//   // Generate the sequence [0, 1, 2, ..., (End-Start)]
-//   // and expand the calls.
-//   run_gpu_stages_impl<Start>(
-//       task.app_data, task.vulkan_tmp_storage, std::make_integer_sequence<int, End - Start +
-//       1>{});
-// }
 
 // ---------------------------------------------------------------------
 // Old working design
@@ -102,7 +42,7 @@ void run_cpu_stages(Task& task) {
 
     // Generate a compile-time sequence for the range [start_stage, end_stage]
     []<std::size_t... I>(
-        std::index_sequence<I...>, tree::AppData& data, tree::omp::TmpStorage& tmp_storage) {
+        std::index_sequence<I...>, tree::SafeAppData& data, tree::omp::TmpStorage& tmp_storage) {
       // Each I is offset by (start_stage - 1)
       ((tree::omp::run_stage<start_stage + I>(data, tmp_storage)), ...);
     }(std::make_index_sequence<end_stage - start_stage + 1>{},
@@ -126,7 +66,7 @@ template <int start_stage, int end_stage>
 void run_gpu_stages(Task& task) {
   // Generate a compile-time sequence for the range [start_stage, end_stage]
   []<std::size_t... I>(
-      std::index_sequence<I...>, tree::AppData& data, tree::vulkan::TmpStorage& tmp_storage) {
+      std::index_sequence<I...>, tree::SafeAppData& data, tree::vulkan::TmpStorage& tmp_storage) {
     ((tree::vulkan::Singleton::getInstance().run_stage<start_stage + I>(data, tmp_storage)), ...);
   }(std::make_index_sequence<end_stage - start_stage + 1>{},
     *task.app_data,

@@ -8,7 +8,7 @@ set-jetson:
 
 # Set default configuration for PC
 set-default:
-    xmake f -p linux -a x86_64 -c -v --use_vulkan=no --use_cuda=yes -m releasedbg
+    xmake f -p linux -a x86_64 -c -v --use_vulkan=yes --use_cuda=yes -m releasedbg
 
 # Compile Vulkan shader (need xxd)
 compile-shader:

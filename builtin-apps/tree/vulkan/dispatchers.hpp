@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../common/kiss-vk/engine.hpp"
+#include "../safe_tree_appdata.hpp"
 #include "../tree_appdata.hpp"
 #include "tmp_storage.hpp"
 
@@ -30,6 +31,34 @@ class Singleton {
   template <int Stage>
     requires(Stage >= 1 && Stage <= 7)
   void run_stage(AppData &appdata, TmpStorage &tmp_storage) {
+    if constexpr (Stage == 1) {
+      process_stage_1(appdata, tmp_storage);
+    } else if constexpr (Stage == 2) {
+      process_stage_2(appdata, tmp_storage);
+    } else if constexpr (Stage == 3) {
+      process_stage_3(appdata, tmp_storage);
+    } else if constexpr (Stage == 4) {
+      process_stage_4(appdata, tmp_storage);
+    } else if constexpr (Stage == 5) {
+      process_stage_5(appdata, tmp_storage);
+    } else if constexpr (Stage == 6) {
+      process_stage_6(appdata, tmp_storage);
+    } else if constexpr (Stage == 7) {
+      process_stage_7(appdata, tmp_storage);
+    }
+  }
+
+  void process_stage_1(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_2(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_3(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_4(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_5(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_6(SafeAppData &appdata, TmpStorage &tmp_storage);
+  void process_stage_7(SafeAppData &appdata, TmpStorage &tmp_storage);
+
+  template <int Stage>
+    requires(Stage >= 1 && Stage <= 7)
+  void run_stage(SafeAppData &appdata, TmpStorage &tmp_storage) {
     if constexpr (Stage == 1) {
       process_stage_1(appdata, tmp_storage);
     } else if constexpr (Stage == 2) {

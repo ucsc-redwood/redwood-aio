@@ -32,6 +32,7 @@ do
 		
 		-- tree headers
 		"tree/tree_appdata.hpp",
+		"tree/safe_tree_appdata.hpp",
 		"tree/omp/dispatchers.hpp",
 		"tree/omp/func_brt.hpp",
 		"tree/omp/func_edge.hpp",
@@ -59,6 +60,7 @@ do
 
 		-- tree implementations
 		"tree/tree_appdata.cpp",
+		"tree/safe_tree_appdata.cpp",
 		"tree/omp/dispatchers.cpp",
 	})
 end

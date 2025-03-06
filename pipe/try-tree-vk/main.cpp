@@ -1,7 +1,6 @@
 #include <concurrentqueue.h>
 #include <omp.h>
 
-// #include <queue>
 #include <queue>
 #include <thread>
 
@@ -43,8 +42,8 @@ void chunk_chunk2(moodycamel::ConcurrentQueue<Task>& in_q,
       }
 
       // ---------------------------------------------------------------------
-      // run_cpu_stages<2, 2, ProcessorType::kMediumCore, 2>(task);
-      run_gpu_stages<2, 2>(task);
+      run_cpu_stages<2, 2, ProcessorType::kMediumCore, 2>(task);
+      // run_gpu_stages<2, 2>(task);
       // ---------------------------------------------------------------------
 
       out_q.enqueue(task);
