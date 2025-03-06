@@ -5,7 +5,6 @@ do
 	add_rules("pipe_config", "common_flags")
 
 	add_headerfiles({
-		"run_stages.hpp",
 		"task.hpp",
 	})
 

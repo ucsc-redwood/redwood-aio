@@ -3,10 +3,14 @@
 add_rules("mode.debug", "mode.release", "mode.releasedbg")
 
 set_languages("c++20")
-set_warnings("allextra")
+set_warnings("all", "extra")
+
+if is_mode("release") or is_mode("releasedbg") then
+	set_optimize("faster") -- O2
+end
 
 if not is_plat("android") then
-	-- Clang is better for cross-platform consistency
+	-- Clang is better for cross-platform consistency (all platforms can use Clang)
 	set_toolchains("clang")
 end
 
@@ -48,6 +52,9 @@ on_load(function(target)
 	    target:add("cuflags", "-Xcompiler", "-fopenmp", {force = true})
 	    target:add("ldflags", "-fopenmp", {force = true})
 	end
+
+	-- -- for adding debugging
+	-- target:add("cxxflags", "-pg")
 end)
 rule_end()
 

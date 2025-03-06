@@ -4,12 +4,11 @@
 #include <queue>
 
 #include "../templates.hpp"
+#include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-dense/omp/dispatchers.hpp"
 #include "builtin-apps/common/cuda/helpers.cuh"
-// #include "run_stages.hpp"
-#include "builtin-apps/affinity.hpp"
 #include "task.hpp"
 
 // ---------------------------------------------------------------------
@@ -73,28 +72,6 @@ void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
 
   t_chunk1.join();
   t_chunk4.join();
-}
-
-void run_pipeline_test() {
-  constexpr auto num_tasks = 20;
-  auto tasks = init_tasks(num_tasks);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(tasks.size());
-
-  const auto start = std::chrono::high_resolution_clock::now();
-
-  // -------------------  run the pipeline  ------------------------------
-  run_pipeline(tasks, out_tasks);
-  // ---------------------------------------------------------------------
-
-  const auto end = std::chrono::high_resolution_clock::now();
-
-  const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  const double avg_time = duration.count() / static_cast<double>(num_tasks);
-
-  std::cout << "[schedule]: Average time per iteration: " << avg_time << " ms" << std::endl;
-
-  cleanup(out_tasks);
 }
 
 }  // namespace device_pc
@@ -165,28 +142,6 @@ void run_pipeline(std::vector<Task>& tasks, std::vector<Task>& out_tasks) {
   t_chunk4.join();
 }
 
-void run_pipeline_test() {
-  constexpr auto num_tasks = 20;
-  auto tasks = init_tasks(num_tasks);
-  std::vector<Task> out_tasks;
-  out_tasks.reserve(tasks.size());
-
-  const auto start = std::chrono::high_resolution_clock::now();
-
-  // -------------------  run the pipeline  ------------------------------
-  run_pipeline(tasks, out_tasks);
-  // ---------------------------------------------------------------------
-
-  const auto end = std::chrono::high_resolution_clock::now();
-
-  const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  const double avg_time = duration.count() / static_cast<double>(num_tasks);
-
-  std::cout << "[schedule]: Average time per iteration: " << avg_time << " ms" << std::endl;
-
-  cleanup(out_tasks);
-}
-
 }  // namespace device_jetson
 
 // ---------------------------------------------------------------------
@@ -199,11 +154,9 @@ int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   if (g_device_id == "pc") {
-    // run_pipelined_schedule<Task>(init_tasks, device_pc::run_pipeline, cleanup);
-    device_pc::run_pipeline_test();
+    run_pipelined_schedule<Task>(init_tasks, device_pc::run_pipeline);
   } else if (g_device_id == "jetson") {
-    // run_pipelined_schedule<Task>(init_tasks, device_jetson::run_pipeline, cleanup);
-    device_jetson::run_pipeline_test();
+    run_pipelined_schedule<Task>(init_tasks, device_jetson::run_pipeline);
   }
 
   return 0;
