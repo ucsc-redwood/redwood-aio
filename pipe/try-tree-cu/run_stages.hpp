@@ -70,6 +70,10 @@ constexpr std::array<void (*)(tree::AppData &), 7> gpu_stages = {
 template <int Start, int End>
   requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
 void run_multiple_stages(tree::AppData &data, cuda::CudaManager &mgr) {
+
+
+
+
 #pragma unroll
   for (int s = Start; s <= End; ++s) {
     gpu_stages[s - 1](data);

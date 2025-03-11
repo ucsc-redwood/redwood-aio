@@ -16,25 +16,6 @@ HARDWARE_MAP = {
 ###############################################################################
 # Parsing
 ###############################################################################
-def parse_schedule_filename(filename: str):
-    """
-    Parse something like "3A021JEHN02756_CifarDense_schedule_001.json"
-    into (device_id, application_name, schedule_id_stem).
-
-    Returns (device_id, application_name, schedule_id).
-    Raises ValueError if not matching.
-    """
-    stem = Path(filename).stem  # e.g. "3A021JEHN02756_CifarDense_schedule_001"
-    parts = stem.split("_")
-    if len(parts) < 4:
-        raise ValueError(
-            f"Filename '{filename}' does not match <device>_<application>_schedule_<num>.json"
-        )
-    device_id = parts[0]
-    application_name = parts[1]
-    schedule_id = stem
-    return device_id, application_name, schedule_id
-
 
 def read_schedule_file(schedule_path: Path):
     """
