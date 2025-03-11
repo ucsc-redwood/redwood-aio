@@ -7,9 +7,10 @@
 #include "run_stages.hpp"
 #include "task.hpp"
 
-[[nodiscard]] std::vector<cifar_dense::AppData> init_appdata(std::pmr::memory_resource *mr,
-                                                             const int num_tasks) {
-  std::vector<cifar_dense::AppData> all_data;
+template <typename AppDataType>
+[[nodiscard]] std::vector<AppDataType> init_appdata(std::pmr::memory_resource *mr,
+                                                    const int num_tasks) {
+  std::vector<AppDataType> all_data;
   all_data.reserve(num_tasks);
   for (size_t i = 0; i < num_tasks; ++i) {
     all_data.emplace_back(mr);  // Each has big vectors
@@ -17,10 +18,10 @@
   return all_data;
 }
 
-void chunk(moodycamel::ConcurrentQueue<Task *> &q_cur,
-           moodycamel::ConcurrentQueue<Task *> *q_next,
-           // lambda function and its parameters
-           std::function<void(Task *, cuda::CudaManager &)> func,
+template <typename TaskType>
+void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
+           moodycamel::ConcurrentQueue<TaskType *> *q_next,
+           std::function<void(TaskType *, cuda::CudaManager &)> func,
            cuda::CudaManager &mgr) {
   while (true) {
     Task *task = nullptr;
@@ -56,37 +57,43 @@ namespace device_pc {
 void program(const int num_tasks) {
   cuda::CudaManager mgr;
 
-  std::vector<cifar_dense::AppData> allData = init_appdata(&mgr.get_mr(), num_tasks);
+  auto preallocated_data = init_appdata<cifar_dense::AppData>(&mgr.get_mr(), num_tasks);
 
   // ---------------------------------------------------------------------
-  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(allData, &mgr);
+  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &mgr);
   moodycamel::ConcurrentQueue<Task *> q_12;
   moodycamel::ConcurrentQueue<Task *> q_23;
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  std::thread t1([&q_input, &q_12, &mgr]() {
-    chunk(q_input, &q_12,
-          [](Task* task, cuda::CudaManager& mgr) {
-            omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data, mgr);
-          },
-          mgr);
+  std::thread t1([&]() {
+    chunk<Task>(
+        q_input,
+        &q_12,
+        [](Task *task, cuda::CudaManager &mgr) {
+          omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data, mgr);
+        },
+        mgr);
   });
 
-  std::thread t2([&q_12, &q_23, &mgr]() {
-    chunk(q_12, &q_23,
-          [](Task* task, cuda::CudaManager& mgr) {
-            cuda::run_multiple_stages<3, 4>(*task->data, mgr);
-          },
-          mgr);
+  std::thread t2([&]() {
+    chunk<Task>(
+        q_12,
+        &q_23,
+        [](Task *task, cuda::CudaManager &mgr) {
+          cuda::run_multiple_stages<3, 4>(*task->data, mgr);
+        },
+        mgr);
   });
 
-  std::thread t3([&q_23, &mgr]() {
-    chunk(q_23, nullptr,
-          [](Task* task, cuda::CudaManager& mgr) {
-            omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>(*task->data, mgr);
-          },
-          mgr);
+  std::thread t3([&]() {
+    chunk<Task>(
+        q_23,
+        nullptr,
+        [](Task *task, cuda::CudaManager &mgr) {
+          omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>(*task->data, mgr);
+        },
+        mgr);
   });
 
   t1.join();
@@ -109,37 +116,43 @@ namespace device_jetson {
 void program(const int num_tasks) {
   cuda::CudaManager mgr;
 
-  std::vector<cifar_dense::AppData> allData = init_appdata(&mgr.get_mr(), num_tasks);
+  auto preallocated_data = init_appdata<cifar_dense::AppData>(&mgr.get_mr(), num_tasks);
 
   // ---------------------------------------------------------------------
-  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(allData, &mgr);
+  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &mgr);
   moodycamel::ConcurrentQueue<Task *> q_12;
   moodycamel::ConcurrentQueue<Task *> q_23;
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  std::thread t1([&q_input, &q_12, &mgr]() {
-    chunk(q_input, &q_12,
-          [](Task* task, cuda::CudaManager& mgr) {
-            omp::run_multiple_stages<1, 2, ProcessorType::kLittleCore, 3>(*task->data, mgr);
-          },
-          mgr);
+  std::thread t1([&]() {
+    chunk<Task>(
+        q_input,
+        &q_12,
+        [](Task *task, cuda::CudaManager &mgr) {
+          omp::run_multiple_stages<1, 2, ProcessorType::kLittleCore, 3>(*task->data, mgr);
+        },
+        mgr);
   });
 
-  std::thread t2([&q_12, &q_23, &mgr]() {
-    chunk(q_12, &q_23,
-          [](Task* task, cuda::CudaManager& mgr) {
-            cuda::run_multiple_stages<3, 4>(*task->data, mgr);
-          },
-          mgr);
+  std::thread t2([&]() {
+    chunk<Task>(
+        q_12,
+        &q_23,
+        [](Task *task, cuda::CudaManager &mgr) {
+          cuda::run_multiple_stages<3, 4>(*task->data, mgr);
+        },
+        mgr);
   });
 
-  std::thread t3([&q_23, &mgr]() {
-    chunk(q_23, nullptr,
-          [](Task* task, cuda::CudaManager& mgr) {
-            omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 3>(*task->data, mgr);
-          },
-          mgr);
+  std::thread t3([&]() {
+    chunk<Task>(
+        q_23,
+        nullptr,
+        [](Task *task, cuda::CudaManager &mgr) {
+          omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 3>(*task->data, mgr);
+        },
+        mgr);
   });
 
   t1.join();
