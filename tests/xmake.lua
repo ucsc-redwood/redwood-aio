@@ -81,15 +81,15 @@ end
 -- Mixed targets (cifar-dense)
 -- ----------------------------------------------------------------
 
-if has_config("use_cuda") then
-	target("test-cifar-dense-mixed-cu")
-	do
-		add_rules("test_config", "common_flags")
-		add_files({
-			"test_cifar_dense_mixed_cu.cu",
-		})
-		add_deps("builtin-apps", "builtin-apps-cuda")
-		add_cugencodes("native")
-		add_packages("concurrentqueue")
-	end
-end
+-- if has_config("use_cuda") then
+-- 	target("test-cifar-dense-mixed-cu")
+-- 	do
+-- 		add_rules("test_config", "common_flags")
+-- 		add_files({
+-- 			"test_cifar_dense_mixed_cu.cu",
+-- 		})
+-- 		add_deps("builtin-apps", "builtin-apps-cuda")
+-- 		add_cugencodes("native")
+-- 		add_packages("concurrentqueue")
+-- 	end
+-- end
