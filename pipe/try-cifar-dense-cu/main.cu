@@ -65,19 +65,29 @@ void program(const int num_tasks) {
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  std::thread t1(chunk,
-                 std::ref(q_input),
-                 &q_12,
-                 omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>,
-                 mgr);
+  std::thread t1([&q_input, &q_12, &mgr]() {
+    chunk(q_input, &q_12,
+          [](Task* task, cuda::CudaManager& mgr) {
+            omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data, mgr);
+          },
+          mgr);
+  });
 
-  std::thread t2(chunk, std::ref(q_12), &q_23, cuda::run_multiple_stages<3, 4>, mgr);
+  std::thread t2([&q_12, &q_23, &mgr]() {
+    chunk(q_12, &q_23,
+          [](Task* task, cuda::CudaManager& mgr) {
+            cuda::run_multiple_stages<3, 4>(*task->data, mgr);
+          },
+          mgr);
+  });
 
-  std::thread t3(chunk,
-                 std::ref(q_23),
-                 nullptr,
-                 omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>,
-                 mgr);
+  std::thread t3([&q_23, &mgr]() {
+    chunk(q_23, nullptr,
+          [](Task* task, cuda::CudaManager& mgr) {
+            omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>(*task->data, mgr);
+          },
+          mgr);
+  });
 
   t1.join();
   t2.join();
@@ -108,19 +118,29 @@ void program(const int num_tasks) {
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  std::thread t1(chunk,
-                 std::ref(q_input),
-                 &q_12,
-                 omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>,
-                 mgr);
+  std::thread t1([&q_input, &q_12, &mgr]() {
+    chunk(q_input, &q_12,
+          [](Task* task, cuda::CudaManager& mgr) {
+            omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data, mgr);
+          },
+          mgr);
+  });
 
-  std::thread t2(chunk, std::ref(q_12), &q_23, cuda::run_multiple_stages<3, 4>, mgr);
+  std::thread t2([&q_12, &q_23, &mgr]() {
+    chunk(q_12, &q_23,
+          [](Task* task, cuda::CudaManager& mgr) {
+            cuda::run_multiple_stages<3, 4>(*task->data, mgr);
+          },
+          mgr);
+  });
 
-  std::thread t3(chunk,
-                 std::ref(q_23),
-                 nullptr,
-                 omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>,
-                 mgr);
+  std::thread t3([&q_23, &mgr]() {
+    chunk(q_23, nullptr,
+          [](Task* task, cuda::CudaManager& mgr) {
+            omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>(*task->data, mgr);
+          },
+          mgr);
+  });
 
   t1.join();
   t2.join();
