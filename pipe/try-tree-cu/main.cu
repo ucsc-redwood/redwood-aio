@@ -73,12 +73,13 @@ void program(const int num_tasks) {
 
   auto preallocated_data = init_appdata<tree::AppData>(&mgr.get_mr(), num_tasks);
 
-  // ---------------------------------------------------------------------
   moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &mgr);
   moodycamel::ConcurrentQueue<Task *> q_12;
   moodycamel::ConcurrentQueue<Task *> q_23;
 
   auto start = std::chrono::high_resolution_clock::now();
+
+  // ---------------------------------------------------------------------
 
   std::thread t1([&]() {
     chunk<Task, tree::AppData>(
