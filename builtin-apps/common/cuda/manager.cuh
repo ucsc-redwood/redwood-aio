@@ -19,7 +19,7 @@ class CudaManager {
 
   [[nodiscard]] CudaManagedResource &get_mr() { return mr_; }
 
- private:
+ protected:
   cudaStream_t stream_;
   CudaManagedResource mr_;
 };

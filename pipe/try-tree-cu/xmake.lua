@@ -1,6 +1,6 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
-target("try-pipe-cifar-dense-cu")
+target("try-pipe-tree-cu")
 do
 	add_rules("pipe_config", "common_flags")
 
