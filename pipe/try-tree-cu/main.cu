@@ -41,7 +41,7 @@ void program(const int num_tasks) {
 
   std::thread t1([&]() {
     chunk<Task, tree::AppData>(
-        q_input, &q_12, omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>, mgr);
+        q_input, &q_12, omp::run_multiple_stages<1, 3, ProcessorType::kBigCore, 8>, mgr);
   });
 
   t1.join();

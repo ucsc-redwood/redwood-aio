@@ -8,6 +8,7 @@
 #include "func_morton.hpp"
 #include "func_octree.hpp"
 #include "func_sort.hpp"
+#include "temp_storage.hpp"
 
 namespace tree::omp {
 
@@ -40,11 +41,23 @@ void process_stage_2(tree::AppData &appdata) {
 
   LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
 
+  omp::TmpStorage temp_storage;
+
+  const auto n_threads = omp_get_num_threads();
+  const auto n_buckets = n_threads;
+
+  // spdlog::info("---num_threads: {}", n_threads);
+  // spdlog::info("--- num_buckets: {}", n_buckets);
+
+  temp_storage.allocate(n_buckets, n_threads);
+
+  // assert(temp_storage.is_allocated());
+
   bucket_sort(appdata.u_morton_keys_s1.data(),
               appdata.u_morton_keys_sorted_s2.data(),
-              appdata.omp_temp_storage.global_n_elem(),
-              appdata.omp_temp_storage.global_starting_position(),
-              appdata.omp_temp_storage.buckets(),
+              temp_storage.global_n_elem(),
+              temp_storage.global_starting_position(),
+              temp_storage.buckets(),
               appdata.get_n_input(),
               num_buckets,
               num_threads);
@@ -198,11 +211,15 @@ void process_stage_2(tree::SafeAppData &appdata) {
 
   LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
 
+  omp::TmpStorage temp_storage;
+
+  assert(temp_storage.is_allocated());
+
   bucket_sort(appdata.u_morton_keys_s1.data(),
               appdata.u_morton_keys_sorted_s2.data(),
-              appdata.omp_temp_storage.global_n_elem(),
-              appdata.omp_temp_storage.global_starting_position(),
-              appdata.omp_temp_storage.buckets(),
+              temp_storage.global_n_elem(),
+              temp_storage.global_starting_position(),
+              temp_storage.buckets(),
               appdata.get_n_input(),
               num_buckets,
               num_threads);

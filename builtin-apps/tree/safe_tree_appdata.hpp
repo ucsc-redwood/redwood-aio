@@ -90,7 +90,7 @@ struct SafeAppData final {
   // Temp storage
   // --------------------------------------------------------------------------
 
-  omp::TmpStorage omp_temp_storage;
+  // omp::TmpStorage omp_temp_storage;
 
   // --------------------------------------------------------------------------
   // Getters / Setters
