@@ -12,7 +12,6 @@
   constexpr auto input_size = 640 * 480;
 
   std::vector<tree::AppData> all_data;
-  std::vector<tree::cuda::TempStorage> all_temp_storage;
 
   all_data.reserve(num_tasks);
   for (size_t i = 0; i < num_tasks; ++i) {

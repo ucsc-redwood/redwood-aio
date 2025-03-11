@@ -115,7 +115,10 @@ struct AppData {
   // --------------------------------------------------------------------------
 
   omp::TmpStorage omp_temp_storage;
-  std::optional<cuda::TempStorage> cuda_temp_storage;
+  // std::optional<cuda::TempStorage> cuda_temp_storage;
+
+  // uint32_t* u_num_selected_out = nullptr;
+  std::pmr::vector<int32_t> u_num_selected_out;
 
   // --------------------------------------------------------------------------
   // Getters

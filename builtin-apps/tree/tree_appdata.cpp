@@ -28,6 +28,7 @@ namespace tree {
 // | 7     | u_oct_child_node_mask_s7     | n_input * 0.6f               | n_octree_nodes          |
 // | 7     | u_oct_child_leaf_mask_s7     | n_input * 0.6f               | n_octree_nodes          |
 // | 7     | u_oct_children_s7            | 8 * n_input * 0.6f           | 8 * n_octree_nodes      |
+// | 7     | u_num_selected_out           | 1                            | 1                       |
 // ------------------------------------------------------------------------------------------------
 // clang-format on
 AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input, const bool use_cuda)
@@ -47,7 +48,8 @@ AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input, const bool
       u_oct_corner_s7(n_input * kMemoryRatio, mr),
       u_oct_cell_size_s7(n_input * kMemoryRatio, mr),
       u_oct_child_node_mask_s7(n_input * kMemoryRatio, mr),
-      u_oct_child_leaf_mask_s7(n_input * kMemoryRatio, mr) {
+      u_oct_child_leaf_mask_s7(n_input * kMemoryRatio, mr),
+      u_num_selected_out(1, mr) {
   static std::mt19937 gen(114514);
   static std::uniform_real_distribution dis(kMinCoord, kMinCoord + kRange);
 
@@ -71,7 +73,8 @@ AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input, const bool
                              u_oct_corner_s7.size() * sizeof(glm::vec4) +         // Stage 7
                              u_oct_cell_size_s7.size() * sizeof(float) +          // Stage 7
                              u_oct_child_node_mask_s7.size() * sizeof(int32_t) +  // Stage 7
-                             u_oct_child_leaf_mask_s7.size() * sizeof(int32_t);   // Stage 7
+                             u_oct_child_leaf_mask_s7.size() * sizeof(int32_t) +  // Stage 7
+                             u_num_selected_out.size() * sizeof(int32_t);         // Stage 7
 
   const float total_mb = total_bytes / (1024.0f * 1024.0f);
 
@@ -80,8 +83,8 @@ AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input, const bool
   spdlog::trace("\tTotal memory: {:.2f} MB", total_mb);
 
   if (use_cuda) {
-    cuda_temp_storage = cuda::TempStorage();
-    spdlog::trace("\tCuda temp storage (device only) allocated");
+    // cuda_temp_storage = cuda::TempStorage();
+    // spdlog::trace("\tCuda temp storage (device only) allocated");
   }
 }
 
