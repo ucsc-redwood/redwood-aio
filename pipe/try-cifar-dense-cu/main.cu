@@ -121,7 +121,7 @@ void program(const int num_tasks) {
   std::thread t1([&q_input, &q_12, &mgr]() {
     chunk(q_input, &q_12,
           [](Task* task, cuda::CudaManager& mgr) {
-            omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data, mgr);
+            omp::run_multiple_stages<1, 2, ProcessorType::kLittleCore, 3>(*task->data, mgr);
           },
           mgr);
   });
@@ -137,7 +137,7 @@ void program(const int num_tasks) {
   std::thread t3([&q_23, &mgr]() {
     chunk(q_23, nullptr,
           [](Task* task, cuda::CudaManager& mgr) {
-            omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>(*task->data, mgr);
+            omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 3>(*task->data, mgr);
           },
           mgr);
   });
