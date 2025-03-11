@@ -141,6 +141,9 @@ if has_config("use_cuda") then
 		})
 
 		add_files({
+			-- Common CUDA implementations
+			"common/cuda/cu_mem_resource.cu",
+
 			-- CIFAR dense CUDA implementations
 			"cifar-dense/cuda/all_kernels.cu",
 			"cifar-dense/cuda/dispatchers.cu",

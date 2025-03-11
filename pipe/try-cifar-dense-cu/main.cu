@@ -2,14 +2,13 @@
 #include <spdlog/spdlog.h>
 
 #include "../templates.hpp"
+#include "builtin-apps/common/cuda/manager.cuh"
 #include "builtin-apps/conf.hpp"
 #include "run_stages.hpp"
 #include "task.hpp"
 
-#include "builtin-apps/common/cuda/manager.cuh"
-
-
-[[nodiscard]] std::vector<cifar_dense::AppData> init_appdata(std::pmr::memory_resource* mr, const int num_tasks) {
+[[nodiscard]] std::vector<cifar_dense::AppData> init_appdata(std::pmr::memory_resource *mr,
+                                                             const int num_tasks) {
   std::vector<cifar_dense::AppData> all_data;
   all_data.reserve(num_tasks);
   for (size_t i = 0; i < num_tasks; ++i) {
@@ -17,7 +16,6 @@
   }
   return all_data;
 }
-
 
 template <typename TaskType>
 void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
@@ -54,10 +52,7 @@ void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
 // Define a Schedule (Nvidia PC)
 // ---------------------------------------------------------------------
 
-
-
 namespace device_pc {
-
 
 void program(const int num_tasks) {
   cuda::CudaManager mgr;
@@ -72,21 +67,21 @@ void program(const int num_tasks) {
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  // std::thread t1(chunk, std::ref(q_input), &q_12, omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>);
-  // std::thread t2(chunk, std::ref(q_23), &q_34, cuda::run_multiple_stages<5, 6>, &mgr);
-  // std::thread t3(chunk, std::ref(q_34), nullptr, omp::run_multiple_stages<7, 9,   ProcessorType::kLittleCore, 12>);
-  
+  // std::thread t1(chunk, std::ref(q_input), &q_12, omp::run_multiple_stages<1, 2,
+  // ProcessorType::kBigCore, 8>); std::thread t2(chunk, std::ref(q_23), &q_34,
+  // cuda::run_multiple_stages<5, 6>, &mgr); std::thread t3(chunk, std::ref(q_34), nullptr,
+  // omp::run_multiple_stages<7, 9,   ProcessorType::kLittleCore, 12>);
+
   Task *task = nullptr;
-  omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(task);
+  omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data);
 
-
+  cuda::run_multiple_stages<5, 6>(*task->data, mgr);
 
   // ---------------------------------------------------------------------
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
   spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
-
 
 // void run_pipeline_queue(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
 //   moodycamel::ConcurrentQueue<Task> q_01;
@@ -124,7 +119,7 @@ namespace device_jetson {
 // Main
 // ---------------------------------------------------------------------
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   parse_args(argc, argv);
 
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
