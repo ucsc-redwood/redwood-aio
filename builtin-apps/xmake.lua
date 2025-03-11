@@ -14,7 +14,6 @@ do
 		-- common headers
 		"affinity.hpp",
 		"app.hpp",
-		"base_appdata.hpp",
 		"conf.hpp",
 		"resources_path.hpp",
 

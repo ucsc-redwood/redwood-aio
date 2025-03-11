@@ -31,8 +31,7 @@ namespace tree {
 // ------------------------------------------------------------------------------------------------
 // clang-format on
 AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input)
-    : BaseAppData(mr),
-      n_input(n_input),
+    : n_input(n_input),
       u_input_points_s0(n_input, mr),
       u_morton_keys_s1(n_input, mr),
       u_morton_keys_sorted_s2(n_input, mr),

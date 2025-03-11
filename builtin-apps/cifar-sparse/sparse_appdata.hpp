@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../base_appdata.hpp"
+#include <memory_resource>
 
 namespace cifar_sparse {
 
@@ -22,49 +22,49 @@ constexpr int MAX_NNZ_CONV4 = 884736;  // 3*3*384*256
 constexpr int MAX_NNZ_CONV5 = 589824;  // 3*3*256*256
 constexpr int MAX_NNZ_LINEAR = 40960;  // 256*4*4*10
 
-struct AppData : public BaseAppData {
-  UsmVector<float> u_image_data;  // initial input
+struct AppData {
+  std::pmr::vector<float> u_image_data;  // initial input
 
-  UsmVector<float> u_conv1_values;
-  UsmVector<int> u_conv1_row_ptr;
-  UsmVector<int> u_conv1_col_idx;
+  std::pmr::vector<float> u_conv1_values;
+  std::pmr::vector<int> u_conv1_row_ptr;
+  std::pmr::vector<int> u_conv1_col_idx;
 
-  UsmVector<float> u_conv2_values;
-  UsmVector<int> u_conv2_row_ptr;
-  UsmVector<int> u_conv2_col_idx;
+  std::pmr::vector<float> u_conv2_values;
+  std::pmr::vector<int> u_conv2_row_ptr;
+  std::pmr::vector<int> u_conv2_col_idx;
 
-  UsmVector<float> u_conv3_values;
-  UsmVector<int> u_conv3_row_ptr;
-  UsmVector<int> u_conv3_col_idx;
+  std::pmr::vector<float> u_conv3_values;
+  std::pmr::vector<int> u_conv3_row_ptr;
+  std::pmr::vector<int> u_conv3_col_idx;
 
-  UsmVector<float> u_conv4_values;
-  UsmVector<int> u_conv4_row_ptr;
-  UsmVector<int> u_conv4_col_idx;
+  std::pmr::vector<float> u_conv4_values;
+  std::pmr::vector<int> u_conv4_row_ptr;
+  std::pmr::vector<int> u_conv4_col_idx;
 
-  UsmVector<float> u_conv5_values;
-  UsmVector<int> u_conv5_row_ptr;
-  UsmVector<int> u_conv5_col_idx;
+  std::pmr::vector<float> u_conv5_values;
+  std::pmr::vector<int> u_conv5_row_ptr;
+  std::pmr::vector<int> u_conv5_col_idx;
 
-  UsmVector<float> u_linear_values;
-  UsmVector<int> u_linear_row_ptr;
-  UsmVector<int> u_linear_col_idx;
+  std::pmr::vector<float> u_linear_values;
+  std::pmr::vector<int> u_linear_row_ptr;
+  std::pmr::vector<int> u_linear_col_idx;
 
-  UsmVector<float> u_conv1_output;
-  UsmVector<float> u_pool1_output;
-  UsmVector<float> u_conv2_output;
-  UsmVector<float> u_pool2_output;
-  UsmVector<float> u_conv3_output;
-  UsmVector<float> u_conv4_output;
-  UsmVector<float> u_conv5_output;
-  UsmVector<float> u_pool3_output;
-  UsmVector<float> u_linear_output;  // final output
+  std::pmr::vector<float> u_conv1_output;
+  std::pmr::vector<float> u_pool1_output;
+  std::pmr::vector<float> u_conv2_output;
+  std::pmr::vector<float> u_pool2_output;
+  std::pmr::vector<float> u_conv3_output;
+  std::pmr::vector<float> u_conv4_output;
+  std::pmr::vector<float> u_conv5_output;
+  std::pmr::vector<float> u_pool3_output;
+  std::pmr::vector<float> u_linear_output;  // final output
 
-  UsmVector<float> u_conv1_bias;
-  UsmVector<float> u_conv2_bias;
-  UsmVector<float> u_conv3_bias;
-  UsmVector<float> u_conv4_bias;
-  UsmVector<float> u_conv5_bias;
-  UsmVector<float> u_linear_bias;
+  std::pmr::vector<float> u_conv1_bias;
+  std::pmr::vector<float> u_conv2_bias;
+  std::pmr::vector<float> u_conv3_bias;
+  std::pmr::vector<float> u_conv4_bias;
+  std::pmr::vector<float> u_conv5_bias;
+  std::pmr::vector<float> u_linear_bias;
 
   CSRMatrix conv1_weights;
   CSRMatrix conv2_weights;

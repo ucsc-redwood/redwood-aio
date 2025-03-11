@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../base_appdata.hpp"
+#include <memory_resource>
 
 namespace cifar_dense {
 
@@ -128,50 +128,50 @@ constexpr int kLinearOutSize = kLinearOutFeatures; // 10
 // Application Data
 // ----------------------------------------------------------------------------
 
-struct AppData : public BaseAppData {
+struct AppData {
   explicit AppData(std::pmr::memory_resource* mr);
 
   // Input
-  UsmVector<float> u_image;
+  std::pmr::vector<float> u_image;
 
   // Conv1
-  UsmVector<float> u_conv1_weights;
-  UsmVector<float> u_conv1_bias;
-  UsmVector<float> u_conv1_out;
+  std::pmr::vector<float> u_conv1_weights;
+  std::pmr::vector<float> u_conv1_bias;
+  std::pmr::vector<float> u_conv1_out;
 
   // Pool1
-  UsmVector<float> u_pool1_out;
+  std::pmr::vector<float> u_pool1_out;
 
   // Conv2
-  UsmVector<float> u_conv2_weights;
-  UsmVector<float> u_conv2_bias;
-  UsmVector<float> u_conv2_out;
+  std::pmr::vector<float> u_conv2_weights;
+  std::pmr::vector<float> u_conv2_bias;
+  std::pmr::vector<float> u_conv2_out;
 
   // Pool2
-  UsmVector<float> u_pool2_out;
+  std::pmr::vector<float> u_pool2_out;
 
   // Conv3
-  UsmVector<float> u_conv3_weights;
-  UsmVector<float> u_conv3_bias;
-  UsmVector<float> u_conv3_out;
+  std::pmr::vector<float> u_conv3_weights;
+  std::pmr::vector<float> u_conv3_bias;
+  std::pmr::vector<float> u_conv3_out;
 
   // Conv4
-  UsmVector<float> u_conv4_weights;
-  UsmVector<float> u_conv4_bias;
-  UsmVector<float> u_conv4_out;
+  std::pmr::vector<float> u_conv4_weights;
+  std::pmr::vector<float> u_conv4_bias;
+  std::pmr::vector<float> u_conv4_out;
 
   // Conv5
-  UsmVector<float> u_conv5_weights;
-  UsmVector<float> u_conv5_bias;
-  UsmVector<float> u_conv5_out;
+  std::pmr::vector<float> u_conv5_weights;
+  std::pmr::vector<float> u_conv5_bias;
+  std::pmr::vector<float> u_conv5_out;
 
   // Pool3 (also used as flattened)
-  UsmVector<float> u_pool3_out;
+  std::pmr::vector<float> u_pool3_out;
 
   // Linear
-  UsmVector<float> u_linear_weights;
-  UsmVector<float> u_linear_bias;
-  UsmVector<float> u_linear_out;
+  std::pmr::vector<float> u_linear_weights;
+  std::pmr::vector<float> u_linear_bias;
+  std::pmr::vector<float> u_linear_out;
 };
 
 }  // namespace cifar_dense

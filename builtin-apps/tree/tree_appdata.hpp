@@ -2,9 +2,8 @@
 
 #include <cstdint>
 #include <glm/glm.hpp>
+#include <memory_resource>
 #include <stdexcept>
-
-#include "../base_appdata.hpp"
 
 namespace tree {
 
@@ -48,10 +47,8 @@ constexpr auto kRange = 1024.0f;
 // - `u_oct_children_s7` is 8× larger because each octree node can have up to 8 children.
 // clang-format on
 
-struct AppData final : BaseAppData {
+struct AppData final {
   explicit AppData(std::pmr::memory_resource* mr, const size_t n_input = kDefaultInputSize);
-
-  ~AppData() override = default;
 
   // --------------------------------------------------------------------------
   // Essential data
@@ -64,46 +61,46 @@ struct AppData final : BaseAppData {
   // --------------------------------------------------------------------------
   // Stage 1: xyz -> morton
   // --------------------------------------------------------------------------
-  UsmVector<glm::vec4> u_input_points_s0;
-  UsmVector<uint32_t> u_morton_keys_s1;
+  std::pmr::vector<glm::vec4> u_input_points_s0;
+  std::pmr::vector<uint32_t> u_morton_keys_s1;
 
   // --------------------------------------------------------------------------
   // Stage 2: morton -> sorted morton
   // --------------------------------------------------------------------------
-  UsmVector<uint32_t> u_morton_keys_sorted_s2;
+  std::pmr::vector<uint32_t> u_morton_keys_sorted_s2;
 
   // --------------------------------------------------------------------------
   // Stage 3: sorted morton -> unique morton
   // --------------------------------------------------------------------------
-  UsmVector<uint32_t> u_morton_keys_unique_s3;
+  std::pmr::vector<uint32_t> u_morton_keys_unique_s3;
 
   // --------------------------------------------------------------------------
   // Stage 4: unique morton -> Binary Radix Tree (BRT)
   // --------------------------------------------------------------------------
-  UsmVector<uint8_t> u_brt_prefix_n_s4;
-  UsmVector<uint8_t> u_brt_has_leaf_left_s4;
-  UsmVector<uint8_t> u_brt_has_leaf_right_s4;
-  UsmVector<int32_t> u_brt_left_child_s4;
-  UsmVector<int32_t> u_brt_parents_s4;
+  std::pmr::vector<uint8_t> u_brt_prefix_n_s4;
+  std::pmr::vector<uint8_t> u_brt_has_leaf_left_s4;
+  std::pmr::vector<uint8_t> u_brt_has_leaf_right_s4;
+  std::pmr::vector<int32_t> u_brt_left_child_s4;
+  std::pmr::vector<int32_t> u_brt_parents_s4;
 
   // --------------------------------------------------------------------------
   // Stage 5: BRT -> edge count
   // --------------------------------------------------------------------------
-  UsmVector<int32_t> u_edge_count_s5;
+  std::pmr::vector<int32_t> u_edge_count_s5;
 
   // --------------------------------------------------------------------------
   // Stage 6: edge count -> edge offset
   // --------------------------------------------------------------------------
-  UsmVector<int32_t> u_edge_offset_s6;
+  std::pmr::vector<int32_t> u_edge_offset_s6;
 
   // --------------------------------------------------------------------------
   // Stage 7: Build Octree
   // --------------------------------------------------------------------------
-  UsmVector<int32_t> u_oct_children_s7;  // 8 * sizeof
-  UsmVector<glm::vec4> u_oct_corner_s7;
-  UsmVector<float> u_oct_cell_size_s7;
-  UsmVector<int32_t> u_oct_child_node_mask_s7;
-  UsmVector<int32_t> u_oct_child_leaf_mask_s7;
+  std::pmr::vector<int32_t> u_oct_children_s7;  // 8 * sizeof
+  std::pmr::vector<glm::vec4> u_oct_corner_s7;
+  std::pmr::vector<float> u_oct_cell_size_s7;
+  std::pmr::vector<int32_t> u_oct_child_node_mask_s7;
+  std::pmr::vector<int32_t> u_oct_child_leaf_mask_s7;
 
   // --------------------------------------------------------------------------
   // Getters

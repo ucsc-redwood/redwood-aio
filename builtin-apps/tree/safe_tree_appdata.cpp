@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include <memory_resource>
-#include <random>
+#include <numeric>
 
 #include "omp/func_brt.hpp"
 #include "omp/func_edge.hpp"
@@ -174,8 +174,7 @@ void HostTreeManager::initialize() {
 }
 
 SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
-    : BaseAppData(mr),
-      // Get data from singleton
+    :  // Get data from singleton
       n_input(HostTreeManager::getInstance().getAppData()->get_n_input()),
       n_unique(HostTreeManager::getInstance().getAppData()->get_n_unique()),
       n_brt_nodes(HostTreeManager::getInstance().getAppData()->get_n_brt_nodes()),
@@ -226,33 +225,3 @@ SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
 }
 
 }  // namespace tree
-
-// namespace tree {
-
-// SafeAppData::SafeAppData(std::pmr::memory_resource* mr, const size_t n_input)
-//     : BaseAppData(mr),
-//       n_input(n_input),
-//       u_input_points_s0(n_input, mr),
-//       u_morton_keys_s1(n_input, mr),
-//       u_morton_keys_sorted_s2(n_input, mr),
-//       u_morton_keys_unique_s3(n_input, mr),
-//       u_brt_prefix_n_s4(n_input, mr),
-//       u_brt_has_leaf_left_s4(n_input, mr),
-//       u_brt_has_leaf_right_s4(n_input, mr),
-//       u_brt_left_child_s4(n_input, mr),
-//       u_brt_parents_s4(n_input, mr),
-//       u_edge_count_s5(n_input, mr),
-//       u_edge_offset_s6(n_input, mr),
-//       u_oct_children_s7(n_input * 8 * kMemoryRatio, mr),
-//       u_oct_corner_s7(n_input * kMemoryRatio, mr),
-//       u_oct_cell_size_s7(n_input * kMemoryRatio, mr),
-//       u_oct_child_node_mask_s7(n_input * kMemoryRatio, mr),
-//       u_oct_child_leaf_mask_s7(n_input * kMemoryRatio, mr) {
-//   std::mt19937 gen(114514);
-//   std::uniform_real_distribution dis(kMinCoord, kMinCoord + kRange);
-
-//   std::ranges::generate(u_input_points_s0,
-//                         [&]() { return glm::vec4(dis(gen), dis(gen), dis(gen), 1.0f); });
-// }
-
-// }  // namespace tree

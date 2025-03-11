@@ -26,8 +26,7 @@ void readDataFromFile(const std::string_view filename, float *data, const int si
 }
 
 AppData::AppData(std::pmr::memory_resource *mr)
-    : BaseAppData(mr),
-      u_image(kImageSize, mr),
+    : u_image(kImageSize, mr),
       u_conv1_weights(kConv1WeightSize, mr),
       u_conv1_bias(kConv1BiasSize, mr),
       u_conv1_out(kConv1OutSize, mr),

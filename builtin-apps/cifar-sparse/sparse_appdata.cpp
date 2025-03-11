@@ -52,9 +52,7 @@ void readCSRFromFiles(const char* values_file,
 }
 
 AppData::AppData(std::pmr::memory_resource* mr)
-    : BaseAppData(mr),
-      // Image data
-      u_image_data(3 * 32 * 32, mr),
+    : u_image_data(3 * 32 * 32, mr),
 
       // Conv1 arrays
       u_conv1_values(MAX_NNZ_CONV1, mr),
