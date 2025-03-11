@@ -9,7 +9,8 @@ namespace cifar_sparse::cuda {
 // Stage 1 (first conv2d)
 // -----------------------------------------------------------------------------
 
-constexpr bool kAutoSync = true;
+constexpr bool kAutoSync = false;
+constexpr int kGpuBatchSize = 16;
 
 // Input Image dimensions
 constexpr int kInputChannels = 3;
@@ -33,7 +34,7 @@ void process_stage_1(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 1, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_image_data.data(),
                                                 kInputChannels,
                                                 kInputHeight,
@@ -70,7 +71,7 @@ void process_stage_2(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 2, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     maxpool2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_conv1_output.data(),
                                                    kInputChannels,
                                                    kInputHeight,
@@ -90,7 +91,7 @@ void process_stage_3(AppData &appdata) {
 
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_pool1_output.data(),
                                                 64,
                                                 16,
@@ -127,7 +128,7 @@ void process_stage_4(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 3, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     maxpool2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_conv2_output.data(),
                                                    input_channels,
                                                    input_height,
@@ -148,7 +149,7 @@ void process_stage_5(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 4, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_pool2_output.data(),
                                                 192,
                                                 8,
@@ -179,7 +180,7 @@ void process_stage_6(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 5, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_conv3_output.data(),
                                                 384,
                                                 8,
@@ -210,7 +211,7 @@ void process_stage_7(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 6, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_conv4_output.data(),
                                                 256,
                                                 8,
@@ -247,7 +248,7 @@ void process_stage_8(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 7, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     maxpool2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_conv5_output.data(),
                                                    input_channels,
                                                    input_height,
@@ -268,7 +269,7 @@ void process_stage_9(AppData &appdata) {
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
   LOG_KERNEL(LogKernelType::kCUDA, 8, &appdata);
 
-  for (auto i = 0; i < total_iterations; i++) {
+  for (auto i = 0; i < kGpuBatchSize; i++) {
     linear<<<grid_dim, block_dim, shared_mem>>>(appdata.u_pool3_output.data(),
                                                 appdata.linear_weights.values,
                                                 appdata.linear_weights.row_ptr,

@@ -7,7 +7,7 @@
 
 namespace cifar_dense::cuda {
 
-constexpr bool kAutoSync = true;
+constexpr bool kAutoSync = false;
 
 // -----------------------------------------------------------------------------
 // Stage 1 (first conv2d)
