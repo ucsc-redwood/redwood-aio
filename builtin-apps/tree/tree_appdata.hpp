@@ -3,7 +3,11 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <memory_resource>
+#include <optional>
 #include <stdexcept>
+
+#include "cuda/temp_storage.hpp"
+#include "omp/temp_storage.hpp"
 
 namespace tree {
 
@@ -47,8 +51,10 @@ constexpr auto kRange = 1024.0f;
 // - `u_oct_children_s7` is 8× larger because each octree node can have up to 8 children.
 // clang-format on
 
-struct AppData final {
-  explicit AppData(std::pmr::memory_resource* mr, const size_t n_input = kDefaultInputSize);
+struct AppData {
+  explicit AppData(std::pmr::memory_resource* mr,
+                   const size_t n_input = kDefaultInputSize,
+                   bool use_cuda = false);
 
   // --------------------------------------------------------------------------
   // Essential data
@@ -101,6 +107,18 @@ struct AppData final {
   std::pmr::vector<float> u_oct_cell_size_s7;
   std::pmr::vector<int32_t> u_oct_child_node_mask_s7;
   std::pmr::vector<int32_t> u_oct_child_leaf_mask_s7;
+
+  // --------------------------------------------------------------------------
+  // Simplifying things (Just put Temp Storage in AppData)
+  // Will, we almost always use OMP
+  // and cuda is only used in cuda
+  // --------------------------------------------------------------------------
+
+  omp::TmpStorage omp_temp_storage;
+  // std::optional<cuda::TempStorage> cuda_temp_storage;
+
+  // uint32_t* u_num_selected_out = nullptr;
+  std::pmr::vector<int32_t> u_num_selected_out;
 
   // --------------------------------------------------------------------------
   // Getters

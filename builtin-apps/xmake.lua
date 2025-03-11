@@ -38,6 +38,7 @@ do
 		"tree/omp/func_morton.hpp",
 		"tree/omp/func_octree.hpp",
 		"tree/omp/func_sort.hpp",
+		"tree/omp/temp_storage.hpp",
 
 		-- Add missing common header
 		"debug_logger.hpp",
@@ -137,7 +138,7 @@ if has_config("use_cuda") then
 			"tree/cuda/common.cuh",
 			"tree/cuda/func_morton.cuh",
 			"tree/cuda/dispatchers.cuh",
-			"tree/cuda/temp_storage.cuh",
+			"tree/cuda/temp_storage.hpp",
 		})
 
 		add_files({

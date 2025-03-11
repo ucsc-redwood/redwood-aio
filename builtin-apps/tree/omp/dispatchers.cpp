@@ -15,7 +15,7 @@ namespace tree::omp {
 // Stage 1 (xyz -> morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_1(tree::AppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_input();
 
@@ -34,7 +34,7 @@ void process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 // Stage 2 (morton -> sorted morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_2(tree::AppData &appdata, TmpStorage &temp_storage) {
+void process_stage_2(tree::AppData &appdata) {
   const auto num_threads = omp_get_num_threads();
   const auto num_buckets = num_threads;
 
@@ -42,9 +42,9 @@ void process_stage_2(tree::AppData &appdata, TmpStorage &temp_storage) {
 
   bucket_sort(appdata.u_morton_keys_s1.data(),
               appdata.u_morton_keys_sorted_s2.data(),
-              temp_storage.global_n_elem(),
-              temp_storage.global_starting_position(),
-              temp_storage.buckets(),
+              appdata.omp_temp_storage.global_n_elem(),
+              appdata.omp_temp_storage.global_starting_position(),
+              appdata.omp_temp_storage.buckets(),
               appdata.get_n_input(),
               num_buckets,
               num_threads);
@@ -58,7 +58,7 @@ void process_stage_2(tree::AppData &appdata, TmpStorage &temp_storage) {
 // Stage 3 (sorted morton -> unique morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_3(tree::AppData &appdata) {
   LOG_KERNEL(LogKernelType::kOMP, 3, &appdata);
 
   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
@@ -76,7 +76,7 @@ void process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 // Stage 4 (unique morton -> brt)
 // ----------------------------------------------------------------------------
 
-void process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_4(tree::AppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_unique();
 
@@ -101,7 +101,7 @@ void process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 // Stage 5 (brt -> edge count)
 // ----------------------------------------------------------------------------
 
-void process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_5(tree::AppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
 
@@ -121,7 +121,7 @@ void process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 // Stage 6 (edge count -> edge offset)
 // ----------------------------------------------------------------------------
 
-void process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_6(tree::AppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
 
@@ -143,7 +143,7 @@ void process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 // Stage 7 (everything -> octree)
 // ----------------------------------------------------------------------------
 
-void process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_7(tree::AppData &appdata) {
   // note: 1 here, skipping root
   const int start = 1;
   const int end = appdata.get_n_octree_nodes();
@@ -173,7 +173,7 @@ void process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &temp_s
 // Stage 1 (xyz -> morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_1(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_1(tree::SafeAppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_input();
 
@@ -192,7 +192,7 @@ void process_stage_1(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &te
 // Stage 2 (morton -> sorted morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_2(tree::SafeAppData &appdata, TmpStorage &temp_storage) {
+void process_stage_2(tree::SafeAppData &appdata) {
   const auto num_threads = omp_get_num_threads();
   const auto num_buckets = num_threads;
 
@@ -200,9 +200,9 @@ void process_stage_2(tree::SafeAppData &appdata, TmpStorage &temp_storage) {
 
   bucket_sort(appdata.u_morton_keys_s1.data(),
               appdata.u_morton_keys_sorted_s2.data(),
-              temp_storage.global_n_elem(),
-              temp_storage.global_starting_position(),
-              temp_storage.buckets(),
+              appdata.omp_temp_storage.global_n_elem(),
+              appdata.omp_temp_storage.global_starting_position(),
+              appdata.omp_temp_storage.buckets(),
               appdata.get_n_input(),
               num_buckets,
               num_threads);
@@ -216,7 +216,7 @@ void process_stage_2(tree::SafeAppData &appdata, TmpStorage &temp_storage) {
 // Stage 3 (sorted morton -> unique morton)
 // ----------------------------------------------------------------------------
 
-void process_stage_3(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_3(tree::SafeAppData &appdata) {
   LOG_KERNEL(LogKernelType::kOMP, 3, &appdata);
 
   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
@@ -234,7 +234,7 @@ void process_stage_3(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &te
 // Stage 4 (unique morton -> brt)
 // ----------------------------------------------------------------------------
 
-void process_stage_4(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_4(tree::SafeAppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_unique();
 
@@ -259,7 +259,7 @@ void process_stage_4(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &te
 // Stage 5 (brt -> edge count)
 // ----------------------------------------------------------------------------
 
-void process_stage_5(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_5(tree::SafeAppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
 
@@ -279,7 +279,7 @@ void process_stage_5(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &te
 // Stage 6 (edge count -> edge offset)
 // ----------------------------------------------------------------------------
 
-void process_stage_6(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_6(tree::SafeAppData &appdata) {
   const int start = 0;
   const int end = appdata.get_n_brt_nodes();
 
@@ -301,7 +301,7 @@ void process_stage_6(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &te
 // Stage 7 (everything -> octree)
 // ----------------------------------------------------------------------------
 
-void process_stage_7(tree::SafeAppData &appdata, [[maybe_unused]] TmpStorage &temp_storage) {
+void process_stage_7(tree::SafeAppData &appdata) {
   // note: 1 here, skipping root
   const int start = 1;
   const int end = appdata.get_n_octree_nodes();

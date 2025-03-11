@@ -94,6 +94,16 @@ run-minipc-bm:
     xmake r bm-cifar-dense-omp --device minipc
     xmake r bm-cifar-sparse-omp --device minipc
 
+run-pc-bm:
+    # xmake r bm-tree-vk --device pc 
+    # xmake r bm-cifar-dense-vk --device pc
+    # xmake r bm-cifar-sparse-vk --device pc
+    # xmake r bm-tree-omp --device pc 
+    xmake r bm-cifar-dense-omp --device pc
+    xmake r bm-cifar-sparse-omp --device pc
+    xmake r bm-cifar-dense-cu --device pc
+    xmake r bm-cifar-sparse-cu --device pc
+
 #  ----------------------------------------------------------------------------
 #  Android
 #  ----------------------------------------------------------------------------
