@@ -16,20 +16,20 @@ concept AllowedStage = (N >= 1 && N <= 9);
 namespace omp {
 
 constexpr std::array<void (*)(cifar_dense::AppData &), 9> cpu_stages = {
-    cifar_dense::omp::run_stage<1>,
-    cifar_dense::omp::run_stage<2>,
-    cifar_dense::omp::run_stage<3>,
-    cifar_dense::omp::run_stage<4>,
-    cifar_dense::omp::run_stage<5>,
-    cifar_dense::omp::run_stage<6>,
-    cifar_dense::omp::run_stage<7>,
-    cifar_dense::omp::run_stage<8>,
-    cifar_dense::omp::run_stage<9>,
+    cifar_dense::omp::process_stage_1,
+    cifar_dense::omp::process_stage_2,
+    cifar_dense::omp::process_stage_3,
+    cifar_dense::omp::process_stage_4,
+    cifar_dense::omp::process_stage_5,
+    cifar_dense::omp::process_stage_6,
+    cifar_dense::omp::process_stage_7,
+    cifar_dense::omp::process_stage_8,
+    cifar_dense::omp::process_stage_9,
 };
 
 template <int Start, int End, ProcessorType PT, int NThreads>
   requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-void run_multiple_stages(cifar_dense::AppData &data) {
+void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &) {
 #pragma omp parallel num_threads(NThreads)
   {
     // Bind to core
@@ -57,15 +57,15 @@ void run_multiple_stages(cifar_dense::AppData &data) {
 namespace cuda {
 
 constexpr std::array<void (*)(cifar_dense::AppData &), 9> gpu_stages = {
-    cifar_dense::cuda::run_stage<1>,
-    cifar_dense::cuda::run_stage<2>,
-    cifar_dense::cuda::run_stage<3>,
-    cifar_dense::cuda::run_stage<4>,
-    cifar_dense::cuda::run_stage<5>,
-    cifar_dense::cuda::run_stage<6>,
-    cifar_dense::cuda::run_stage<7>,
-    cifar_dense::cuda::run_stage<8>,
-    cifar_dense::cuda::run_stage<9>,
+    cifar_dense::cuda::process_stage_1,
+    cifar_dense::cuda::process_stage_2,
+    cifar_dense::cuda::process_stage_3,
+    cifar_dense::cuda::process_stage_4,
+    cifar_dense::cuda::process_stage_5,
+    cifar_dense::cuda::process_stage_6,
+    cifar_dense::cuda::process_stage_7,
+    cifar_dense::cuda::process_stage_8,
+    cifar_dense::cuda::process_stage_9,
 };
 
 // // Input

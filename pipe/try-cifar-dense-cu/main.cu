@@ -17,14 +17,13 @@
   return all_data;
 }
 
-template <typename TaskType>
-void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
-           moodycamel::ConcurrentQueue<TaskType *> *q_next,
+void chunk(moodycamel::ConcurrentQueue<Task *> &q_cur,
+           moodycamel::ConcurrentQueue<Task *> *q_next,
            // lambda function and its parameters
-           std::function<void(TaskType *, cuda::CudaManager *)> func,
-           cuda::CudaManager *mgr) {
+           std::function<void(Task *, cuda::CudaManager &)> func,
+           cuda::CudaManager &mgr) {
   while (true) {
-    TaskType *task = nullptr;
+    Task *task = nullptr;
     if (q_cur.try_dequeue(task)) {
       if (task == nullptr) {
         // Sentinel => pass it on if there's a next queue and stop
@@ -35,7 +34,7 @@ void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
       }
 
       // -----------------------------------
-      func(task->data, mgr);
+      func(task, mgr);
       // -----------------------------------
 
       // If there's a next queue, pass the task along
@@ -63,36 +62,32 @@ void program(const int num_tasks) {
   moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(allData, &mgr);
   moodycamel::ConcurrentQueue<Task *> q_12;
   moodycamel::ConcurrentQueue<Task *> q_23;
-  moodycamel::ConcurrentQueue<Task *> q_34;
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  // std::thread t1(chunk, std::ref(q_input), &q_12, omp::run_multiple_stages<1, 2,
-  // ProcessorType::kBigCore, 8>); std::thread t2(chunk, std::ref(q_23), &q_34,
-  // cuda::run_multiple_stages<5, 6>, &mgr); std::thread t3(chunk, std::ref(q_34), nullptr,
-  // omp::run_multiple_stages<7, 9,   ProcessorType::kLittleCore, 12>);
+  std::thread t1(chunk,
+                 std::ref(q_input),
+                 &q_12,
+                 omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>,
+                 mgr);
 
-  Task *task = nullptr;
-  omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data);
+  std::thread t2(chunk, std::ref(q_12), &q_23, cuda::run_multiple_stages<3, 4>, mgr);
 
-  cuda::run_multiple_stages<5, 6>(*task->data, mgr);
+  std::thread t3(chunk,
+                 std::ref(q_23),
+                 nullptr,
+                 omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>,
+                 mgr);
+
+  t1.join();
+  t2.join();
+  t3.join();
 
   // ---------------------------------------------------------------------
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
   spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
-
-// void run_pipeline_queue(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
-//   moodycamel::ConcurrentQueue<Task> q_01;
-
-//   std::thread t_chunk1(
-//       [&]() { chunk_first(tasks, q_01, run_cpu_stages<1, 3, ProcessorType::kBigCore, 8>); });
-//   std::thread t_chunk4([&]() { chunk_last(q_01, out_tasks, run_gpu_stages<4, 7>); });
-
-//   t_chunk1.join();
-//   t_chunk4.join();
-// }
 
 }  // namespace device_pc
 
@@ -101,17 +96,41 @@ void program(const int num_tasks) {
 // ---------------------------------------------------------------------
 
 namespace device_jetson {
+void program(const int num_tasks) {
+  cuda::CudaManager mgr;
 
-// void run_pipeline_queue(std::queue<Task>& tasks, std::queue<Task>& out_tasks) {
-//   moodycamel::ConcurrentQueue<Task> q_01;
+  std::vector<cifar_dense::AppData> allData = init_appdata(&mgr.get_mr(), num_tasks);
 
-//   std::thread t_chunk1(
-//       [&]() { chunk_first(tasks, q_01, run_cpu_stages<1, 3, ProcessorType::kLittleCore, 6>); });
-//   std::thread t_chunk4([&]() { chunk_last(q_01, out_tasks, run_gpu_stages<4, 7>); });
+  // ---------------------------------------------------------------------
+  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(allData, &mgr);
+  moodycamel::ConcurrentQueue<Task *> q_12;
+  moodycamel::ConcurrentQueue<Task *> q_23;
 
-//   t_chunk1.join();
-//   t_chunk4.join();
-// }
+  auto start = std::chrono::high_resolution_clock::now();
+
+  std::thread t1(chunk,
+                 std::ref(q_input),
+                 &q_12,
+                 omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>,
+                 mgr);
+
+  std::thread t2(chunk, std::ref(q_12), &q_23, cuda::run_multiple_stages<3, 4>, mgr);
+
+  std::thread t3(chunk,
+                 std::ref(q_23),
+                 nullptr,
+                 omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>,
+                 mgr);
+
+  t1.join();
+  t2.join();
+  t3.join();
+
+  // ---------------------------------------------------------------------
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
+}
 
 }  // namespace device_jetson
 
@@ -125,9 +144,9 @@ int main(int argc, char **argv) {
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   if (g_device_id == "pc") {
-    // run_pipelined_schedule<Task>(init_tasks_queue, device_pc::run_pipeline_queue, cleanup);
+    device_pc::program(20);
   } else if (g_device_id == "jetson") {
-    // run_pipelined_schedule<Task>(init_tasks_queue, device_jetson::run_pipeline_queue, cleanup);
+    device_jetson::program(20);
   }
 
   return 0;
