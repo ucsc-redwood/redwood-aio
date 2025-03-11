@@ -82,7 +82,6 @@ def main():
     )
     lines.append("#pragma once")
     lines.append("")
-    lines.append("#include <queue>")
     lines.append("#include <thread>")
     lines.append("#include <chrono>")
     lines.append("#include <concurrentqueue.h>")
