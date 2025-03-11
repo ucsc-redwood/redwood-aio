@@ -110,6 +110,7 @@ if has_config("use_cuda") then
 			-- Common CUDA headers
 			"common/cuda/cu_mem_resource.cuh",
 			"common/cuda/helpers.cuh",
+			"common/cuda/manager.cuh",
 
 			-- CIFAR sparse CUDA headers
 			"cifar-sparse/cuda/all_kernels.cuh",
@@ -141,9 +142,6 @@ if has_config("use_cuda") then
 		})
 
 		add_files({
-			-- Common CUDA implementations
-			"common/cuda/cu_mem_resource.cu",
-
 			-- CIFAR dense CUDA implementations
 			"cifar-dense/cuda/all_kernels.cu",
 			"cifar-dense/cuda/dispatchers.cu",

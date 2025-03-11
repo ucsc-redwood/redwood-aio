@@ -53,7 +53,7 @@ void process_stage_1(AppData &appdata) {
                                                 appdata.u_conv1_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -80,7 +80,7 @@ void process_stage_2(AppData &appdata) {
                                                    appdata.u_pool1_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -110,7 +110,7 @@ void process_stage_3(AppData &appdata) {
                                                 appdata.u_conv2_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -137,7 +137,7 @@ void process_stage_4(AppData &appdata) {
                                                    appdata.u_pool2_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -168,7 +168,7 @@ void process_stage_5(AppData &appdata) {
                                                 appdata.u_conv3_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -199,7 +199,7 @@ void process_stage_6(AppData &appdata) {
                                                 appdata.u_conv4_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -230,7 +230,7 @@ void process_stage_7(AppData &appdata) {
                                                 appdata.u_conv5_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -257,7 +257,7 @@ void process_stage_8(AppData &appdata) {
                                                    appdata.u_pool3_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }
@@ -280,7 +280,7 @@ void process_stage_9(AppData &appdata) {
                                                 appdata.u_linear_output.data());
 
     if constexpr (kAutoSync) {
-      CUDA_CHECK(cudaDeviceSynchronize());
+      CheckCuda(cudaDeviceSynchronize());
     }
   }
 }

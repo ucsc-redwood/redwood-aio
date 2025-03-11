@@ -62,7 +62,7 @@ void process_stage_1(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
       tree::kRange);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -89,7 +89,7 @@ void process_stage_2(AppData &app_data, TempStorage &tmp) {
       tmp.sort.d_temp_storage, tmp.sort.temp_storage_bytes, d_keys_in, d_keys_out, num_items);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -153,7 +153,7 @@ void process_stage_4(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
       app_data.u_brt_parents_s4.data());
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -174,7 +174,7 @@ void process_stage_5(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
                                                                  app_data.get_n_brt_nodes());
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -234,7 +234,7 @@ void process_stage_7(AppData &app_data, [[maybe_unused]] TempStorage &tmp) {
       app_data.get_n_brt_nodes());
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 

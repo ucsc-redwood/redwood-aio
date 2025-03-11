@@ -7,11 +7,11 @@
 #include "builtin-apps/resources_path.hpp"
 #include "builtin-apps/tree/cuda/dispatchers.cuh"
 
-#define PREPARE_DATA                    \
-  auto mr = cuda::CudaMemoryResource_PinnedHost(); \
-  tree::AppData appdata(&mr);           \
-  tree::cuda::TempStorage tmp_storage;  \
-  CUDA_CHECK(cudaDeviceSynchronize());
+#define PREPARE_DATA                     \
+  auto mr = cuda::CudaManagedResource(); \
+  tree::AppData appdata(&mr);            \
+  tree::cuda::TempStorage tmp_storage;   \
+  CheckCuda(cudaDeviceSynchronize());
 
 // ----------------------------------------------------------------
 // Baseline
@@ -31,7 +31,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
     tree::cuda::run_stage<5>(appdata, tmp_storage);
     tree::cuda::run_stage<6>(appdata, tmp_storage);
     tree::cuda::run_stage<7>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -47,11 +47,11 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
 
   // warmup
   tree::cuda::run_stage<1>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<1>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -66,15 +66,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
   PREPARE_DATA;
 
   tree::cuda::run_stage<1>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   tree::cuda::run_stage<2>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<2>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -90,15 +90,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
 
   tree::cuda::run_stage<1>(appdata, tmp_storage);
   tree::cuda::run_stage<2>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   tree::cuda::run_stage<3>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<3>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -115,15 +115,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
   tree::cuda::run_stage<1>(appdata, tmp_storage);
   tree::cuda::run_stage<2>(appdata, tmp_storage);
   tree::cuda::run_stage<3>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   tree::cuda::run_stage<4>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<4>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -141,15 +141,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
   tree::cuda::run_stage<2>(appdata, tmp_storage);
   tree::cuda::run_stage<3>(appdata, tmp_storage);
   tree::cuda::run_stage<4>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   tree::cuda::run_stage<5>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<5>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -168,15 +168,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
   tree::cuda::run_stage<3>(appdata, tmp_storage);
   tree::cuda::run_stage<4>(appdata, tmp_storage);
   tree::cuda::run_stage<5>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   tree::cuda::run_stage<6>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<6>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -196,15 +196,15 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   tree::cuda::run_stage<4>(appdata, tmp_storage);
   tree::cuda::run_stage<5>(appdata, tmp_storage);
   tree::cuda::run_stage<6>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   tree::cuda::run_stage<7>(appdata, tmp_storage);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     tree::cuda::run_stage<7>(appdata, tmp_storage);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 

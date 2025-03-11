@@ -13,7 +13,7 @@
 
 #define PREPARE_DATA                   \
   cifar_dense::AppData appdata(&g_mr); \
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
 struct Task {
   cifar_dense::AppData* app_data;  // basically just a pointer
@@ -29,7 +29,7 @@ void cleanup(std::queue<Task>& tasks);
 //   auto mr = cuda::CudaMemoryResource();
 
 // cuda::CudaMemoryResource g_mr;
-cuda::CudaMemoryResource_PinnedHost g_mr;
+cuda::CudaManagedResource g_mr;
 
 /**
  * Initializes a queue of tasks and adds a sentinel task at the end.
@@ -84,7 +84,7 @@ TEST(CUDA_CIFAR_DENSE, Stage1_OMP_Then_CUDA) {
   cifar_dense::cuda::run_stage<2>(appdata);
   cifar_dense::cuda::run_stage<3>(appdata);
 
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   SUCCEED();
 }
@@ -101,7 +101,7 @@ TEST(CUDA_CIFAR_DENSE, Stage12_OMP_Then_CUDA) {
 
   cifar_dense::cuda::run_stage<3>(appdata);
   cifar_dense::cuda::run_stage<4>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   SUCCEED();
 }
@@ -119,7 +119,7 @@ TEST(CUDA_CIFAR_DENSE, Stage123_OMP_Then_CUDA) {
 
   cifar_dense::cuda::run_stage<4>(appdata);
   cifar_dense::cuda::run_stage<5>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   SUCCEED();
 }
@@ -138,7 +138,7 @@ TEST(CUDA_CIFAR_DENSE, Stage1234_OMP_Then_CUDA) {
 
   cifar_dense::cuda::run_stage<5>(appdata);
   cifar_dense::cuda::run_stage<6>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   SUCCEED();
 }
@@ -152,7 +152,7 @@ TEST(CUDA_CIFAR_DENSE, Stage12_CUDA_Then_OMP) {
 
   cifar_dense::cuda::run_stage<1>(appdata);
   cifar_dense::cuda::run_stage<2>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
 #pragma omp parallel num_threads(g_little_cores.size())
   {
@@ -170,7 +170,7 @@ TEST(CUDA_CIFAR_DENSE, Stage123_CUDA_Then_OMP) {
   cifar_dense::cuda::run_stage<1>(appdata);
   cifar_dense::cuda::run_stage<2>(appdata);
   cifar_dense::cuda::run_stage<3>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
 #pragma omp parallel num_threads(g_little_cores.size())
   {
@@ -189,7 +189,7 @@ TEST(CUDA_CIFAR_DENSE, Stage1234_CUDA_Then_OMP) {
   cifar_dense::cuda::run_stage<2>(appdata);
   cifar_dense::cuda::run_stage<3>(appdata);
   cifar_dense::cuda::run_stage<4>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
 #pragma omp parallel num_threads(g_little_cores.size())
   {

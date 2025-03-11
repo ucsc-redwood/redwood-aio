@@ -8,7 +8,7 @@
 // Global Variables
 // ---------------------------------------------------------------------
 
-cuda::CudaMemoryResource_PinnedHost g_mr;
+cuda::CudaManagedResource g_mr;
 
 // ---------------------------------------------------------------------
 // Queue version

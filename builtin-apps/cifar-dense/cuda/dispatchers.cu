@@ -38,7 +38,7 @@ void process_stage_1(AppData &app_data) {
                                               kRelu);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -63,7 +63,7 @@ void process_stage_2(AppData &app_data) {
                                                  kPool1OutWidth);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -96,7 +96,7 @@ void process_stage_3(AppData &app_data) {
                                               kRelu);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -121,7 +121,7 @@ void process_stage_4(AppData &app_data) {
                                                  kPool2OutWidth);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -154,7 +154,7 @@ void process_stage_5(AppData &app_data) {
                                               kRelu);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -187,7 +187,7 @@ void process_stage_6(AppData &app_data) {
                                               kRelu);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -220,7 +220,7 @@ void process_stage_7(AppData &app_data) {
                                               kRelu);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -245,7 +245,7 @@ void process_stage_8(AppData &app_data) {
                                                  kPool3OutWidth);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -267,7 +267,7 @@ void process_stage_9(AppData &app_data) {
                                               kLinearOutFeatures);
 
   if constexpr (kAutoSync) {
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 

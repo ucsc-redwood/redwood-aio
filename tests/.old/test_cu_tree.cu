@@ -15,7 +15,7 @@ std::string device_id;
 static void manual_visualized_test(size_t n_input) {
   spdlog::set_level(spdlog::level::debug);
 
-  auto mr = cuda::CudaMemoryResource_PinnedHost();
+  auto mr = cuda::CudaManagedResource();
   tree::AppData appdata(&mr, n_input);
   tree::cuda::TempStorage tmp;
 
@@ -24,7 +24,7 @@ static void manual_visualized_test(size_t n_input) {
     spdlog::info("Iteration {}...", i);
 
     tree::cuda::process_stage_1(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 morton codes:");
@@ -34,7 +34,7 @@ static void manual_visualized_test(size_t n_input) {
     }
 
     tree::cuda::process_stage_2(appdata, tmp);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 sorted morton codes:");
@@ -44,7 +44,7 @@ static void manual_visualized_test(size_t n_input) {
     }
 
     tree::cuda::process_stage_3(appdata, tmp);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 unique morton codes:");
@@ -54,7 +54,7 @@ static void manual_visualized_test(size_t n_input) {
     }
 
     tree::cuda::process_stage_4(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 BRT node parents:");
@@ -64,7 +64,7 @@ static void manual_visualized_test(size_t n_input) {
     }
 
     tree::cuda::process_stage_5(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 edge counts:");
@@ -74,7 +74,7 @@ static void manual_visualized_test(size_t n_input) {
     }
 
     tree::cuda::process_stage_6(appdata, tmp);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 edge offsets:");
@@ -84,7 +84,7 @@ static void manual_visualized_test(size_t n_input) {
     }
 
     tree::cuda::process_stage_7(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
 
     if (i == n_iter - 1) {
       spdlog::debug("First 10 octree nodes:");
@@ -116,7 +116,7 @@ static void manual_visualized_test(size_t n_input) {
 //     auto mr = cuda::CudaMemoryResource();
 //     appdata = std::make_unique<tree::AppData>(&mr);
 
-//     CUDA_CHECK(cudaDeviceSynchronize());
+//     CheckCuda(cudaDeviceSynchronize());
 //   }
 
 //   void TearDown() override { appdata.reset(); }
@@ -127,7 +127,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage1_MortonCodeGeneration) {
 //   tree::cuda::process_stage_1(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify that morton codes are generated and non-zero
 //   ASSERT_GT(appdata->get_n_input(), 0);
@@ -138,7 +138,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage2_MortonCodeSorting) {
 //   tree::cuda::process_stage_2(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify that morton codes are sorted
 //   for (size_t i = 1; i < appdata->get_n_input(); ++i) {
@@ -149,7 +149,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage3_UniqueMortonCodes) {
 //   tree::cuda::process_stage_3(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify unique morton codes
 //   ASSERT_GT(appdata->get_n_unique(), 0);
@@ -162,7 +162,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage4_BRTParents) {
 //   tree::cuda::process_stage_4(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify BRT parents are non-zero
 //   ASSERT_GT(appdata->get_n_brt_nodes(), 0);
@@ -175,7 +175,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage5_EdgeCounts) {
 //   tree::cuda::process_stage_5(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify not all are zeros
 //   bool all_zeros = std::ranges::all_of(appdata->u_edge_count_s5,
@@ -185,7 +185,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage6_EdgeOffsets) {
 //   tree::cuda::process_stage_6(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify not all are zeros
 //   bool all_zeros = std::ranges::all_of(appdata->u_edge_offset_s6,
@@ -201,7 +201,7 @@ static void manual_visualized_test(size_t n_input) {
 
 // TEST_F(CudaTreeTestFixture, Stage7_OctreeNodes) {
 //   tree::cuda::process_stage_7(*appdata);
-//   CUDA_CHECK(cudaDeviceSynchronize());
+//   CheckCuda(cudaDeviceSynchronize());
 
 //   // Verify not all are zeros
 //   bool all_zeros = std::ranges::all_of(appdata->u_oct_child_node_mask_s7,

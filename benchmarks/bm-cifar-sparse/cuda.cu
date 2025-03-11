@@ -8,10 +8,10 @@
 #include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/resources_path.hpp"
 
-#define PREPARE_DATA                    \
-  auto mr = cuda::CudaMemoryResource_PinnedHost(); \
-  cifar_sparse::AppData appdata(&mr);   \
-  CUDA_CHECK(cudaDeviceSynchronize());
+#define PREPARE_DATA                     \
+  auto mr = cuda::CudaManagedResource(); \
+  cifar_sparse::AppData appdata(&mr);    \
+  CheckCuda(cudaDeviceSynchronize());
 
 // ----------------------------------------------------------------
 // Baseline
@@ -33,7 +33,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
     cifar_sparse::cuda::run_stage<7>(appdata);
     cifar_sparse::cuda::run_stage<8>(appdata);
     cifar_sparse::cuda::run_stage<9>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -49,11 +49,11 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage1)
 
   // warmup
   cifar_sparse::cuda::run_stage<1>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<1>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -70,11 +70,11 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage2)
   cifar_sparse::cuda::run_stage<1>(appdata);
   // warmup
   cifar_sparse::cuda::run_stage<2>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<2>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -90,15 +90,15 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage3)
 
   cifar_sparse::cuda::run_stage<1>(appdata);
   cifar_sparse::cuda::run_stage<2>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   cifar_sparse::cuda::run_stage<3>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<3>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -115,14 +115,14 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage4)
   cifar_sparse::cuda::run_stage<1>(appdata);
   cifar_sparse::cuda::run_stage<2>(appdata);
   cifar_sparse::cuda::run_stage<3>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   cifar_sparse::cuda::run_stage<4>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<4>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -140,15 +140,15 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage5)
   cifar_sparse::cuda::run_stage<2>(appdata);
   cifar_sparse::cuda::run_stage<3>(appdata);
   cifar_sparse::cuda::run_stage<4>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   cifar_sparse::cuda::run_stage<5>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<5>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -167,15 +167,15 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage6)
   cifar_sparse::cuda::run_stage<3>(appdata);
   cifar_sparse::cuda::run_stage<4>(appdata);
   cifar_sparse::cuda::run_stage<5>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   cifar_sparse::cuda::run_stage<6>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<6>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -195,15 +195,15 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage7)
   cifar_sparse::cuda::run_stage<4>(appdata);
   cifar_sparse::cuda::run_stage<5>(appdata);
   cifar_sparse::cuda::run_stage<6>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   cifar_sparse::cuda::run_stage<7>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<7>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -224,15 +224,15 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage8)
   cifar_sparse::cuda::run_stage<5>(appdata);
   cifar_sparse::cuda::run_stage<6>(appdata);
   cifar_sparse::cuda::run_stage<7>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   cifar_sparse::cuda::run_stage<8>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<8>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 
@@ -254,15 +254,15 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage9)
   cifar_sparse::cuda::run_stage<6>(appdata);
   cifar_sparse::cuda::run_stage<7>(appdata);
   cifar_sparse::cuda::run_stage<8>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   // warmup
   cifar_sparse::cuda::run_stage<9>(appdata);
-  CUDA_CHECK(cudaDeviceSynchronize());
+  CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
     cifar_sparse::cuda::run_stage<9>(appdata);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CheckCuda(cudaDeviceSynchronize());
   }
 }
 

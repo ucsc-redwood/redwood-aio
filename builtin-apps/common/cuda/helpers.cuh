@@ -1,8 +1,7 @@
 #pragma once
 
 #include <cuda_runtime_api.h>
-
-#include <iostream>
+#include <spdlog/spdlog.h>
 
 // ----------------------------------------------------------------------------
 // Math
@@ -14,14 +13,14 @@ constexpr size_t div_up(const size_t a, const size_t b) { return (a + b - 1) / b
 // Helper function to handle CUDA errors
 // ----------------------------------------------------------------------------
 
-#define CUDA_CHECK(call)                                                               \
-  do {                                                                                 \
-    cudaError_t _status = call;                                                        \
-    if (_status != cudaSuccess) {                                                      \
-      std::cerr << "Error: " << cudaGetErrorString(_status) << " at line " << __LINE__ \
-                << std::endl;                                                          \
-      exit(EXIT_FAILURE);                                                              \
-    }                                                                                  \
+#define CheckCuda(call)                                                                    \
+  do {                                                                                     \
+    cudaError_t err = call;                                                                \
+    if (err != cudaSuccess) {                                                              \
+      spdlog::error(                                                                       \
+          "CUDA error in {} at line {}: {}", __FILE__, __LINE__, cudaGetErrorString(err)); \
+      exit(1);                                                                             \
+    }                                                                                      \
   } while (0)
 
 // ----------------------------------------------------------------------------
