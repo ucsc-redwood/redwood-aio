@@ -7,8 +7,6 @@
 #include "run_stages.hpp"
 #include "task.hpp"
 
-
-
 // ---------------------------------------------------------------------
 // Define a Schedule (Nvidia PC)
 // ---------------------------------------------------------------------
@@ -28,33 +26,15 @@ void program(const int num_tasks) {
   auto start = std::chrono::high_resolution_clock::now();
 
   std::thread t1([&]() {
-    chunk<Task>(
-        q_input,
-        &q_12,
-        [](Task *task, cuda::CudaManager &mgr) {
-          omp::run_multiple_stages<1, 2, ProcessorType::kBigCore, 8>(*task->data, mgr);
-        },
-        mgr);
+    chunk<Task, cifar_dense::AppData>(
+        q_input, &q_12, omp::run_multiple_stages<1, 3, ProcessorType::kBigCore, 8>, mgr);
   });
-
   std::thread t2([&]() {
-    chunk<Task>(
-        q_12,
-        &q_23,
-        [](Task *task, cuda::CudaManager &mgr) {
-          cuda::run_multiple_stages<3, 4>(*task->data, mgr);
-        },
-        mgr);
+    chunk<Task, cifar_dense::AppData>(q_12, &q_23, cuda::run_multiple_stages<4, 6>, mgr);
   });
-
   std::thread t3([&]() {
-    chunk<Task>(
-        q_23,
-        nullptr,
-        [](Task *task, cuda::CudaManager &mgr) {
-          omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 12>(*task->data, mgr);
-        },
-        mgr);
+    chunk<Task, cifar_dense::AppData>(
+        q_23, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 12>, mgr);
   });
 
   t1.join();
@@ -87,33 +67,15 @@ void program(const int num_tasks) {
   auto start = std::chrono::high_resolution_clock::now();
 
   std::thread t1([&]() {
-    chunk<Task>(
-        q_input,
-        &q_12,
-        [](Task *task, cuda::CudaManager &mgr) {
-          omp::run_multiple_stages<1, 2, ProcessorType::kLittleCore, 3>(*task->data, mgr);
-        },
-        mgr);
+    chunk<Task, cifar_dense::AppData>(
+        q_input, &q_12, omp::run_multiple_stages<1, 3, ProcessorType::kLittleCore, 3>, mgr);
   });
-
   std::thread t2([&]() {
-    chunk<Task>(
-        q_12,
-        &q_23,
-        [](Task *task, cuda::CudaManager &mgr) {
-          cuda::run_multiple_stages<3, 4>(*task->data, mgr);
-        },
-        mgr);
+    chunk<Task, cifar_dense::AppData>(q_12, &q_23, cuda::run_multiple_stages<4, 6>, mgr);
   });
-
   std::thread t3([&]() {
-    chunk<Task>(
-        q_23,
-        nullptr,
-        [](Task *task, cuda::CudaManager &mgr) {
-          omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 3>(*task->data, mgr);
-        },
-        mgr);
+    chunk<Task, cifar_dense::AppData>(
+        q_23, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>, mgr);
   });
 
   t1.join();
