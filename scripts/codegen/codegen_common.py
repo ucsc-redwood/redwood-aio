@@ -113,8 +113,8 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
         
         lines.append("")
         lines.append("  auto end = std::chrono::high_resolution_clock::now();")
-        lines.append("  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);")
-        lines.append("  spdlog::info(\"Time taken per task: {} ms\", duration.count() / num_tasks);")
+        lines.append("  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);")
+        lines.append("  spdlog::info(\"Time taken per task: {} microseconds\", duration.count() / num_tasks);")
         
         lines.append("}")
         return "\n".join(lines)
@@ -168,8 +168,8 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
 
     lines.append("")
     lines.append("  auto end = std::chrono::high_resolution_clock::now();")
-    lines.append("  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);")
-    lines.append("  spdlog::info(\"Time taken per task: {} ms\", duration.count() / num_tasks);")
+    lines.append("  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);")
+    lines.append("  spdlog::info(\"Time taken per task: {} microseconds\", duration.count() / num_tasks);")
 
     lines.append("}")
     return "\n".join(lines)

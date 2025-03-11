@@ -44,8 +44,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_001
@@ -77,8 +77,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_002
@@ -110,8 +110,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_003
@@ -143,8 +143,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_004
@@ -170,8 +170,8 @@ inline void run_pipeline(const int num_tasks)
   t_only.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_005
@@ -203,8 +203,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_006
@@ -236,8 +236,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_007
@@ -269,8 +269,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_008
@@ -302,8 +302,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_009
@@ -335,8 +335,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_010
@@ -368,8 +368,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_011
@@ -401,8 +401,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_012
@@ -434,8 +434,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_013
@@ -467,8 +467,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_014
@@ -500,8 +500,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_015
@@ -533,8 +533,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_016
@@ -566,8 +566,8 @@ inline void run_pipeline(const int num_tasks)
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_017
@@ -593,8 +593,8 @@ inline void run_pipeline(const int num_tasks)
   t_only.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_018
