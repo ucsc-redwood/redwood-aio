@@ -1,35 +1,48 @@
 #pragma once
 
-#include "../concepts.hpp"
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-dense/omp/dispatchers.hpp"
 #include "task.hpp"
 
+template <int N>
+concept AllowedStage = (N >= 1 && N <= 9);
+
 // ---------------------------------------------------------------------
 // CPU stages
 // ---------------------------------------------------------------------
 
-template <int start_stage, int end_stage, ProcessorType processor_type, int num_threads>
-  requires ValidStageRange<start_stage, end_stage> && ValidProcessorType<processor_type>
-void run_cpu_stages(Task& task) {
-#pragma omp parallel num_threads(num_threads)
+constexpr std::array<void (*)(cifar_dense::AppData &), 9> cpu_stages = {
+    cifar_dense::omp::run_stage<1>,
+    cifar_dense::omp::run_stage<2>,
+    cifar_dense::omp::run_stage<3>,
+    cifar_dense::omp::run_stage<4>,
+    cifar_dense::omp::run_stage<5>,
+    cifar_dense::omp::run_stage<6>,
+    cifar_dense::omp::run_stage<7>,
+    cifar_dense::omp::run_stage<8>,
+    cifar_dense::omp::run_stage<9>,
+};
+
+template <int Start, int End, ProcessorType PT, int NThreads>
+  requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
+void run_multiple_stages(Task *t) {
+#pragma omp parallel num_threads(NThreads)
   {
-    // Bind to core if needed:
-    if constexpr (processor_type == ProcessorType::kLittleCore) {
+    // Bind to core
+    if constexpr (PT == ProcessorType::kLittleCore) {
       bind_thread_to_cores(g_little_cores);
-    } else if constexpr (processor_type == ProcessorType::kMediumCore) {
+    } else if constexpr (PT == ProcessorType::kMediumCore) {
       bind_thread_to_cores(g_medium_cores);
-    } else if constexpr (processor_type == ProcessorType::kBigCore) {
+    } else if constexpr (PT == ProcessorType::kBigCore) {
       bind_thread_to_cores(g_big_cores);
     }
 
-    // Generate a compile-time sequence for the range [start_stage, end_stage]
-    []<std::size_t... I>(std::index_sequence<I...>, cifar_dense::AppData& data) {
-      // Each I is offset by (start_stage - 1)
-      ((cifar_dense::omp::run_stage<start_stage + I>(data)), ...);
-    }(std::make_index_sequence<end_stage - start_stage + 1>{}, *task.app_data);
+#pragma unroll
+    for (int s = Start; s <= End; ++s) {
+      cpu_stages[s - 1](*t->data);
+    }
   }
 }
 
@@ -37,11 +50,114 @@ void run_cpu_stages(Task& task) {
 // GPU stages
 // ---------------------------------------------------------------------
 
-template <int start_stage, int end_stage>
-  requires ValidStageRange<start_stage, end_stage>
-void run_gpu_stages(Task& task) {
-  // Generate a compile-time sequence for the range [start_stage, end_stage]
-  []<std::size_t... I>(std::index_sequence<I...>, cifar_dense::AppData& data) {
-    ((cifar_dense::cuda::run_stage<start_stage + I>(data)), ...);
-  }(std::make_index_sequence<end_stage - start_stage + 1>{}, *task.app_data);
+constexpr std::array<void (*)(cifar_dense::AppData &), 9> gpu_stages = {
+    cifar_dense::cuda::run_stage<1>,
+    cifar_dense::cuda::run_stage<2>,
+    cifar_dense::cuda::run_stage<3>,
+    cifar_dense::cuda::run_stage<4>,
+    cifar_dense::cuda::run_stage<5>,
+    cifar_dense::cuda::run_stage<6>,
+    cifar_dense::cuda::run_stage<7>,
+    cifar_dense::cuda::run_stage<8>,
+    cifar_dense::cuda::run_stage<9>,
+};
+
+// // Input
+//   std::pmr::vector<float> u_image;
+
+//   // Conv1
+//   std::pmr::vector<float> u_conv1_weights;
+//   std::pmr::vector<float> u_conv1_bias;
+//   std::pmr::vector<float> u_conv1_out;
+
+//   // Pool1
+//   std::pmr::vector<float> u_pool1_out;
+
+//   // Conv2
+//   std::pmr::vector<float> u_conv2_weights;
+//   std::pmr::vector<float> u_conv2_bias;
+//   std::pmr::vector<float> u_conv2_out;
+
+//   // Pool2
+//   std::pmr::vector<float> u_pool2_out;
+
+//   // Conv3
+//   std::pmr::vector<float> u_conv3_weights;
+//   std::pmr::vector<float> u_conv3_bias;
+//   std::pmr::vector<float> u_conv3_out;
+
+//   // Conv4
+//   std::pmr::vector<float> u_conv4_weights;
+//   std::pmr::vector<float> u_conv4_bias;
+//   std::pmr::vector<float> u_conv4_out;
+
+//   // Conv5
+//   std::pmr::vector<float> u_conv5_weights;
+//   std::pmr::vector<float> u_conv5_bias;
+//   std::pmr::vector<float> u_conv5_out;
+
+//   // Pool3 (also used as flattened)
+//   std::pmr::vector<float> u_pool3_out;
+
+//   // Linear
+//   std::pmr::vector<float> u_linear_weights;
+//   std::pmr::vector<float> u_linear_bias;
+//   std::pmr::vector<float> u_linear_out;
+
+#define CudaAttachSingle(ptr) \
+  (cudaStreamAttachMemAsync(t->mgr->get_stream(), ptr, 0, cudaMemAttachSingle))
+#define CudaAttachHost(ptr) \
+  (cudaStreamAttachMemAsync(t->mgr->get_stream(), ptr, 0, cudaMemAttachHost))
+
+template <int Start, int End>
+  requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
+void run_multiple_stages(Task *t) {
+  CudaAttachSingle(t->data->u_conv1_bias.data());
+  CudaAttachSingle(t->data->u_conv1_weights.data());
+  CudaAttachSingle(t->data->u_conv1_out.data());
+  CudaAttachSingle(t->data->u_pool1_out.data());
+  CudaAttachSingle(t->data->u_conv2_bias.data());
+  CudaAttachSingle(t->data->u_conv2_weights.data());
+  CudaAttachSingle(t->data->u_conv2_out.data());
+  CudaAttachSingle(t->data->u_pool2_out.data());
+  CudaAttachSingle(t->data->u_conv3_bias.data());
+  CudaAttachSingle(t->data->u_conv3_weights.data());
+  CudaAttachSingle(t->data->u_conv3_out.data());
+  CudaAttachSingle(t->data->u_conv4_bias.data());
+  CudaAttachSingle(t->data->u_conv4_weights.data());
+  CudaAttachSingle(t->data->u_conv4_out.data());
+  CudaAttachSingle(t->data->u_conv5_bias.data());
+  CudaAttachSingle(t->data->u_conv5_weights.data());
+  CudaAttachSingle(t->data->u_conv5_out.data());
+  CudaAttachSingle(t->data->u_pool3_out.data());
+  CudaAttachSingle(t->data->u_linear_bias.data());
+  CudaAttachSingle(t->data->u_linear_weights.data());
+  CudaAttachSingle(t->data->u_linear_out.data());
+
+#pragma unroll
+  for (int s = Start; s <= End; ++s) {
+    gpu_stages[s - 1](*t->data);
+  }
+
+  CudaAttachHost(t->data->u_conv1_bias.data());
+  CudaAttachHost(t->data->u_conv1_weights.data());
+  CudaAttachHost(t->data->u_conv1_out.data());
+  CudaAttachHost(t->data->u_pool1_out.data());
+  CudaAttachHost(t->data->u_conv2_bias.data());
+  CudaAttachHost(t->data->u_conv2_weights.data());
+  CudaAttachHost(t->data->u_conv2_out.data());
+  CudaAttachHost(t->data->u_pool2_out.data());
+  CudaAttachHost(t->data->u_conv3_bias.data());
+  CudaAttachHost(t->data->u_conv3_weights.data());
+  CudaAttachHost(t->data->u_conv3_out.data());
+  CudaAttachHost(t->data->u_conv4_bias.data());
+  CudaAttachHost(t->data->u_conv4_weights.data());
+  CudaAttachHost(t->data->u_conv4_out.data());
+  CudaAttachHost(t->data->u_conv5_bias.data());
+  CudaAttachHost(t->data->u_conv5_weights.data());
+  CudaAttachHost(t->data->u_conv5_out.data());
+  CudaAttachHost(t->data->u_pool3_out.data());
+  CudaAttachHost(t->data->u_linear_bias.data());
+  CudaAttachHost(t->data->u_linear_weights.data());
+  CudaAttachHost(t->data->u_linear_out.data());
 }
