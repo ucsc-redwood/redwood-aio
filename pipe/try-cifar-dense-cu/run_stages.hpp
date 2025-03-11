@@ -1,10 +1,9 @@
 #pragma once
 
 #include "builtin-apps/affinity.hpp"
-#include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-dense/omp/dispatchers.hpp"
-#include "task.hpp"
+#include "builtin-apps/conf.hpp"
 
 template <int N>
 concept AllowedStage = (N >= 1 && N <= 9);
