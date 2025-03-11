@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 from codegen_common import (
-    parse_schedule_filename,
+    # parse_schedule_filename,
     read_schedule_file,
     generate_run_pipeline_code,
 )
@@ -84,15 +84,40 @@ def main():
     lines.append("")
     lines.append("#include <queue>")
     lines.append("#include <thread>")
+    lines.append("#include <chrono>")
     lines.append("#include <concurrentqueue.h>")
+    lines.append('#include <spdlog/spdlog.h>')
+    lines.append("")
     lines.append('#include "../task.hpp"')
-    # Use "../../templates.hpp" as requested
-    lines.append(
-        '#include "../../templates.hpp"  // chunk_first, chunk_middle, chunk_last, chunk_single'
-    )
+    lines.append('#include "../../templates.hpp"')
     lines.append('#include "../run_stages.hpp"')
+    lines.append('#include "builtin-apps/common/cuda/manager.cuh"')
+    
+    # Determine the app-specific include based on app_filter
+    app_name_lower = app_filter.lower()
+    if "cifardense" in app_name_lower:
+        lines.append('#include "builtin-apps/cifar-dense/dense_appdata.hpp"')
+    elif "cifarsparse" in app_name_lower:
+        lines.append('#include "builtin-apps/cifar-sparse/sparse_appdata.hpp"')
+    elif "tree" in app_name_lower:
+        lines.append('#include "builtin-apps/tree/tree_appdata.hpp"')
+    else:
+        lines.append(f'// Warning: Unknown application type: {app_filter}')
+    
     lines.append("")
     lines.append(f"namespace device_{device_filter} {{")
+    lines.append("")
+    
+    # Add the AppData typedef based on app_filter
+    if "cifardense" in app_name_lower:
+        lines.append("using AppData = cifar_dense::AppData;")
+    elif "cifarsparse" in app_name_lower:
+        lines.append("using AppData = cifar_sparse::AppData;")
+    elif "tree" in app_name_lower:
+        lines.append("using AppData = tree::AppData;")
+    else:
+        lines.append(f'// Warning: No AppData typedef available for: {app_filter}')
+    
     lines.append("")
 
     # Insert each schedule as a sub-namespace
@@ -111,7 +136,7 @@ def main():
     )
     lines.append("// Define function pointer type for run_pipeline")
     lines.append(
-        "using RunPipelineFunc = void (*)(std::queue<Task>&, std::queue<Task>&);"
+        "using RunPipelineFunc = void (*)(int);"
     )
     lines.append("")
     lines.append("// Array of function pointers to all run_pipeline implementations")

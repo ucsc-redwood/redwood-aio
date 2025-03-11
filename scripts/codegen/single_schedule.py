@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 from codegen_common import (
-    parse_schedule_filename,
+    # parse_schedule_filename,
     read_schedule_file,
     generate_run_pipeline_code,
     build_single_hpp_content,

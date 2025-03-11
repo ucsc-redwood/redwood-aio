@@ -2,51 +2,23 @@
 
 #include <spdlog/spdlog.h>
 
-#include "builtin-apps/common/cuda/cu_mem_resource.cuh"
+[[nodiscard]] moodycamel::ConcurrentQueue<Task*> init_tasks(std::vector<cifar_dense::AppData>& data,
+                                                            cuda::CudaManager* mgr,
+                                                            const size_t initial_capacity) {
+  // Initialize queue with reasonable capacity to avoid resizing
+  moodycamel::ConcurrentQueue<Task*> tasks(initial_capacity);
 
-// ---------------------------------------------------------------------
-// Global Variables
-// ---------------------------------------------------------------------
-
-cuda::CudaManagedResource g_mr;
-
-// ---------------------------------------------------------------------
-// Queue version
-// ---------------------------------------------------------------------
-
-[[nodiscard]] std::queue<Task> init_tasks_queue(const size_t num_tasks) {
-  std::queue<Task> tasks;
-
-  for (uint32_t i = 0; i < num_tasks; ++i) {
-    Task t{
-        .app_data = new cifar_dense::AppData(&g_mr),
-        .done = false,
-    };
-
-    tasks.push(std::move(t));
+  // Reserve space for all tasks plus sentinel
+  for (auto& app_data : data) {
+    Task* task = new Task(&app_data, mgr);
+    if (!tasks.enqueue(task)) {
+      delete task;
+      throw std::runtime_error("Failed to enqueue task");
+    }
   }
 
-  tasks.push(Task{
-      .app_data = nullptr,
-      .done = true,
-  });
+  // Add sentinel task
+  tasks.enqueue(nullptr);
 
   return tasks;
-}
-
-void cleanup(std::queue<Task>& tasks) {
-  spdlog::debug("cleanup, tasks.size() = {}", tasks.size());
-
-  while (!tasks.empty()) {
-    auto& task = tasks.front();
-    if (task.is_sentinel()) {
-      tasks.pop();
-      continue;
-    }
-
-    delete task.app_data;
-    task.app_data = nullptr;
-
-    tasks.pop();
-  }
 }
