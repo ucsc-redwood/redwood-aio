@@ -44,8 +44,8 @@ inline void run_pipeline(const int num_tasks) {
   t2.join();
 
   auto end = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  spdlog::info("Time taken per task: {} microseconds", duration.count() / num_tasks);
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  spdlog::info("Time taken per task: {} ms", duration.count() / num_tasks);
 }
 
 }  // namespace schedule_jetson_CifarDense_schedule_001
