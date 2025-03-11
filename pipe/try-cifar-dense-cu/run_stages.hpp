@@ -143,6 +143,8 @@ void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &mgr) {
     gpu_stages[s - 1](data);
   }
 
+  CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+
   CudaAttachHost(data.u_conv1_bias.data());
   CudaAttachHost(data.u_conv1_weights.data());
   CudaAttachHost(data.u_conv1_out.data());
