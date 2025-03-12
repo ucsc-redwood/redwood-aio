@@ -104,6 +104,30 @@ void program(const int num_tasks) {
 
 }  // namespace device_jetson
 
+void fun_program() {
+  cuda::CudaManager mgr;
+
+  auto preallocated_data = init_appdata<tree::AppData>(&mgr.get_mr(), 20);
+
+  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &mgr);
+
+  std::thread t1([&]() {
+    chunk<Task, tree::AppData>(
+        // q_input, nullptr, omp::run_multiple_stages<1, 7, ProcessorType::kLittleCore, 3>, mgr);
+        q_input,
+        nullptr,
+        cuda::run_multiple_stages<1, 7>,
+        mgr);
+  });
+
+  t1.join();
+
+  for (auto &data : preallocated_data) {
+    auto is_sorted = std::ranges::is_sorted(data.u_morton_keys_sorted_s2);
+    spdlog::info("Is sorted: {}", (is_sorted ? "true" : "false"));
+  }
+}
+
 // ---------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------
@@ -118,6 +142,8 @@ int main(int argc, char **argv) {
   } else if (g_device_id == "jetson") {
     device_jetson::program(30);
   }
+
+  fun_program();
 
   return 0;
 }

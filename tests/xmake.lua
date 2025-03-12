@@ -93,3 +93,5 @@ end
 -- 		add_packages("concurrentqueue")
 -- 	end
 -- end
+
+includes("omp-sort")

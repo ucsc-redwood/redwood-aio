@@ -1,6 +1,7 @@
 #include "dispatchers.hpp"
 
 #include <numeric>
+#include <thread>
 
 #include "../../debug_logger.hpp"
 #include "func_brt.hpp"
@@ -43,7 +44,8 @@ void process_stage_2(tree::AppData &appdata) {
 
   omp::TmpStorage temp_storage;
 
-  const auto n_threads = omp_get_num_threads();
+  // const auto n_threads = omp_get_num_threads();
+  const auto n_threads = std::thread::hardware_concurrency();
   const auto n_buckets = n_threads;
 
   // spdlog::info("---num_threads: {}", n_threads);

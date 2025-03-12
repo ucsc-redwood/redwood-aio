@@ -13,18 +13,16 @@
 // Global variables
 // ------------------------------------------------------------
 
-static void run_baseline_unrestricted(tree::AppData& appdata,
-                                      tree::omp::TmpStorage& temp_storage,
-                                      const int n_threads) {
+static void run_baseline_unrestricted(tree::AppData& appdata, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
-    tree::omp::process_stage_1(appdata, temp_storage);
-    tree::omp::process_stage_2(appdata, temp_storage);
-    tree::omp::process_stage_3(appdata, temp_storage);
-    tree::omp::process_stage_4(appdata, temp_storage);
-    tree::omp::process_stage_5(appdata, temp_storage);
-    tree::omp::process_stage_6(appdata, temp_storage);
-    tree::omp::process_stage_7(appdata, temp_storage);
+    tree::omp::process_stage_1(appdata);
+    tree::omp::process_stage_2(appdata);
+    tree::omp::process_stage_3(appdata);
+    tree::omp::process_stage_4(appdata);
+    tree::omp::process_stage_5(appdata);
+    tree::omp::process_stage_6(appdata);
+    tree::omp::process_stage_7(appdata);
   }
 }
 
@@ -35,12 +33,9 @@ class OMP_Tree : public benchmark::Fixture {
   void SetUp(const ::benchmark::State&) override {
     appdata_ptr = std::make_unique<tree::AppData>(std::pmr::new_delete_resource());
 
-    tree::omp::TmpStorage temp_storage;
     const auto stage_2_threads = std::thread::hardware_concurrency();
-    const auto stage_2_buckets = stage_2_threads;
-    temp_storage.allocate(stage_2_buckets, stage_2_threads);
 
-    run_baseline_unrestricted(*appdata_ptr, temp_storage, stage_2_threads);
+    run_baseline_unrestricted(*appdata_ptr, stage_2_threads);
   }
 
   void TearDown(const ::benchmark::State&) override { appdata_ptr.reset(); }
@@ -55,12 +50,7 @@ BENCHMARK_DEFINE_F(OMP_Tree, Baseline)
   const auto n_threads = state.range(0);
 
   for (auto _ : state) {
-    tree::omp::TmpStorage temp_storage;
-    const auto stage_2_threads = std::thread::hardware_concurrency();
-    const auto stage_2_buckets = stage_2_threads;
-    temp_storage.allocate(stage_2_buckets, stage_2_threads);
-
-    run_baseline_unrestricted(*appdata_ptr, temp_storage, n_threads);
+    run_baseline_unrestricted(*appdata_ptr, n_threads);
   }
 }
 
@@ -74,7 +64,7 @@ BENCHMARK_REGISTER_F(OMP_Tree, Baseline)
 
 template <int stage, ProcessorType processor_type>
   requires(stage >= 1 && stage <= 9)
-void run_stage(tree::AppData& appdata, tree::omp::TmpStorage& temp_storage, const int n_threads) {
+void run_stage(tree::AppData& appdata, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
     // Bind to core if needed:
@@ -88,7 +78,7 @@ void run_stage(tree::AppData& appdata, tree::omp::TmpStorage& temp_storage, cons
       assert(false);
     }
 
-    tree::omp::run_stage<stage>(appdata, temp_storage);
+    tree::omp::run_stage<stage>(appdata);
   }
 }
 
@@ -99,12 +89,7 @@ class StageFixture : public OMP_Tree {
   void BenchmarkCase(benchmark::State& state) {
     const auto n_threads = state.range(0);
     for (auto _ : state) {
-      tree::omp::TmpStorage temp_storage;
-      const auto stage_2_threads = std::thread::hardware_concurrency();
-      const auto stage_2_buckets = stage_2_threads;
-      temp_storage.allocate(stage_2_buckets, stage_2_threads);
-
-      run_stage<stage, processor_type>(*appdata_ptr, temp_storage, n_threads);
+      run_stage<stage, processor_type>(*appdata_ptr, n_threads);
     }
   }
   BENCHMARK_PRIVATE_DECLARE(StageFixture);
