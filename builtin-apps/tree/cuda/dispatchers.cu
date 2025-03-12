@@ -59,6 +59,8 @@ void process_stage_1(AppData &app_data) {
       app_data.get_n_input(),
       tree::kMinCoord,
       tree::kRange);
+
+  CubDebugExit(cudaDeviceSynchronize());
 }
 
 // ----------------------------------------------------------------------------
@@ -160,6 +162,8 @@ void process_stage_4(AppData &app_data) {
       app_data.u_brt_has_leaf_right_s4.data(),
       app_data.u_brt_left_child_s4.data(),
       app_data.u_brt_parents_s4.data());
+
+  CubDebugExit(cudaDeviceSynchronize());
 }
 
 // ----------------------------------------------------------------------------
@@ -176,7 +180,9 @@ void process_stage_5(AppData &app_data) {
   ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(app_data.u_brt_prefix_n_s4.data(),
                                                                  app_data.u_brt_parents_s4.data(),
                                                                  app_data.u_edge_count_s5.data(),
-                                                                 app_data.get_n_brt_nodes());
+                                                                  app_data.get_n_brt_nodes());
+
+  CubDebugExit(cudaDeviceSynchronize());
 }
 
 // ----------------------------------------------------------------------------
@@ -238,9 +244,7 @@ void process_stage_7(AppData &app_data) {
       tree::kRange,
       app_data.get_n_brt_nodes());
 
-  // if constexpr (kAutoSync) {
-  //   CheckCuda(cudaDeviceSynchronize());
-  // }
+  CubDebugExit(cudaDeviceSynchronize());
 }
 
 }  // namespace tree::cuda
