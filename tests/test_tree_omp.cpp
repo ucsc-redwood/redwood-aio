@@ -2,6 +2,8 @@
 #include <omp.h>
 
 #include <memory_resource>
+#include <thread>
+#include <vector>
 
 #include "builtin-apps/tree/omp/dispatchers.hpp"
 #include "verify_tree.hpp"
