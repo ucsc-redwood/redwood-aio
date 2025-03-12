@@ -40,10 +40,17 @@ void process_stage_2(tree::AppData &appdata) {
 
   LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
 
-  omp::RadixSortTemp<uint32_t> temp_storage(appdata.get_n_input(), num_threads);
+  // ----------------------------------------------------------------------------
+  // Merge sort version
+  // ----------------------------------------------------------------------------
 
-  parallel_radix_sort<uint32_t>(
-      appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, temp_storage);
+  const int tid = omp_get_thread_num();
+  omp::parallel_sort(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, tid, num_threads);
+
+  // omp::RadixSortTemp<uint32_t> temp_storage(appdata.get_n_input(), num_threads);
+
+  // parallel_radix_sort<uint32_t>(
+  //     appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, temp_storage);
 
   // omp::TmpStorage temp_storage;
 

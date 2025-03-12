@@ -2,14 +2,82 @@
 
 #include <omp.h>
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <memory_resource>
 #include <vector>
 
 #include "temp_storage.hpp"
 
 namespace tree::omp {
+
+// ----------------------------------------------------------------------------
+// Merge sort version (new)
+// ----------------------------------------------------------------------------
+
+// Helper function to merge sorted segments
+inline void merge_segments(const std::pmr::vector<uint32_t> &input,
+                           std::pmr::vector<uint32_t> &output,
+                           size_t start1,
+                           size_t end1,
+                           size_t start2,
+                           size_t end2,
+                           size_t output_start) {
+  size_t i = start1, j = start2, k = output_start;
+  while (i < end1 && j < end2) {
+    if (input[i] <= input[j])
+      output[k++] = input[i++];
+    else
+      output[k++] = input[j++];
+  }
+  while (i < end1) output[k++] = input[i++];
+  while (j < end2) output[k++] = input[j++];
+}
+
+inline void parallel_sort(std::pmr::vector<uint32_t> &buffer_input,
+                          std::pmr::vector<uint32_t> &buffer_output,
+                          int thread_id,
+                          int num_threads) {
+  const size_t N = buffer_input.size();
+  const size_t segment_size = (N + num_threads - 1) / num_threads;
+
+  size_t start = thread_id * segment_size;
+  size_t end = std::min(start + segment_size, N);
+
+  // Step 1: Each thread sorts its segment
+  if (start < end) {
+    std::sort(buffer_input.begin() + start, buffer_input.begin() + end);
+  }
+
+#pragma omp barrier
+
+  // Step 2: Iterative merging performed by a single thread after sorting
+  if (thread_id == 0) {
+    std::pmr::vector<uint32_t> *src = &buffer_input;
+    std::pmr::vector<uint32_t> *dst = &buffer_output;
+
+    for (size_t width = segment_size; width < N; width *= 2) {
+#pragma omp parallel for schedule(static)
+      for (size_t i = 0; i < N; i += 2 * width) {
+        size_t start1 = i;
+        size_t end1 = std::min(start1 + width, N);
+        size_t start2 = end1;
+        size_t end2 = std::min(start2 + width, N);
+
+        merge_segments(*src, *dst, start1, end1, start2, end2, start1);
+      }
+      std::swap(src, dst);
+    }
+
+    if (src != &buffer_output) {
+      buffer_output = *src;
+    }
+  }
+
+#pragma omp barrier
+}
 
 // ----------------------------------------------------------------------------
 // New version
@@ -119,13 +187,11 @@ void parallel_radix_sort(const std::pmr::vector<T> &input,
 //   int start;  // starting point in B array
 // };
 
-[[deprecated("Use bucket_sort_v2 instead")]]
-inline int cmpfunc(const void *a, const void *b) {
+[[deprecated("Use bucket_sort_v2 instead")]] inline int cmpfunc(const void *a, const void *b) {
   return (*(uint32_t *)a - *(uint32_t *)b);
 }
 
-[[deprecated("Use bucket_sort_v2 instead")]]
-inline void bucket_sort(
+[[deprecated("Use bucket_sort_v2 instead")]] inline void bucket_sort(
 
     uint32_t *A,
     uint32_t *B,  // for temporary storage

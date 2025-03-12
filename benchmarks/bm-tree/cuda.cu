@@ -10,7 +10,7 @@
 constexpr auto kInputSize = 640 * 480;
 
 #define PREPARE_DATA                            \
-  auto mr = cuda::CudaManagedResource();        \
+  auto mr = cuda::CudaPinnedResource();        \
   tree::AppData appdata(&mr, kInputSize, true); \
   CheckCuda(cudaDeviceSynchronize());
 
