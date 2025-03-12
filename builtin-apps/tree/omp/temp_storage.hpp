@@ -4,6 +4,50 @@
 
 namespace tree::omp {
 
+// ----------------------------------------------------------------------------
+// New version
+// ----------------------------------------------------------------------------
+
+// Structure to hold all temporary storage needed for radix sort
+template <typename T>
+struct RadixSortTemp {
+  const size_t n_elements;              // Number of elements to sort
+  const int n_threads;                  // Number of threads to use
+  static constexpr size_t RADIX = 256;  // Radix size (2^8)
+
+  std::vector<T> temp_buffer;                          // Temporary buffer for elements
+  std::vector<std::vector<size_t>> thread_histograms;  // Per-thread histograms
+  std::vector<std::vector<size_t>> thread_offsets;     // Per-thread offsets
+  std::vector<size_t> global_histogram;                // Global histogram
+  std::vector<size_t> prefix_sum;                      // Prefix sum array
+
+  // Constructor allocates all temporary storage
+  RadixSortTemp(size_t n, int threads)
+      : n_elements(n),
+        n_threads(threads),
+        temp_buffer(n),
+        thread_histograms(threads, std::vector<size_t>(RADIX)),
+        thread_offsets(threads, std::vector<size_t>(RADIX)),
+        global_histogram(RADIX),
+        prefix_sum(RADIX) {}
+
+  // Calculate memory usage
+  size_t get_memory_usage() const {
+    size_t temp_buffer_size = n_elements * sizeof(T);
+    size_t thread_histograms_size = n_threads * RADIX * sizeof(size_t);
+    size_t thread_offsets_size = n_threads * RADIX * sizeof(size_t);
+    size_t global_histogram_size = RADIX * sizeof(size_t);
+    size_t prefix_sum_size = RADIX * sizeof(size_t);
+
+    return temp_buffer_size + thread_histograms_size + thread_offsets_size + global_histogram_size +
+           prefix_sum_size;
+  }
+};
+
+// ----------------------------------------------------------------------------
+// Old version
+// ----------------------------------------------------------------------------
+
 struct bucket {
   int n_elem;
   int index;  // [start : n_elem)

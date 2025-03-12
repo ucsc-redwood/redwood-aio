@@ -2,7 +2,7 @@
 
 #include "../safe_tree_appdata.hpp"
 #include "../tree_appdata.hpp"
-#include "func_sort.hpp"
+// #include "func_sort.hpp"
 
 namespace tree::omp {
 

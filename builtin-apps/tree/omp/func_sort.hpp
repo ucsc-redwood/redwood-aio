@@ -11,14 +11,120 @@
 
 namespace tree::omp {
 
+// ----------------------------------------------------------------------------
+// New version
+// ----------------------------------------------------------------------------
+
+// Parallel Radix Sort for unsigned integer types
+template <typename T>
+void parallel_radix_sort(const std::pmr::vector<T> &input,
+                         std::pmr::vector<T> &output,
+                         RadixSortTemp<T> &temp) {
+  static_assert(std::is_unsigned<T>::value, "Radix sort requires unsigned integer type");
+
+  const size_t n = input.size();
+  std::copy(input.begin(), input.end(), output.begin());
+
+  constexpr size_t RADIX_BITS = 8;
+  constexpr size_t RADIX = 1 << RADIX_BITS;  // 256
+  constexpr size_t MASK = RADIX - 1;         // 0xFF
+  constexpr size_t NUM_PASSES = sizeof(T) * 8 / RADIX_BITS;
+
+  // Get thread ID
+  int thread_id = omp_get_thread_num();
+  int num_threads = omp_get_num_threads();
+
+  // For each byte
+  for (size_t pass = 0; pass < NUM_PASSES; pass++) {
+    const size_t shift = pass * RADIX_BITS;
+
+    // Reset histograms for this thread
+    std::fill(
+        temp.thread_histograms[thread_id].begin(), temp.thread_histograms[thread_id].end(), 0);
+
+// Barrier to ensure all threads have reset their histograms
+#pragma omp barrier
+
+// Build local histogram
+#pragma omp for schedule(static)
+    for (size_t i = 0; i < n; i++) {
+      size_t bin = (output[i] >> shift) & MASK;
+      temp.thread_histograms[thread_id][bin]++;
+    }
+
+// Barrier to ensure all histograms are complete
+#pragma omp barrier
+
+// Thread 0 combines histograms and computes prefix sums
+#pragma omp single
+    {
+      // Reset global histogram
+      std::fill(temp.global_histogram.begin(), temp.global_histogram.end(), 0);
+
+      // Combine histograms
+      for (int t = 0; t < num_threads; t++) {
+        for (size_t i = 0; i < RADIX; i++) {
+          temp.global_histogram[i] += temp.thread_histograms[t][i];
+        }
+      }
+
+      // Compute prefix sum
+      temp.prefix_sum[0] = 0;
+      for (size_t i = 1; i < RADIX; i++) {
+        temp.prefix_sum[i] = temp.prefix_sum[i - 1] + temp.global_histogram[i - 1];
+      }
+
+      // Compute per-thread offsets
+      for (size_t bin = 0; bin < RADIX; bin++) {
+        size_t offset = temp.prefix_sum[bin];
+        for (int t = 0; t < num_threads; t++) {
+          temp.thread_offsets[t][bin] = offset;
+          offset += temp.thread_histograms[t][bin];
+        }
+      }
+    }
+
+// Barrier to ensure prefix sums and offsets are ready
+#pragma omp barrier
+
+// Distribute elements to correct positions
+#pragma omp for schedule(static)
+    for (size_t i = 0; i < n; i++) {
+      size_t bin = (output[i] >> shift) & MASK;
+      size_t pos = temp.thread_offsets[thread_id][bin]++;
+      temp.temp_buffer[pos] = output[i];
+    }
+
+// Barrier to ensure all elements are distributed
+#pragma omp barrier
+
+// Copy back to output buffer
+#pragma omp for schedule(static)
+    for (size_t i = 0; i < n; i++) {
+      output[i] = temp.temp_buffer[i];
+    }
+
+// Barrier before next pass
+#pragma omp barrier
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Old version
+// ----------------------------------------------------------------------------
+
 // struct bucket {
 //   int n_elem;
 //   int index;  // [start : n_elem)
 //   int start;  // starting point in B array
 // };
 
-inline int cmpfunc(const void *a, const void *b) { return (*(uint32_t *)a - *(uint32_t *)b); }
+[[deprecated("Use bucket_sort_v2 instead")]]
+inline int cmpfunc(const void *a, const void *b) {
+  return (*(uint32_t *)a - *(uint32_t *)b);
+}
 
+[[deprecated("Use bucket_sort_v2 instead")]]
 inline void bucket_sort(
 
     uint32_t *A,

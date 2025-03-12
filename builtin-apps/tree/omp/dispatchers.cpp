@@ -28,8 +28,6 @@ void process_stage_1(tree::AppData &appdata) {
     appdata.u_morton_keys_s1[i] =
         xyz_to_morton32(appdata.u_input_points_s0[i], tree::kMinCoord, tree::kRange);
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -38,35 +36,38 @@ void process_stage_1(tree::AppData &appdata) {
 
 void process_stage_2(tree::AppData &appdata) {
   const auto num_threads = omp_get_num_threads();
-  const auto num_buckets = num_threads;
+  // const auto num_buckets = num_threads;
 
   LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
 
-  omp::TmpStorage temp_storage;
+  omp::RadixSortTemp<uint32_t> temp_storage(appdata.get_n_input(), num_threads);
 
-  // const auto n_threads = omp_get_num_threads();
-  const auto n_threads = std::thread::hardware_concurrency();
-  const auto n_buckets = n_threads;
+  parallel_radix_sort<uint32_t>(
+      appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, temp_storage);
 
-  // spdlog::info("---num_threads: {}", n_threads);
-  // spdlog::info("--- num_buckets: {}", n_buckets);
+  // omp::TmpStorage temp_storage;
 
-  temp_storage.allocate(n_buckets, n_threads);
+  // // const auto n_threads = omp_get_num_threads();
+  // const auto n_threads = std::thread::hardware_concurrency();
+  // const auto n_buckets = n_threads;
 
-  // assert(temp_storage.is_allocated());
+  // // spdlog::info("---num_threads: {}", n_threads);
+  // // spdlog::info("--- num_buckets: {}", n_buckets);
 
-  bucket_sort(appdata.u_morton_keys_s1.data(),
-              appdata.u_morton_keys_sorted_s2.data(),
-              temp_storage.global_n_elem(),
-              temp_storage.global_starting_position(),
-              temp_storage.buckets(),
-              appdata.get_n_input(),
-              num_buckets,
-              num_threads);
+  // temp_storage.allocate(n_buckets, n_threads);
 
-#pragma omp barrier
+  // // assert(temp_storage.is_allocated());
 
-  // by this point, 'u_morton_keys_sorted_s2' is sorted
+  // bucket_sort(appdata.u_morton_keys_s1.data(),
+  //             appdata.u_morton_keys_sorted_s2.data(),
+  //             temp_storage.global_n_elem(),
+  //             temp_storage.global_starting_position(),
+  //             temp_storage.buckets(),
+  //             appdata.get_n_input(),
+  //             num_buckets,
+  //             num_threads);
+
+  // // by this point, 'u_morton_keys_sorted_s2' is sorted
 }
 
 // ----------------------------------------------------------------------------
@@ -83,8 +84,6 @@ void process_stage_3(tree::AppData &appdata) {
 
   appdata.set_n_unique(n_unique);
   appdata.set_n_brt_nodes(n_unique - 1);
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -108,8 +107,6 @@ void process_stage_4(tree::AppData &appdata) {
                          appdata.u_brt_left_child_s4.data(),
                          appdata.u_brt_parents_s4.data());
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -128,8 +125,6 @@ void process_stage_5(tree::AppData &appdata) {
                          appdata.u_brt_parents_s4.data(),
                          appdata.u_edge_count_s5.data());
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -150,8 +145,6 @@ void process_stage_6(tree::AppData &appdata) {
   const auto num_octree_nodes = appdata.u_edge_offset_s6[end - 1];
 
   appdata.set_n_octree_nodes(num_octree_nodes);
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -180,8 +173,6 @@ void process_stage_7(tree::AppData &appdata) {
                      tree::kMinCoord,
                      tree::kRange);
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -199,8 +190,6 @@ void process_stage_1(tree::SafeAppData &appdata) {
     appdata.u_morton_keys_s1[i] =
         xyz_to_morton32(appdata.u_input_points_s0[i], tree::kMinCoord, tree::kRange);
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -226,8 +215,6 @@ void process_stage_2(tree::SafeAppData &appdata) {
               num_buckets,
               num_threads);
 
-#pragma omp barrier
-
   // by this point, 'u_morton_keys_sorted_s2' is sorted
 }
 
@@ -245,8 +232,6 @@ void process_stage_3(tree::SafeAppData &appdata) {
 
   appdata.set_n_unique(n_unique);
   appdata.set_n_brt_nodes(n_unique - 1);
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -270,8 +255,6 @@ void process_stage_4(tree::SafeAppData &appdata) {
                          appdata.u_brt_left_child_s4.data(),
                          appdata.u_brt_parents_s4.data());
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -290,8 +273,6 @@ void process_stage_5(tree::SafeAppData &appdata) {
                          appdata.u_brt_parents_s4.data(),
                          appdata.u_edge_count_s5.data());
   }
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -312,8 +293,6 @@ void process_stage_6(tree::SafeAppData &appdata) {
   const auto num_octree_nodes = appdata.u_edge_offset_s6[end - 1];
 
   appdata.set_n_octree_nodes(num_octree_nodes);
-
-#pragma omp barrier
 }
 
 // ----------------------------------------------------------------------------
@@ -342,8 +321,6 @@ void process_stage_7(tree::SafeAppData &appdata) {
                      tree::kMinCoord,
                      tree::kRange);
   }
-
-#pragma omp barrier
 }
 
 }  // namespace tree::omp
