@@ -5,6 +5,7 @@
 #include <memory_resource>
 #include <optional>
 #include <stdexcept>
+#include <vector>
 
 #include "cuda/temp_storage.hpp"
 #include "omp/temp_storage.hpp"

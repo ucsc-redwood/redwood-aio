@@ -22,7 +22,7 @@ class Engine final : public BaseEngine {
         this->get_device(), this->get_compute_queue(), this->get_compute_queue_family_index());
   }
 
-  // To get a 'vk::Buffer' from raw pointer of the 'UsmVector'
+  // To get a 'vk::Buffer' from raw pointer of the 'std::pmr::vector'
   [[nodiscard]] vk::Buffer get_buffer(void* ptr) const {
     return mr_ptr_->get_buffer_from_pointer(ptr);
   }

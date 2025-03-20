@@ -14,6 +14,8 @@ if not is_plat("android") then
 	set_toolchains("clang")
 end
 
+-- add_cxxflags("-stdlib=libc++")
+
 -- ----------------------------------------------------------------
 -- Common packages used in the project
 -- ----------------------------------------------------------------

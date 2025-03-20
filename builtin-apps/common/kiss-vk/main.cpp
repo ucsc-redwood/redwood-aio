@@ -3,13 +3,13 @@
 // #include "engine.hpp"
 
 // template <typename T>
-// using UsmVector = std::pmr::vector<T>;
+// using std::pmr::vector = std::pmr::vector<T>;
 
 // static void run_hello_vector_add(const vulkan::Engine& engine, const vulkan::Sequence* seq) {
 //   constexpr auto n = 1024;
-//   UsmVector<float> input_a(n, engine.get_mr());
-//   UsmVector<float> input_b(n, engine.get_mr());
-//   UsmVector<float> output(n, engine.get_mr());
+//   std::pmr::vector<float> input_a(n, engine.get_mr());
+//   std::pmr::vector<float> input_b(n, engine.get_mr());
+//   std::pmr::vector<float> output(n, engine.get_mr());
 
 //   std::ranges::fill(input_a, 1.0f);
 //   std::ranges::fill(input_b, 2.0f);
@@ -54,12 +54,12 @@
 
 // static void run_multiple_steps(const vulkan::Engine& engine, const vulkan::Sequence* seq) {
 //   constexpr auto n = 1024;
-//   UsmVector<float> buf_a(n, engine.get_mr());
-//   UsmVector<float> buf_b(n, engine.get_mr());
-//   UsmVector<float> buf_c(n, engine.get_mr());
-//   UsmVector<float> buf_d(n, engine.get_mr());
-//   UsmVector<float> buf_e(n, engine.get_mr());
-//   UsmVector<float> buf_f(n, engine.get_mr());
+//   std::pmr::vector<float> buf_a(n, engine.get_mr());
+//   std::pmr::vector<float> buf_b(n, engine.get_mr());
+//   std::pmr::vector<float> buf_c(n, engine.get_mr());
+//   std::pmr::vector<float> buf_d(n, engine.get_mr());
+//   std::pmr::vector<float> buf_e(n, engine.get_mr());
+//   std::pmr::vector<float> buf_f(n, engine.get_mr());
 
 //   std::ranges::fill(buf_a, 1.0f);
 //   std::ranges::fill(buf_c, 2.0f);
@@ -128,10 +128,10 @@
 
 // // static void run_multiple_steps_chained(const vulkan::Engine& engine, const vulkan::Sequence* seq) {
 // //   constexpr auto n = 1024;
-// //   UsmVector<float> buf_a(n, engine.get_mr());
-// //   UsmVector<float> buf_b(n, engine.get_mr());
-// //   UsmVector<float> buf_c(n, engine.get_mr());
-// //   UsmVector<float> buf_d(n, engine.get_mr());
+// //   std::pmr::vector<float> buf_a(n, engine.get_mr());
+// //   std::pmr::vector<float> buf_b(n, engine.get_mr());
+// //   std::pmr::vector<float> buf_c(n, engine.get_mr());
+// //   std::pmr::vector<float> buf_d(n, engine.get_mr());
 
 // //   std::ranges::fill(buf_a, 1.0f);
 // //   std::ranges::fill(buf_c, 2.0f);

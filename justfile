@@ -10,7 +10,7 @@
 # drwxrwxr-x 11 doremy doremy 4.0K Feb 17 00:08 28.0.13004108/
 # drwxrwxr-x 11 doremy doremy 4.0K Mar 10 12:24 29.0.13113456/
 set-android:
-    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/28.0.13004108/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=28 -c -v --use_vulkan=yes --use_cuda=no -m release
+    xmake f -p android -a arm64-v8a --ndk=~/Android/Sdk/ndk/29.0.13113456/ --android_sdk=~/Android/Sdk/ --ndk_sdkver=29 -c -v --use_vulkan=yes --use_cuda=no -m release
 
 # Set configuration for NVIDIA Jetson Orin
 set-jetson:

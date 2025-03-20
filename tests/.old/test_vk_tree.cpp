@@ -3,6 +3,9 @@
 
 #include <CLI/CLI.hpp>
 
+#include <memory_resource>
+#include <vector>
+
 #include "app.hpp"
 #include "tree/vulkan/tmp_storage.hpp"
 #include "tree/vulkan/vk_dispatcher.hpp"

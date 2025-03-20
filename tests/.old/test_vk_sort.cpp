@@ -6,6 +6,9 @@
 #include <numeric>
 #include <random>
 
+#include <memory_resource>
+#include <vector>
+
 #include "base_appdata.hpp"
 #include "common/vulkan/algorithm.hpp"
 #include "common/vulkan/engine.hpp"
@@ -68,8 +71,8 @@ class VulkanSortTest : public VulkanTestFixture, public testing::WithParamInterf
   void verify_sort(unsigned int n) {
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(n, mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_elements_in(n, mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
 
     // Initialize with shuffled sequence
     std::iota(u_elements_in.begin(), u_elements_in.end(), 0);
@@ -121,8 +124,8 @@ class VulkanSortIterationTest
   void verify_sort_iterations(unsigned int n, unsigned int iterations) {
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(n, mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_elements_in(n, mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
 
     // Initialize with shuffled sequence
     std::iota(u_elements_in.begin(), u_elements_in.end(), 0);
@@ -178,8 +181,8 @@ class VulkanSortEdgeCasesTest : public VulkanTestFixture {
     auto mr = engine.get_mr();
     const size_t n = input_data.size();
 
-    UsmVector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
 
     // Keep CPU copy for verification
     std::vector<uint32_t> h_cpu_elements = input_data;
@@ -238,8 +241,8 @@ TEST_F(VulkanTestFixture, RadixSortCorrectlySortsRandomData) {
   constexpr unsigned int n = 640 * 480;
   auto mr = engine.get_mr();
 
-  UsmVector<uint32_t> u_elements_in(n, mr);
-  UsmVector<uint32_t> u_elements_out(n, mr);
+  std::pmr::vector<uint32_t> u_elements_in(n, mr);
+  std::pmr::vector<uint32_t> u_elements_out(n, mr);
 
   // Initialize with shuffled sequence
   std::iota(u_elements_in.begin(), u_elements_in.end(), 0);

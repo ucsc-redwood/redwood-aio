@@ -89,8 +89,8 @@ class Singleton {
   // --------------------------------------------------------------------------
 
   // (n + 255) / 256;
-  UsmVector<uint32_t> tmp_u_sums;
-  UsmVector<uint32_t> tmp_u_prefix_sums;
+  std::pmr::vector<uint32_t> tmp_u_sums;
+  std::pmr::vector<uint32_t> tmp_u_prefix_sums;
 };
 
 }  // namespace tree::vulkan

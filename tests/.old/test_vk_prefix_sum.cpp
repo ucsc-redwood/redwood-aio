@@ -5,6 +5,9 @@
 #include <cstdint>
 #include <numeric>
 
+#include <memory_resource>
+#include <vector>
+
 #include "base_appdata.hpp"
 #include "common/vulkan/engine.hpp"
 
@@ -60,10 +63,10 @@ class VulkanPrefixSumTest : public VulkanTestFixture,
 
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(n, mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
-    UsmVector<uint32_t> u_sums(n_blocks, mr);
-    UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_elements_in(n, mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
     std::ranges::fill(u_elements_in, 1);
 
@@ -157,10 +160,10 @@ class VulkanPrefixSumIterationTest
     const auto n_blocks = (n + 255) / 256;
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(n, mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
-    UsmVector<uint32_t> u_sums(n_blocks, mr);
-    UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_elements_in(n, mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
     std::ranges::fill(u_elements_in, 1);
 
@@ -230,10 +233,10 @@ class VulkanPrefixSumEdgeCasesTest : public VulkanTestFixture {
     const uint32_t n_blocks = (n + 255) / 256;
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
-    UsmVector<uint32_t> u_sums(n_blocks, mr);
-    UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
     auto local_inclusive_scan = engine
                                     .algorithm("tmp_local_inclusive_scan.comp",

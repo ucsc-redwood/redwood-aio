@@ -5,6 +5,9 @@
 #include <cstdint>
 #include <numeric>
 
+#include <memory_resource>
+#include <vector>
+
 #include "base_appdata.hpp"
 #include "common/vulkan/engine.hpp"
 
@@ -48,10 +51,10 @@ struct GlobalPushConstants {
 // ----------------------------------------------------------------------------
 
 void prefix_sum_v2_32(vulkan::Engine &engine,
-                      UsmVector<uint32_t> &input,
-                      UsmVector<uint32_t> &output,
-                      UsmVector<uint32_t> &sums,
-                      UsmVector<uint32_t> &prefix_sums,
+                      std::pmr::vector<uint32_t> &input,
+                      std::pmr::vector<uint32_t> &output,
+                      std::pmr::vector<uint32_t> &sums,
+                      std::pmr::vector<uint32_t> &prefix_sums,
                       uint32_t numElements,
                       uint32_t numWorkgroups) {
   std::string pass_1_name = "tmp_local_inclusive_scan_v2_32.comp";
@@ -149,10 +152,10 @@ class VulkanPrefixSum_v2_Test : public VulkanTestFixture,
 
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(n, mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
-    UsmVector<uint32_t> u_sums(n_blocks, mr);
-    UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_elements_in(n, mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
     std::ranges::fill(u_elements_in, 1);
 
@@ -249,10 +252,10 @@ class VulkanPrefixSumIterationTest
     const auto n_blocks = (n + 255) / 256;
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(n, mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
-    UsmVector<uint32_t> u_sums(n_blocks, mr);
-    UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_elements_in(n, mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
     std::ranges::fill(u_elements_in, 1);
 
@@ -275,10 +278,10 @@ class VulkanPrefixSumEdgeCasesTest : public VulkanTestFixture {
     const uint32_t n_blocks = (n + 255) / 256;
     auto mr = engine.get_mr();
 
-    UsmVector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
-    UsmVector<uint32_t> u_elements_out(n, mr);
-    UsmVector<uint32_t> u_sums(n_blocks, mr);
-    UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_elements_in(input_data.begin(), input_data.end(), mr);
+    std::pmr::vector<uint32_t> u_elements_out(n, mr);
+    std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+    std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
     prefix_sum_v2_32(engine, u_elements_in, u_elements_out, u_sums, u_prefix_sums, n, n_blocks);
 

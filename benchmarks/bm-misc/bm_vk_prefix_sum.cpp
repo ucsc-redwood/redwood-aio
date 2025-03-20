@@ -57,10 +57,10 @@ BENCHMARK_DEFINE_F(VK_Misc, PrefixSum)
 
   auto mr = engine.get_mr();
 
-  UsmVector<uint32_t> u_elements_in(n, mr);
-  UsmVector<uint32_t> u_elements_out(n, mr);
-  UsmVector<uint32_t> u_sums(n_blocks, mr);
-  UsmVector<uint32_t> u_prefix_sums(n_blocks, mr);
+  std::pmr::vector<uint32_t> u_elements_in(n, mr);
+  std::pmr::vector<uint32_t> u_elements_out(n, mr);
+  std::pmr::vector<uint32_t> u_sums(n_blocks, mr);
+  std::pmr::vector<uint32_t> u_prefix_sums(n_blocks, mr);
 
   std::ranges::fill(u_elements_in, 1);
 
