@@ -22,7 +22,6 @@ DeviceRegistry::DeviceRegistry() {
 
   // For "jetson": 6 cores all of one type.
 
-  // yanwen@duck-naughty ~/D/redwood-aio (feature-managed-memory) [255]> xmake r bm-check-core-types
   // 2025-03-20T09:43:23-07:00
   // Running /home/yanwen/Desktop/redwood-aio/build/linux/arm64/releasedbg/bm-check-core-types
   // Run on (6 X 1510.4 MHz CPU s)
@@ -60,7 +59,31 @@ DeviceRegistry::DeviceRegistry() {
                               {5, ProcessorType::kLittleCore, true},
                           }));
 
+  // ----------------------------------------------------------------------------
   // For "jetson-low-power": 4 cores all of one type.
+  // ----------------------------------------------------------------------------
+
+  // bm-check-core-types 2025-03-20T10:04:46-07:00 Running
+  // /home/yanwen/Desktop/redwood-aio/build/linux/arm64/releasedbg/bm-check-core-types Run on (4 X
+  // 1510.4 MHz CPU s) CPU Caches:
+  //   L1 Data 64 KiB (x4)
+  //   L1 Instruction 64 KiB (x4)
+  //   L2 Unified 256 KiB (x4)
+  //   L3 Unified 2048 KiB (x1)
+  // Load Average: 0.31, 0.20, 0.08
+  // ***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and
+  // will incur extra overhead.
+  // ---------------------------------------------------------------
+  // Benchmark                     Time             CPU   Iterations
+  // ---------------------------------------------------------------
+  // HeavyFloat/CoreID0/0       74.4 ms         74.2 ms            9
+  // HeavyFloat/CoreID1/1       75.2 ms         75.0 ms            9
+  // HeavyFloat/CoreID2/2       74.5 ms         74.4 ms            9
+  // HeavyFloat/CoreID3/3       73.9 ms         73.9 ms            9
+  // GraphBFS/CoreID0/0         29.0 ms         28.9 ms           20
+  // GraphBFS/CoreID1/1         29.8 ms         29.7 ms           21
+  // GraphBFS/CoreID2/2         29.7 ms         29.6 ms           21
+  // GraphBFS/CoreID3/3         29.9 ms         29.8 ms           22
   devices_.emplace("jetson-low-power",
                    Device("jetson-low-power",
                           std::vector<Core>{
