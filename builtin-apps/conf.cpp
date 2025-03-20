@@ -21,6 +21,34 @@ DeviceRegistry::DeviceRegistry() {
              }));
 
   // For "jetson": 6 cores all of one type.
+
+  // yanwen@duck-naughty ~/D/redwood-aio (feature-managed-memory) [255]> xmake r bm-check-core-types
+  // 2025-03-20T09:43:23-07:00
+  // Running /home/yanwen/Desktop/redwood-aio/build/linux/arm64/releasedbg/bm-check-core-types
+  // Run on (6 X 1510.4 MHz CPU s)
+  // CPU Caches:
+  //   L1 Data 64 KiB (x6)
+  //   L1 Instruction 64 KiB (x6)
+  //   L2 Unified 256 KiB (x6)
+  //   L3 Unified 2048 KiB (x1)
+  // Load Average: 0.45, 0.40, 0.19
+  // ***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and
+  // will incur extra overhead.
+  // ---------------------------------------------------------------
+  // Benchmark                     Time             CPU   Iterations
+  // ---------------------------------------------------------------
+  // HeavyFloat/CoreID0/0       47.1 ms         47.0 ms           15
+  // HeavyFloat/CoreID1/1       47.0 ms         47.0 ms           14
+  // HeavyFloat/CoreID2/2       47.0 ms         47.0 ms           14
+  // HeavyFloat/CoreID3/3       47.3 ms         47.2 ms           13
+  // HeavyFloat/CoreID4/4       47.0 ms         47.0 ms           15
+  // HeavyFloat/CoreID5/5       47.7 ms         47.6 ms           13
+  // GraphBFS/CoreID0/0         6.52 ms         6.50 ms          107
+  // GraphBFS/CoreID1/1         6.62 ms         6.61 ms          104
+  // GraphBFS/CoreID2/2         6.40 ms         6.39 ms          107
+  // GraphBFS/CoreID3/3         6.64 ms         6.62 ms          105
+  // GraphBFS/CoreID4/4         6.13 ms         6.12 ms          107
+  // GraphBFS/CoreID5/5         6.45 ms         6.43 ms          108
   devices_.emplace("jetson",
                    Device("jetson",
                           std::vector<Core>{
@@ -30,6 +58,16 @@ DeviceRegistry::DeviceRegistry() {
                               {3, ProcessorType::kLittleCore, true},
                               {4, ProcessorType::kLittleCore, true},
                               {5, ProcessorType::kLittleCore, true},
+                          }));
+
+  // For "jetson-low-power": 4 cores all of one type.
+  devices_.emplace("jetson-low-power",
+                   Device("jetson-low-power",
+                          std::vector<Core>{
+                              {0, ProcessorType::kLittleCore, true},
+                              {1, ProcessorType::kLittleCore, true},
+                              {2, ProcessorType::kLittleCore, true},
+                              {3, ProcessorType::kLittleCore, true},
                           }));
 
   // For "3A021JEHN02756": 8 cores in 3 groups.
