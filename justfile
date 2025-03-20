@@ -86,6 +86,14 @@ run-jetson-bm:
     xmake r bm-cifar-dense-omp --device jetson
     xmake r bm-cifar-sparse-omp --device jetson
 
+run-jetson-low-power-bm:
+    xmake r bm-tree-cu --device jetson-low-power 
+    xmake r bm-cifar-dense-cu --device jetson-low-power
+    xmake r bm-cifar-sparse-cu --device jetson-low-power
+    xmake r bm-tree-omp --device jetson-low-power 
+    xmake r bm-cifar-dense-omp --device jetson-low-power
+    xmake r bm-cifar-sparse-omp --device jetson-low-power
+
 cuda-codegen-jetson:
     python3 scripts/codegen/multi_schedule.py --in_dir data/generated-schedules/ --out_dir pipe/cifar-dense-cu/generated-code/ --device jetson --application CifarDense
     python3 scripts/codegen/multi_schedule.py --in_dir data/generated-schedules/ --out_dir pipe/cifar-sparse-cu/generated-code/ --device jetson --application CifarSparse
