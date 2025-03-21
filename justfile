@@ -143,16 +143,16 @@ cat-android-tmp:
 #  ----------------------------------------------------------------------------
 
 db-to-schedules:
-    python3 scripts/gen_schedules.py -d jetson -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d jetson -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d jetson -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d jetson-low-power -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d jetson-low-power -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d jetson-low-power -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files
-    python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files
+    python3 scripts/gen_schedules.py -d jetson -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d jetson -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d jetson -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d jetson-low-power -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d jetson-low-power -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d jetson-low-power -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
 
