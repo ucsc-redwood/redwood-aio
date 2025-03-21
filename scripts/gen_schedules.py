@@ -470,12 +470,14 @@ if __name__ == "__main__":
                 sorted_schedules = sorted(
                     annotated_schedules, key=lambda s: s.max_chunk_time
                 )
+                # Limit to top N schedules
+                sorted_schedules = sorted_schedules[: args.top]
 
                 print(
-                    f"\nTop {min(args.top, len(sorted_schedules))} schedules by performance (lowest max chunk time):\n"
+                    f"\nTop {len(sorted_schedules)} schedules by performance (lowest max chunk time):\n"
                 )
 
-                for i, schedule in enumerate(sorted_schedules[: args.top]):
+                for i, schedule in enumerate(sorted_schedules):
                     print_schedule(schedule, i + 1)
                     print(
                         f"  Chunk times: {[f'{t:.2f}' for t in schedule.chunk_times]}"
@@ -493,17 +495,21 @@ if __name__ == "__main__":
                     "No schedules could be annotated with timing information. Check your benchmark data."
                 )
         else:
-            print("\nAll possible schedules (without timing information):\n")
-            for i, schedule in enumerate(schedules[: args.top]):
+            # Limit to top N schedules when no benchmark data
+            sorted_schedules = schedules[: args.top]
+            print(
+                f"\nTop {len(sorted_schedules)} possible schedules (without timing information):\n"
+            )
+            for i, schedule in enumerate(sorted_schedules):
                 print_schedule(schedule, i + 1)
 
-        # Write schedules to output directory if specified
+        # Write only top N schedules to output directory if specified
         if args.output_dir:
             write_schedules_to_json(
                 sorted_schedules, args.device_id, args.application, args.output_dir
             )
 
-        # Write all schedules to a single file if specified
+        # Write only top N schedules to a single file if specified
         if args.output_file:
             write_all_schedules_to_file(
                 sorted_schedules, args.device_id, args.application, args.output_file
