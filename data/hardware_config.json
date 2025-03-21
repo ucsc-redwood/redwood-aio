@@ -43,6 +43,17 @@
     "gpu_backend": "cuda",
     "description": "N/A"
   },
+  "jetson-low-power": {
+    "name": "NVIDIA Jetson Orin Nano (Low Power Mode)",
+    "pinnable_cores": {
+      "little": 4,
+      "medium": 0,
+      "big": 0,
+      "gpu": 1
+    },
+    "gpu_backend": "cuda",
+    "description": "N/A"
+  },
   "minipc": {
     "name": "AMD Mini PC",
     "pinnable_cores": {

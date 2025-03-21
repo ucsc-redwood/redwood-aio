@@ -1,0 +1,39 @@
+{
+  "schedule": {
+    "schedule_id": "9b034f1b_CifarSparse_schedule_175",
+    "device_id": "9b034f1b",
+    "application": "CifarSparse",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "little",
+        "threads": 3,
+        "stages": [
+          1,
+          2
+        ],
+        "time": 11.42343195839005
+      },
+      {
+        "name": "chunk2",
+        "hardware": "medium",
+        "threads": 2,
+        "stages": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "time": 4.892353016531737
+      }
+    ]
+  },
+  "max_chunk_time": 11.42343195839005,
+  "cpu_baseline_time": 14.79171758666376,
+  "gpu_baseline_time": 10.369402547747049,
+  "cpu_speedup": 1.2948575910061633,
+  "gpu_speedup": 0.9077309328332928
+}

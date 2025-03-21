@@ -1,0 +1,47 @@
+{
+  "schedule": {
+    "schedule_id": "3A021JEHN02756_CifarSparse_schedule_1906",
+    "device_id": "3A021JEHN02756",
+    "application": "CifarSparse",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "gpu_vulkan",
+        "threads": 1,
+        "stages": [
+          1
+        ],
+        "time": 2.069012253654787
+      },
+      {
+        "name": "chunk2",
+        "hardware": "big",
+        "threads": 2,
+        "stages": [
+          2,
+          3,
+          4
+        ],
+        "time": 5.651931009637141
+      },
+      {
+        "name": "chunk3",
+        "hardware": "little",
+        "threads": 4,
+        "stages": [
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "time": 3.996757677551441
+      }
+    ]
+  },
+  "max_chunk_time": 5.651931009637141,
+  "cpu_baseline_time": 17.181976804758527,
+  "gpu_baseline_time": 6.395777766030693,
+  "cpu_speedup": 3.0400188493917275,
+  "gpu_speedup": 1.1316093128393137
+}

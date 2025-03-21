@@ -1,0 +1,39 @@
+{
+  "schedule": {
+    "schedule_id": "jetson_CifarDense_schedule_013",
+    "device_id": "jetson",
+    "application": "CifarDense",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "gpu_cuda",
+        "threads": 1,
+        "stages": [
+          1,
+          2,
+          3
+        ],
+        "time": 0.9361677141747807
+      },
+      {
+        "name": "chunk2",
+        "hardware": "little",
+        "threads": 6,
+        "stages": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "time": 54.95035942881077
+      }
+    ]
+  },
+  "max_chunk_time": 54.95035942881077,
+  "cpu_baseline_time": 393.05978908669204,
+  "gpu_baseline_time": 6.740798186184838,
+  "cpu_speedup": 7.152997599513583,
+  "gpu_speedup": 0.12267068416390742
+}
