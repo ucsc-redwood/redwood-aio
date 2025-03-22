@@ -9,7 +9,10 @@ HARDWARE_MAP = {
     "little": "ProcessorType::kLittleCore",
     "medium": "ProcessorType::kMediumCore",
     "big": "ProcessorType::kBigCore",
-    "gpu": "GPU_PLACEHOLDER",  # We'll handle GPU specially
+    # GPU types are handled specially during code generation
+    "gpu_cuda": "GPU_CUDA",
+    "gpu_vulkan": "GPU_VULKAN",
+    "gpu": "GPU_CUDA",  # Default to CUDA for backward compatibility
 }
 
 
@@ -54,21 +57,58 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
     chunks = schedule_obj["chunks"]
     num_chunks = len(chunks)
 
+    # Determine if we need CUDA or Vulkan or both
+    uses_cuda = any(
+        chunk["hardware"].lower() == "gpu_cuda" or chunk["hardware"].lower() == "gpu"
+        for chunk in chunks
+    )
+    uses_vulkan = any(chunk["hardware"].lower() == "gpu_vulkan" for chunk in chunks)
+
     lines = []
     # Add inline to the function declaration
     lines.append("inline void run_pipeline(const int num_tasks)")
     lines.append("{")
-    lines.append("  cuda::CudaManager mgr;")
+
+    # Add appropriate GPU manager based on what's used
+    if uses_cuda:
+        lines.append("  cuda::CudaManager cuda_mgr;")
+    if uses_vulkan:
+        lines.append("  vk::VulkanManager vk_mgr;")
     lines.append("")
-    lines.append("  // Preallocate data for all tasks")
-    lines.append(
-        "  auto preallocated_data = init_appdata<AppData>(&mgr.get_mr(), num_tasks);"
-    )
-    lines.append("")
-    lines.append("  // Initialize input queue with tasks")
-    lines.append(
-        "  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &mgr);"
-    )
+
+    # Determine which manager to use for preallocation
+    if uses_cuda:
+        lines.append("  // Preallocate data for all tasks")
+        lines.append(
+            "  auto preallocated_data = init_appdata<AppData>(&cuda_mgr.get_mr(), num_tasks);"
+        )
+        lines.append("")
+        lines.append("  // Initialize input queue with tasks")
+        lines.append(
+            "  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &cuda_mgr);"
+        )
+    elif uses_vulkan:
+        lines.append("  // Preallocate data for all tasks")
+        lines.append(
+            "  auto preallocated_data = init_appdata<AppData>(&vk_mgr.get_mr(), num_tasks);"
+        )
+        lines.append("")
+        lines.append("  // Initialize input queue with tasks")
+        lines.append(
+            "  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, &vk_mgr);"
+        )
+    else:
+        # CPU-only case
+        lines.append("  // Preallocate data for all tasks (CPU only)")
+        lines.append(
+            "  auto preallocated_data = init_appdata<AppData>(nullptr, num_tasks);"
+        )
+        lines.append("")
+        lines.append("  // Initialize input queue with tasks")
+        lines.append(
+            "  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data, nullptr);"
+        )
+
     lines.append("")
 
     # If exactly one chunk => use single thread
@@ -79,16 +119,26 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
         end_stage = c["stages"][-1]
         threads = c["threads"]
 
-        if hw == "gpu":
+        # Determine which GPU namespace to use based on hardware type
+        if hw == "gpu_cuda" or hw == "gpu":
             stage_func = f"cuda::run_multiple_stages<{start_stage}, {end_stage}>"
+            mgr_var = "cuda_mgr"
+        elif hw == "gpu_vulkan":
+            stage_func = f"vk::run_multiple_stages<{start_stage}, {end_stage}>"
+            mgr_var = "vk_mgr"
         else:
             pt_enum = HARDWARE_MAP.get(hw, "ProcessorType::kUnknown")
             stage_func = f"omp::run_multiple_stages<{start_stage}, {end_stage}, {pt_enum}, {threads}>"
+            mgr_var = (
+                "cuda_mgr" if uses_cuda else "vk_mgr" if uses_vulkan else "nullptr"
+            )
 
         lines.append("  auto start = std::chrono::high_resolution_clock::now();")
         lines.append("")
         lines.append("  std::thread t_only([&]() {")
-        lines.append(f"    chunk<Task, AppData>(q_input, nullptr, {stage_func}, mgr);")
+        lines.append(
+            f"    chunk<Task, AppData>(q_input, nullptr, {stage_func}, {mgr_var});"
+        )
         lines.append("  });")
         lines.append("")
         lines.append("  t_only.join();")
@@ -123,11 +173,19 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
         start_stage = stages[0]
         end_stage = stages[-1]
 
-        if hw == "gpu":
+        # Determine which GPU namespace to use based on hardware type
+        if hw == "gpu_cuda" or hw == "gpu":
             stage_func = f"cuda::run_multiple_stages<{start_stage}, {end_stage}>"
+            mgr_var = "cuda_mgr"
+        elif hw == "gpu_vulkan":
+            stage_func = f"vk::run_multiple_stages<{start_stage}, {end_stage}>"
+            mgr_var = "vk_mgr"
         else:
             pt_enum = HARDWARE_MAP.get(hw, "ProcessorType::kUnknown")
             stage_func = f"omp::run_multiple_stages<{start_stage}, {end_stage}, {pt_enum}, {threads}>"
+            mgr_var = (
+                "cuda_mgr" if uses_cuda else "vk_mgr" if uses_vulkan else "nullptr"
+            )
 
         tvar = f"t{i+1}"
         thread_names.append(tvar)
@@ -135,19 +193,19 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
         if i == 0:
             lines.append(f"  std::thread {tvar}([&]() {{")
             lines.append(
-                f"    chunk<Task, AppData>(q_input, &q_{i}_{i+1}, {stage_func}, mgr);"
+                f"    chunk<Task, AppData>(q_input, &q_{i}_{i+1}, {stage_func}, {mgr_var});"
             )
             lines.append("  });")
         elif i == num_chunks - 1:
             lines.append(f"  std::thread {tvar}([&]() {{")
             lines.append(
-                f"    chunk<Task, AppData>(q_{i-1}_{i}, nullptr, {stage_func}, mgr);"
+                f"    chunk<Task, AppData>(q_{i-1}_{i}, nullptr, {stage_func}, {mgr_var});"
             )
             lines.append("  });")
         else:
             lines.append(f"  std::thread {tvar}([&]() {{")
             lines.append(
-                f"    chunk<Task, AppData>(q_{i-1}_{i}, &q_{i}_{i+1}, {stage_func}, mgr);"
+                f"    chunk<Task, AppData>(q_{i-1}_{i}, &q_{i}_{i+1}, {stage_func}, {mgr_var});"
             )
             lines.append("  });")
 
@@ -170,7 +228,11 @@ def generate_run_pipeline_code(schedule_obj: dict) -> str:
 
 
 def build_single_hpp_content(
-    device_id: str, schedule_id: str, application_name: str, pipeline_code: str
+    device_id: str,
+    schedule_id: str,
+    application_name: str,
+    pipeline_code: str,
+    schedule_obj: dict,
 ) -> str:
     """
     Returns a single .hpp containing the includes plus:
@@ -183,6 +245,14 @@ def build_single_hpp_content(
 
     This is for a single schedule.
     """
+    # Determine if we need CUDA or Vulkan or both
+    chunks = schedule_obj["chunks"]
+    uses_cuda = any(
+        chunk["hardware"].lower() == "gpu_cuda" or chunk["hardware"].lower() == "gpu"
+        for chunk in chunks
+    )
+    uses_vulkan = any(chunk["hardware"].lower() == "gpu_vulkan" for chunk in chunks)
+
     # Determine the app-specific include based on application_name
     app_include = ""
     app_data_typedef = ""
@@ -221,7 +291,13 @@ def build_single_hpp_content(
     code_lines.append('#include "../task.hpp"')
     code_lines.append('#include "../../templates.hpp"')
     code_lines.append('#include "../run_stages.hpp"')
-    code_lines.append('#include "builtin-apps/common/cuda/manager.cuh"')
+
+    # Include GPU headers as needed
+    if uses_cuda:
+        code_lines.append('#include "builtin-apps/common/cuda/manager.cuh"')
+    if uses_vulkan:
+        code_lines.append('#include "builtin-apps/common/vulkan/manager.hpp"')
+
     code_lines.append(app_include)
     code_lines.append("")
     code_lines.append(f"namespace device_{device_id} {{")

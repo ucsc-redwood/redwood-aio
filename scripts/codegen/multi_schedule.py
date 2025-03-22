@@ -121,6 +121,49 @@ def main():
     # Insert each schedule as a sub-namespace
     for sch_id in sorted_schedule_ids:
         code = schedules_code[sch_id]
+
+        # Extract schedule object to check for GPU usage
+        schedule_key = f"{args.device}_{args.application}_schedule_{int(re.search(r'_(\d+)$', sch_id).group(1))}"
+        schedule_obj = (
+            schedules_code[schedule_key] if schedule_key in schedules_code else None
+        )
+
+        if schedule_obj:
+            chunks = schedule_obj.get("chunks", [])
+            uses_cuda = any(
+                chunk["hardware"].lower() == "gpu_cuda"
+                or chunk["hardware"].lower() == "gpu"
+                for chunk in chunks
+            )
+            uses_vulkan = any(
+                chunk["hardware"].lower() == "gpu_vulkan" for chunk in chunks
+            )
+
+            # Prepare appropriate GPU manager declarations
+            gpu_manager_decl = []
+            if uses_cuda:
+                gpu_manager_decl.append("  cuda::CudaManager cuda_mgr;")
+            if uses_vulkan:
+                gpu_manager_decl.append("  vk::VulkanManager vk_mgr;")
+
+            # Insert GPU manager declarations at the beginning of the function
+            if gpu_manager_decl:
+                code_lines = code.split("\n")
+                insert_pos = (
+                    next(
+                        (
+                            i
+                            for i, line in enumerate(code_lines)
+                            if "run_pipeline" in line
+                        ),
+                        1,
+                    )
+                    + 1
+                )
+                for decl in reversed(gpu_manager_decl):
+                    code_lines.insert(insert_pos, decl)
+                code = "\n".join(code_lines)
+
         lines.append(f"namespace schedule_{sch_id} {{")
         lines.append("")
         lines.append(code)

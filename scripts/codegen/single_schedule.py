@@ -54,6 +54,7 @@ def main():
         schedule_id=schedule_id,
         application_name=application_name,
         pipeline_code=pipeline_code,
+        schedule_obj=schedule_obj,
     )
 
     # Write out
