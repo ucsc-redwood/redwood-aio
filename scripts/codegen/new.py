@@ -5,66 +5,46 @@ import sys
 import json
 from pathlib import Path
 
-# If your application names map to distinct C++ namespaces or data types,
-# customize this dictionary:
+###############################################################################
+# Map your known application names to a relevant C++ namespace if needed
+###############################################################################
 APP_NAMESPACE_MAP = {
     "CifarDense": "cifar_dense",
     "CifarSparse": "cifar_sparse",
-    "Tree": "tree",
+    # We won't include "Tree" here because it has a wholly different approach
 }
 
 
-def hardware_to_cpp(hardware, stages):
+###############################################################################
+# Utility to generate the "normal" benchmark code (for non-Tree applications)
+###############################################################################
+def generate_benchmark_code_default(schedule_json, application):
     """
-    Return a string like:
-        'vulkan::run_gpu_stages<3,7>'
-    or
-        'omp::run_multiple_stages<3,7, ProcessorType::kLittleCore, 4>'
-    depending on the JSON chunk data.
-    """
-    stage_min = min(stages)
-    stage_max = max(stages)
-
-    if hardware == "gpu_vulkan":
-        # GPU chunk
-        return f"vulkan::run_gpu_stages<{stage_min}, {stage_max}>"
-    else:
-        # CPU chunk via OMP
-        hw_map = {
-            "little": "ProcessorType::kLittleCore",
-            "medium": "ProcessorType::kMediumCore",
-            "big":    "ProcessorType::kBigCore",
-        }
-        if hardware not in hw_map:
-            raise ValueError(f"Unknown hardware type: {hardware}")
-        proc_type = hw_map[hardware]
-
-        # Example: run_multiple_stages<start,end,ProcessorType::kX,threads>
-        return f"omp::run_multiple_stages<{stage_min}, {stage_max}, {proc_type}, {{threads}}>"
-
-
-def generate_benchmark_code(schedule_json, app_namespace):
-    """
-    Given the parsed JSON for one schedule (dictionary) and the application
-    namespace (string), emit a C++ function as a list of lines.
+    Generate the standard approach used by e.g. CifarDense or CifarSparse:
+      - memory resource from <app_namespace>::vulkan::Singleton
+      - init_appdata<app_namespace::AppData>(...)
+      - chunk<Task, app_namespace::AppData>(...)
     """
     sched = schedule_json["schedule"]
-    device_id = sched["device_id"]
     schedule_id = sched["schedule_id"]
-    # e.g. "3A021JEHN02756_CifarDense_schedule_001"
+    chunks = sched["chunks"]
+
+    # E.g., "9b034f1b_CifarDense_schedule_001"
     func_name = f"BM_schedule_{schedule_id}"
 
-    # We'll assume it's something like "cifar_dense::AppData" for CifarDense, etc.
-    app_data_type = f"{app_namespace}::AppData"
+    # Convert app name to a namespace, or fallback
+    app_ns = APP_NAMESPACE_MAP.get(application, "cifar_dense")
 
     lines = []
     lines.append(f"static void {func_name}(benchmark::State &state) {{")
     lines.append("    constexpr size_t num_tasks = 20;")
     lines.append("")
-    lines.append(f"    auto mr = {app_namespace}::vulkan::Singleton::getInstance().get_mr();")
+    lines.append(f"    auto mr = {app_ns}::vulkan::Singleton::getInstance().get_mr();")
     lines.append("")
     lines.append("    // Preallocate data for all tasks")
-    lines.append(f"    auto preallocated_data = init_appdata<{app_data_type}>(mr, num_tasks);")
+    lines.append(
+        f"    auto preallocated_data = init_appdata<{app_ns}::AppData>(mr, num_tasks);"
+    )
     lines.append("")
     lines.append("    // Track individual task times")
     lines.append("    std::vector<double> task_times;")
@@ -72,51 +52,45 @@ def generate_benchmark_code(schedule_json, app_namespace):
     lines.append("")
     lines.append("    for (auto _ : state) {")
     lines.append("        state.PauseTiming();")
-    lines.append("        moodycamel::ConcurrentQueue<Task*> q_input = init_tasks(preallocated_data);")
+    lines.append(
+        "        moodycamel::ConcurrentQueue<Task*> q_input = init_tasks(preallocated_data);"
+    )
     lines.append("")
     lines.append("        auto start_time = std::chrono::high_resolution_clock::now();")
     lines.append("        state.ResumeTiming();")
     lines.append("")
-    lines.append("        // ---------------------------------------------------------------------")
+    lines.append(
+        "        // ---------------------------------------------------------------------"
+    )
     lines.append("        // Automatically generated from schedule JSON")
     lines.append("")
 
-    chunks = sched["chunks"]
     n = len(chunks)
-    # We'll define one queue per link in pipeline; i.e. for 4 chunks => 3 internal queues
+    # Define the intermediate queues
     for i in range(n - 1):
         lines.append(f"        moodycamel::ConcurrentQueue<Task*> q_{i}_{i+1};")
     lines.append("")
 
-    # Create each thread that processes one chunk
-    for i, chunk in enumerate(chunks):
-        if i == 0:
-            inQ = "q_input"
-        else:
-            inQ = f"q_{i-1}_{i}"
+    # Build thread calls
+    for i, ch in enumerate(chunks):
+        hw = ch["hardware"]
+        threads = ch["threads"]
+        stages = ch["stages"]
+        stage_min = min(stages)
+        stage_max = max(stages)
 
-        if i == n - 1:
-            outQ = "nullptr"
-        else:
-            outQ = f"&q_{i}_{i+1}"
-
-        hw = chunk["hardware"]
-        threads = chunk["threads"]
-        stages = chunk["stages"]
+        # input Q / output Q
+        inQ = "q_input" if i == 0 else f"q_{i-1}_{i}"
+        outQ = "nullptr" if i == n - 1 else f"&q_{i}_{i+1}"
 
         if hw == "gpu_vulkan":
-            stage_min = min(stages)
-            stage_max = max(stages)
             run_fun = f"vulkan::run_gpu_stages<{stage_min}, {stage_max}>"
-            thread_line = (
+            line = (
                 f"std::thread t{i+1}([&]() {{ "
-                f"chunk<Task, {app_data_type}>({inQ}, {outQ}, {run_fun}); }});"
+                f"chunk<Task, {app_ns}::AppData>({inQ}, {outQ}, {run_fun}); }});"
             )
         else:
-            # e.g. omp::run_multiple_stages<start,end,ProcessorType::kX,threads>
-            stage_min = min(stages)
-            stage_max = max(stages)
-
+            # CPU path
             proc_map = {
                 "little": "ProcessorType::kLittleCore",
                 "medium": "ProcessorType::kMediumCore",
@@ -127,20 +101,22 @@ def generate_benchmark_code(schedule_json, app_namespace):
 
             proc_type = proc_map[hw]
             run_fun = f"omp::run_multiple_stages<{stage_min}, {stage_max}, {proc_type}, {threads}>"
-            thread_line = (
+            line = (
                 f"std::thread t{i+1}([&]() {{ "
-                f"chunk<Task, {app_data_type}>({inQ}, {outQ}, {run_fun}); }});"
+                f"chunk<Task, {app_ns}::AppData>({inQ}, {outQ}, {run_fun}); }});"
             )
 
-        lines.append(f"        {thread_line}")
+        lines.append(f"        {line}")
 
-    # Join all threads
+    # Join threads
     lines.append("")
     for i in range(n):
         lines.append(f"        t{i+1}.join();")
 
     lines.append("")
-    lines.append("        // ---------------------------------------------------------------------")
+    lines.append(
+        "        // ---------------------------------------------------------------------"
+    )
     lines.append("")
     lines.append("        state.PauseTiming();")
     lines.append("        auto end_time = std::chrono::high_resolution_clock::now();")
@@ -163,21 +139,138 @@ def generate_benchmark_code(schedule_json, app_namespace):
     return lines, func_name
 
 
+###############################################################################
+# Utility to generate the special "Tree" code
+###############################################################################
+def generate_benchmark_code_tree(schedule_json):
+    """
+    The specialized approach for 'Tree' schedules:
+      - Use tree::vulkan::Singleton
+      - init_vk_appdata<tree::vulkan::VkAppData_Safe>
+      - chunk<Task, tree::SafeAppData> (CPU) or chunk<Task, tree::vulkan::VkAppData_Safe> (GPU)
+    """
+    sched = schedule_json["schedule"]
+    schedule_id = sched["schedule_id"]
+    chunks = sched["chunks"]
+
+    func_name = f"BM_schedule_{schedule_id}"
+
+    lines = []
+    lines.append(f"static void {func_name}(benchmark::State &state) {{")
+    lines.append("    constexpr size_t num_tasks = 20;")
+    lines.append("")
+    lines.append("    auto mr = tree::vulkan::Singleton::getInstance().get_mr();")
+    lines.append("")
+    lines.append("    // Preallocate data for all tasks")
+    lines.append(
+        "    auto preallocated_data = init_vk_appdata<tree::vulkan::VkAppData_Safe>(mr, num_tasks);"
+    )
+    lines.append("")
+    lines.append("    // Track individual task times")
+    lines.append("    std::vector<double> task_times;")
+    lines.append("    task_times.reserve(num_tasks);")
+    lines.append("")
+    lines.append("    for (auto _ : state) {")
+    lines.append("        state.PauseTiming();")
+    lines.append(
+        "        moodycamel::ConcurrentQueue<Task*> q_input = init_tasks(preallocated_data);"
+    )
+    lines.append("")
+    lines.append("        auto start_time = std::chrono::high_resolution_clock::now();")
+    lines.append("        state.ResumeTiming();")
+    lines.append("")
+    lines.append(
+        "        // ---------------------------------------------------------------------"
+    )
+    lines.append("        // Automatically generated from schedule JSON")
+    lines.append("")
+
+    n = len(chunks)
+    for i in range(n - 1):
+        lines.append(f"        moodycamel::ConcurrentQueue<Task*> q_{i}_{i+1};")
+    lines.append("")
+
+    for i, ch in enumerate(chunks):
+        hw = ch["hardware"]
+        threads = ch["threads"]
+        stages = ch["stages"]
+        stage_min = min(stages)
+        stage_max = max(stages)
+
+        inQ = "q_input" if i == 0 else f"q_{i-1}_{i}"
+        outQ = "nullptr" if i == n - 1 else f"&q_{i}_{i+1}"
+
+        if hw == "gpu_vulkan":
+            run_fun = f"vulkan::run_gpu_stages<{stage_min}, {stage_max}>"
+            line = (
+                f"std::thread t{i+1}([&]() {{ "
+                f"chunk<Task, tree::vulkan::VkAppData_Safe>({inQ}, {outQ}, {run_fun}); }});"
+            )
+        else:
+            # CPU path => chunk<Task, tree::SafeAppData>
+            proc_map = {
+                "little": "ProcessorType::kLittleCore",
+                "medium": "ProcessorType::kMediumCore",
+                "big": "ProcessorType::kBigCore",
+            }
+            if hw not in proc_map:
+                raise ValueError(f"Unknown hardware type: {hw}")
+
+            proc_type = proc_map[hw]
+            run_fun = f"omp::run_multiple_stages<{stage_min}, {stage_max}, {proc_type}, {threads}>"
+            line = (
+                f"std::thread t{i+1}([&]() {{ "
+                f"chunk<Task, tree::SafeAppData>({inQ}, {outQ}, {run_fun}); }});"
+            )
+
+        lines.append(f"        {line}")
+
+    # Join
+    lines.append("")
+    for i in range(n):
+        lines.append(f"        t{i+1}.join();")
+
+    lines.append("")
+    lines.append(
+        "        // ---------------------------------------------------------------------"
+    )
+    lines.append("")
+    lines.append("        state.PauseTiming();")
+    lines.append("        auto end_time = std::chrono::high_resolution_clock::now();")
+    lines.append(
+        "        double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();"
+    )
+    lines.append("        task_times.push_back(elapsed / num_tasks);")
+    lines.append("        state.ResumeTiming();")
+    lines.append("    }  // for (auto _ : state)")
+    lines.append("")
+    lines.append("    // Calculate and report the actual average time per task")
+    lines.append(
+        "    double avg_task_time = "
+        "std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();"
+    )
+    lines.append('    state.counters["avg_time_per_task"] = avg_task_time;')
+    lines.append("}")
+    lines.append("")
+
+    return lines, func_name
+
+
+###############################################################################
+# Main code generator
+###############################################################################
 def main():
     if len(sys.argv) < 4:
-        print("Usage: python generate_code.py <root_dir> <application> <output_file.hpp>")
+        print(
+            "Usage: python generate_code.py <root_dir> <application> <output_file.hpp>"
+        )
         print("Example:")
-        print("  python generate_code.py data/schedule_files/ CifarDense generated_code.hpp")
+        print("  python generate_code.py data/schedule_files/ Tree generated_code.hpp")
         sys.exit(1)
 
     root_dir = Path(sys.argv[1])
     application = sys.argv[2]
     output_path = Path(sys.argv[3])
-
-    if application in APP_NAMESPACE_MAP:
-        app_namespace = APP_NAMESPACE_MAP[application]
-    else:
-        app_namespace = "cifar_dense"  # fallback
 
     lines_out = []
     # Basic includes
@@ -194,7 +287,7 @@ def main():
     lines_out.append("// Automatically generated benchmark code")
     lines_out.append("")
 
-    # We'll define a small struct in a common namespace, so each device can build a table of it:
+    # We'll define a struct for schedule_table entries in a common namespace:
     lines_out.append("namespace generated_schedules {")
     lines_out.append("using bench_func_t = void(*)(benchmark::State&);")
     lines_out.append("struct ScheduleRecord {")
@@ -203,26 +296,25 @@ def main():
     lines_out.append("};")
     lines_out.append("} // namespace generated_schedules\n")
 
-    # Now, for each device, we'll collect all schedule (id, function) pairs
-    # and then produce a static array for that device only.
+    # Iterate each device directory under root
     for device_dir in sorted(root_dir.iterdir()):
         if not device_dir.is_dir():
             continue
 
+        # Check if this device has subdir for the chosen application
         app_dir = device_dir / application
         if not app_dir.is_dir():
-            # This device doesn't have the app subdir
             continue
 
         schedule_files = sorted(app_dir.glob("schedule_*.json"))
         if not schedule_files:
             continue
 
-        # Start the device namespace
+        # Start device namespace
         device_ns = f"device_{device_dir.name}"
         lines_out.append(f"namespace {device_ns} {{")
 
-        # We'll accumulate pairs for this device's table
+        # We'll store (schedule_id, function_name) for the table
         schedule_records = []
 
         for json_path in schedule_files:
@@ -233,39 +325,45 @@ def main():
             schedule_id = sched["schedule_id"]
             chunks = sched["chunks"]
 
-            # Skip unknown hardware
-            valid_hardware = {"gpu_vulkan", "little", "medium", "big"}
-            skip_this = False
-            for ch in chunks:
-                if ch["hardware"] not in valid_hardware:
-                    print(f"Skipping {schedule_id} for device '{device_dir.name}' due to unknown hardware {ch['hardware']}")
-                    skip_this = True
+            # Skip unknown hardware if encountered
+            valid_hw = {"gpu_vulkan", "little", "medium", "big"}
+            skip_it = False
+            for c in chunks:
+                if c["hardware"] not in valid_hw:
+                    print(
+                        f"Skipping {schedule_id} for device '{device_dir.name}' due to unknown hardware {c['hardware']}"
+                    )
+                    skip_it = True
                     break
-            if skip_this:
+            if skip_it:
                 continue
 
-            # Generate the function code
-            func_lines, func_name = generate_benchmark_code(schedule_json, app_namespace)
-            lines_out.extend(func_lines)
+            # Now generate code with the correct function, depending on 'application'
+            if application == "Tree":
+                func_lines, func_name = generate_benchmark_code_tree(schedule_json)
+            else:
+                func_lines, func_name = generate_benchmark_code_default(
+                    schedule_json, application
+                )
 
-            # We'll store it in the device's schedule table
-            # function pointer is &BM_schedule_<schedule_id> (in this namespace)
+            lines_out.extend(func_lines)
             schedule_records.append((schedule_id, func_name))
 
-        # Now emit the static table for this device
+        # Build device's schedule_table
         lines_out.append("")
         lines_out.append("// Table of schedules for this device:")
-        lines_out.append("static generated_schedules::ScheduleRecord schedule_table[] = {")
-        for (sid, fname) in schedule_records:
+        lines_out.append(
+            "static generated_schedules::ScheduleRecord schedule_table[] = {"
+        )
+        for sid, fname in schedule_records:
             lines_out.append(f'    {{"{sid}", &{fname}}},')
         lines_out.append("};")
         lines_out.append(
             "static const size_t schedule_count = sizeof(schedule_table)/sizeof(schedule_table[0]);"
         )
-
         lines_out.append(f"}} // namespace {device_ns}\n")
 
-    # Write out to file
+    # Done. Write the file
     with open(output_path, "w") as outf:
         outf.write("\n".join(lines_out))
         outf.write("\n")
