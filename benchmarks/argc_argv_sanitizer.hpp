@@ -79,11 +79,17 @@ inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(const
       ++i;
       continue;
     }
+
+    if (arg == "-s") {
+      ++i;
+      continue;
+    }
+
     stored_strings.push_back(std::move(arg));
   }
 
   // Add additional arguments
-  stored_strings.push_back("--benchmark_repetitions=5");
+  // stored_strings.push_back("--benchmark_repetitions=5");
 
   // Print the full argument list
   std::cout << "\nFull argument list:\n";

@@ -1,16 +1,3 @@
-#include <benchmark/benchmark.h>
-#include <spdlog/spdlog.h>
-
-#include "../templates.hpp"
-#include "../templates_vk.hpp"
-#include "benchmarks/argc_argv_sanitizer.hpp"
-#include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-dense/dense_appdata.hpp"
-// #include "generated-code/all_schedules.hpp"
-#include "run_stages.hpp"
-#include "spdlog/common.h"
-#include "task.hpp"
-
 // =============================================================================
 // AUTOMATICALLY GENERATED BENCHMARK CODE
 // =============================================================================
@@ -734,29 +721,3 @@ static void BM_schedule_3A021JEHN02756_CifarDense_schedule_008(benchmark::State 
 BENCHMARK(BM_schedule_3A021JEHN02756_CifarDense_schedule_008)
     ->Unit(benchmark::kMillisecond)
     ->Iterations(10);
-
-// ---------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------
-
-int main(int argc, char **argv) {
-  PARSE_ARGS_BEGIN;
-
-  int which_schedule = 1;
-  app.add_option("-s,--schedule", which_schedule, "Schedule ID")->required();
-
-  PARSE_ARGS_END;
-
-  spdlog::set_level(spdlog::level::off);
-
-  if (g_device_id == "3A021JEHN02756") {
-    auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv);
-
-    benchmark::Initialize(&argc, argv);
-    if (benchmark::ReportUnrecognizedArguments(new_argc, new_argv.data())) return 1;
-    benchmark::RunSpecifiedBenchmarks();
-    benchmark::Shutdown();
-  }
-
-  return 0;
-}
