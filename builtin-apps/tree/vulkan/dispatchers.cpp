@@ -480,12 +480,12 @@ void Singleton::process_stage_4(tree::vulkan::VkAppData &appdata) {
   const int32_t n = appdata.get_n_unique();
   auto algo = cached_algorithms.at("build_radix_tree").get();
 
-  // print first 10 appdata.u_morton_keys_unique_s3
-  for (int i = 0; i < 10; ++i) {
-    spdlog::trace("================= appdata.u_morton_keys_unique_s3[{}] = {}",
-                  i,
-                  appdata.u_morton_keys_unique_s3[i]);
-  }
+  // // print first 10 appdata.u_morton_keys_unique_s3
+  // for (int i = 0; i < 10; ++i) {
+  //   spdlog::trace("================= appdata.u_morton_keys_unique_s3[{}] = {}",
+  //                 i,
+  //                 appdata.u_morton_keys_unique_s3[i]);
+  // }
 
   algo->update_descriptor_set(0,
                               {
@@ -639,241 +639,233 @@ void Singleton::process_stage_7(tree::vulkan::VkAppData &appdata) {
 // // ==============================================================
 // // ==============================================================
 
-// // ----------------------------------------------------------------------------
-// // Stage 1 (Input -> Morton)
-// // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Stage 1 (Input -> Morton)
+// ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_1(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 1, &appdata);
+void Singleton::process_stage_1(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 1, &appdata);
 
-//   auto algo = cached_algorithms.at("morton").get();
+  auto algo = cached_algorithms.at("morton").get();
 
-//   algo->update_descriptor_set(0,
-//                               {
-//                                   engine.get_buffer_info(appdata.u_input_points_s0),
-//                                   engine.get_buffer_info(appdata.u_morton_keys_s1_out),
-//                               });
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_input_points_s0),
+                                  engine.get_buffer_info(appdata.u_morton_keys_s1_out),
+                              });
 
-//   algo->update_push_constant(MortonPushConstants{
-//       .n = static_cast<uint32_t>(appdata.get_n_input()),
-//       .min_coord = tree::kMinCoord,
-//       .range = tree::kRange,
-//   });
+  algo->update_push_constant(MortonPushConstants{
+      .n = static_cast<uint32_t>(appdata.get_n_input()),
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
+  });
 
-//   seq->cmd_begin();
-//   algo->record_bind_core(seq->get_handle(), 0);
-//   algo->record_bind_push(seq->get_handle());
-//   algo->record_dispatch(
-//       seq->get_handle(),
-//       {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 256)), 1, 1});
-//   seq->cmd_end();
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_input(), 256)), 1, 1});
+  seq->cmd_end();
 
-//   seq->reset_fence();
-//   seq->submit();
-//   seq->wait_for_fence();
-// }
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
 
-// // ----------------------------------------------------------------------------
-// // Stage 2 (Morton -> Sorted Morton)
-// // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Stage 2 (Morton -> Sorted Morton)
+// ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_2(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 2, &appdata);
+void Singleton::process_stage_2(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 2, &appdata);
 
-//   auto algo = cached_algorithms.at("radixsort").get();
+  auto algo = cached_algorithms.at("radixsort").get();
 
-//   algo->update_descriptor_set(0,
-//                               {
-//                                   engine.get_buffer_info(appdata.u_morton_keys_s1),
-//                                   engine.get_buffer_info(appdata.u_morton_keys_sorted_s2),
-//                               });
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_morton_keys_s1),
+                                  engine.get_buffer_info(appdata.u_morton_keys_sorted_s2),
+                              });
 
-//   algo->update_push_constant(InputSizePushConstantsUnsigned{
-//       .n = appdata.get_n_input(),
-//   });
+  algo->update_push_constant(InputSizePushConstantsUnsigned{
+      .n = appdata.get_n_input(),
+  });
 
-//   seq->cmd_begin();
-//   algo->record_bind_core(seq->get_handle(), 0);
-//   algo->record_bind_push(seq->get_handle());
-//   algo->record_dispatch(seq->get_handle(), {1, 1, 1});  // Special case: single workgroup
-//   seq->cmd_end();
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(), {1, 1, 1});  // Special case: single workgroup
+  seq->cmd_end();
 
-//   seq->reset_fence();
-//   seq->submit();
-//   seq->wait_for_fence();
-// }
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
 
-// // ----------------------------------------------------------------------------
-// // Stage 3 (Sorted Morton -> Unique Sorted Morton)
-// // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Stage 3 (Sorted Morton -> Unique Sorted Morton)
+// ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_3(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
+void Singleton::process_stage_3(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
 
-//   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
-//                                      appdata.u_morton_keys_sorted_s2.data() +
-//                                      appdata.get_n_input(),
-//                                      appdata.u_morton_keys_unique_s3_out.data());
-//   const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3_out.data(), last);
+  const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
+                                     appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
+                                     appdata.u_morton_keys_unique_s3_out.data());
+  const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3_out.data(), last);
 
-//   appdata.set_n_unique(n_unique);
-//   appdata.set_n_brt_nodes(n_unique - 1);
-// }
+  appdata.set_n_unique(n_unique);
+  appdata.set_n_brt_nodes(n_unique - 1);
+}
 
-// // ----------------------------------------------------------------------------
-// // Stage 4 (Unique Sorted Morton -> BRT)
-// // ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Stage 4 (Unique Sorted Morton -> BRT)
+// ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_4(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 4, &appdata);
+void Singleton::process_stage_4(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 4, &appdata);
 
-//   const int32_t n = appdata.get_n_unique();
-//   auto algo = cached_algorithms.at("build_radix_tree").get();
+  const int32_t n = appdata.get_n_unique();
+  auto algo = cached_algorithms.at("build_radix_tree").get();
 
-//   // // print first 10 appdata.u_morton_keys_unique_s3
-//   // for (int i = 0; i < 10; ++i) {
-//   //   spdlog::trace("================= appdata.u_morton_keys_unique_s3[{}] = {}",
-//   //                 i,
-//   //                 appdata.u_morton_keys_unique_s3[i]);
-//   // }
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_morton_keys_unique_s3),
+                                  engine.get_buffer_info(appdata.u_brt_prefix_n_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_has_leaf_left_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_has_leaf_right_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_left_child_s4_out),
+                                  engine.get_buffer_info(appdata.u_brt_parents_s4_out),
+                              });
 
-//   algo->update_descriptor_set(0,
-//                               {
-//                                   engine.get_buffer_info(appdata.u_morton_keys_unique_s3),
-//                                   engine.get_buffer_info(appdata.u_brt_prefix_n_s4_out),
-//                                   engine.get_buffer_info(appdata.u_brt_has_leaf_left_s4_out),
-//                                   engine.get_buffer_info(appdata.u_brt_has_leaf_right_s4_out),
-//                                   engine.get_buffer_info(appdata.u_brt_left_child_s4_out),
-//                                   engine.get_buffer_info(appdata.u_brt_parents_s4_out),
-//                               });
+  algo->update_push_constant(InputSizePushConstantsSigned{
+      .n = n,
+  });
 
-//   algo->update_push_constant(InputSizePushConstantsSigned{
-//       .n = n,
-//   });
+  // vk::CommandBufferBeginInfo
+  // cmd_buf.bindPipeline
+  // cmd_buf.bindDescriptorSets
+  // cmd_buf.pushConstants
+  // cmd_buf.dispatch
+  // end
 
-//   // vk::CommandBufferBeginInfo
-//   // cmd_buf.bindPipeline
-//   // cmd_buf.bindDescriptorSets
-//   // cmd_buf.pushConstants
-//   // cmd_buf.dispatch
-//   // end
+  // vk::SubmitInfo
+  // waitForFences
+  // resetFences
 
-//   // vk::SubmitInfo
-//   // waitForFences
-//   // resetFences
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(seq->get_handle(),
+                        {static_cast<uint32_t>(kiss_vk::div_ceil(n, 256)), 1, 1});
+  seq->cmd_end();
 
-//   seq->cmd_begin();
-//   algo->record_bind_core(seq->get_handle(), 0);
-//   algo->record_bind_push(seq->get_handle());
-//   algo->record_dispatch(seq->get_handle(),
-//                         {static_cast<uint32_t>(kiss_vk::div_ceil(n, 256)), 1, 1});
-//   seq->cmd_end();
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
 
-//   seq->reset_fence();
-//   seq->submit();
-//   seq->wait_for_fence();
+  // seq->sync();
+}
 
-//   // seq->sync();
-// }
+// ----------------------------------------------------------------------------
+// Stage 5 (BRT -> Edge Count)
+// ----------------------------------------------------------------------------
 
-// // ----------------------------------------------------------------------------
-// // Stage 5 (BRT -> Edge Count)
-// // ----------------------------------------------------------------------------
+void Singleton::process_stage_5(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 5, &appdata);
 
-// void Singleton::process_stage_5(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 5, &appdata);
+  auto algo = cached_algorithms.at("edge_count").get();
 
-//   auto algo = cached_algorithms.at("edge_count").get();
+  algo->update_descriptor_set(0,
+                              {
+                                  engine.get_buffer_info(appdata.u_brt_prefix_n_s4),    // input
+                                  engine.get_buffer_info(appdata.u_brt_parents_s4),     // input
+                                  engine.get_buffer_info(appdata.u_edge_count_s5_out),  // output
+                              });
 
-//   algo->update_descriptor_set(0,
-//                               {
-//                                   engine.get_buffer_info(appdata.u_brt_prefix_n_s4),    // input
-//                                   engine.get_buffer_info(appdata.u_brt_parents_s4),     // input
-//                                   engine.get_buffer_info(appdata.u_edge_count_s5_out),  // output
-//                               });
+  algo->update_push_constant(InputSizePushConstantsUnsigned{
+      .n = appdata.get_n_brt_nodes(),
+  });
 
-//   algo->update_push_constant(InputSizePushConstantsUnsigned{
-//       .n = appdata.get_n_brt_nodes(),
-//   });
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_brt_nodes(), 512)), 1, 1});
+  seq->cmd_end();
 
-//   seq->cmd_begin();
-//   algo->record_bind_core(seq->get_handle(), 0);
-//   algo->record_bind_push(seq->get_handle());
-//   algo->record_dispatch(
-//       seq->get_handle(),
-//       {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_brt_nodes(), 512)), 1, 1});
-//   seq->cmd_end();
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
 
-//   seq->reset_fence();
-//   seq->submit();
-//   seq->wait_for_fence();
-// }
+// ----------------------------------------------------------------------------
+// Stage 6 (Edge Count -> Edge Offset, prefix sum)
+// ----------------------------------------------------------------------------
 
-// // ----------------------------------------------------------------------------
-// // Stage 6 (Edge Count -> Edge Offset, prefix sum)
-// // ----------------------------------------------------------------------------
+void Singleton::process_stage_6(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 6, &appdata);
 
-// void Singleton::process_stage_6(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 6, &appdata);
+  const int start = 0;
+  const int end = appdata.get_n_brt_nodes();
 
-//   const int start = 0;
-//   const int end = appdata.get_n_brt_nodes();
+  std::partial_sum(appdata.u_edge_count_s5.data() + start,
+                   appdata.u_edge_count_s5.data() + end,
+                   appdata.u_edge_offset_s6_out.data() + start);
 
-//   std::partial_sum(appdata.u_edge_count_s5.data() + start,
-//                    appdata.u_edge_count_s5.data() + end,
-//                    appdata.u_edge_offset_s6_out.data() + start);
+  // num_octree node is the result of the partial sum
+  const auto num_octree_nodes = appdata.u_edge_offset_s6_out[end - 1];
 
-//   // num_octree node is the result of the partial sum
-//   const auto num_octree_nodes = appdata.u_edge_offset_s6_out[end - 1];
+  // No-op since SafeAppData has const n_octree_nodes
+  appdata.set_n_octree_nodes(num_octree_nodes);
+}
 
-//   // No-op since SafeAppData has const n_octree_nodes
-//   appdata.set_n_octree_nodes(num_octree_nodes);
-// }
+//----------------------------------------------------------------------------
+// Stage 7 (Edge Offset -> Octree)
+//----------------------------------------------------------------------------
 
-// //----------------------------------------------------------------------------
-// // Stage 7 (Edge Offset -> Octree)
-// //----------------------------------------------------------------------------
+void Singleton::process_stage_7(VkAppData_Safe &appdata) {
+  LOG_KERNEL(LogKernelType::kVK, 7, &appdata);
 
-// void Singleton::process_stage_7(SafeAppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
-//   LOG_KERNEL(LogKernelType::kVK, 7, &appdata);
+  auto algo = cached_algorithms.at("build_octree").get();
 
-//   auto algo = cached_algorithms.at("build_octree").get();
+  algo->update_descriptor_set(
+      0,
+      {
+          engine.get_buffer_info(appdata.u_oct_children_s7_out),         // output
+          engine.get_buffer_info(appdata.u_oct_corner_s7_out),           // output
+          engine.get_buffer_info(appdata.u_oct_cell_size_s7_out),        // output
+          engine.get_buffer_info(appdata.u_oct_child_node_mask_s7_out),  // output
+          engine.get_buffer_info(appdata.u_oct_child_leaf_mask_s7_out),  // output
+          engine.get_buffer_info(appdata.u_edge_offset_s6),              // input
+          engine.get_buffer_info(appdata.u_edge_count_s5),               // input
+          engine.get_buffer_info(appdata.u_morton_keys_unique_s3),       // input
+          engine.get_buffer_info(appdata.u_brt_prefix_n_s4),             // input
+          engine.get_buffer_info(appdata.u_brt_parents_s4),              // input
+          engine.get_buffer_info(appdata.u_brt_left_child_s4),           // input
+          engine.get_buffer_info(appdata.u_brt_has_leaf_left_s4),        // input
+          engine.get_buffer_info(appdata.u_brt_has_leaf_right_s4),       // input
+      });
 
-//   algo->update_descriptor_set(
-//       0,
-//       {
-//           engine.get_buffer_info(appdata.u_oct_children_s7_out),         // output
-//           engine.get_buffer_info(appdata.u_oct_corner_s7_out),           // output
-//           engine.get_buffer_info(appdata.u_oct_cell_size_s7_out),        // output
-//           engine.get_buffer_info(appdata.u_oct_child_node_mask_s7_out),  // output
-//           engine.get_buffer_info(appdata.u_oct_child_leaf_mask_s7_out),  // output
-//           engine.get_buffer_info(appdata.u_edge_offset_s6),              // input
-//           engine.get_buffer_info(appdata.u_edge_count_s5),               // input
-//           engine.get_buffer_info(appdata.u_morton_keys_unique_s3),       // input
-//           engine.get_buffer_info(appdata.u_brt_prefix_n_s4),             // input
-//           engine.get_buffer_info(appdata.u_brt_parents_s4),              // input
-//           engine.get_buffer_info(appdata.u_brt_left_child_s4),           // input
-//           engine.get_buffer_info(appdata.u_brt_has_leaf_left_s4),        // input
-//           engine.get_buffer_info(appdata.u_brt_has_leaf_right_s4),       // input
-//       });
+  algo->update_push_constant(OctreePushConstants{
+      .min_coord = tree::kMinCoord,
+      .range = tree::kRange,
+      .n_brt_nodes = static_cast<int32_t>(appdata.get_n_brt_nodes()),
+  });
 
-//   algo->update_push_constant(OctreePushConstants{
-//       .min_coord = tree::kMinCoord,
-//       .range = tree::kRange,
-//       .n_brt_nodes = static_cast<int32_t>(appdata.get_n_brt_nodes()),
-//   });
+  seq->cmd_begin();
+  algo->record_bind_core(seq->get_handle(), 0);
+  algo->record_bind_push(seq->get_handle());
+  algo->record_dispatch(
+      seq->get_handle(),
+      {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_octree_nodes(), 256)), 1, 1});
+  seq->cmd_end();
 
-//   seq->cmd_begin();
-//   algo->record_bind_core(seq->get_handle(), 0);
-//   algo->record_bind_push(seq->get_handle());
-//   algo->record_dispatch(
-//       seq->get_handle(),
-//       {static_cast<uint32_t>(kiss_vk::div_ceil(appdata.get_n_octree_nodes(), 256)), 1, 1});
-//   seq->cmd_end();
-
-//   seq->reset_fence();
-//   seq->submit();
-//   seq->wait_for_fence();
-// }
+  seq->reset_fence();
+  seq->submit();
+  seq->wait_for_fence();
+}
 
 }  // namespace tree::vulkan

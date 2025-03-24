@@ -31,7 +31,7 @@ namespace tree {
 // | 7     | u_num_selected_out           | 1                            | 1                       |
 // ------------------------------------------------------------------------------------------------
 // clang-format on
-AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input, const bool use_cuda)
+AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input)
     : n_input(n_input),
       u_input_points_s0(n_input, mr),
       u_morton_keys_s1(n_input, mr),
@@ -81,11 +81,6 @@ AppData::AppData(std::pmr::memory_resource* mr, const size_t n_input, const bool
   spdlog::trace("Tree construction appdata allocated:");
   spdlog::trace("\tInput size: {} points", n_input);
   spdlog::trace("\tTotal memory: {:.2f} MB", total_mb);
-
-  if (use_cuda) {
-    // cuda_temp_storage = cuda::TempStorage();
-    // spdlog::trace("\tCuda temp storage (device only) allocated");
-  }
 }
 
 }  // namespace tree

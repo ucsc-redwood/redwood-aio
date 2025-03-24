@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "cuda/temp_storage.hpp"
-#include "omp/temp_storage.hpp"
 
 namespace tree {
 
@@ -52,9 +51,7 @@ constexpr auto kRange = 1024.0f;
 // clang-format on
 
 struct AppData {
-  explicit AppData(std::pmr::memory_resource* mr,
-                   const size_t n_input = kDefaultInputSize,
-                   bool use_cuda = false);
+  explicit AppData(std::pmr::memory_resource* mr, const size_t n_input = kDefaultInputSize);
 
   // --------------------------------------------------------------------------
   // Essential data
@@ -114,7 +111,7 @@ struct AppData {
   // and cuda is only used in cuda
   // --------------------------------------------------------------------------
 
-  omp::TmpStorage omp_temp_storage;
+  // omp::TmpStorage omp_temp_storage;
   // std::optional<cuda::TempStorage> cuda_temp_storage;
 
   // uint32_t* u_num_selected_out = nullptr;

@@ -3,8 +3,13 @@
 #include <concurrentqueue.h>
 
 #include <functional>
+#include <vector>
 
 #include "builtin-apps/common/kiss-vk/vma_pmr.hpp"
+
+// ---------------------------------------------------------------------
+// Chunk building blocks
+// ---------------------------------------------------------------------
 
 template <typename TaskType, typename AppDataType>
 void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
@@ -34,6 +39,10 @@ void chunk(moodycamel::ConcurrentQueue<TaskType *> &q_cur,
     }
   }
 }
+
+// ---------------------------------------------------------------------
+// AppData initialization
+// ---------------------------------------------------------------------
 
 template <typename AppDataType>
 [[nodiscard]] std::vector<AppDataType> init_vk_appdata(

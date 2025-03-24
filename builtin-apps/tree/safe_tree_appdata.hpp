@@ -9,7 +9,7 @@
 
 namespace tree {
 
-struct SafeAppData final {
+struct SafeAppData {
   explicit SafeAppData(std::pmr::memory_resource* mr);
 
   // --------------------------------------------------------------------------
