@@ -204,25 +204,33 @@ void process_stage_1(tree::SafeAppData &appdata) {
 // ----------------------------------------------------------------------------
 
 void process_stage_2(tree::SafeAppData &appdata) {
+  // const auto num_threads = omp_get_num_threads();
+  // const auto num_buckets = num_threads;
+
+  // LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
+
+  // omp::TmpStorage temp_storage;
+  // temp_storage.allocate(num_buckets, num_threads);
+  // assert(temp_storage.is_allocated());
+
+  // bucket_sort(appdata.u_morton_keys_s1.data(),
+  //             appdata.u_morton_keys_sorted_s2.data(),
+  //             temp_storage.global_n_elem(),
+  //             temp_storage.global_starting_position(),
+  //             temp_storage.buckets(),
+  //             appdata.get_n_input(),
+  //             num_buckets,
+  //             num_threads);
+
+  // // by this point, 'u_morton_keys_sorted_s2' is sorted
+
+  // ----------------------------------------------------------------------------
+  // Parallel sort version
+  // ----------------------------------------------------------------------------
+
   const auto num_threads = omp_get_num_threads();
-  const auto num_buckets = num_threads;
-
-  LOG_KERNEL(LogKernelType::kOMP, 2, &appdata);
-
-  omp::TmpStorage temp_storage;
-
-  assert(temp_storage.is_allocated());
-
-  bucket_sort(appdata.u_morton_keys_s1.data(),
-              appdata.u_morton_keys_sorted_s2.data(),
-              temp_storage.global_n_elem(),
-              temp_storage.global_starting_position(),
-              temp_storage.buckets(),
-              appdata.get_n_input(),
-              num_buckets,
-              num_threads);
-
-  // by this point, 'u_morton_keys_sorted_s2' is sorted
+  const int tid = omp_get_thread_num();
+  omp::parallel_sort(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, tid, num_threads);
 }
 
 // ----------------------------------------------------------------------------
