@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <memory_resource>
-#include <optional>
 #include <stdexcept>
 #include <vector>
 

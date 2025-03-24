@@ -3,15 +3,13 @@
 #include <spdlog/spdlog.h>
 
 [[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(
-    std::vector<tree::AppData> &data,
-    std::vector<tree::vulkan::TmpStorage> &vulkan_tmp_storages,
-    const size_t initial_capacity) {
+    std::vector<tree::vulkan::VkAppData> &data, const size_t initial_capacity) {
   // Initialize queue with reasonable capacity to avoid resizing
   moodycamel::ConcurrentQueue<Task *> tasks(initial_capacity);
 
   // Reserve space for all tasks plus sentinel
   for (size_t i = 0; i < data.size(); ++i) {
-    Task *task = new Task(&data[i], &vulkan_tmp_storages[i]);
+    Task *task = new Task(&data[i]);
     if (!tasks.enqueue(task)) {
       delete task;
       throw std::runtime_error("Failed to enqueue task");

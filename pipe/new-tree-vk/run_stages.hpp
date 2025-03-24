@@ -56,13 +56,11 @@ namespace vulkan {
 
 template <int Start, int End>
   requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-void run_gpu_stages(tree::AppData &data, tree::vulkan::TmpStorage &vulkan_tmp_storage) {
+void run_gpu_stages(tree::vulkan::VkAppData &data) {
   // Generate a compile-time sequence for the range [start_stage, end_stage]
-  []<std::size_t... I>(std::index_sequence<I...>,
-                       tree::AppData &data,
-                       tree::vulkan::TmpStorage &vulkan_tmp_storage) {
-    ((tree::vulkan::Singleton::getInstance().run_stage<Start + I>(data, vulkan_tmp_storage)), ...);
-  }(std::make_index_sequence<End - Start + 1>{}, data, vulkan_tmp_storage);
+  []<std::size_t... I>(std::index_sequence<I...>, tree::vulkan::VkAppData &data) {
+    ((tree::vulkan::Singleton::getInstance().run_stage<Start + I>(data)), ...);
+  }(std::make_index_sequence<End - Start + 1>{}, data);
 }
 
 }  // namespace vulkan

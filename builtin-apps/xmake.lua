@@ -84,6 +84,7 @@ if has_config("use_vulkan") then
 			"cifar-dense/vulkan/dispatchers.hpp",
 			"tree/vulkan/dispatchers.hpp",
 			"tree/vulkan/tmp_storage.hpp",
+			"tree/vulkan/vk_appdata.hpp",
 		})
 
 		add_files({

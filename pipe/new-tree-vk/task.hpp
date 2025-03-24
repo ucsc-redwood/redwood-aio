@@ -4,22 +4,17 @@
 
 #include <vector>
 
-#include "builtin-apps/tree/tree_appdata.hpp"
-#include "builtin-apps/tree/vulkan/tmp_storage.hpp"
+#include "builtin-apps/tree/vulkan/vk_appdata.hpp"
 
 // ---------------------------------------------------------------------
 // Task structure (new)
 // ---------------------------------------------------------------------
 
 struct Task {
-  tree::AppData *data;
-  tree::vulkan::TmpStorage *vulkan_tmp_storage = nullptr;
+  tree::vulkan::VkAppData *data;
 
-  explicit Task(tree::AppData *data, tree::vulkan::TmpStorage *vulkan_tmp_storage)
-      : data(data), vulkan_tmp_storage(vulkan_tmp_storage) {}
+  explicit Task(tree::vulkan::VkAppData *data) : data(data) {}
 };
 
 [[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(
-    std::vector<tree::AppData> &data,
-    std::vector<tree::vulkan::TmpStorage> &vulkan_tmp_storages,
-    size_t initial_capacity = 32);
+    std::vector<tree::vulkan::VkAppData> &data, size_t initial_capacity = 32);
