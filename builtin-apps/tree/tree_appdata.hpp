@@ -115,7 +115,7 @@ struct AppData {
   // and cuda is only used in cuda
   // --------------------------------------------------------------------------
 
-  // omp::TmpStorage omp_temp_storage;
+  omp::TmpStorage omp_temp_storage;
   // std::optional<cuda::TempStorage> cuda_temp_storage;
 
   // uint32_t* u_num_selected_out = nullptr;
