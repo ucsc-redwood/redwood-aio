@@ -56,39 +56,6 @@ void run_multiple_stages(cifar_dense::AppData &data) {
 
 namespace vulkan {
 
-// template <int Stage>
-// void gpu_stage(cifar_dense::AppData &data) {
-//   if constexpr (Stage == 1) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_1(data);
-//   } else if constexpr (Stage == 2) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_2(data);
-//   } else if constexpr (Stage == 3) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_3(data);
-//   } else if constexpr (Stage == 4) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_4(data);
-//   } else if constexpr (Stage == 5) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_5(data);
-//   } else if constexpr (Stage == 6) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_6(data);
-//   } else if constexpr (Stage == 7) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_7(data);
-//   } else if constexpr (Stage == 8) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_8(data);
-//   } else if constexpr (Stage == 9) {
-//     cifar_dense::vulkan::Singleton::getInstance().process_stage_9(data);
-//   }
-// }
-
-// template <int Start, int End>
-//   requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-// void run_multiple_stages(cifar_dense::AppData &data) {
-// // don't know if this has any effect
-// #pragma unroll
-//   for (int s = Start; s <= End; ++s) {
-
-//   }
-// }
-
 template <int Start, int End>
   requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
 void run_gpu_stages(cifar_dense::AppData &data) {

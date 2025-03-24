@@ -1,7 +1,6 @@
 #include <spdlog/spdlog.h>
 
 #include "builtin-apps/app.hpp"
-#include "generated-code/all_schedules.hpp"
 
 // ---------------------------------------------------------------------
 // Main

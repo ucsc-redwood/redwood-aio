@@ -85,6 +85,11 @@ inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(const
       continue;
     }
 
+    if (arg == "-i") {
+      ++i;
+      continue;
+    }
+
     stored_strings.push_back(std::move(arg));
   }
 

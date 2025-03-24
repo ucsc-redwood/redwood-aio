@@ -180,7 +180,6 @@ static void <<<BENCHMARK_NAME>>>(benchmark::State &state) {
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-BENCHMARK(<<<BENCHMARK_NAME>>>)->Unit(benchmark::kMillisecond)->Iterations(10);
     """
 
     cpp_code = generate_cpp_function_from_schedule(schedule_json)
@@ -323,4 +322,34 @@ def generate_all_benchmarks_top_n(schedule_dir, num_schedules):
 
 
 if __name__ == "__main__":
-    generate_all_benchmarks_top_n("./data/schedule_files/3A021JEHN02756/CifarDense", 10)
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Generate benchmark code from schedule files"
+    )
+    parser.add_argument(
+        "--root-dir",
+        type=str,
+        required=True,
+        help="Root directory containing schedule files",
+    )
+    parser.add_argument(
+        "--device-id", type=str, required=True, help="Device ID (e.g. 3A021JEHN02756)"
+    )
+    parser.add_argument(
+        "--application",
+        type=str,
+        required=True,
+        help="Application name (e.g. CifarDense)",
+    )
+    parser.add_argument(
+        "--num-schedules",
+        type=int,
+        default=10,
+        help="Number of schedules to generate (default: 10)",
+    )
+
+    args = parser.parse_args()
+
+    schedule_dir = f"{args.root_dir}/{args.device_id}/{args.application}"
+    generate_all_benchmarks_top_n(schedule_dir, args.num_schedules)

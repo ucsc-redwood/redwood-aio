@@ -1,23 +1,23 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
-target("new-pipe-cifar-dense-vk")
-do
-	add_rules("pipe_config", "common_flags", "vulkan_config", "run_on_android")
+-- target("new-pipe-cifar-dense-vk")
+-- do
+-- 	add_rules("pipe_config", "common_flags", "vulkan_config", "run_on_android")
 
-	add_headerfiles({
-		"task.hpp",
-		"run_stages.hpp",
-		"../templates.hpp",
-		"../templates_vk.hpp",
-	})
+-- 	add_headerfiles({
+-- 		"task.hpp",
+-- 		"run_stages.hpp",
+-- 		"../templates.hpp",
+-- 		"../templates_vk.hpp",
+-- 	})
 
-	add_files({
-		"main.cpp",
-		"task.cpp",
-	})
+-- 	add_files({
+-- 		"main.cpp",
+-- 		"task.cpp",
+-- 	})
 
-	add_deps("builtin-apps-vulkan", "builtin-apps")
-end
+-- 	add_deps("builtin-apps-vulkan", "builtin-apps")
+-- end
 
 target("bm-new-pipe-cifar-dense-vk")
 do
