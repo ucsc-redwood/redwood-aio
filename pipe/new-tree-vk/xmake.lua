@@ -9,6 +9,7 @@ do
 		"run_stages.hpp",
 		"../templates.hpp",
 		"../templates_vk.hpp",
+		"generated_code.hpp",
 	})
 
 	add_files({
@@ -31,6 +32,7 @@ do
 		"run_stages.hpp",
 		"../templates.hpp",
 		"../templates_vk.hpp",
+		"generated_code.hpp",
 	})
 
 	add_files({

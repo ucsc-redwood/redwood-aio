@@ -10,23 +10,6 @@ struct DeviceInfo {
   size_t count;
 };
 
-// namespace device_9b034f1b {
-// extern generated_schedules::ScheduleRecord schedule_table[];
-// extern const size_t schedule_count;
-// }  // namespace device_9b034f1b
-
-// namespace device_3A021JEHN02756 {
-// extern generated_schedules::ScheduleRecord schedule_table[];
-// extern const size_t schedule_count;
-// }  // namespace device_3A021JEHN02756
-
-// namespace device_jetson_low_power {
-// extern generated_schedules::ScheduleRecord schedule_table[];
-// extern const size_t schedule_count;
-// }  // namespace device_jetson_low_power
-
-// ... (Forward-declare any other devices similarly)
-
 // Now create a lookup map from the string device ID to the device's table info
 static std::map<std::string, DeviceInfo> g_device_map = {
     {"9b034f1b", {device_9b034f1b::schedule_table, device_9b034f1b::schedule_count}},

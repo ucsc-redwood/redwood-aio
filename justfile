@@ -174,9 +174,8 @@ db-to-schedules:
 #     xmake format
 
 schedules-to-code-new:
-    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 3A021JEHN02756 --application CifarDense > tmp/3A021JEHN02756_cifar_dense_schedules.cpp
-    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 3A021JEHN02756 --application CifarSparse > tmp/3A021JEHN02756_cifar_sparse_schedules.cpp
-    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 3A021JEHN02756 --application Tree > tmp/3A021JEHN02756_tree_schedules.cpp
-    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 9b034f1b --application CifarDense > tmp/9b034f1b_cifar_dense_schedules.cpp
-    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 9b034f1b --application CifarSparse > tmp/9b034f1b_cifar_sparse_schedules.cpp
-    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 9b034f1b --application Tree > tmp/9b034f1b_tree_schedules.cpp
+    python3 scripts/codegen/new.py data/schedule_files/ CifarDense pipe/new-cifar-dense-vk/generated_code.hpp
+    python3 scripts/codegen/new.py data/schedule_files/ CifarSparse pipe/new-cifar-sparse-vk/generated_code.hpp
+    python3 scripts/codegen/new.py data/schedule_files/ Tree pipe/new-tree-vk/generated_code.hpp
+
+    xmake format
