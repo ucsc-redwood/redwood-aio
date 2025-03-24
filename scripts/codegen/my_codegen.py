@@ -20,6 +20,25 @@ def hardware_to_processor_type(hardware):
         return None
 
 
+def application_to_namespace(application):
+    """
+    Maps application names to their corresponding namespace format.
+    Automatically converts CamelCase to snake_case:
+    - CifarDense -> cifar_dense
+    - Tree -> tree
+    - Resnet50 -> resnet50
+    - CifarSparse -> cifar_sparse
+    - Any other CamelCase format -> snake_case format
+    """
+    # Insert underscore before capital letters (except the first one) and convert to lowercase
+    result = ""
+    for i, char in enumerate(application):
+        if char.isupper() and i > 0:
+            result += "_"
+        result += char.lower()
+    return result
+
+
 def generate_queue_definitions(num_chunks):
     """
     Generate definitions for moodycamel::ConcurrentQueue<Task*>.
@@ -35,7 +54,7 @@ def generate_queue_definitions(num_chunks):
     return lines
 
 
-def generate_thread_call(i, chunk_info, total_chunks):
+def generate_thread_call(i, chunk_info, total_chunks, application):
     """
     Generate the std::thread line for the i-th chunk in the schedule.
     chunk_info is a dictionary containing:
@@ -48,6 +67,7 @@ def generate_thread_call(i, chunk_info, total_chunks):
        }
 
     total_chunks is the total number of chunks in the schedule.
+    application is the application name (e.g., "CifarDense").
 
     Returns a string with the C++ code for that thread.
     """
@@ -56,6 +76,7 @@ def generate_thread_call(i, chunk_info, total_chunks):
     stages = chunk_info["stages"]
     first_stage = stages[0]
     last_stage = stages[-1]
+    namespace = application_to_namespace(application)
 
     # Determine the input and output queues for this chunk
     #  - The first chunk uses q_input as the input queue
@@ -89,7 +110,7 @@ def generate_thread_call(i, chunk_info, total_chunks):
     thread_name = f"t{i+1}"
     call = (
         f"std::thread {thread_name}([&]() {{\n"
-        f"  chunk<Task, cifar_dense::AppData>(\n"
+        f"  chunk<Task, {namespace}::AppData>(\n"
         f"      {input_queue},\n"
         f"      {output_queue},\n"
         f"      {run_function});\n"
@@ -107,6 +128,7 @@ def generate_cpp_function_from_schedule(schedule_json):
 
     chunks = schedule_json["schedule"]["chunks"]
     num_chunks = len(chunks)
+    application = schedule_json["schedule"]["application"]
 
     # 1) Generate queue definitions
     queue_definitions = generate_queue_definitions(num_chunks)
@@ -114,7 +136,7 @@ def generate_cpp_function_from_schedule(schedule_json):
     # 2) Generate thread calls
     thread_calls = []
     for i, chunk in enumerate(chunks):
-        thread_calls.append(generate_thread_call(i, chunk, num_chunks))
+        thread_calls.append(generate_thread_call(i, chunk, num_chunks, application))
 
     # 3) Generate the join calls
     #    We'll name each thread t1, t2, t3, ...
@@ -142,21 +164,23 @@ def generate_cpp_function_from_schedule(schedule_json):
 
 def generate_benchmark_function(schedule_json):
     benchmark_name = f"BM_schedule_{schedule_json['schedule']['schedule_id']}"
+    application = schedule_json["schedule"]["application"]
+    namespace = application_to_namespace(application)
 
-    template_code = """
-static void <<<BENCHMARK_NAME>>>(benchmark::State &state) {
+    template_code = f"""
+static void <<<BENCHMARK_NAME>>>(benchmark::State &state) {{
   constexpr size_t num_tasks = 20;
 
-  auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
+  auto mr = {namespace}::vulkan::Singleton::getInstance().get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_dense::AppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<{namespace}::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
   task_times.reserve(num_tasks);
 
-  for (auto _ : state) {
+  for (auto _ : state) {{
     state.PauseTiming();
     moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
 
@@ -172,13 +196,13 @@ static void <<<BENCHMARK_NAME>>>(benchmark::State &state) {
     double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
     task_times.push_back(elapsed / num_tasks);
     state.ResumeTiming();
-  }
+  }}
 
   // Calculate and report the actual average time per task
   double avg_task_time =
       std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
   state.counters["avg_time_per_task"] = avg_task_time;
-}
+}}
 
     """
 
@@ -234,61 +258,6 @@ def read_schedules_from_dir(directory_path):
                 print(f"Warning: Error reading file {filename}: {str(e)}")
 
     return schedules
-
-
-def main():
-    """
-    Example usage of the generator.
-    In practice, you might read the JSON from a file, e.g.:
-        with open("some_schedule.json") as f:
-            schedule_data = json.load(f)
-    """
-    # For demonstration, we'll just embed the schedule here:
-    schedule_data = {
-        "schedule": {
-            "schedule_id": "3A021JEHN02756_CifarDense_schedule_001",
-            "device_id": "3A021JEHN02756",
-            "application": "CifarDense",
-            "chunks": [
-                {
-                    "name": "chunk1",
-                    "hardware": "little",
-                    "threads": 4,
-                    "stages": [1],
-                    "time": 6.494148231768887,
-                },
-                {
-                    "name": "chunk2",
-                    "hardware": "medium",
-                    "threads": 2,
-                    "stages": [2],
-                    "time": 0.3203897834324584,
-                },
-                {
-                    "name": "chunk3",
-                    "hardware": "gpu_vulkan",
-                    "threads": 1,
-                    "stages": [3, 4, 5, 6, 7],
-                    "time": 27.287561781360886,
-                },
-                {
-                    "name": "chunk4",
-                    "hardware": "big",
-                    "threads": 2,
-                    "stages": [8, 9],
-                    "time": 0.09971189033337916,
-                },
-            ],
-        },
-        "max_chunk_time": 27.287561781360886,
-        "cpu_baseline_time": 252.87687740031592,
-        "gpu_baseline_time": 37.74098821796361,
-        "cpu_speedup": 9.267111493011686,
-        "gpu_speedup": 1.3830839310730603,
-    }
-
-    generated_code = generate_benchmark_function(schedule_data)
-    print(generated_code)
 
 
 def generate_all_benchmarks_top_n(schedule_dir, num_schedules):

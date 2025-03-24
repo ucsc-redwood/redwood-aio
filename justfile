@@ -157,18 +157,26 @@ db-to-schedules:
     python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
 
 
-schedules-to-code:
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application CifarDense --out_name jetson_cifar_dense_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application CifarSparse --out_name jetson_cifar_sparse_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application Tree --out_name jetson_tree_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application CifarDense --out_name jetson_low_power_cifar_dense_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application CifarSparse --out_name jetson_low_power_cifar_sparse_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application Tree --out_name jetson_low_power_tree_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application CifarDense --out_name 3A021JEHN02756_cifar_dense_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application CifarSparse --out_name 3A021JEHN02756_cifar_sparse_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application Tree --out_name 3A021JEHN02756_tree_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 9b034f1b --application CifarDense --out_name 9b034f1b_cifar_dense_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 9b034f1b --application CifarSparse --out_name 9b034f1b_cifar_sparse_schedules.hpp
-    python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 9b034f1b --application Tree --out_name 9b034f1b_tree_schedules.hpp
+# schedules-to-code:
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application CifarDense --out_name jetson_cifar_dense_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application CifarSparse --out_name jetson_cifar_sparse_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application Tree --out_name jetson_tree_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application CifarDense --out_name jetson_low_power_cifar_dense_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application CifarSparse --out_name jetson_low_power_cifar_sparse_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application Tree --out_name jetson_low_power_tree_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application CifarDense --out_name 3A021JEHN02756_cifar_dense_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application CifarSparse --out_name 3A021JEHN02756_cifar_sparse_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application Tree --out_name 3A021JEHN02756_tree_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 9b034f1b --application CifarDense --out_name 9b034f1b_cifar_dense_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 9b034f1b --application CifarSparse --out_name 9b034f1b_cifar_sparse_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 9b034f1b --application Tree --out_name 9b034f1b_tree_schedules.hpp
     
-    xmake format
+#     xmake format
+
+schedules-to-code-new:
+    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 3A021JEHN02756 --application CifarDense > tmp/3A021JEHN02756_cifar_dense_schedules.cpp
+    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 3A021JEHN02756 --application CifarSparse > tmp/3A021JEHN02756_cifar_sparse_schedules.cpp
+    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 3A021JEHN02756 --application Tree > tmp/3A021JEHN02756_tree_schedules.cpp
+    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 9b034f1b --application CifarDense > tmp/9b034f1b_cifar_dense_schedules.cpp
+    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 9b034f1b --application CifarSparse > tmp/9b034f1b_cifar_sparse_schedules.cpp
+    python3 scripts/codegen/my_codegen.py --root-dir data/schedule_files/ --device-id 9b034f1b --application Tree > tmp/9b034f1b_tree_schedules.cpp
