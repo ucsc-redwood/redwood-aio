@@ -6,34 +6,6 @@
 #include "run_stages.hpp"
 #include "task.hpp"
 
-// void chunk(moodycamel::ConcurrentQueue<Task *> &q_cur,
-//            moodycamel::ConcurrentQueue<Task *> *q_next,
-//            std::function<void(tree::vulkan::VkAppData &)> func) {
-//   while (true) {
-//     Task *task = nullptr;
-//     if (q_cur.try_dequeue(task)) {
-//       if (task == nullptr) {
-//         // Sentinel => pass it on if there's a next queue and stop
-//         if (q_next != nullptr) {
-//           q_next->enqueue(nullptr);
-//         }
-//         break;
-//       }
-
-//       // -----------------------------------
-//       func(*task->data);
-//       // -----------------------------------
-
-//       // If there's a next queue, pass the task along
-//       if (q_next != nullptr) {
-//         q_next->enqueue(task);
-//       }
-//     } else {
-//       std::this_thread::yield();
-//     }
-//   }
-// }
-
 int main(int argc, char **argv) {
   PARSE_ARGS_BEGIN;
 
