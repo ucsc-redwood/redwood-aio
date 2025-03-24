@@ -48,6 +48,20 @@ void run_multiple_stages(cifar_dense::AppData &data) {
   }
 }
 
+template <int Start, int End>
+void run_baseline(cifar_dense::AppData &data) {
+#pragma omp parallel
+  {
+    // No need to Bind to core
+
+// don't know if this has any effect
+#pragma unroll
+    for (int s = Start; s <= End; ++s) {
+      cpu_stages[s - 1](data);
+    }
+  }
+}
+
 }  // namespace omp
 
 // ---------------------------------------------------------------------

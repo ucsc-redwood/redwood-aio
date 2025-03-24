@@ -9,9 +9,93 @@
 #include "run_stages.hpp"
 #include "task.hpp"
 
-// =============================================================================
-// AUTOMATICALLY GENERATED BENCHMARK CODE
-// =============================================================================
+static void BM_omp_baseline(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_dense::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    // Thread calls:
+    std::thread t1(
+        [&]() { chunk<Task, cifar_dense::AppData>(q_input, nullptr, omp::run_baseline<1, 9>); });
+    t1.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_vk_baseline(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_dense::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_dense::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    // Thread calls:
+    std::thread t1([&]() {
+      chunk<Task, cifar_dense::AppData>(q_input, nullptr, vulkan::run_gpu_stages<1, 9>);
+    });
+    t1.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+// BENCHMARK(BM_omp_baseline)->Unit(benchmark::kMillisecond)->Iterations(10);
+// BENCHMARK(BM_vk_baseline)->Unit(benchmark::kMillisecond)->Iterations(10);
 
 namespace device_9b034f1b {
 
