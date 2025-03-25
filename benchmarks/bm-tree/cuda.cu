@@ -37,178 +37,170 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
 
 BENCHMARK_REGISTER_F(CUDA_Tree, Baseline)->Unit(benchmark::kMillisecond);
 
-// // ----------------------------------------------------------------
-// // Stage 1
-// // ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// Stage 1
+// ----------------------------------------------------------------
 
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-//   // warmup
-//   tree::cuda::run_stage<1>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+  //  previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<1>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
+  for (auto _ : state) {
+    tree::cuda::process_stage_1(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage1)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage1)->Unit(benchmark::kMillisecond);
 
-// // ----------------------------------------------------------------
-// // Stage 2
-// // ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// Stage 2
+// ----------------------------------------------------------------
 
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-//   tree::cuda::run_stage<1>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+  // previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-//   // warmup
-//   tree::cuda::run_stage<2>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+  for (auto _ : state) {
+    tree::cuda::run_stage<2>(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<2>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage2)->Unit(benchmark::kMillisecond);
 
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage2)->Unit(benchmark::kMillisecond);
+// ----------------------------------------------------------------
+// Stage 3
+// ----------------------------------------------------------------
 
-// // ----------------------------------------------------------------
-// // Stage 3
-// // ----------------------------------------------------------------
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
+  // previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  tree::cuda::process_stage_3(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-//   tree::cuda::run_stage<1>(appdata);
-//   tree::cuda::run_stage<2>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+  for (auto _ : state) {
+    tree::cuda::run_stage<3>(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-//   // warmup
-//   tree::cuda::run_stage<3>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage3)->Unit(benchmark::kMillisecond);
 
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<3>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
+// ----------------------------------------------------------------
+// Stage 4
+// ----------------------------------------------------------------
 
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage3)->Unit(benchmark::kMillisecond);
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-// // ----------------------------------------------------------------
-// // Stage 4
-// // ----------------------------------------------------------------
+  // previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  tree::cuda::process_stage_3(appdata);
+  tree::cuda::process_stage_4(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
+  for (auto _ : state) {
+    tree::cuda::run_stage<4>(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-//   tree::cuda::run_stage<1>(appdata);
-//   tree::cuda::run_stage<2>(appdata);
-//   tree::cuda::run_stage<3>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage4)->Unit(benchmark::kMillisecond);
 
-//   // warmup
-//   tree::cuda::run_stage<4>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+// ----------------------------------------------------------------
+// Stage 5
+// ----------------------------------------------------------------
 
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<4>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage4)->Unit(benchmark::kMillisecond);
+  // previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  tree::cuda::process_stage_3(appdata);
+  tree::cuda::process_stage_4(appdata);
+  tree::cuda::process_stage_5(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-// // ----------------------------------------------------------------
-// // Stage 5
-// // ----------------------------------------------------------------
+  for (auto _ : state) {
+    tree::cuda::run_stage<5>(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage5)->Unit(benchmark::kMillisecond);
 
-//   tree::cuda::run_stage<1>(appdata);
-//   tree::cuda::run_stage<2>(appdata);
-//   tree::cuda::run_stage<3>(appdata);
-//   tree::cuda::run_stage<4>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+// ----------------------------------------------------------------
+// Stage 6
+// ----------------------------------------------------------------
 
-//   // warmup
-//   tree::cuda::run_stage<5>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<5>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
+  // previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  tree::cuda::process_stage_3(appdata);
+  tree::cuda::process_stage_4(appdata);
+  tree::cuda::process_stage_5(appdata);
+  tree::cuda::process_stage_6(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage5)->Unit(benchmark::kMillisecond);
+  for (auto _ : state) {
+    tree::cuda::run_stage<6>(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-// // ----------------------------------------------------------------
-// // Stage 6
-// // ----------------------------------------------------------------
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage6)->Unit(benchmark::kMillisecond);
 
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
+// ----------------------------------------------------------------
+// Stage 7
+// ----------------------------------------------------------------
 
-//   tree::cuda::run_stage<1>(appdata);
-//   tree::cuda::run_stage<2>(appdata);
-//   tree::cuda::run_stage<3>(appdata);
-//   tree::cuda::run_stage<4>(appdata);
-//   tree::cuda::run_stage<5>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
+(benchmark::State& state) {
+  PREPARE_DATA;
 
-//   // warmup
-//   tree::cuda::run_stage<6>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
+  // previous steps + warmup
+  tree::cuda::process_stage_1(appdata);
+  tree::cuda::process_stage_2(appdata);
+  tree::cuda::process_stage_3(appdata);
+  tree::cuda::process_stage_4(appdata);
+  tree::cuda::process_stage_5(appdata);
+  tree::cuda::process_stage_6(appdata);
+  tree::cuda::process_stage_7(appdata);
+  CheckCuda(cudaDeviceSynchronize());
 
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<6>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
+  for (auto _ : state) {
+    tree::cuda::run_stage<7>(appdata);
+    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+  }
+}
 
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage6)->Unit(benchmark::kMillisecond);
+BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond);
 
-// // ----------------------------------------------------------------
-// // Stage 7
-// // ----------------------------------------------------------------
-
-// BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
-// (benchmark::State& state) {
-//   PREPARE_DATA;
-
-//   tree::cuda::run_stage<1>(appdata);
-//   tree::cuda::run_stage<2>(appdata);
-//   tree::cuda::run_stage<3>(appdata);
-//   tree::cuda::run_stage<4>(appdata);
-//   tree::cuda::run_stage<5>(appdata);
-//   tree::cuda::run_stage<6>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
-
-//   // warmup
-//   tree::cuda::run_stage<7>(appdata);
-//   CheckCuda(cudaDeviceSynchronize());
-
-//   for (auto _ : state) {
-//     tree::cuda::run_stage<7>(appdata);
-//     CheckCuda(cudaDeviceSynchronize());
-//   }
-// }
-
-// BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond);
+// ----------------------------------------------------------------
+// Main
+// ----------------------------------------------------------------
 
 int main(int argc, char** argv) {
   parse_args(argc, argv);
