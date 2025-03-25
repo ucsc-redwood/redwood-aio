@@ -51,7 +51,32 @@ void run_multiple_stages(tree::AppData &data, cuda::CudaManager &) {
 // GPU stages
 // ---------------------------------------------------------------------
 
+// -----------------------------------------------------------------------------------------------
+// | Stage | Buffer Name                  | Allocated Size               | Real Data Used          |
+// |-------|------------------------------|------------------------------|-------------------------|
+// | 1     | u_input_points_s0            | n_input                      | n_input                 |
+// | 1     | u_morton_keys_s1             | n_input                      | n_input                 |
+// | 2     | u_morton_keys_sorted_s2      | n_input                      | n_input                 |
+// | 3     | u_morton_keys_unique_s3      | n_input                      | n_unique                |
+// | 4     | u_brt_prefix_n_s4            | n_input                      | n_brt_nodes             |
+// | 4     | u_brt_has_leaf_left_s4       | n_input                      | n_brt_nodes             |
+// | 4     | u_brt_has_leaf_right_s4      | n_input                      | n_brt_nodes             |
+// | 4     | u_brt_left_child_s4          | n_input                      | n_brt_nodes             |
+// | 4     | u_brt_parents_s4             | n_input                      | n_brt_nodes             |
+// | 5     | u_edge_count_s5              | n_input                      | n_brt_nodes             |
+// | 6     | u_edge_offset_s6             | n_input                      | n_brt_nodes             |
+// | 7     | u_oct_corner_s7              | n_input * 0.6f               | n_octree_nodes          |
+// | 7     | u_oct_cell_size_s7           | n_input * 0.6f               | n_octree_nodes          |
+// | 7     | u_oct_child_node_mask_s7     | n_input * 0.6f               | n_octree_nodes          |
+// | 7     | u_oct_child_leaf_mask_s7     | n_input * 0.6f               | n_octree_nodes          |
+// | 7     | u_oct_children_s7            | 8 * n_input * 0.6f           | 8 * n_octree_nodes      |
+// ------------------------------------------------------------------------------------------------
+
 namespace cuda {
+
+#define CudaAttachSingle(ptr) \
+  (cudaStreamAttachMemAsync(mgr.get_stream(), ptr, 0, cudaMemAttachSingle))
+#define CudaAttachHost(ptr) (cudaStreamAttachMemAsync(mgr.get_stream(), ptr, 0, cudaMemAttachHost))
 
 constexpr std::array<void (*)(tree::AppData &), 7> gpu_stages = {
     tree::cuda::process_stage_1,
@@ -66,11 +91,45 @@ constexpr std::array<void (*)(tree::AppData &), 7> gpu_stages = {
 template <int Start, int End>
   requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
 void run_multiple_stages(tree::AppData &data, cuda::CudaManager &mgr) {
+  CudaAttachSingle(data.u_input_points_s0.data());
+  CudaAttachSingle(data.u_morton_keys_s1.data());
+  CudaAttachSingle(data.u_morton_keys_sorted_s2.data());
+  CudaAttachSingle(data.u_morton_keys_unique_s3.data());
+  CudaAttachSingle(data.u_brt_prefix_n_s4.data());
+  CudaAttachSingle(data.u_brt_has_leaf_left_s4.data());
+  CudaAttachSingle(data.u_brt_has_leaf_right_s4.data());
+  CudaAttachSingle(data.u_brt_left_child_s4.data());
+  CudaAttachSingle(data.u_brt_parents_s4.data());
+  CudaAttachSingle(data.u_edge_count_s5.data());
+  CudaAttachSingle(data.u_edge_offset_s6.data());
+  CudaAttachSingle(data.u_oct_corner_s7.data());
+  CudaAttachSingle(data.u_oct_cell_size_s7.data());
+  CudaAttachSingle(data.u_oct_child_node_mask_s7.data());
+  CudaAttachSingle(data.u_oct_child_leaf_mask_s7.data());
+  CudaAttachSingle(data.u_oct_children_s7.data());
+
   for (int s = Start; s <= End; ++s) {
     gpu_stages[s - 1](data);
   }
 
   CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+
+  CudaAttachHost(data.u_input_points_s0.data());
+  CudaAttachHost(data.u_morton_keys_s1.data());
+  CudaAttachHost(data.u_morton_keys_sorted_s2.data());
+  CudaAttachHost(data.u_morton_keys_unique_s3.data());
+  CudaAttachHost(data.u_brt_prefix_n_s4.data());
+  CudaAttachHost(data.u_brt_has_leaf_left_s4.data());
+  CudaAttachHost(data.u_brt_has_leaf_right_s4.data());
+  CudaAttachHost(data.u_brt_left_child_s4.data());
+  CudaAttachHost(data.u_brt_parents_s4.data());
+  CudaAttachHost(data.u_edge_count_s5.data());
+  CudaAttachHost(data.u_edge_offset_s6.data());
+  CudaAttachHost(data.u_oct_corner_s7.data());
+  CudaAttachHost(data.u_oct_cell_size_s7.data());
+  CudaAttachHost(data.u_oct_child_node_mask_s7.data());
+  CudaAttachHost(data.u_oct_child_leaf_mask_s7.data());
+  CudaAttachHost(data.u_oct_children_s7.data());
 }
 
 }  // namespace cuda
