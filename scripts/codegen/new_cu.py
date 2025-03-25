@@ -11,19 +11,22 @@ from pathlib import Path
 APP_NAMESPACE_MAP = {
     "CifarDense": "cifar_dense",
     "CifarSparse": "cifar_sparse",
-    # We won't include "Tree" here because it has a wholly different approach
+    "Tree": "tree",
 }
 
+# Hardcoded list of CUDA-capable devices
+CUDA_DEVICES = ["jetson", "test"]  # Example device ID  # For testing
+
 
 ###############################################################################
-# Utility to generate the "normal" benchmark code (for non-Tree applications)
+# Utility to generate the benchmark code for CUDA applications
 ###############################################################################
-def generate_benchmark_code_default(schedule_json, application):
+def generate_benchmark_code_cuda(schedule_json, application):
     """
-    Generate the standard approach used by e.g. CifarDense or CifarSparse:
-      - memory resource from <app_namespace>::vulkan::Singleton
-      - init_appdata<app_namespace::AppData>(...)
-      - chunk<Task, app_namespace::AppData>(...)
+    Generate the CUDA approach:
+      - cuda::CudaManager mgr
+      - init_appdata<app_namespace::AppData>(mr, num_tasks)
+      - chunk<Task, app_namespace::AppData>(..., mgr)
     """
     sched = schedule_json["schedule"]
     schedule_id = sched["schedule_id"]
@@ -37,9 +40,11 @@ def generate_benchmark_code_default(schedule_json, application):
 
     lines = []
     lines.append(f"static void {func_name}(benchmark::State &state) {{")
+    lines.append("    cuda::CudaManager mgr;")
+    lines.append("")
     lines.append("    constexpr size_t num_tasks = 20;")
     lines.append("")
-    lines.append(f"    auto mr = {app_ns}::vulkan::Singleton::getInstance().get_mr();")
+    lines.append("    auto mr = &mgr.get_mr();")
     lines.append("")
     lines.append("    // Preallocate data for all tasks")
     lines.append(
@@ -83,11 +88,11 @@ def generate_benchmark_code_default(schedule_json, application):
         inQ = "q_input" if i == 0 else f"q_{i-1}_{i}"
         outQ = "nullptr" if i == n - 1 else f"&q_{i}_{i+1}"
 
-        if hw == "gpu_vulkan":
-            run_fun = f"vulkan::run_gpu_stages<{stage_min}, {stage_max}>"
+        if hw == "gpu_cuda":
+            run_fun = f"cuda::run_multiple_stages<{stage_min}, {stage_max}>"
             line = (
                 f"std::thread t{i+1}([&]() {{ "
-                f"chunk<Task, {app_ns}::AppData>({inQ}, {outQ}, {run_fun}); }});"
+                f"chunk<Task, {app_ns}::AppData>({inQ}, {outQ}, {run_fun}, mgr); }});"
             )
         else:
             # CPU path
@@ -103,7 +108,7 @@ def generate_benchmark_code_default(schedule_json, application):
             run_fun = f"omp::run_multiple_stages<{stage_min}, {stage_max}, {proc_type}, {threads}>"
             line = (
                 f"std::thread t{i+1}([&]() {{ "
-                f"chunk<Task, {app_ns}::AppData>({inQ}, {outQ}, {run_fun}); }});"
+                f"chunk<Task, {app_ns}::AppData>({inQ}, {outQ}, {run_fun}, mgr); }});"
             )
 
         lines.append(f"        {line}")
@@ -140,132 +145,13 @@ def generate_benchmark_code_default(schedule_json, application):
 
 
 ###############################################################################
-# Utility to generate the special "Tree" code
-###############################################################################
-def generate_benchmark_code_tree(schedule_json):
-    """
-    The specialized approach for 'Tree' schedules:
-      - Use tree::vulkan::Singleton
-      - init_vk_appdata<tree::vulkan::VkAppData_Safe>
-      - chunk<Task, tree::SafeAppData> (CPU) or chunk<Task, tree::vulkan::VkAppData_Safe> (GPU)
-    """
-    sched = schedule_json["schedule"]
-    schedule_id = sched["schedule_id"]
-    chunks = sched["chunks"]
-
-    func_name = f"BM_schedule_{schedule_id}"
-
-    lines = []
-    lines.append(f"static void {func_name}(benchmark::State &state) {{")
-    lines.append("    constexpr size_t num_tasks = 20;")
-    lines.append("")
-    lines.append("    auto mr = tree::vulkan::Singleton::getInstance().get_mr();")
-    lines.append("")
-    lines.append("    // Preallocate data for all tasks")
-    lines.append(
-        "    auto preallocated_data = init_vk_appdata<tree::vulkan::VkAppData_Safe>(mr, num_tasks);"
-    )
-    lines.append("")
-    lines.append("    // Track individual task times")
-    lines.append("    std::vector<double> task_times;")
-    lines.append("    task_times.reserve(num_tasks);")
-    lines.append("")
-    lines.append("    for (auto _ : state) {")
-    lines.append("        state.PauseTiming();")
-    lines.append(
-        "        moodycamel::ConcurrentQueue<Task*> q_input = init_tasks(preallocated_data);"
-    )
-    lines.append("")
-    lines.append("        auto start_time = std::chrono::high_resolution_clock::now();")
-    lines.append("        state.ResumeTiming();")
-    lines.append("")
-    lines.append(
-        "        // ---------------------------------------------------------------------"
-    )
-    lines.append("        // Automatically generated from schedule JSON")
-    lines.append("")
-
-    n = len(chunks)
-    for i in range(n - 1):
-        lines.append(f"        moodycamel::ConcurrentQueue<Task*> q_{i}_{i+1};")
-    lines.append("")
-
-    for i, ch in enumerate(chunks):
-        hw = ch["hardware"]
-        threads = ch["threads"]
-        stages = ch["stages"]
-        stage_min = min(stages)
-        stage_max = max(stages)
-
-        inQ = "q_input" if i == 0 else f"q_{i-1}_{i}"
-        outQ = "nullptr" if i == n - 1 else f"&q_{i}_{i+1}"
-
-        if hw == "gpu_vulkan":
-            run_fun = f"vulkan::run_gpu_stages<{stage_min}, {stage_max}>"
-            line = (
-                f"std::thread t{i+1}([&]() {{ "
-                f"chunk<Task, tree::vulkan::VkAppData_Safe>({inQ}, {outQ}, {run_fun}); }});"
-            )
-        else:
-            # CPU path => chunk<Task, tree::SafeAppData>
-            proc_map = {
-                "little": "ProcessorType::kLittleCore",
-                "medium": "ProcessorType::kMediumCore",
-                "big": "ProcessorType::kBigCore",
-            }
-            if hw not in proc_map:
-                raise ValueError(f"Unknown hardware type: {hw}")
-
-            proc_type = proc_map[hw]
-            run_fun = f"omp::run_multiple_stages<{stage_min}, {stage_max}, {proc_type}, {threads}>"
-            line = (
-                f"std::thread t{i+1}([&]() {{ "
-                f"chunk<Task, tree::SafeAppData>({inQ}, {outQ}, {run_fun}); }});"
-            )
-
-        lines.append(f"        {line}")
-
-    # Join
-    lines.append("")
-    for i in range(n):
-        lines.append(f"        t{i+1}.join();")
-
-    lines.append("")
-    lines.append(
-        "        // ---------------------------------------------------------------------"
-    )
-    lines.append("")
-    lines.append("        state.PauseTiming();")
-    lines.append("        auto end_time = std::chrono::high_resolution_clock::now();")
-    lines.append(
-        "        double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();"
-    )
-    lines.append("        task_times.push_back(elapsed / num_tasks);")
-    lines.append("        state.ResumeTiming();")
-    lines.append("    }  // for (auto _ : state)")
-    lines.append("")
-    lines.append("    // Calculate and report the actual average time per task")
-    lines.append(
-        "    double avg_task_time = "
-        "std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();"
-    )
-    lines.append('    state.counters["avg_time_per_task"] = avg_task_time;')
-    lines.append("}")
-    lines.append("")
-
-    return lines, func_name
-
-
-###############################################################################
 # Main code generator
 ###############################################################################
 def main():
     if len(sys.argv) < 4:
-        print(
-            "Usage: python generate_code.py <root_dir> <application> <output_file.hpp>"
-        )
+        print("Usage: python new_cu.py <root_dir> <application> <output_file.hpp>")
         print("Example:")
-        print("  python generate_code.py data/schedule_files/ Tree generated_code.hpp")
+        print("  python new_cu.py data/schedule_files/ CifarDense generated_code.hpp")
         sys.exit(1)
 
     root_dir = Path(sys.argv[1])
@@ -282,9 +168,9 @@ def main():
     lines_out.append('#include "task.hpp"')
     lines_out.append('#include "run_stages.hpp"')
     lines_out.append('#include "../templates.hpp"')
-    lines_out.append('#include "../templates_vk.hpp"')
+    lines_out.append('#include "../templates_cu.hpp"')
     lines_out.append("")
-    lines_out.append("// Automatically generated benchmark code")
+    lines_out.append("// Automatically generated benchmark code for CUDA")
     lines_out.append("")
 
     # We'll define a struct for schedule_table entries in a common namespace:
@@ -296,8 +182,9 @@ def main():
     lines_out.append("};")
     lines_out.append("} // namespace generated_schedules\n")
 
-    # Iterate each device directory under root
-    for device_dir in sorted(root_dir.iterdir()):
+    # Iterate through hardcoded CUDA devices list
+    for device in CUDA_DEVICES:
+        device_dir = root_dir / device
         if not device_dir.is_dir():
             continue
 
@@ -311,7 +198,7 @@ def main():
             continue
 
         # Start device namespace
-        device_ns = f"device_{device_dir.name}"
+        device_ns = f"device_{device}"
         lines_out.append(f"namespace {device_ns} {{")
 
         # We'll store (schedule_id, function_name) for the table
@@ -325,26 +212,28 @@ def main():
             schedule_id = sched["schedule_id"]
             chunks = sched["chunks"]
 
+            # Map gpu_vulkan to gpu_cuda for CUDA generation
+            for chunk in chunks:
+                if chunk["hardware"] == "gpu_vulkan":
+                    chunk["hardware"] = "gpu_cuda"
+
             # Skip unknown hardware if encountered
-            valid_hw = {"gpu_vulkan", "little", "medium", "big"}
+            valid_hw = {"gpu_cuda", "little", "medium", "big"}
             skip_it = False
             for c in chunks:
                 if c["hardware"] not in valid_hw:
                     print(
-                        f"Skipping {schedule_id} for device '{device_dir.name}' due to unknown hardware {c['hardware']}"
+                        f"Skipping {schedule_id} for device '{device}' due to unknown hardware {c['hardware']}"
                     )
                     skip_it = True
                     break
             if skip_it:
                 continue
 
-            # Now generate code with the correct function, depending on 'application'
-            if application == "Tree":
-                func_lines, func_name = generate_benchmark_code_tree(schedule_json)
-            else:
-                func_lines, func_name = generate_benchmark_code_default(
-                    schedule_json, application
-                )
+            # Generate CUDA code
+            func_lines, func_name = generate_benchmark_code_cuda(
+                schedule_json, application
+            )
 
             lines_out.extend(func_lines)
             schedule_records.append((schedule_id, func_name))
@@ -368,7 +257,7 @@ def main():
         outf.write("\n".join(lines_out))
         outf.write("\n")
 
-    print(f"Done. Generated code has been written to {output_path}")
+    print(f"Done. Generated CUDA code has been written to {output_path}")
 
 
 if __name__ == "__main__":

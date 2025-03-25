@@ -1,7 +1,9 @@
+#include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
 #include "../templates.hpp"
 #include "../templates_cu.hpp"
+#include "benchmarks/argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/common/cuda/manager.cuh"
 #include "generated_code.cuh"
@@ -117,15 +119,24 @@ int main(int argc, char **argv) {
 
   PARSE_ARGS_END;
 
-  spdlog::set_level(spdlog::level::debug);
+  spdlog::set_level(spdlog::level::off);
 
   warmup();
 
-  //   device_test::BM_schedule_test_CifarDense_schedule_001();
+  auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv);
+  benchmark::Initialize(&new_argc, new_argv.data());
 
-  //   device_jetson::BM_schedule_jetson_CifarDense_schedule_001();
+  // Register the benchmark based on the device ID and index
+  try {
+    register_benchmarks(g_device_id, schedule_index);
+  } catch (const std::runtime_error &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    return 1;
+  }
 
-  register_benchmarks("jetson", schedule_index);
+  if (benchmark::ReportUnrecognizedArguments(new_argc, new_argv.data())) return 1;
+  benchmark::RunSpecifiedBenchmarks();
+  benchmark::Shutdown();
 
   return 0;
 }

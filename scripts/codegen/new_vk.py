@@ -11,8 +11,16 @@ from pathlib import Path
 APP_NAMESPACE_MAP = {
     "CifarDense": "cifar_dense",
     "CifarSparse": "cifar_sparse",
+    "Tree": "tree",
     # We won't include "Tree" here because it has a wholly different approach
 }
+
+# Hardcoded list of Vulkan-capable devices
+VULKAN_DEVICES = [
+    "3A021JEHN02756",  # Example device ID
+    "9b034f1b",  # Example device ID
+    # "jetson",          # Example device ID
+]
 
 
 ###############################################################################
@@ -261,11 +269,9 @@ def generate_benchmark_code_tree(schedule_json):
 ###############################################################################
 def main():
     if len(sys.argv) < 4:
-        print(
-            "Usage: python generate_code.py <root_dir> <application> <output_file.hpp>"
-        )
+        print("Usage: python new_vk.py <root_dir> <application> <output_file.hpp>")
         print("Example:")
-        print("  python generate_code.py data/schedule_files/ Tree generated_code.hpp")
+        print("  python new_vk.py data/schedule_files/ Tree generated_code.hpp")
         sys.exit(1)
 
     root_dir = Path(sys.argv[1])
@@ -284,7 +290,7 @@ def main():
     lines_out.append('#include "../templates.hpp"')
     lines_out.append('#include "../templates_vk.hpp"')
     lines_out.append("")
-    lines_out.append("// Automatically generated benchmark code")
+    lines_out.append("// Automatically generated benchmark code for Vulkan")
     lines_out.append("")
 
     # We'll define a struct for schedule_table entries in a common namespace:
@@ -296,8 +302,9 @@ def main():
     lines_out.append("};")
     lines_out.append("} // namespace generated_schedules\n")
 
-    # Iterate each device directory under root
-    for device_dir in sorted(root_dir.iterdir()):
+    # Iterate through hardcoded Vulkan devices list
+    for device in VULKAN_DEVICES:
+        device_dir = root_dir / device
         if not device_dir.is_dir():
             continue
 
@@ -311,7 +318,7 @@ def main():
             continue
 
         # Start device namespace
-        device_ns = f"device_{device_dir.name}"
+        device_ns = f"device_{device}"
         lines_out.append(f"namespace {device_ns} {{")
 
         # We'll store (schedule_id, function_name) for the table
@@ -331,7 +338,7 @@ def main():
             for c in chunks:
                 if c["hardware"] not in valid_hw:
                     print(
-                        f"Skipping {schedule_id} for device '{device_dir.name}' due to unknown hardware {c['hardware']}"
+                        f"Skipping {schedule_id} for device '{device}' due to unknown hardware {c['hardware']}"
                     )
                     skip_it = True
                     break
@@ -368,7 +375,7 @@ def main():
         outf.write("\n".join(lines_out))
         outf.write("\n")
 
-    print(f"Done. Generated code has been written to {output_path}")
+    print(f"Done. Generated Vulkan code has been written to {output_path}")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
-target("new-pipe-cifar-dense-cu")
+target("bm-new-pipe-cifar-dense-cu")
 do
 	add_rules("pipe_config", "common_flags", "run_on_android")
 
@@ -9,11 +9,13 @@ do
 		"run_stages.hpp",
 		"../templates.hpp",
 		"../templates_cu.hpp",
+		"generated_code.cuh",
+
 		-- "generated_code.hpp",
 	})
 
 	add_files({
-		"main.cu",
+		"bm_main.cu",
 		"task.cpp",
 	})
 
