@@ -174,8 +174,12 @@ db-to-schedules:
 #     xmake format
 
 schedules-to-code-new:
-    python3 scripts/codegen/new.py data/schedule_files/ CifarDense pipe/new-cifar-dense-vk/generated_code.hpp
-    python3 scripts/codegen/new.py data/schedule_files/ CifarSparse pipe/new-cifar-sparse-vk/generated_code.hpp
-    python3 scripts/codegen/new.py data/schedule_files/ Tree pipe/new-tree-vk/generated_code.hpp
+    python3 scripts/codegen/new_vk.py data/schedule_files/ CifarDense pipe/new-cifar-dense-vk/generated_code.hpp
+    python3 scripts/codegen/new_vk.py data/schedule_files/ CifarSparse pipe/new-cifar-sparse-vk/generated_code.hpp
+    python3 scripts/codegen/new_vk.py data/schedule_files/ Tree pipe/new-tree-vk/generated_code.hpp
+
+    python3 scripts/codegen/new_cu.py data/schedule_files/ CifarDense pipe/new-cifar-dense-cu/generated_code.cuh
+    python3 scripts/codegen/new_cu.py data/schedule_files/ CifarSparse pipe/new-cifar-sparse-cu/generated_code.cuh
+    python3 scripts/codegen/new_cu.py data/schedule_files/ Tree pipe/new-tree-cu/generated_code.cuh
 
     xmake format

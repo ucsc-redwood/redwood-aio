@@ -1,14 +1,9 @@
 #include <benchmark/benchmark.h>
 #include <spdlog/spdlog.h>
 
-#include "../templates.hpp"
-#include "../templates_cu.hpp"
 #include "benchmarks/argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/common/cuda/manager.cuh"
 #include "generated_code.cuh"
-#include "run_stages.hpp"
-#include "task.hpp"
 
 __global__ void kernel_test() {}
 
@@ -16,42 +11,6 @@ void warmup() {
   kernel_test<<<1, 1>>>();
   CheckCuda(cudaDeviceSynchronize());
 }
-
-namespace device_test {
-
-static void BM_schedule_test_CifarDense_schedule_001() {
-  cuda::CudaManager mgr;
-
-  constexpr size_t num_tasks = 20;
-
-  auto mr = &mgr.get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_dense::AppData>(mr, num_tasks);
-
-  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-  moodycamel::ConcurrentQueue<Task *> q_0_1;
-  moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-  std::thread t1([&]() {
-    chunk<Task, cifar_dense::AppData>(
-        q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 4>, mgr);
-  });
-  std::thread t2([&]() {
-    chunk<Task, cifar_dense::AppData>(q_0_1, &q_1_2, cuda::run_multiple_stages<3, 7>, mgr);
-  });
-  std::thread t3([&]() {
-    chunk<Task, cifar_dense::AppData>(
-        q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kBigCore, 2>, mgr);
-  });
-
-  t1.join();
-  t2.join();
-  t3.join();
-}
-
-}  // namespace device_test
 
 struct DeviceInfo {
   const generated_schedules::ScheduleRecord *table;
