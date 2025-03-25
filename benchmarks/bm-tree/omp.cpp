@@ -7,13 +7,13 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/resources_path.hpp"
 #include "builtin-apps/tree/omp/dispatchers.hpp"
-#include "builtin-apps/tree/tree_appdata.hpp"
+// #include "builtin-apps/tree/tree_appdata.hpp"
 
 // ------------------------------------------------------------
 // Global variables
 // ------------------------------------------------------------
 
-static void run_baseline_unrestricted(tree::AppData& appdata, const int n_threads) {
+static void run_baseline_unrestricted(tree::SafeAppData& appdata, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
     tree::omp::process_stage_1(appdata);
@@ -28,10 +28,10 @@ static void run_baseline_unrestricted(tree::AppData& appdata, const int n_thread
 
 class OMP_Tree : public benchmark::Fixture {
  protected:
-  std::unique_ptr<tree::AppData> appdata_ptr;
+  std::unique_ptr<tree::SafeAppData> appdata_ptr;
 
   void SetUp(const ::benchmark::State&) override {
-    appdata_ptr = std::make_unique<tree::AppData>(std::pmr::new_delete_resource());
+    appdata_ptr = std::make_unique<tree::SafeAppData>(std::pmr::new_delete_resource());
 
     const auto stage_2_threads = std::thread::hardware_concurrency();
 
@@ -64,7 +64,7 @@ BENCHMARK_REGISTER_F(OMP_Tree, Baseline)
 
 template <int stage, ProcessorType processor_type>
   requires(stage >= 1 && stage <= 9)
-void run_stage(tree::AppData& appdata, const int n_threads) {
+void run_stage(tree::SafeAppData& appdata, const int n_threads) {
 #pragma omp parallel num_threads(n_threads)
   {
     // Bind to core if needed:
