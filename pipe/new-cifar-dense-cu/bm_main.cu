@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 
   warmup();
 
-  auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv);
+  auto [new_argc, new_argv] = sanitize_argc_argv_for_pipe_benchmark(argc, argv);
   benchmark::Initialize(&new_argc, new_argv.data());
 
   // Register the benchmark based on the device ID and index

@@ -56,8 +56,8 @@ inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(
 // ---------------------------------------------------------------------
 
 [[nodiscard]]
-inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(const int argc,
-                                                                           char** argv) {
+inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_pipe_benchmark(
+    const int argc, char** argv) {
   // print original args
   for (int i = 0; i < argc; ++i) {
     std::cout << "Original arg " << i << ": " << argv[i] << std::endl;
@@ -95,6 +95,9 @@ inline std::pair<int, std::vector<char*>> sanitize_argc_argv_for_benchmark(const
 
   // Add additional arguments
   // stored_strings.push_back("--benchmark_repetitions=5");
+
+  // stored_strings.push_back("--benchmark_out=" + benchmark_out_filename);
+  // stored_strings.push_back("--benchmark_out_format=json");
 
   // Print the full argument list
   std::cout << "\nFull argument list:\n";
