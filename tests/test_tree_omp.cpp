@@ -20,7 +20,9 @@ TEST(OMP_Tree, Stage1) {
   PREPARE_APPDATA;
 
 #pragma omp parallel
-  { tree::omp::run_stage<1>(appdata); }
+  {
+    tree::omp::run_stage<1>(appdata);
+  }
 
   test_tree::verify_stage_1(appdata);
 }
@@ -35,7 +37,9 @@ TEST(OMP_Tree, Stage2) {
   tree::omp::run_stage<1>(appdata);
 
 #pragma omp parallel
-  { tree::omp::run_stage<2>(appdata); }
+  {
+    tree::omp::run_stage<2>(appdata);
+  }
 
   test_tree::verify_stage_2(appdata);
 }
@@ -51,7 +55,9 @@ TEST(OMP_Tree, Stage3) {
   tree::omp::run_stage<2>(appdata);
 
 #pragma omp parallel
-  { tree::omp::run_stage<3>(appdata); }
+  {
+    tree::omp::run_stage<3>(appdata);
+  }
 
   test_tree::verify_stage_3(appdata);
 }
@@ -68,7 +74,9 @@ TEST(OMP_Tree, Stage4) {
   tree::omp::run_stage<3>(appdata);
 
 #pragma omp parallel
-  { tree::omp::run_stage<4>(appdata); }
+  {
+    tree::omp::run_stage<4>(appdata);
+  }
 
   test_tree::verify_stage_4(appdata);
 }
@@ -86,7 +94,9 @@ TEST(OMP_Tree, Stage5) {
   tree::omp::run_stage<4>(appdata);
 
 #pragma omp parallel
-  { tree::omp::run_stage<5>(appdata); }
+  {
+    tree::omp::run_stage<5>(appdata);
+  }
 
   test_tree::verify_stage_5(appdata);
 }
@@ -105,7 +115,9 @@ TEST(OMP_Tree, Stage6) {
   tree::omp::run_stage<5>(appdata);
 
 #pragma omp parallel
-  { tree::omp::run_stage<6>(appdata); }
+  {
+    tree::omp::run_stage<6>(appdata);
+  }
 
   test_tree::verify_stage_6(appdata);
 }
@@ -125,7 +137,9 @@ TEST(OMP_Tree, Stage7) {
   tree::omp::run_stage<6>(appdata);
 
 #pragma omp parallel
-  { tree::omp::run_stage<7>(appdata); }
+  {
+    tree::omp::run_stage<7>(appdata);
+  }
 
   test_tree::verify_stage_7(appdata);
 }
