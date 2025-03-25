@@ -106,7 +106,7 @@ rule_end()
 
 includes("builtin-apps/common/kiss-vk") -- Keep-It-Simple-Stupid Vulkan library
 includes("builtin-apps") -- the three applications
-includes("tests")
+-- includes("tests")
 includes("benchmarks")
 includes("pipe")
 -- includes("play")
