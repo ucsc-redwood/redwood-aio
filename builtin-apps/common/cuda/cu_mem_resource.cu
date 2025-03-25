@@ -56,12 +56,14 @@ bool CudaManagedResource::do_is_equal(const std::pmr::memory_resource &other) co
 //   }
 
 //   spdlog::trace(
-//       "CudaPinnedResource::do_allocate: {}, {}", static_cast<void *>(d_ptr), format_bytes(bytes));
+//       "CudaPinnedResource::do_allocate: {}, {}", static_cast<void *>(d_ptr),
+//       format_bytes(bytes));
 
 //   return d_ptr;
 // }
 
-// void CudaPinnedResource::do_deallocate(void *p, std::size_t /*bytes*/, std::size_t /*alignment*/) {
+// void CudaPinnedResource::do_deallocate(void *p, std::size_t /*bytes*/, std::size_t /*alignment*/)
+// {
 //   spdlog::trace("CudaPinnedResource::do_deallocate: {}", static_cast<void *>(p));
 //   CheckCuda(cudaFreeHost(p));
 // }

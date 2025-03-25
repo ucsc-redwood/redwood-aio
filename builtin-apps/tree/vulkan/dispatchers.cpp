@@ -109,7 +109,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 1 (Input -> Morton)
 // // ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_1(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 1, &appdata);
 
 //   auto algo = cached_algorithms.at("morton").get();
@@ -143,7 +144,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 2 (Morton -> Sorted Morton)
 // // ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_2(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_2(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 2, &appdata);
 
 //   auto algo = cached_algorithms.at("radixsort").get();
@@ -168,7 +170,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 //   // seq->sync();
 
 //   // #ifdef __ANDROID__
-//   // std::iota(appdata.u_morton_keys_sorted_s2.begin(), appdata.u_morton_keys_sorted_s2.end(), 0);
+//   // std::iota(appdata.u_morton_keys_sorted_s2.begin(), appdata.u_morton_keys_sorted_s2.end(),
+//   0);
 //   // #endif
 
 //   std::ranges::copy(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2.begin());
@@ -191,11 +194,13 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 3 (Sorted Morton -> Unique Sorted Morton)
 // // ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_3(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
 
 //   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
-//                                      appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
+//                                      appdata.u_morton_keys_sorted_s2.data() +
+//                                      appdata.get_n_input(),
 //                                      appdata.u_morton_keys_unique_s3.data());
 //   const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3.data(), last);
 
@@ -207,7 +212,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 4 (Unique Sorted Morton -> BRT)
 // // ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_4(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 4, &appdata);
 
 //   const int32_t n = appdata.get_n_unique();
@@ -263,7 +269,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 5 (BRT -> Edge Count)
 // // ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_5(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 5, &appdata);
 
 //   auto algo = cached_algorithms.at("edge_count").get();
@@ -296,7 +303,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 6 (Edge Count -> Edge Offset, prefix sum)
 // // ----------------------------------------------------------------------------
 
-// void Singleton::process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_6(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 6, &appdata);
 
 //   const int start = 0;
@@ -316,7 +324,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 // // Stage 7 (Edge Offset -> Octree)
 // //----------------------------------------------------------------------------
 
-// void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage) {
+// void Singleton::process_stage_7(tree::AppData &appdata, [[maybe_unused]] TmpStorage &tmp_storage)
+// {
 //   LOG_KERNEL(LogKernelType::kVK, 7, &appdata);
 
 //   auto algo = cached_algorithms.at("build_octree").get();
@@ -435,7 +444,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 //   // seq->sync();
 
 //   // #ifdef __ANDROID__
-//   // std::iota(appdata.u_morton_keys_sorted_s2.begin(), appdata.u_morton_keys_sorted_s2.end(), 0);
+//   // std::iota(appdata.u_morton_keys_sorted_s2.begin(), appdata.u_morton_keys_sorted_s2.end(),
+//   0);
 //   // #endif
 
 //   std::ranges::copy(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2.begin());
@@ -462,7 +472,8 @@ Singleton::Singleton() : engine(kiss_vk::Engine()), seq(engine.make_seq()) {
 //   LOG_KERNEL(LogKernelType::kVK, 3, &appdata);
 
 //   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
-//                                      appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
+//                                      appdata.u_morton_keys_sorted_s2.data() +
+//                                      appdata.get_n_input(),
 //                                      appdata.u_morton_keys_unique_s3.data());
 //   const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3.data(), last);
 

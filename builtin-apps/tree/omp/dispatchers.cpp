@@ -45,7 +45,8 @@ namespace tree::omp {
 //   // ----------------------------------------------------------------------------
 
 //   const int tid = omp_get_thread_num();
-//   omp::parallel_sort(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, tid, num_threads);
+//   omp::parallel_sort(appdata.u_morton_keys_s1, appdata.u_morton_keys_sorted_s2, tid,
+//   num_threads);
 
 //   // omp::RadixSortTemp<uint32_t> temp_storage(appdata.get_n_input(), num_threads);
 
@@ -85,7 +86,8 @@ namespace tree::omp {
 //   LOG_KERNEL(LogKernelType::kOMP, 3, &appdata);
 
 //   const auto last = std::unique_copy(appdata.u_morton_keys_sorted_s2.data(),
-//                                      appdata.u_morton_keys_sorted_s2.data() + appdata.get_n_input(),
+//                                      appdata.u_morton_keys_sorted_s2.data() +
+//                                      appdata.get_n_input(),
 //                                      appdata.u_morton_keys_unique_s3.data());
 //   const auto n_unique = std::distance(appdata.u_morton_keys_unique_s3.data(), last);
 
