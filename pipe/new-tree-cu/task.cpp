@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-[[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(std::vector<tree::AppData> &data,
+[[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(std::vector<tree::SafeAppData> &data,
                                                              const size_t initial_capacity) {
   // Initialize queue with reasonable capacity to avoid resizing
   moodycamel::ConcurrentQueue<Task *> tasks(initial_capacity);

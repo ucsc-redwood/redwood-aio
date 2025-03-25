@@ -189,6 +189,7 @@ SafeAppData::SafeAppData(std::pmr::memory_resource* mr)
       u_morton_keys_unique_s3(HostTreeManager::getInstance().getAppData()->u_morton_keys_unique_s3,
                               mr),
       u_morton_keys_unique_s3_out(n_input, mr),  // Same size as input
+      u_num_selected_out(1, mr),                 // Used by CUDA for unique count
       u_brt_prefix_n_s4(HostTreeManager::getInstance().getAppData()->u_brt_prefix_n_s4, mr),
       u_brt_has_leaf_left_s4(HostTreeManager::getInstance().getAppData()->u_brt_has_leaf_left_s4,
                              mr),

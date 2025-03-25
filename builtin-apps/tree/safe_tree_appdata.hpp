@@ -42,6 +42,9 @@ struct SafeAppData {
 
   std::pmr::vector<uint32_t> u_morton_keys_unique_s3_out;
 
+  // Used by CUDA implementation for unique count
+  std::pmr::vector<uint32_t> u_num_selected_out;
+
   // --------------------------------------------------------------------------
   // Stage 4: unique morton -> Binary Radix Tree (BRT)
   // --------------------------------------------------------------------------
