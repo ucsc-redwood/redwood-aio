@@ -29,10 +29,6 @@ end
 
 if has_config("use_cuda") then
 	includes("new-cifar-dense-cu")	
-	
-	-- includes("cifar-dense-cu")
-	-- includes("cifar-sparse-cu")
-	-- includes("tree-cu")
-	-- includes("try-cifar-dense-cu")
-	-- includes("try-tree-cu")
+	includes("new-cifar-sparse-cu")
+	includes("new-tree-cu")
 end

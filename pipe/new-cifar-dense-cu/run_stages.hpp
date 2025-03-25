@@ -41,7 +41,6 @@ void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &) {
       bind_thread_to_cores(g_big_cores);
     }
 
-#pragma unroll
     for (int s = Start; s <= End; ++s) {
       cpu_stages[s - 1](data);
     }
@@ -139,7 +138,6 @@ void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &mgr) {
   CudaAttachSingle(data.u_linear_weights.data());
   CudaAttachSingle(data.u_linear_out.data());
 
-#pragma unroll
   for (int s = Start; s <= End; ++s) {
     gpu_stages[s - 1](data);
   }

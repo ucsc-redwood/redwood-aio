@@ -3,7 +3,14 @@
 
 #include "benchmarks/argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
-#include "generated_code.hpp"
+#include "generated_code.cuh"
+
+__global__ void kernel_test() {}
+
+void warmup() {
+  kernel_test<<<1, 1>>>();
+  CheckCuda(cudaDeviceSynchronize());
+}
 
 struct DeviceInfo {
   const generated_schedules::ScheduleRecord *table;
@@ -12,10 +19,7 @@ struct DeviceInfo {
 
 // Now create a lookup map from the string device ID to the device's table info
 static std::map<std::string, DeviceInfo> g_device_map = {
-    {"9b034f1b", {device_9b034f1b::schedule_table, device_9b034f1b::schedule_count}},
-    {"3A021JEHN02756",
-     {device_3A021JEHN02756::schedule_table, device_3A021JEHN02756::schedule_count}},
-    // {"jetson", {device_jetson::schedule_table, device_jetson::schedule_count}},
+    {"jetson", {device_jetson::schedule_table, device_jetson::schedule_count}},
 };
 
 // Helper function to register a single benchmark for a given device & schedule index
@@ -75,6 +79,8 @@ int main(int argc, char **argv) {
   PARSE_ARGS_END;
 
   spdlog::set_level(spdlog::level::off);
+
+  warmup();
 
   auto [new_argc, new_argv] = sanitize_argc_argv_for_benchmark(argc, argv);
   benchmark::Initialize(&new_argc, new_argv.data());

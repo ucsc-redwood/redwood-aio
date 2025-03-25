@@ -15,7 +15,7 @@ static std::map<std::string, DeviceInfo> g_device_map = {
     {"9b034f1b", {device_9b034f1b::schedule_table, device_9b034f1b::schedule_count}},
     {"3A021JEHN02756",
      {device_3A021JEHN02756::schedule_table, device_3A021JEHN02756::schedule_count}},
-    {"jetson", {device_jetson::schedule_table, device_jetson::schedule_count}},
+    // {"jetson", {device_jetson::schedule_table, device_jetson::schedule_count}},
 };
 
 // Helper function to register a single benchmark for a given device & schedule index

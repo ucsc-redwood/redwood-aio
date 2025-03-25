@@ -38,8 +38,7 @@ void run_multiple_stages(tree::SafeAppData &data) {
       bind_thread_to_cores(g_big_cores);
     }
 
-// don't know if this has any effect
-#pragma unroll
+    // don't know if this has any effect
     for (int s = Start; s <= End; ++s) {
       cpu_stages[s - 1](data);
     }
