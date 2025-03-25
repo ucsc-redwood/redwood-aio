@@ -22,14 +22,9 @@ rule_end()
 -- ----------------------------------------------------------------
 
 if has_config("use_vulkan") then
-	-- includes("cifar-dense-vk")
 	includes("new-cifar-dense-vk")
 	includes("new-cifar-sparse-vk")
 	includes("new-tree-vk")
-	includes("try-new-tree-vk")
-	-- includes("cifar-sparse-vk")
-	-- includes("tree-vk")
-	-- includes("try-tree-vk")
 end
 
 if has_config("use_cuda") then
