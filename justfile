@@ -139,6 +139,46 @@ cat-android-tmp:
 
 
 #  ----------------------------------------------------------------------------
+#  Run benchmarks 
+#  ----------------------------------------------------------------------------
+
+run-jetson-cu-bm:
+    xmake r bm-cifar-dense-cu --device jetson
+    xmake r bm-cifar-sparse-cu --device jetson
+    xmake r bm-tree-cu --device jetson
+
+run-jetson-omp-bm:
+    xmake r bm-cifar-dense-omp --device jetson
+    xmake r bm-cifar-sparse-omp --device jetson
+    xmake r bm-tree-omp --device jetson
+
+run-jetson-bm:
+    run-jetson-cu-bm
+    run-jetson-omp-bm
+
+run-android-vk-bm:
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-dense-vk
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-sparse-vk
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-tree-vk
+
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-cifar-dense-vk
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-cifar-sparse-vk
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-tree-vk
+
+run-android-omp-bm:
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-dense-omp
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-sparse-omp
+    python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-tree-omp
+
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-cifar-dense-omp
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-cifar-sparse-omp
+    python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-tree-omp
+
+run-android-bm:
+    run-android-vk-bm
+    run-android-omp-bm
+
+#  ----------------------------------------------------------------------------
 #  from google benchmark output (json) to schedules (json)
 #  ----------------------------------------------------------------------------
 
