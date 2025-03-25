@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "cuda/temp_storage.hpp"
-
 namespace tree {
 
 // From empirical observation, 60% memory is a good ratio for octree
@@ -110,11 +108,6 @@ struct AppData {
   // Will, we almost always use OMP
   // and cuda is only used in cuda
   // --------------------------------------------------------------------------
-
-  // omp::TmpStorage omp_temp_storage;
-  // std::optional<cuda::TempStorage> cuda_temp_storage;
-
-  // uint32_t* u_num_selected_out = nullptr;
 
   // CUDA backend only
   std::pmr::vector<int32_t> u_num_selected_out;
