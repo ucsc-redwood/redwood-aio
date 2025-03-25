@@ -153,7 +153,8 @@ cub::CachingDeviceAllocator g_allocator(true);  // Caching allocator for device 
 
 //   LOG_KERNEL(LogKernelType::kCUDA, 5, &app_data);
 
-//   ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(app_data.u_brt_prefix_n_s4.data(),
+//   ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim,
+//   sharedMem>>>(app_data.u_brt_prefix_n_s4.data(),
 //                                                                  app_data.u_brt_parents_s4.data(),
 //                                                                  app_data.u_edge_count_s5.data(),
 //                                                                  app_data.get_n_brt_nodes());
@@ -454,21 +455,21 @@ void process_stage_7(SafeAppData &app_data) {
 
   CubDebugExit(cudaDeviceSynchronize());
 
-  // // Second kernel: Link leaf nodes
-  // ::cuda::kernels::k_LinkLeafNodes<<<gridDim, blockDim, sharedMem>>>(
-  //     reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7_out.data()),
-  //     app_data.u_oct_child_leaf_mask_s7_out.data(),
-  //     app_data.u_edge_offset_s6.data(),
-  //     app_data.u_edge_count_s5.data(),
-  //     app_data.u_morton_keys_unique_s3.data(),
-  //     app_data.u_brt_has_leaf_left_s4.data(),
-  //     app_data.u_brt_has_leaf_right_s4.data(),
-  //     app_data.u_brt_prefix_n_s4.data(),
-  //     app_data.u_brt_parents_s4.data(),
-  //     app_data.u_brt_left_child_s4.data(),
-  //     app_data.get_n_brt_nodes());
+  // Second kernel: Link leaf nodes
+  ::cuda::kernels::k_LinkLeafNodes<<<gridDim, blockDim, sharedMem>>>(
+      reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7_out.data()),
+      app_data.u_oct_child_leaf_mask_s7_out.data(),
+      app_data.u_edge_offset_s6.data(),
+      app_data.u_edge_count_s5.data(),
+      app_data.u_morton_keys_unique_s3.data(),
+      app_data.u_brt_has_leaf_left_s4.data(),
+      app_data.u_brt_has_leaf_right_s4.data(),
+      app_data.u_brt_prefix_n_s4.data(),
+      app_data.u_brt_parents_s4.data(),
+      app_data.u_brt_left_child_s4.data(),
+      app_data.get_n_brt_nodes());
 
-  // CubDebugExit(cudaDeviceSynchronize());
+  CubDebugExit(cudaDeviceSynchronize());
 }
 
 }  // namespace tree::cuda
