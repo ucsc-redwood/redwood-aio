@@ -43,7 +43,7 @@
     "gpu_backend": "cuda",
     "description": "N/A"
   },
-  "jetson-low-power": {
+  "jetsonlowpower": {
     "name": "NVIDIA Jetson Orin Nano (Low Power Mode)",
     "pinnable_cores": {
       "little": 4,

@@ -60,7 +60,7 @@ DeviceRegistry::DeviceRegistry() {
                           }));
 
   // ----------------------------------------------------------------------------
-  // For "jetson-low-power": 4 cores all of one type.
+  // For "jetsonlowpower": 4 cores all of one type.
   // ----------------------------------------------------------------------------
 
   // bm-check-core-types 2025-03-20T10:04:46-07:00 Running
@@ -84,8 +84,8 @@ DeviceRegistry::DeviceRegistry() {
   // GraphBFS/CoreID1/1         29.8 ms         29.7 ms           21
   // GraphBFS/CoreID2/2         29.7 ms         29.6 ms           21
   // GraphBFS/CoreID3/3         29.9 ms         29.8 ms           22
-  devices_.emplace("jetson-low-power",
-                   Device("jetson-low-power",
+  devices_.emplace("jetsonlowpower",
+                   Device("jetsonlowpower",
                           std::vector<Core>{
                               {0, ProcessorType::kLittleCore, true},
                               {1, ProcessorType::kLittleCore, true},
