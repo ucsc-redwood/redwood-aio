@@ -153,8 +153,8 @@ run-jetson-omp-bm:
     xmake r bm-tree-omp --device jetson
 
 run-jetson-bm:
-    run-jetson-cu-bm
-    run-jetson-omp-bm
+    just run-jetson-cu-bm
+    just run-jetson-omp-bm
 
 run-android-vk-bm:
     python3 scripts/collect_android_benchmarks.py --device 3A021JEHN02756 --benchmark bm-cifar-dense-vk
@@ -175,8 +175,8 @@ run-android-omp-bm:
     python3 scripts/collect_android_benchmarks.py --device 9b034f1b --benchmark bm-tree-omp
 
 run-android-bm:
-    run-android-vk-bm
-    run-android-omp-bm
+    just run-android-vk-bm
+    just run-android-omp-bm
 
 #  ----------------------------------------------------------------------------
 #  from google benchmark output (json) to schedules (json)
