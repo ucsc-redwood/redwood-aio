@@ -1,6 +1,3 @@
-----------------------------------------------------------------------------------------------------------
-Benchmark                                                Time             CPU   Iterations UserCounters...
-----------------------------------------------------------------------------------------------------------
 9b034f1b_CifarSparse_schedule_001/iterations:10       96.5 ms         1.19 ms           10 avg_time_per_task=4.82119
 9b034f1b_CifarSparse_schedule_002/iterations:10       95.1 ms        0.842 ms           10 avg_time_per_task=4.75511
 9b034f1b_CifarSparse_schedule_003/iterations:10        100 ms         1.03 ms           10 avg_time_per_task=5.00941

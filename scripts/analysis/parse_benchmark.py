@@ -35,17 +35,33 @@ def parse_benchmark_output(output_text: str) -> List[Tuple[str, str, str, float]
     lines = output_text.strip().split("\n")
 
     for line in lines:
-        # Extract device, app name, schedule ID and avg_time_per_task using regex
-        match = re.match(
-            r"([A-Z0-9]+)_(\w+)_schedule_(\d+)/iterations:\d+\s+\d+\.\d+\s+ms\s+\d+\.\d+\s+ms\s+\d+\s+avg_time_per_task=(\d+\.\d+)",
-            line,
-        )
-        if match:
-            device = match.group(1)
-            app_name = match.group(2)
-            schedule_id = match.group(3)
-            avg_time = float(match.group(4))
+        if not line.strip():
+            continue
+
+        # Extract components from the beginning of the line
+        parts = line.split("/")
+        if len(parts) < 2:
+            continue
+
+        full_id = parts[0]
+        id_components = full_id.split("_")
+
+        if len(id_components) < 4:
+            print(f"Warning: Could not parse components from line: {line}")
+            continue
+
+        device = id_components[0]
+        app_name = id_components[1]
+        # Assuming 'schedule' is always part of the component
+        schedule_id = id_components[3]
+
+        # Extract avg_time_per_task from the end of the line
+        avg_time_match = re.search(r"avg_time_per_task=(\d+\.\d+)", line)
+        if avg_time_match:
+            avg_time = float(avg_time_match.group(1))
             results.append((device, app_name, schedule_id, avg_time))
+        else:
+            print(f"Warning: Could not find avg_time_per_task in line: {line}")
 
     return results
 
@@ -156,7 +172,9 @@ def main():
     parser = argparse.ArgumentParser(
         description="Parse benchmark output and compare with schedule files"
     )
-    parser.add_argument("benchmark_file", help="Path to the benchmark output file")
+    parser.add_argument(
+        "benchmark_file", help="Path to the benchmark output file (txt)"
+    )
     parser.add_argument(
         "--schedule-root",
         default="data/schedule_files_v2",
@@ -181,7 +199,7 @@ def main():
     print("\nSchedule Comparison Results:")
     print("-" * 100)
     print(
-        f"{'Device':<10} {'App':<10} {'Schedule ID':<12} {'Max Chunk Time':<15} {'Avg Time/Task':<15} {'Difference %':<15}"
+        f"{'Device':<15} {'App':<15} {'Schedule ID':<12} {'Max Chunk Time':<15} {'Avg Time/Task':<15} {'Difference %':<15}"
     )
     print("-" * 100)
 
@@ -202,7 +220,7 @@ def main():
 
     for result in sorted_results:
         print(
-            f"{result.device:<10} {result.app_name:<10} {result.schedule_id:<12} "
+            f"{result.device:<15} {result.app_name:<15} {result.schedule_id:<12} "
             f"{result.max_chunk_time:<15.2f} {result.avg_time_per_task:<15.2f} {result.difference_percentage:<15.2f}%"
         )
 
