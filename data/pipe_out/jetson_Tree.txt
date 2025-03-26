@@ -1,0 +1,14 @@
+jetson_Tree_schedule_001/iterations:10        137 ms        0.223 ms           10 avg_time_per_task=6.82617
+jetson_Tree_schedule_002/iterations:10        127 ms        0.219 ms           10 avg_time_per_task=6.3601
+jetson_Tree_schedule_003/iterations:10        143 ms        0.174 ms           10 avg_time_per_task=7.16904
+jetson_Tree_schedule_004/iterations:10        316 ms        0.180 ms           10 avg_time_per_task=15.7758
+jetson_Tree_schedule_005/iterations:10        160 ms        0.223 ms           10 avg_time_per_task=7.98592
+jetson_Tree_schedule_006/iterations:10        314 ms        0.177 ms           10 avg_time_per_task=15.6788
+jetson_Tree_schedule_007/iterations:10        150 ms        0.237 ms           10 avg_time_per_task=7.52234
+jetson_Tree_schedule_008/iterations:10        169 ms        0.177 ms           10 avg_time_per_task=8.45547
+jetson_Tree_schedule_009/iterations:10        163 ms        0.133 ms           10 avg_time_per_task=8.16318
+jetson_Tree_schedule_010/iterations:10        454 ms        0.179 ms           10 avg_time_per_task=22.7172
+jetson_Tree_schedule_011/iterations:10        450 ms        0.169 ms           10 avg_time_per_task=22.4846
+jetson_Tree_schedule_012/iterations:10        444 ms        0.191 ms           10 avg_time_per_task=22.2133
+jetson_Tree_schedule_013/iterations:10        197 ms        0.233 ms           10 avg_time_per_task=9.84397
+jetson_Tree_schedule_014/iterations:10        319 ms        0.157 ms           10 avg_time_per_task=15.948
