@@ -228,3 +228,7 @@ analysis:
      python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarDense.txt
      python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarSparse.txt
      python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_Tree.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarDense.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarSparse.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_Tree.txt
+
