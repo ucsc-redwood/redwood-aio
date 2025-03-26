@@ -86,13 +86,13 @@ cat-android-tmp:
 #     xmake r bm-cifar-dense-omp --device jetson
 #     xmake r bm-cifar-sparse-omp --device jetson
 
-# run-jetson-low-power-bm:
-#     xmake r bm-tree-cu --device jetson-low-power 
-#     xmake r bm-cifar-dense-cu --device jetson-low-power
-#     xmake r bm-cifar-sparse-cu --device jetson-low-power
-#     xmake r bm-tree-omp --device jetson-low-power 
-#     xmake r bm-cifar-dense-omp --device jetson-low-power
-#     xmake r bm-cifar-sparse-omp --device jetson-low-power
+# run-jetsonlowpower-bm:
+#     xmake r bm-tree-cu --device jetsonlowpower 
+#     xmake r bm-cifar-dense-cu --device jetsonlowpower
+#     xmake r bm-cifar-sparse-cu --device jetsonlowpower
+#     xmake r bm-tree-omp --device jetsonlowpower 
+#     xmake r bm-cifar-dense-omp --device jetsonlowpower
+#     xmake r bm-cifar-sparse-omp --device jetsonlowpower
 
 # cuda-codegen-jetson:
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/generated-schedules/ --out_dir pipe/cifar-dense-cu/generated-code/ --device jetson --application CifarDense
@@ -197,27 +197,27 @@ run-android-bm:
 #  ----------------------------------------------------------------------------
 
 db-to-schedules:
-    python3 scripts/gen_schedules.py -d jetson -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d jetson -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d jetson -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    # python3 scripts/gen_schedules.py -d jetson-low-power -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    # python3 scripts/gen_schedules.py -d jetson-low-power -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    # python3 scripts/gen_schedules.py -d jetson-low-power -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarDense -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarSparse -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
-    python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable-benchmark-out/ -o ./data/schedule_files --top 50
+    python3 scripts/gen_schedules.py -d jetson -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d jetson -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d jetson -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d jetsonlowpower -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d jetsonlowpower -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d jetsonlowpower -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
 
 
 # schedules-to-code:
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application CifarDense --out_name jetson_cifar_dense_schedules.hpp
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application CifarSparse --out_name jetson_cifar_sparse_schedules.hpp
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson --application Tree --out_name jetson_tree_schedules.hpp
-#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application CifarDense --out_name jetson_low_power_cifar_dense_schedules.hpp
-#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application CifarSparse --out_name jetson_low_power_cifar_sparse_schedules.hpp
-#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetson-low-power --application Tree --out_name jetson_low_power_tree_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetsonlowpower --application CifarDense --out_name jetson_low_power_cifar_dense_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetsonlowpower --application CifarSparse --out_name jetson_low_power_cifar_sparse_schedules.hpp
+#     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device jetsonlowpower --application Tree --out_name jetson_low_power_tree_schedules.hpp
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application CifarDense --out_name 3A021JEHN02756_cifar_dense_schedules.hpp
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application CifarSparse --out_name 3A021JEHN02756_cifar_sparse_schedules.hpp
 #     python3 scripts/codegen/multi_schedule.py --in_dir data/schedule_files/ --out_dir ./tmp --device 3A021JEHN02756 --application Tree --out_name 3A021JEHN02756_tree_schedules.hpp

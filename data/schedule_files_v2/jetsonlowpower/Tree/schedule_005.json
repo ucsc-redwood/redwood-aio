@@ -1,0 +1,37 @@
+{
+  "schedule": {
+    "schedule_id": "jetsonlowpower_Tree_schedule_005",
+    "device_id": "jetsonlowpower",
+    "application": "Tree",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "little",
+        "threads": 4,
+        "stages": [
+          1,
+          2,
+          3
+        ],
+        "time": 7.137436842880195
+      },
+      {
+        "name": "chunk2",
+        "hardware": "gpu_cuda",
+        "threads": 1,
+        "stages": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "time": 5.137607430649371
+      }
+    ]
+  },
+  "max_chunk_time": 7.137436842880195,
+  "cpu_baseline_time": 87.82193452502725,
+  "gpu_baseline_time": 8.920334918803928,
+  "cpu_speedup": 12.304407934990309,
+  "gpu_speedup": 1.2497952857827703
+}

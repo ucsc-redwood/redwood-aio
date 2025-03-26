@@ -1,0 +1,39 @@
+{
+  "schedule": {
+    "schedule_id": "jetsonlowpower_CifarSparse_schedule_016",
+    "device_id": "jetsonlowpower",
+    "application": "CifarSparse",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "gpu_cuda",
+        "threads": 1,
+        "stages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "time": 14.778834943284675
+      },
+      {
+        "name": "chunk2",
+        "hardware": "little",
+        "threads": 4,
+        "stages": [
+          8,
+          9
+        ],
+        "time": 0.9393560616016368
+      }
+    ]
+  },
+  "max_chunk_time": 14.778834943284675,
+  "cpu_baseline_time": 32.835986628578254,
+  "gpu_baseline_time": 17.03903051324868,
+  "cpu_speedup": 2.2218251137244436,
+  "gpu_speedup": 1.1529346243217238
+}

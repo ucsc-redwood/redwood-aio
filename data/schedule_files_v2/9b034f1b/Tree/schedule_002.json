@@ -1,0 +1,45 @@
+{
+  "schedule": {
+    "schedule_id": "9b034f1b_Tree_schedule_002",
+    "device_id": "9b034f1b",
+    "application": "Tree",
+    "chunks": [
+      {
+        "name": "chunk1",
+        "hardware": "medium",
+        "threads": 2,
+        "stages": [
+          1,
+          2,
+          3
+        ],
+        "time": 2.621703890900495
+      },
+      {
+        "name": "chunk2",
+        "hardware": "gpu_vulkan",
+        "threads": 1,
+        "stages": [
+          4,
+          5,
+          6
+        ],
+        "time": 3.3746881791265726
+      },
+      {
+        "name": "chunk3",
+        "hardware": "little",
+        "threads": 3,
+        "stages": [
+          7
+        ],
+        "time": 2.71142879355466
+      }
+    ]
+  },
+  "max_chunk_time": 3.3746881791265726,
+  "cpu_baseline_time": 44.81421793864754,
+  "gpu_baseline_time": 50.54795894285145,
+  "cpu_speedup": 13.279513709099556,
+  "gpu_speedup": 14.978556909496193
+}
