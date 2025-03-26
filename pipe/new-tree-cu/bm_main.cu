@@ -20,6 +20,8 @@ struct DeviceInfo {
 // Now create a lookup map from the string device ID to the device's table info
 static std::map<std::string, DeviceInfo> g_device_map = {
     {"jetson", {device_jetson::schedule_table, device_jetson::schedule_count}},
+    {"jetsonlowpower",
+     {device_jetsonlowpower::schedule_table, device_jetsonlowpower::schedule_count}},
 };
 
 // Helper function to register a single benchmark for a given device & schedule index

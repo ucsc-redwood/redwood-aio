@@ -15,7 +15,7 @@ APP_NAMESPACE_MAP = {
 }
 
 # Hardcoded list of CUDA-capable devices
-CUDA_DEVICES = ["jetson", "test"]  # Example device ID  # For testing
+CUDA_DEVICES = ["jetson", "jetsonlowpower"]  # Example device ID  # For testing
 
 
 ###############################################################################
