@@ -29,7 +29,7 @@ static void BM_schedule_jetson_Tree_schedule_001(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -48,10 +48,10 @@ static void BM_schedule_jetson_Tree_schedule_001(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 4>, mgr);
+      chunk<Task, tree::AppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 4>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_0_1, nullptr, omp::run_multiple_stages<5, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 
@@ -81,7 +81,7 @@ static void BM_schedule_jetson_Tree_schedule_002(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -100,10 +100,10 @@ static void BM_schedule_jetson_Tree_schedule_002(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 5>, mgr);
+      chunk<Task, tree::AppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 5>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_0_1, nullptr, omp::run_multiple_stages<6, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 
@@ -133,7 +133,7 @@ static void BM_schedule_jetson_Tree_schedule_003(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -152,11 +152,11 @@ static void BM_schedule_jetson_Tree_schedule_003(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 2, ProcessorType::kLittleCore, 6>, mgr);
+      chunk<Task, tree::AppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(q_0_1, nullptr, cuda::run_multiple_stages<3, 7>, mgr);
+      chunk<Task, tree::AppData>(
+          q_0_1, nullptr, omp::run_multiple_stages<7, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 
     t1.join();
@@ -185,7 +185,7 @@ static void BM_schedule_jetson_Tree_schedule_004(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -204,11 +204,11 @@ static void BM_schedule_jetson_Tree_schedule_004(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 3>, mgr);
+      chunk<Task, tree::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 2, ProcessorType::kLittleCore, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(
-          q_0_1, nullptr, omp::run_multiple_stages<4, 7, ProcessorType::kLittleCore, 6>, mgr);
+      chunk<Task, tree::AppData>(q_0_1, nullptr, cuda::run_multiple_stages<3, 7>, mgr);
     });
 
     t1.join();
@@ -237,7 +237,7 @@ static void BM_schedule_jetson_Tree_schedule_005(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -256,11 +256,11 @@ static void BM_schedule_jetson_Tree_schedule_005(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kLittleCore, 6>, mgr);
+      chunk<Task, tree::AppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 3>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(q_0_1, nullptr, cuda::run_multiple_stages<4, 7>, mgr);
+      chunk<Task, tree::AppData>(
+          q_0_1, nullptr, omp::run_multiple_stages<4, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 
     t1.join();
@@ -289,7 +289,7 @@ static void BM_schedule_jetson_Tree_schedule_006(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -308,11 +308,11 @@ static void BM_schedule_jetson_Tree_schedule_006(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 6>, mgr);
+      chunk<Task, tree::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kLittleCore, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(
-          q_0_1, nullptr, omp::run_multiple_stages<7, 7, ProcessorType::kLittleCore, 6>, mgr);
+      chunk<Task, tree::AppData>(q_0_1, nullptr, cuda::run_multiple_stages<4, 7>, mgr);
     });
 
     t1.join();
@@ -341,7 +341,7 @@ static void BM_schedule_jetson_Tree_schedule_007(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -360,10 +360,10 @@ static void BM_schedule_jetson_Tree_schedule_007(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 2>, mgr);
+      chunk<Task, tree::AppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 2>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_0_1, nullptr, omp::run_multiple_stages<3, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 
@@ -393,7 +393,7 @@ static void BM_schedule_jetson_Tree_schedule_008(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -412,11 +412,11 @@ static void BM_schedule_jetson_Tree_schedule_008(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(q_0_1, nullptr, cuda::run_multiple_stages<2, 7>, mgr);
+      chunk<Task, tree::AppData>(q_0_1, nullptr, cuda::run_multiple_stages<2, 7>, mgr);
     });
 
     t1.join();
@@ -445,7 +445,7 @@ static void BM_schedule_jetson_Tree_schedule_009(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -462,7 +462,7 @@ static void BM_schedule_jetson_Tree_schedule_009(benchmark::State &state) {
     // Automatically generated from schedule JSON
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, nullptr, cuda::run_multiple_stages<1, 7>, mgr);
+      chunk<Task, tree::AppData>(q_input, nullptr, cuda::run_multiple_stages<1, 7>, mgr);
     });
 
     t1.join();
@@ -490,7 +490,7 @@ static void BM_schedule_jetson_Tree_schedule_010(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -509,11 +509,11 @@ static void BM_schedule_jetson_Tree_schedule_010(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 4, ProcessorType::kLittleCore, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(q_0_1, nullptr, cuda::run_multiple_stages<5, 7>, mgr);
+      chunk<Task, tree::AppData>(q_0_1, nullptr, cuda::run_multiple_stages<5, 7>, mgr);
     });
 
     t1.join();
@@ -542,7 +542,7 @@ static void BM_schedule_jetson_Tree_schedule_011(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -561,11 +561,11 @@ static void BM_schedule_jetson_Tree_schedule_011(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 5, ProcessorType::kLittleCore, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(q_0_1, nullptr, cuda::run_multiple_stages<6, 7>, mgr);
+      chunk<Task, tree::AppData>(q_0_1, nullptr, cuda::run_multiple_stages<6, 7>, mgr);
     });
 
     t1.join();
@@ -594,7 +594,7 @@ static void BM_schedule_jetson_Tree_schedule_012(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -613,11 +613,11 @@ static void BM_schedule_jetson_Tree_schedule_012(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 6, ProcessorType::kLittleCore, 6>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(q_0_1, nullptr, cuda::run_multiple_stages<7, 7>, mgr);
+      chunk<Task, tree::AppData>(q_0_1, nullptr, cuda::run_multiple_stages<7, 7>, mgr);
     });
 
     t1.join();
@@ -646,7 +646,7 @@ static void BM_schedule_jetson_Tree_schedule_013(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -665,10 +665,10 @@ static void BM_schedule_jetson_Tree_schedule_013(benchmark::State &state) {
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 1>, mgr);
+      chunk<Task, tree::AppData>(q_input, &q_0_1, cuda::run_multiple_stages<1, 1>, mgr);
     });
     std::thread t2([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_0_1, nullptr, omp::run_multiple_stages<2, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 
@@ -698,7 +698,7 @@ static void BM_schedule_jetson_Tree_schedule_014(benchmark::State &state) {
   auto mr = &mgr.get_mr();
 
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);
+  auto preallocated_data = init_appdata<tree::AppData>(mr, num_tasks);
 
   // Track individual task times
   std::vector<double> task_times;
@@ -715,7 +715,7 @@ static void BM_schedule_jetson_Tree_schedule_014(benchmark::State &state) {
     // Automatically generated from schedule JSON
 
     std::thread t1([&]() {
-      chunk<Task, tree::SafeAppData>(
+      chunk<Task, tree::AppData>(
           q_input, nullptr, omp::run_multiple_stages<1, 7, ProcessorType::kLittleCore, 6>, mgr);
     });
 

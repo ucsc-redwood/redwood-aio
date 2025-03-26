@@ -55,128 +55,6 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_001(benchmark::State
         [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_002(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_003(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
           q_1_2, &q_2_3, omp::run_multiple_stages<5, 7, ProcessorType::kBigCore, 2>);
     });
     std::thread t4([&]() {
@@ -204,7 +82,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_003(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_004(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_002(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -265,68 +143,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_004(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_005(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 8, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 4>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_006(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_003(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -387,7 +204,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_006(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_007(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_004(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -414,18 +231,189 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_007(benchmark::State
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
     std::thread t2(
         [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_005(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_006(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_007(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, &q_2_3, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 4>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -466,21 +454,27 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_008(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
     std::thread t2(
         [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 4>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -521,21 +515,27 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_009(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
     std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kLittleCore, 4>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -576,21 +576,27 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_010(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
     std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kLittleCore, 4>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -608,665 +614,6 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_010(benchmark::State
 }
 
 static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_011(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_012(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_013(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_014(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_015(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_016(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_017(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_018(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_019(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_020(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_021(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<6, 7, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kBigCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_022(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -1327,68 +674,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_022(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_023(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<6, 7, ProcessorType::kLittleCore, 4>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_024(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_012(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -1449,7 +735,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_024(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_025(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_013(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -1510,7 +796,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_025(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_026(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_014(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -1571,7 +857,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_026(benchmark::State
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_027(benchmark::State &state) {
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_015(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -1610,6 +896,690 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_027(benchmark::State
     t1.join();
     t2.join();
     t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_016(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_017(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_018(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_019(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_020(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_021(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, &q_2_3, omp::run_multiple_stages<5, 8, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 4>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_022(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_023(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_024(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_025(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, &q_2_3, omp::run_multiple_stages<6, 7, ProcessorType::kLittleCore, 4>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kBigCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_026(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, &q_2_3, omp::run_multiple_stages<6, 7, ProcessorType::kLittleCore, 4>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_027(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -1650,21 +1620,27 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_028(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
     std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -1705,6 +1681,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_029(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
@@ -1714,12 +1691,17 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_029(benchmark::State
         [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kBigCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -1760,6 +1742,7 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_030(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
@@ -1769,12 +1752,17 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_030(benchmark::State
         [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<6, 6, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -1815,21 +1803,27 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_031(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
     std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 3>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<4, 6, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -1870,21 +1864,28 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_032(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
+    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
     });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kBigCore, 2>);
+    });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<4, 6, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t4([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -1929,17 +1930,17 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_033(benchmark::State
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
     std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 3>); });
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 6, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 7, ProcessorType::kLittleCore, 4>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
+          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kBigCore, 2>);
     });
 
     t1.join();
@@ -1989,19 +1990,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_034(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 4>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 4, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 7, ProcessorType::kBigCore, 2>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
@@ -2051,19 +2051,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_035(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 4>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 4, ProcessorType::kBigCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 7, ProcessorType::kLittleCore, 4>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -2113,19 +2112,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_036(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 4>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 5, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 7, ProcessorType::kMediumCore, 2>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
+          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
@@ -2175,19 +2173,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_037(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 4>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 6, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 8, ProcessorType::kLittleCore, 4>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
+          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kBigCore, 2>);
     });
 
     t1.join();
@@ -2237,19 +2234,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_038(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kBigCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 6, ProcessorType::kMediumCore, 2>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 8, ProcessorType::kBigCore, 2>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
+          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
@@ -2299,19 +2295,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_039(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 4>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 8, ProcessorType::kLittleCore, 4>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kBigCore, 2>);
+          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -2361,19 +2356,18 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_040(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 4>);
+          q_1_2, &q_2_3, omp::run_multiple_stages<7, 8, ProcessorType::kMediumCore, 2>);
     });
     std::thread t4([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
+          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
@@ -2420,28 +2414,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_041(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 6, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -2482,28 +2469,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_042(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 7, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 4>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -2544,28 +2524,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_043(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<5, 8, ProcessorType::kBigCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 4>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -2608,15 +2581,14 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_044(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -2664,15 +2636,14 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_045(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
@@ -2720,15 +2691,14 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_046(benchmark::State
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 4, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
@@ -2774,27 +2744,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_047(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
-    std::thread t2([&]() {
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
+    std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<2, 2, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t3(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_1_2, &q_2_3, vulkan::run_gpu_stages<3, 6>); });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kBigCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -2835,27 +2799,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_048(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
       chunk<Task, cifar_sparse::AppData>(
           q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
     std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 3>); });
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 7, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 4>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -2896,28 +2854,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_049(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 4>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 7, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kBigCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -2958,28 +2909,21 @@ static void BM_schedule_3A021JEHN02756_CifarSparse_schedule_050(benchmark::State
 
     moodycamel::ConcurrentQueue<Task *> q_0_1;
     moodycamel::ConcurrentQueue<Task *> q_1_2;
-    moodycamel::ConcurrentQueue<Task *> q_2_3;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kBigCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kBigCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, &q_2_3, omp::run_multiple_stages<4, 7, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t4([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_2_3, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 4>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 4>);
     });
 
     t1.join();
     t2.join();
     t3.join();
-    t4.join();
 
     // ---------------------------------------------------------------------
 
@@ -3185,15 +3129,14 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_002(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 7, ProcessorType::kMediumCore, 2>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 2, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<3, 6>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 3>);
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
     });
 
     t1.join();
@@ -3245,11 +3188,11 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_003(benchmark::State &stat
     });
     std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 3>);
+          q_0_1, &q_1_2, omp::run_multiple_stages<3, 7, ProcessorType::kMediumCore, 2>);
     });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<4, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 3>);
     });
 
     t1.join();
@@ -3297,14 +3240,15 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_004(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 2, ProcessorType::kMediumCore, 2>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
     });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<3, 6>); });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<3, 3, ProcessorType::kLittleCore, 3>);
+    });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
+          q_1_2, nullptr, omp::run_multiple_stages<4, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -3842,14 +3786,15 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_014(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 3>);
     });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 5>); });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<4, 4, ProcessorType::kLittleCore, 3>);
+    });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kLittleCore, 3>);
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -3872,382 +3817,6 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_014(benchmark::State &stat
 }
 
 static void BM_schedule_9b034f1b_CifarSparse_schedule_015(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 6>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_016(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 7>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_017(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 8>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_018(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<3, 8, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_019(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_020(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_021(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_022(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -4303,7 +3872,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_022(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_023(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_016(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -4329,15 +3898,14 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_023(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 3>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<4, 4, ProcessorType::kLittleCore, 3>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 5>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kLittleCore, 3>);
     });
 
     t1.join();
@@ -4359,7 +3927,227 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_023(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_024(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_017(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 6>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_018(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 7>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_019(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 3, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<4, 8>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_020(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_021(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -4414,7 +4202,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_024(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_025(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_022(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -4440,622 +4228,11 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_025(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 2>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_026(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 3>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<4, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_027(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_028(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_029(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_030(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
     });
     std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_031(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 5, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_032(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_033(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 6, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_034(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 7, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kMediumCore, 2>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_035(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 7, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 3>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_036(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<5, 8, ProcessorType::kMediumCore, 2>);
+          q_0_1, &q_1_2, omp::run_multiple_stages<3, 8, ProcessorType::kMediumCore, 2>);
     });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
@@ -5081,7 +4258,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_036(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_037(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_023(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -5106,11 +4283,11 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_037(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
     });
     std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+          q_0_1, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -5131,7 +4308,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_037(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_038(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_024(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -5156,11 +4333,11 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_038(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_0_1;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 2>);
     });
     std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+          q_0_1, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
@@ -5181,63 +4358,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_038(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_039(benchmark::State &state) {
-  constexpr size_t num_tasks = 20;
-
-  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
-
-  // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
-
-  // Track individual task times
-  std::vector<double> task_times;
-  task_times.reserve(num_tasks);
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
-    state.ResumeTiming();
-
-    // ---------------------------------------------------------------------
-    // Automatically generated from schedule JSON
-
-    moodycamel::ConcurrentQueue<Task *> q_0_1;
-    moodycamel::ConcurrentQueue<Task *> q_1_2;
-
-    std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
-    });
-    std::thread t2([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<2, 3, ProcessorType::kMediumCore, 2>);
-    });
-    std::thread t3([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_1_2, nullptr, vulkan::run_gpu_stages<4, 9>);
-    });
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    // ---------------------------------------------------------------------
-
-    state.PauseTiming();
-    auto end_time = std::chrono::high_resolution_clock::now();
-    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
-    task_times.push_back(elapsed / num_tasks);
-    state.ResumeTiming();
-  }  // for (auto _ : state)
-
-  // Calculate and report the actual average time per task
-  double avg_task_time =
-      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
-  state.counters["avg_time_per_task"] = avg_task_time;
-}
-
-static void BM_schedule_9b034f1b_CifarSparse_schedule_040(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_025(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -5293,7 +4414,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_040(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_041(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_026(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -5343,7 +4464,7 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_041(benchmark::State &stat
   state.counters["avg_time_per_task"] = avg_task_time;
 }
 
-static void BM_schedule_9b034f1b_CifarSparse_schedule_042(benchmark::State &state) {
+static void BM_schedule_9b034f1b_CifarSparse_schedule_027(benchmark::State &state) {
   constexpr size_t num_tasks = 20;
 
   auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
@@ -5377,6 +4498,829 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_042(benchmark::State &stat
 
     t1.join();
     t2.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_028(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 5, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_029(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 5, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_030(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 6, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_031(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 6, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_032(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 7, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_033(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 7, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<8, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_034(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<5, 8, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 3>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_035(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_036(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 4>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_037(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 2>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_038(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<2, 3, ProcessorType::kMediumCore, 2>);
+    });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(q_1_2, nullptr, vulkan::run_gpu_stages<4, 9>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_039(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 3>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<4, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_040(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 4>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<5, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_041(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 5>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<6, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    // ---------------------------------------------------------------------
+
+    state.PauseTiming();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    task_times.push_back(elapsed / num_tasks);
+    state.ResumeTiming();
+  }  // for (auto _ : state)
+
+  // Calculate and report the actual average time per task
+  double avg_task_time =
+      std::accumulate(task_times.begin(), task_times.end(), 0.0) / task_times.size();
+  state.counters["avg_time_per_task"] = avg_task_time;
+}
+
+static void BM_schedule_9b034f1b_CifarSparse_schedule_042(benchmark::State &state) {
+  constexpr size_t num_tasks = 20;
+
+  auto mr = cifar_sparse::vulkan::Singleton::getInstance().get_mr();
+
+  // Preallocate data for all tasks
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(mr, num_tasks);
+
+  // Track individual task times
+  std::vector<double> task_times;
+  task_times.reserve(num_tasks);
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    state.ResumeTiming();
+
+    // ---------------------------------------------------------------------
+    // Automatically generated from schedule JSON
+
+    moodycamel::ConcurrentQueue<Task *> q_0_1;
+    moodycamel::ConcurrentQueue<Task *> q_1_2;
+
+    std::thread t1([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_input, &q_0_1, omp::run_multiple_stages<1, 1, ProcessorType::kLittleCore, 3>);
+    });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<2, 6>); });
+    std::thread t3([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_1_2, nullptr, omp::run_multiple_stages<7, 9, ProcessorType::kMediumCore, 2>);
+    });
+
+    t1.join();
+    t2.join();
+    t3.join();
 
     // ---------------------------------------------------------------------
 
@@ -5419,15 +5363,14 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_043(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 1>);
-    });
-    std::thread t2([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_0_1, &q_1_2, omp::run_multiple_stages<2, 2, ProcessorType::kLittleCore, 3>);
+          q_input, &q_0_1, omp::run_multiple_stages<1, 2, ProcessorType::kMediumCore, 2>);
     });
+    std::thread t2(
+        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<3, 8>); });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
+          q_1_2, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 3>);
     });
 
     t1.join();
@@ -5585,14 +5528,15 @@ static void BM_schedule_9b034f1b_CifarSparse_schedule_046(benchmark::State &stat
     moodycamel::ConcurrentQueue<Task *> q_1_2;
 
     std::thread t1([&]() {
-      chunk<Task, cifar_sparse::AppData>(
-          q_input, &q_0_1, omp::run_multiple_stages<1, 2, ProcessorType::kMediumCore, 2>);
+      chunk<Task, cifar_sparse::AppData>(q_input, &q_0_1, vulkan::run_gpu_stages<1, 1>);
     });
-    std::thread t2(
-        [&]() { chunk<Task, cifar_sparse::AppData>(q_0_1, &q_1_2, vulkan::run_gpu_stages<3, 8>); });
+    std::thread t2([&]() {
+      chunk<Task, cifar_sparse::AppData>(
+          q_0_1, &q_1_2, omp::run_multiple_stages<2, 2, ProcessorType::kLittleCore, 3>);
+    });
     std::thread t3([&]() {
       chunk<Task, cifar_sparse::AppData>(
-          q_1_2, nullptr, omp::run_multiple_stages<9, 9, ProcessorType::kLittleCore, 3>);
+          q_1_2, nullptr, omp::run_multiple_stages<3, 9, ProcessorType::kMediumCore, 2>);
     });
 
     t1.join();
