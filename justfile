@@ -220,3 +220,11 @@ schedules-to-code-new:
     python3 scripts/codegen/new_cu.py data/schedule_files_v2/ Tree pipe/new-tree-cu/generated_code.cuh
 
     xmake format
+
+analysis:
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarDense.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarSparse.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_Tree.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarDense.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarSparse.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_Tree.txt

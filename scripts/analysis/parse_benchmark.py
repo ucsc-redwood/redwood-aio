@@ -3,6 +3,7 @@
 import re
 import json
 import os
+import glob
 from typing import Dict, List, Tuple
 from pathlib import Path
 from dataclasses import dataclass
@@ -17,6 +18,7 @@ class ScheduleResult:
     max_chunk_time: float
     avg_time_per_task: float
     difference_percentage: float
+    is_better: bool  # True if real measure is better than expected
 
 
 def parse_benchmark_output(output_text: str) -> List[Tuple[str, str, str, float]]:
@@ -155,7 +157,13 @@ def compare_benchmark_with_schedule(
         return None
 
     # Calculate difference
-    difference = abs(max_chunk_time - avg_time)
+    # Lower time is better, so if avg_time < max_chunk_time, performance is better
+    is_better = avg_time < max_chunk_time
+    
+    # Calculate signed percentage difference
+    # Positive percentage means faster than expected (better)
+    # Negative percentage means slower than expected (worse)
+    difference = max_chunk_time - avg_time
     difference_percentage = (difference / max_chunk_time) * 100
 
     return ScheduleResult(
@@ -165,7 +173,48 @@ def compare_benchmark_with_schedule(
         max_chunk_time=max_chunk_time,
         avg_time_per_task=avg_time,
         difference_percentage=difference_percentage,
+        is_better=is_better,
     )
+
+
+def process_benchmark_file(benchmark_file: str, schedule_root: str) -> List[ScheduleResult]:
+    """
+    Process a single benchmark file and return comparison results.
+
+    Args:
+        benchmark_file (str): Path to the benchmark file
+        schedule_root (str): Root directory for schedule files
+
+    Returns:
+        List[ScheduleResult]: List of comparison results
+    """
+    print(f"\nProcessing file: {benchmark_file}")
+    
+    # Read benchmark output from file
+    with open(benchmark_file, "r") as f:
+        benchmark_output = f.read()
+
+    # Parse benchmark results
+    benchmark_results = parse_benchmark_output(benchmark_output)
+
+    if not benchmark_results:
+        print(f"Warning: No benchmark results found in {benchmark_file}")
+        return []
+
+    print(f"Found {len(benchmark_results)} benchmark results")
+
+    comparison_results = []
+    for device, app_name, schedule_id, avg_time in benchmark_results:
+        result = compare_benchmark_with_schedule(
+            device, app_name, schedule_id, avg_time, schedule_root
+        )
+        if result:
+            comparison_results.append(result)
+
+    if not comparison_results:
+        print(f"Warning: No schedule files found for comparison in {benchmark_file}")
+        
+    return comparison_results
 
 
 def main():
@@ -173,58 +222,83 @@ def main():
         description="Parse benchmark output and compare with schedule files"
     )
     parser.add_argument(
-        "benchmark_file", help="Path to the benchmark output file (txt)"
+        "benchmark_path", 
+        help="Path to a benchmark file or directory containing benchmark files"
     )
     parser.add_argument(
         "--schedule-root",
         default="data/schedule_files_v2",
         help="Root directory for schedule files",
     )
+    parser.add_argument(
+        "--sort-by",
+        choices=["difference", "max_chunk_time", "avg_time"],
+        default="difference",
+        help="Sort results by this metric",
+    )
     args = parser.parse_args()
 
-    # Read benchmark output from file
-    with open(args.benchmark_file, "r") as f:
-        benchmark_output = f.read()
+    # Check if the path is a directory or a file
+    if os.path.isdir(args.benchmark_path):
+        # Process all .txt files in the directory
+        benchmark_files = glob.glob(os.path.join(args.benchmark_path, "*.txt"))
+        if not benchmark_files:
+            print(f"No .txt files found in directory: {args.benchmark_path}")
+            return
+        print(f"Found {len(benchmark_files)} benchmark files to process")
+    else:
+        # Process a single file
+        if not args.benchmark_path.endswith(".txt"):
+            print("Warning: Benchmark file should be a .txt file")
+        benchmark_files = [args.benchmark_path]
 
-    # Parse benchmark results
-    benchmark_results = parse_benchmark_output(benchmark_output)
+    all_results = []
+    for benchmark_file in benchmark_files:
+        results = process_benchmark_file(benchmark_file, args.schedule_root)
+        all_results.extend(results)
 
-    if not benchmark_results:
-        print(f"Warning: No benchmark results found in {args.benchmark_file}")
+    if not all_results:
+        print("No comparison results found across all files")
         return
 
-    print(f"Found {len(benchmark_results)} benchmark results")
+    # Sort results based on the specified criterion
+    if args.sort_by == "difference":
+        sorted_results = sorted(all_results, key=lambda r: r.difference_percentage, reverse=True)
+    elif args.sort_by == "max_chunk_time":
+        sorted_results = sorted(all_results, key=lambda r: r.max_chunk_time)
+    elif args.sort_by == "avg_time":
+        sorted_results = sorted(all_results, key=lambda r: r.avg_time_per_task)
 
-    # Compare results for each schedule
-    print("\nSchedule Comparison Results:")
-    print("-" * 100)
+    # Print the combined results
+    print("\nCombined Schedule Comparison Results:")
+    print("-" * 130)
     print(
-        f"{'Device':<15} {'App':<15} {'Schedule ID':<12} {'Max Chunk Time':<15} {'Avg Time/Task':<15} {'Difference %':<15}"
+        f"{'Device':<15} {'App':<15} {'Schedule ID':<12} {'Max Chunk Time':<15} {'Avg Time/Task':<15} {'Difference %':<15} {'Status':<10}"
     )
-    print("-" * 100)
-
-    comparison_results = []
-    for device, app_name, schedule_id, avg_time in benchmark_results:
-        result = compare_benchmark_with_schedule(
-            device, app_name, schedule_id, avg_time, args.schedule_root
-        )
-        if result:
-            comparison_results.append(result)
-
-    if not comparison_results:
-        print("Warning: No schedule files found for comparison")
-        return
-
-    # Sort results by difference percentage (ascending)
-    sorted_results = sorted(comparison_results, key=lambda r: r.difference_percentage)
+    print("-" * 130)
 
     for result in sorted_results:
+        # Format the difference percentage with sign (+ for better, - for worse)
+        sign = "+" if result.is_better else "-"
+        formatted_diff = f"{sign}{abs(result.difference_percentage):.2f}%"
+        
+        # Determine status based on performance
+        status = "BETTER" if result.is_better else "WORSE"
+        
         print(
             f"{result.device:<15} {result.app_name:<15} {result.schedule_id:<12} "
-            f"{result.max_chunk_time:<15.2f} {result.avg_time_per_task:<15.2f} {result.difference_percentage:<15.2f}%"
+            f"{result.max_chunk_time:<15.2f} {result.avg_time_per_task:<15.2f} "
+            f"{formatted_diff:<15} {status:<10}"
         )
 
-    print("-" * 100)
+    print("-" * 130)
+    
+    # Print summary statistics
+    better_count = sum(1 for r in all_results if r.is_better)
+    total_count = len(all_results)
+    if total_count > 0:
+        better_percentage = (better_count / total_count) * 100
+        print(f"\nSummary: {better_count}/{total_count} ({better_percentage:.2f}%) of results are better than expected")
 
 
 if __name__ == "__main__":
