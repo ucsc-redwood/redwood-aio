@@ -26,6 +26,10 @@ class Schedule:
     gpu_baseline_time: Optional[float] = None
     cpu_speedup: Optional[float] = None
     gpu_speedup: Optional[float] = None
+    # Add load balancing indicators
+    load_balance_ratio: Optional[float] = None
+    load_imbalance_pct: Optional[float] = None
+    time_variance: Optional[float] = None
 
 
 def get_all_possible_chunks(
@@ -276,6 +280,32 @@ def annotate_schedules_with_timing(
         if modified_schedule:
             max_chunk_time = max(chunk_times) if chunk_times else 0.0
 
+            # Calculate load balancing metrics
+            load_balance_ratio = None
+            load_imbalance_pct = None
+            time_variance = None
+
+            if chunk_times and max_chunk_time > 0:
+                min_chunk_time = min(chunk_times)
+                avg_chunk_time = sum(chunk_times) / len(chunk_times)
+
+                # Load balance ratio (min/max): closer to 1.0 means better balancing
+                if min_chunk_time > 0:
+                    load_balance_ratio = min_chunk_time / max_chunk_time
+
+                # Load imbalance percentage: 0% means perfectly balanced
+                load_imbalance_pct = (
+                    ((max_chunk_time / avg_chunk_time) - 1.0) * 100
+                    if avg_chunk_time > 0
+                    else None
+                )
+
+                # Time variance: lower means better balancing
+                if len(chunk_times) > 1:
+                    time_variance = sum(
+                        (t - avg_chunk_time) ** 2 for t in chunk_times
+                    ) / len(chunk_times)
+
             # Calculate speedups
             cpu_speedup = None
             gpu_speedup = None
@@ -296,6 +326,9 @@ def annotate_schedules_with_timing(
                 gpu_baseline_time=gpu_baseline_time,
                 cpu_speedup=cpu_speedup,
                 gpu_speedup=gpu_speedup,
+                load_balance_ratio=load_balance_ratio,
+                load_imbalance_pct=load_imbalance_pct,
+                time_variance=time_variance,
             )
             annotated_schedules.append(annotated_schedule)
 
@@ -343,6 +376,16 @@ def schedule_to_json(
 
     if schedule.gpu_speedup is not None:
         schedule_json["gpu_speedup"] = schedule.gpu_speedup
+
+    # Add load balancing metrics if available
+    if schedule.load_balance_ratio is not None:
+        schedule_json["load_balance_ratio"] = schedule.load_balance_ratio
+
+    if schedule.load_imbalance_pct is not None:
+        schedule_json["load_imbalance_pct"] = schedule.load_imbalance_pct
+
+    if schedule.time_variance is not None:
+        schedule_json["time_variance"] = schedule.time_variance
 
     return schedule_json
 
@@ -489,6 +532,17 @@ if __name__ == "__main__":
                         print(f"  CPU speedup: {schedule.cpu_speedup:.2f}x")
                     if schedule.gpu_speedup:
                         print(f"  GPU speedup: {schedule.gpu_speedup:.2f}x")
+
+                    # Print load balancing metrics if available
+                    if schedule.load_balance_ratio:
+                        print(
+                            f"  Load balance ratio: {schedule.load_balance_ratio:.2f}"
+                        )
+                    if schedule.load_imbalance_pct:
+                        print(f"  Load imbalance: {schedule.load_imbalance_pct:.2f}%")
+                    if schedule.time_variance:
+                        print(f"  Time variance: {schedule.time_variance:.4f}")
+
                     print()
             else:
                 print(

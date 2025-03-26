@@ -43,5 +43,8 @@
   "cpu_baseline_time": 460.11327079613693,
   "gpu_baseline_time": 33.13804123783484,
   "cpu_speedup": 18.063304758179243,
-  "gpu_speedup": 1.3009460408137996
+  "gpu_speedup": 1.3009460408137996,
+  "load_balance_ratio": 0.005935102876917498,
+  "load_imbalance_pct": 171.2161369001408,
+  "time_variance": 130.25034072093987
 }
