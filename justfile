@@ -134,13 +134,16 @@ schedules-to-code-new:
     xmake format
 
 analysis:
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarDense.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarSparse.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_Tree.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarDense.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarSparse.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_Tree.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarDense.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarSparse.txt
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_Tree.txt
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetsonlowpower_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetsonlowpower_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetsonlowpower_Tree.txt --sort-by avg_time
 

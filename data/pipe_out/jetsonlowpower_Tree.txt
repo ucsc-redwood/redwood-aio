@@ -1,0 +1,14 @@
+jetsonlowpower_Tree_schedule_001/iterations:10        204 ms        0.400 ms           10 avg_time_per_task=10.2115
+jetsonlowpower_Tree_schedule_002/iterations:10        198 ms        0.327 ms           10 avg_time_per_task=9.87795
+jetsonlowpower_Tree_schedule_003/iterations:10        228 ms        0.293 ms           10 avg_time_per_task=11.3805
+jetsonlowpower_Tree_schedule_004/iterations:10        524 ms        0.255 ms           10 avg_time_per_task=26.2013
+jetsonlowpower_Tree_schedule_005/iterations:10        566 ms        0.275 ms           10 avg_time_per_task=28.3024
+jetsonlowpower_Tree_schedule_006/iterations:10        256 ms        0.293 ms           10 avg_time_per_task=12.816
+jetsonlowpower_Tree_schedule_007/iterations:10        226 ms        0.179 ms           10 avg_time_per_task=11.2935
+jetsonlowpower_Tree_schedule_008/iterations:10        281 ms        0.373 ms           10 avg_time_per_task=14.0611
+jetsonlowpower_Tree_schedule_009/iterations:10        273 ms        0.376 ms           10 avg_time_per_task=13.6335
+jetsonlowpower_Tree_schedule_010/iterations:10        867 ms        0.430 ms           10 avg_time_per_task=43.3277
+jetsonlowpower_Tree_schedule_011/iterations:10        931 ms        0.563 ms           10 avg_time_per_task=46.559
+jetsonlowpower_Tree_schedule_012/iterations:10        929 ms        0.596 ms           10 avg_time_per_task=46.4722
+jetsonlowpower_Tree_schedule_013/iterations:10        408 ms        0.844 ms           10 avg_time_per_task=20.3907
+jetsonlowpower_Tree_schedule_014/iterations:10        681 ms        0.572 ms           10 avg_time_per_task=34.028

@@ -8,10 +8,6 @@ from typing import Dict, List, Tuple
 from pathlib import Path
 from dataclasses import dataclass
 import argparse
-import numpy as np
-from scipy import stats
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
 
 
 @dataclass
@@ -248,224 +244,6 @@ def process_benchmark_file(
     return comparison_results
 
 
-def perform_statistical_analysis(results: List[ScheduleResult], output_dir: str = None):
-    """
-    Perform statistical analysis on the benchmark results.
-
-    Args:
-        results: List of ScheduleResult objects
-        output_dir: Directory to save plots to (optional)
-    """
-    if not results:
-        print("No results to analyze")
-        return
-
-    # Extract relevant data for analysis
-    estimated_times = np.array([r.max_chunk_time for r in results])
-    measured_times = np.array([r.avg_time_per_task for r in results])
-    diff_percentages = np.array([r.difference_percentage for r in results])
-
-    # Filter out None values for load balance analysis
-    valid_load_balance = [
-        (r.load_balance_ratio, r.difference_percentage)
-        for r in results
-        if r.load_balance_ratio is not None
-    ]
-
-    if valid_load_balance:
-        load_balance_ratios, lb_diff_percentages = zip(*valid_load_balance)
-        load_balance_ratios = np.array(load_balance_ratios)
-        lb_diff_percentages = np.array(lb_diff_percentages)
-
-    # Extract speedup data
-    valid_real_cpu_speedups = [
-        r.real_cpu_speedup for r in results if r.real_cpu_speedup is not None
-    ]
-    valid_real_gpu_speedups = [
-        r.real_gpu_speedup for r in results if r.real_gpu_speedup is not None
-    ]
-    valid_expected_cpu_speedups = [
-        r.cpu_speedup
-        for r in results
-        if r.cpu_speedup is not None and r.real_cpu_speedup is not None
-    ]
-    valid_expected_gpu_speedups = [
-        r.gpu_speedup
-        for r in results
-        if r.gpu_speedup is not None and r.real_gpu_speedup is not None
-    ]
-
-    # 1. Basic statistics
-    print("\nSTATISTICAL ANALYSIS")
-    print("=" * 50)
-
-    # Prediction error analysis
-    mean_abs_error = np.mean(np.abs(estimated_times - measured_times))
-    mean_rel_error = np.mean(np.abs(diff_percentages))
-
-    print(f"Mean Absolute Error: {mean_abs_error:.4f}")
-    print(f"Mean Relative Error: {mean_rel_error:.4f}%")
-
-    # 2. Correlation analysis
-    correlation, p_value = stats.pearsonr(estimated_times, measured_times)
-
-    print(
-        f"\nCorrelation between estimated and measured times: {correlation:.4f} (p-value: {p_value:.4f})"
-    )
-    print(f"R-squared: {correlation**2:.4f}")
-
-    # 3. Regression analysis
-    X = estimated_times.reshape(-1, 1)
-    model = LinearRegression().fit(X, measured_times)
-    r_squared = model.score(X, measured_times)
-    slope = model.coef_[0]
-    intercept = model.intercept_
-
-    print(f"\nLinear Regression: measured = {slope:.4f} * estimated + {intercept:.4f}")
-    print(f"R-squared: {r_squared:.4f}")
-
-    # 4. Load balance analysis
-    if valid_load_balance:
-        lb_correlation, lb_p_value = stats.pearsonr(
-            load_balance_ratios, lb_diff_percentages
-        )
-        print(
-            f"\nCorrelation between load balance ratio and prediction error: {lb_correlation:.4f} (p-value: {lb_p_value:.4f})"
-        )
-
-        # Analyze if higher load balance ratios lead to better predictions
-        high_lb_indices = np.where(
-            load_balance_ratios > np.median(load_balance_ratios)
-        )[0]
-        low_lb_indices = np.where(
-            load_balance_ratios <= np.median(load_balance_ratios)
-        )[0]
-
-        high_lb_errors = np.abs([lb_diff_percentages[i] for i in high_lb_indices])
-        low_lb_errors = np.abs([lb_diff_percentages[i] for i in low_lb_indices])
-
-        print("\nError analysis by load balance:")
-        print(
-            f"  High load balance (>{np.median(load_balance_ratios):.4f}): Mean error = {np.mean(high_lb_errors):.4f}%"
-        )
-        print(
-            f"  Low load balance (<={np.median(load_balance_ratios):.4f}): Mean error = {np.mean(low_lb_errors):.4f}%"
-        )
-
-        t_stat, t_p_value = stats.ttest_ind(
-            high_lb_errors, low_lb_errors, equal_var=False
-        )
-        print(
-            f"  T-test p-value: {t_p_value:.4f} {'(significant)' if t_p_value < 0.05 else '(not significant)'}"
-        )
-
-    # 5. Speedup analysis
-    if valid_real_cpu_speedups and valid_expected_cpu_speedups:
-        cpu_speedup_corr, cpu_speedup_p = stats.pearsonr(
-            valid_expected_cpu_speedups, valid_real_cpu_speedups
-        )
-        print(
-            f"\nCPU Speedup correlation (expected vs. real): {cpu_speedup_corr:.4f} (p-value: {cpu_speedup_p:.4f})"
-        )
-        print(f"Mean expected CPU speedup: {np.mean(valid_expected_cpu_speedups):.2f}x")
-        print(f"Mean real CPU speedup: {np.mean(valid_real_cpu_speedups):.2f}x")
-        print(
-            f"CPU speedup prediction error: {(np.mean(valid_real_cpu_speedups) - np.mean(valid_expected_cpu_speedups)) / np.mean(valid_expected_cpu_speedups) * 100:.2f}%"
-        )
-
-    if valid_real_gpu_speedups and valid_expected_gpu_speedups:
-        gpu_speedup_corr, gpu_speedup_p = stats.pearsonr(
-            valid_expected_gpu_speedups, valid_real_gpu_speedups
-        )
-        print(
-            f"\nGPU Speedup correlation (expected vs. real): {gpu_speedup_corr:.4f} (p-value: {gpu_speedup_p:.4f})"
-        )
-        print(f"Mean expected GPU speedup: {np.mean(valid_expected_gpu_speedups):.2f}x")
-        print(f"Mean real GPU speedup: {np.mean(valid_real_gpu_speedups):.2f}x")
-        print(
-            f"GPU speedup prediction error: {(np.mean(valid_real_gpu_speedups) - np.mean(valid_expected_gpu_speedups)) / np.mean(valid_expected_gpu_speedups) * 100:.2f}%"
-        )
-
-    # Generate plots if output directory is provided
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-
-        # Plot estimated vs measured times
-        plt.figure(figsize=(10, 6))
-        plt.scatter(estimated_times, measured_times, alpha=0.7)
-        plt.plot(
-            [min(estimated_times), max(estimated_times)],
-            [min(estimated_times), max(estimated_times)],
-            "r--",
-            label="Perfect prediction",
-        )
-        plt.plot(
-            [min(estimated_times), max(estimated_times)],
-            [
-                intercept + slope * min(estimated_times),
-                intercept + slope * max(estimated_times),
-            ],
-            "g-",
-            label="Regression line",
-        )
-        plt.xlabel("Estimated Time (max_chunk_time)")
-        plt.ylabel("Measured Time (avg_time_per_task)")
-        plt.title(
-            f"Estimated vs Measured Times (r={correlation:.2f}, R²={correlation**2:.2f})"
-        )
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.savefig(os.path.join(output_dir, "estimated_vs_measured.png"))
-
-        # Plot load balance ratio vs prediction error
-        if valid_load_balance:
-            plt.figure(figsize=(10, 6))
-            plt.scatter(load_balance_ratios, np.abs(lb_diff_percentages), alpha=0.7)
-            plt.xlabel("Load Balance Ratio")
-            plt.ylabel("Absolute Prediction Error (%)")
-            plt.title(
-                f"Load Balance Ratio vs Prediction Error (r={lb_correlation:.2f})"
-            )
-            plt.grid(True, alpha=0.3)
-            plt.savefig(os.path.join(output_dir, "load_balance_vs_error.png"))
-
-        # Plot real vs expected speedups
-        if valid_real_cpu_speedups and valid_expected_cpu_speedups:
-            plt.figure(figsize=(10, 6))
-            plt.scatter(valid_expected_cpu_speedups, valid_real_cpu_speedups, alpha=0.7)
-            plt.plot(
-                [min(valid_expected_cpu_speedups), max(valid_expected_cpu_speedups)],
-                [min(valid_expected_cpu_speedups), max(valid_expected_cpu_speedups)],
-                "r--",
-                label="Perfect prediction",
-            )
-            plt.xlabel("Expected CPU Speedup")
-            plt.ylabel("Real CPU Speedup")
-            plt.title(f"Expected vs Real CPU Speedup (r={cpu_speedup_corr:.2f})")
-            plt.legend()
-            plt.grid(True, alpha=0.3)
-            plt.savefig(os.path.join(output_dir, "cpu_speedup_comparison.png"))
-
-        # Plot real vs expected GPU speedups
-        if valid_real_gpu_speedups and valid_expected_gpu_speedups:
-            plt.figure(figsize=(10, 6))
-            plt.scatter(valid_expected_gpu_speedups, valid_real_gpu_speedups, alpha=0.7)
-            plt.plot(
-                [min(valid_expected_gpu_speedups), max(valid_expected_gpu_speedups)],
-                [min(valid_expected_gpu_speedups), max(valid_expected_gpu_speedups)],
-                "r--",
-                label="Perfect prediction",
-            )
-            plt.xlabel("Expected GPU Speedup")
-            plt.ylabel("Real GPU Speedup")
-            plt.title(f"Expected vs Real GPU Speedup (r={gpu_speedup_corr:.2f})")
-            plt.legend()
-            plt.grid(True, alpha=0.3)
-            plt.savefig(os.path.join(output_dir, "gpu_speedup_comparison.png"))
-
-        plt.close("all")
-
-
 def main():
     parser = argparse.ArgumentParser(
         description="Parse benchmark output and compare with schedule files"
@@ -493,10 +271,6 @@ def main():
         ],
         default="difference",
         help="Sort results by this metric",
-    )
-    parser.add_argument(
-        "--output-dir",
-        help="Directory to save analysis plots to",
     )
     args = parser.parse_args()
 
@@ -646,9 +420,6 @@ def main():
         if valid_gpu_speedups:
             avg_gpu_speedup = sum(valid_gpu_speedups) / len(valid_gpu_speedups)
             print(f"Average real GPU speedup: {avg_gpu_speedup:.2f}x")
-
-    # Perform detailed statistical analysis
-    perform_statistical_analysis(all_results, args.output_dir)
 
 
 if __name__ == "__main__":
