@@ -2,6 +2,7 @@
 # ppl/vulkan/shaders/compiled_shaders/*.spv
 
 tmp/
+.venv/
 
 # Resources
 resources.tar.gz

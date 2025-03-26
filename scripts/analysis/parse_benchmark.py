@@ -6,6 +6,7 @@ import os
 from typing import Dict, List, Tuple
 from pathlib import Path
 from dataclasses import dataclass
+import argparse
 
 
 @dataclass
@@ -31,12 +32,12 @@ def parse_benchmark_output(output_text: str) -> List[Tuple[str, str, str, float]
     results = []
 
     # Skip the header lines
-    lines = output_text.strip().split("\n")[2:]
+    lines = output_text.strip().split("\n")
 
     for line in lines:
         # Extract device, app name, schedule ID and avg_time_per_task using regex
         match = re.match(
-            r"(\w+)_(\w+)_schedule_(\d+)/iterations:\d+\s+\d+\s+ms\s+\d+\.\d+\s+ms\s+\d+\s+avg_time_per_task=(\d+\.\d+)",
+            r"([A-Z0-9]+)_(\w+)_schedule_(\d+)/iterations:\d+\s+\d+\.\d+\s+ms\s+\d+\.\d+\s+ms\s+\d+\s+avg_time_per_task=(\d+\.\d+)",
             line,
         )
         if match:
@@ -152,25 +153,29 @@ def compare_benchmark_with_schedule(
 
 
 def main():
-    # Example usage
-    sample_output = """-------------------------------------------------------------------------------------------------
-Benchmark                                       Time             CPU   Iterations UserCounters...
--------------------------------------------------------------------------------------------------
-jetson_Tree_schedule_001/iterations:10        134 ms        0.206 ms           10 avg_time_per_task=6.71669
-jetson_Tree_schedule_002/iterations:10        113 ms        0.212 ms           10 avg_time_per_task=5.66512
-jetson_Tree_schedule_003/iterations:10        253 ms        0.177 ms           10 avg_time_per_task=12.652
-jetson_Tree_schedule_004/iterations:10        140 ms        0.225 ms           10 avg_time_per_task=7.0042
-jetson_Tree_schedule_005/iterations:10        279 ms        0.167 ms           10 avg_time_per_task=13.9563
-jetson_Tree_schedule_006/iterations:10        130 ms        0.192 ms           10 avg_time_per_task=6.4888
-jetson_Tree_schedule_007/iterations:10        129 ms        0.214 ms           10 avg_time_per_task=6.46101
-jetson_Tree_schedule_008/iterations:10        133 ms        0.170 ms           10 avg_time_per_task=6.6296
-jetson_Tree_schedule_009/iterations:10        149 ms        0.131 ms           10 avg_time_per_task=7.46228"""
+    parser = argparse.ArgumentParser(
+        description="Parse benchmark output and compare with schedule files"
+    )
+    parser.add_argument("benchmark_file", help="Path to the benchmark output file")
+    parser.add_argument(
+        "--schedule-root",
+        default="data/schedule_files_v2",
+        help="Root directory for schedule files",
+    )
+    args = parser.parse_args()
+
+    # Read benchmark output from file
+    with open(args.benchmark_file, "r") as f:
+        benchmark_output = f.read()
 
     # Parse benchmark results
-    benchmark_results = parse_benchmark_output(sample_output)
+    benchmark_results = parse_benchmark_output(benchmark_output)
 
-    # Directory containing schedule files
-    schedule_root = "data/schedule_files"
+    if not benchmark_results:
+        print(f"Warning: No benchmark results found in {args.benchmark_file}")
+        return
+
+    print(f"Found {len(benchmark_results)} benchmark results")
 
     # Compare results for each schedule
     print("\nSchedule Comparison Results:")
@@ -183,10 +188,14 @@ jetson_Tree_schedule_009/iterations:10        149 ms        0.131 ms           1
     comparison_results = []
     for device, app_name, schedule_id, avg_time in benchmark_results:
         result = compare_benchmark_with_schedule(
-            device, app_name, schedule_id, avg_time, schedule_root
+            device, app_name, schedule_id, avg_time, args.schedule_root
         )
         if result:
             comparison_results.append(result)
+
+    if not comparison_results:
+        print("Warning: No schedule files found for comparison")
+        return
 
     # Sort results by difference percentage (ascending)
     sorted_results = sorted(comparison_results, key=lambda r: r.difference_percentage)
