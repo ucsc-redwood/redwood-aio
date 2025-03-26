@@ -57,7 +57,7 @@ Device     App        Schedule ID  Max Chunk Time  Avg Time/Task   Difference %
 
 df = pd.read_csv(
     io.StringIO(data_str),
-    delim_whitespace=True,
+    sep=r"\s+",
     names=[
         "Device",
         "App",
@@ -72,18 +72,18 @@ df = pd.read_csv(
 df.head()
 
 
-corr_pearson = df['Max_Chunk_Time'].corr(df['Avg_Time_Task'], method='pearson')
-corr_pearson
+# corr_pearson = df["Max_Chunk_Time"].corr(df["Avg_Time_Task"], method="pearson")
+# corr_pearson
 
 
-corr_spearman = df['Max_Chunk_Time'].corr(df['Avg_Time_Task'], method='spearman')
-corr_spearman
+# corr_spearman = df["Max_Chunk_Time"].corr(df["Avg_Time_Task"], method="spearman")
+# corr_spearman
 
 
 import statsmodels.api as sm
 
-X = df['Max_Chunk_Time']
-y = df['Avg_Time_Task']
+X = df["Max_Chunk_Time"]
+y = df["Avg_Time_Task"]
 
 # Add a constant term so we fit intercept as well
 X_with_const = sm.add_constant(X)
@@ -92,11 +92,10 @@ model = sm.OLS(y, X_with_const).fit()
 print(model.summary())
 
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-plt.scatter(df['Max_Chunk_Time'], df['Avg_Time_Task'])
-plt.xlabel("Max Chunk Time (Hypothesized)")
-plt.ylabel("Avg Time/Task (Measured)")
-plt.title("Scatter Plot: Hypothesized vs. Measured Time")
-plt.show()
-
+# plt.scatter(df["Max_Chunk_Time"], df["Avg_Time_Task"])
+# plt.xlabel("Max Chunk Time (Hypothesized)")
+# plt.ylabel("Avg Time/Task (Measured)")
+# plt.title("Scatter Plot: Hypothesized vs. Measured Time")
+# plt.show()
