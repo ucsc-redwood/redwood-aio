@@ -159,7 +159,7 @@ def compare_benchmark_with_schedule(
     # Calculate difference
     # Lower time is better, so if avg_time < max_chunk_time, performance is better
     is_better = avg_time < max_chunk_time
-    
+
     # Calculate signed percentage difference
     # Positive percentage means faster than expected (better)
     # Negative percentage means slower than expected (worse)
@@ -177,7 +177,9 @@ def compare_benchmark_with_schedule(
     )
 
 
-def process_benchmark_file(benchmark_file: str, schedule_root: str) -> List[ScheduleResult]:
+def process_benchmark_file(
+    benchmark_file: str, schedule_root: str
+) -> List[ScheduleResult]:
     """
     Process a single benchmark file and return comparison results.
 
@@ -189,7 +191,7 @@ def process_benchmark_file(benchmark_file: str, schedule_root: str) -> List[Sche
         List[ScheduleResult]: List of comparison results
     """
     print(f"\nProcessing file: {benchmark_file}")
-    
+
     # Read benchmark output from file
     with open(benchmark_file, "r") as f:
         benchmark_output = f.read()
@@ -213,7 +215,7 @@ def process_benchmark_file(benchmark_file: str, schedule_root: str) -> List[Sche
 
     if not comparison_results:
         print(f"Warning: No schedule files found for comparison in {benchmark_file}")
-        
+
     return comparison_results
 
 
@@ -222,8 +224,8 @@ def main():
         description="Parse benchmark output and compare with schedule files"
     )
     parser.add_argument(
-        "benchmark_path", 
-        help="Path to a benchmark file or directory containing benchmark files"
+        "benchmark_path",
+        help="Path to a benchmark file or directory containing benchmark files",
     )
     parser.add_argument(
         "--schedule-root",
@@ -263,7 +265,9 @@ def main():
 
     # Sort results based on the specified criterion
     if args.sort_by == "difference":
-        sorted_results = sorted(all_results, key=lambda r: r.difference_percentage, reverse=True)
+        sorted_results = sorted(
+            all_results, key=lambda r: r.difference_percentage, reverse=True
+        )
     elif args.sort_by == "max_chunk_time":
         sorted_results = sorted(all_results, key=lambda r: r.max_chunk_time)
     elif args.sort_by == "avg_time":
@@ -281,10 +285,10 @@ def main():
         # Format the difference percentage with sign (+ for better, - for worse)
         sign = "+" if result.is_better else "-"
         formatted_diff = f"{sign}{abs(result.difference_percentage):.2f}%"
-        
+
         # Determine status based on performance
         status = "BETTER" if result.is_better else "WORSE"
-        
+
         print(
             f"{result.device:<15} {result.app_name:<15} {result.schedule_id:<12} "
             f"{result.max_chunk_time:<15.2f} {result.avg_time_per_task:<15.2f} "
@@ -292,13 +296,15 @@ def main():
         )
 
     print("-" * 130)
-    
+
     # Print summary statistics
     better_count = sum(1 for r in all_results if r.is_better)
     total_count = len(all_results)
     if total_count > 0:
         better_percentage = (better_count / total_count) * 100
-        print(f"\nSummary: {better_count}/{total_count} ({better_percentage:.2f}%) of results are better than expected")
+        print(
+            f"\nSummary: {better_count}/{total_count} ({better_percentage:.2f}%) of results are better than expected"
+        )
 
 
 if __name__ == "__main__":
