@@ -26,8 +26,8 @@ constexpr std::array<void (*)(tree::SafeAppData &), 7> cpu_stages = {
 };
 
 template <int Start, int End, ProcessorType PT, int NThreads>
-  requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-void run_multiple_stages(tree::SafeAppData &data, cuda::CudaManager &) {
+requires AllowedStage<Start> && AllowedStage<End> &&
+    (Start <= End) void run_multiple_stages(tree::SafeAppData &data, cuda::CudaManager &) {
 #pragma omp parallel num_threads(NThreads)
   {
     // Bind to core
@@ -89,8 +89,8 @@ constexpr std::array<void (*)(tree::SafeAppData &), 7> gpu_stages = {
 };
 
 template <int Start, int End>
-  requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-void run_multiple_stages(tree::SafeAppData &data, cuda::CudaManager &mgr) {
+requires AllowedStage<Start> && AllowedStage<End> &&
+    (Start <= End) void run_multiple_stages(tree::SafeAppData &data, cuda::CudaManager &mgr) {
   CudaAttachSingle(data.u_input_points_s0.data());
   CudaAttachSingle(data.u_morton_keys_s1.data());
   CudaAttachSingle(data.u_morton_keys_sorted_s2.data());

@@ -28,8 +28,8 @@ constexpr std::array<void (*)(cifar_dense::AppData &), 9> cpu_stages = {
 };
 
 template <int Start, int End, ProcessorType PT, int NThreads>
-  requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &) {
+requires AllowedStage<Start> && AllowedStage<End> &&
+    (Start <= End) void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &) {
 #pragma omp parallel num_threads(NThreads)
   {
     // Bind to core
@@ -114,8 +114,8 @@ constexpr std::array<void (*)(cifar_dense::AppData &), 9> gpu_stages = {
 #define CudaAttachHost(ptr) (cudaStreamAttachMemAsync(mgr.get_stream(), ptr, 0, cudaMemAttachHost))
 
 template <int Start, int End>
-  requires AllowedStage<Start> && AllowedStage<End> && (Start <= End)
-void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &mgr) {
+requires AllowedStage<Start> && AllowedStage<End> &&
+    (Start <= End) void run_multiple_stages(cifar_dense::AppData &data, cuda::CudaManager &mgr) {
   CudaAttachSingle(data.u_conv1_bias.data());
   CudaAttachSingle(data.u_conv1_weights.data());
   CudaAttachSingle(data.u_conv1_out.data());

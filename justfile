@@ -131,6 +131,10 @@ schedules-to-code-new:
     python3 scripts/codegen/new_cu.py data/schedule_files_v2/ CifarSparse pipe/new-cifar-sparse-cu/generated_code.cuh
     python3 scripts/codegen/new_cu.py data/schedule_files_v2/ Tree pipe/new-tree-cu/generated_code.cuh
 
+    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v2/ CifarDense pipe/new-cifar-dense-cu/generated_code_non_bm.cuh
+    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v2/ CifarSparse pipe/new-cifar-sparse-cu/generated_code_non_bm.cuh
+    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v2/ Tree pipe/new-tree-cu/generated_code_non_bm.cuh
+
     xmake format
 
 analysis:

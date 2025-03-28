@@ -1,5 +1,7 @@
 -- Copyright (c) 2025 Yanwen Xu (yxu83@ucsc.edu). MIT License.
 
+-- Benchmark for the new pipeline
+
 target("bm-new-pipe-cifar-dense-cu")
 do
 	add_rules("pipe_config", "common_flags", "run_on_android")
@@ -10,8 +12,6 @@ do
 		"../templates.hpp",
 		"../templates_cu.hpp",
 		"generated_code.cuh",
-
-		-- "generated_code.hpp",
 	})
 
 	add_files({
@@ -25,26 +25,28 @@ do
 	add_packages("benchmark")
 end
 
+-- Single execution of the pipeline for debugging or testing purposes
 
--- target("bm-new-pipe-cifar-dense-cu")
--- do
--- 	add_rules("pipe_config", "common_flags", "run_on_android")
+target("pipe-cifar-dense-cu")
+do
+	add_rules("pipe_config", "common_flags", "run_on_android")
 
--- 	add_headerfiles({
--- 		"task.hpp",
--- 		"run_stages.hpp",
--- 		"../templates.hpp",
--- 		"../templates_cu.hpp",
--- 		"generated_code.hpp",
--- 	})
+	add_headerfiles({
+		"task.hpp",
+		"run_stages.hpp",
+		"../templates.hpp",
+		"../templates_cu.hpp",
+		"generated_code_non_bm.cuh",
+	})
 
--- 	add_files({
--- 		"bm_main.cu",
--- 		"task.cpp",
--- 	})
+	add_files({
+		"main.cu",
+		"task.cpp",
+	})
 
--- 	add_deps("builtin-apps", "builtin-apps-cuda")
--- 	add_cugencodes("native")
+	add_deps("builtin-apps", "builtin-apps-cuda")
+	add_cugencodes("native")
 
--- 	add_packages("benchmark")
--- end
+	add_links("nvToolsExt")
+end
+
