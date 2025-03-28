@@ -5,6 +5,7 @@
 #include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-dense/dense_appdata.hpp"
 #include "builtin-apps/common/cuda/helpers.cuh"
+#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/common/cuda/manager.cuh"
 #include "builtin-apps/resources_path.hpp"
 
@@ -25,6 +26,8 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Baseline)
   PREPARE_DATA;
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_1(appdata);
     cifar_dense::cuda::process_stage_2(appdata);
     cifar_dense::cuda::process_stage_3(appdata);
@@ -34,7 +37,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Baseline)
     cifar_dense::cuda::process_stage_7(appdata);
     cifar_dense::cuda::process_stage_8(appdata);
     cifar_dense::cuda::process_stage_9(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -53,8 +56,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage1)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_1(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -73,8 +78,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage2)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_2(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -94,8 +101,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage3)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_3(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -116,8 +125,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage4)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_4(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -139,8 +150,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage5)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_5(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -163,8 +176,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage6)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_6(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -188,8 +203,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage7)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_7(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -214,8 +231,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage8)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_8(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -241,8 +260,10 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage9)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
+
     cifar_dense::cuda::process_stage_9(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 

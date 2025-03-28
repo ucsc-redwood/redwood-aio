@@ -4,6 +4,7 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/common/cuda/manager.cuh"
+#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/resources_path.hpp"
 #include "builtin-apps/tree/cuda/dispatchers.cuh"
 
@@ -24,6 +25,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
   PREPARE_DATA;
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::process_stage_1(appdata);
     tree::cuda::process_stage_2(appdata);
     tree::cuda::process_stage_3(appdata);
@@ -31,7 +33,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
     tree::cuda::process_stage_5(appdata);
     tree::cuda::process_stage_6(appdata);
     tree::cuda::process_stage_7(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -50,8 +52,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::process_stage_1(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -71,8 +74,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::run_stage<2>(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -93,8 +97,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::run_stage<3>(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -116,8 +121,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::run_stage<4>(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -140,8 +146,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::run_stage<5>(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -165,8 +172,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::run_stage<6>(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -191,8 +199,9 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     tree::cuda::run_stage<7>(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 

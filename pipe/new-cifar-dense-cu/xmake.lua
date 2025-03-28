@@ -4,7 +4,7 @@
 
 target("bm-new-pipe-cifar-dense-cu")
 do
-	add_rules("pipe_config", "common_flags", "run_on_android")
+	add_rules("pipe_config", "common_flags")
 
 	add_headerfiles({
 		"task.hpp",
@@ -29,7 +29,7 @@ end
 
 target("pipe-cifar-dense-cu")
 do
-	add_rules("pipe_config", "common_flags", "run_on_android")
+	add_rules("pipe_config", "common_flags")
 
 	add_headerfiles({
 		"task.hpp",
@@ -49,4 +49,3 @@ do
 
 	add_links("nvToolsExt")
 end
-

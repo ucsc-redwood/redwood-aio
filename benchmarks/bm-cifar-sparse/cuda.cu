@@ -6,6 +6,7 @@
 #include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
 #include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/common/cuda/manager.cuh"
+#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/resources_path.hpp"
 
 #define PREPARE_DATA                 \
@@ -25,6 +26,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
   PREPARE_DATA;
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_1(appdata);
     cifar_sparse::cuda::process_stage_2(appdata);
     cifar_sparse::cuda::process_stage_3(appdata);
@@ -34,7 +36,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
     cifar_sparse::cuda::process_stage_7(appdata);
     cifar_sparse::cuda::process_stage_8(appdata);
     cifar_sparse::cuda::process_stage_9(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -53,8 +55,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage1)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_1(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -73,8 +76,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage2)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_2(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -94,8 +98,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage3)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_3(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -116,8 +121,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage4)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_4(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -139,8 +145,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage5)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_5(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -163,8 +170,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage6)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_6(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -188,8 +196,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage7)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_7(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -214,8 +223,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage8)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_8(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -241,8 +251,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage9)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
+    CudaEventTimer timer(state, true);
     cifar_sparse::cuda::process_stage_9(appdata);
-    CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 

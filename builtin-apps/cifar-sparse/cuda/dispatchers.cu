@@ -31,7 +31,7 @@ constexpr bool kRelu = true;
 void process_stage_1(AppData &appdata) {
   const auto total_iterations = appdata.conv1_weights.rows;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 1, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
@@ -68,7 +68,7 @@ void process_stage_2(AppData &appdata) {
   constexpr auto output_width = (kInputWidth - kPoolSize) / kPoolStride + 1;
   auto total_iterations = kInputChannels * output_height * output_width;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 2, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
@@ -89,7 +89,7 @@ void process_stage_2(AppData &appdata) {
 void process_stage_3(AppData &appdata) {
   const auto total_iterations = appdata.conv2_weights.rows;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_pool1_output.data(),
@@ -125,7 +125,7 @@ void process_stage_4(AppData &appdata) {
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
   constexpr auto total_iterations = input_channels * output_height * output_width;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 3, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
@@ -146,7 +146,7 @@ void process_stage_4(AppData &appdata) {
 void process_stage_5(AppData &appdata) {
   const auto total_iterations = appdata.conv3_weights.rows;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 4, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
@@ -177,7 +177,7 @@ void process_stage_5(AppData &appdata) {
 void process_stage_6(AppData &appdata) {
   const auto total_iterations = appdata.conv4_weights.rows;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 5, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
@@ -192,7 +192,7 @@ void process_stage_6(AppData &appdata) {
                                                 appdata.conv4_weights.cols,
                                                 appdata.conv4_weights.nnz,
                                                 appdata.u_conv4_bias.data(),
-                                                256,
+                                                512,
                                                 kKernelSize,
                                                 kStride,
                                                 kPadding,
@@ -208,12 +208,12 @@ void process_stage_6(AppData &appdata) {
 void process_stage_7(AppData &appdata) {
   const auto total_iterations = appdata.conv5_weights.rows;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 6, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
     conv2d<<<grid_dim, block_dim, shared_mem>>>(appdata.u_conv4_output.data(),
-                                                256,
+                                                512,
                                                 8,
                                                 8,
                                                 appdata.conv5_weights.values,
@@ -223,7 +223,7 @@ void process_stage_7(AppData &appdata) {
                                                 appdata.conv5_weights.cols,
                                                 appdata.conv5_weights.nnz,
                                                 appdata.u_conv5_bias.data(),
-                                                256,
+                                                512,
                                                 kKernelSize,
                                                 kStride,
                                                 kPadding,
@@ -237,7 +237,7 @@ void process_stage_7(AppData &appdata) {
 }
 
 void process_stage_8(AppData &appdata) {
-  constexpr auto input_channels = 256;
+  constexpr auto input_channels = 512;
   constexpr auto input_height = 8;
   constexpr auto input_width = 8;
 
@@ -245,7 +245,7 @@ void process_stage_8(AppData &appdata) {
   constexpr auto output_width = (input_width - kPoolSize) / kPoolStride + 1;
   constexpr auto total_iterations = input_channels * output_height * output_width;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 7, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {
@@ -266,7 +266,7 @@ void process_stage_8(AppData &appdata) {
 void process_stage_9(AppData &appdata) {
   const auto total_iterations = appdata.linear_weights.rows;
 
-  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 256);
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 512);
   LOG_KERNEL(LogKernelType::kCUDA, 8, &appdata);
 
   for (auto i = 0; i < kGpuBatchSize; i++) {

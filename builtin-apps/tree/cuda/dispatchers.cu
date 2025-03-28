@@ -3,6 +3,7 @@
 #include <cub/cub.cuh>
 #include <cub/util_math.cuh>
 
+#include "../../common/cuda/helpers.cuh"
 #include "../../debug_logger.hpp"
 #include "01_morton.cuh"
 #include "04_radix_tree.cuh"
@@ -254,13 +255,17 @@ cub::CachingDeviceAllocator g_allocator(true);  // Caching allocator for device 
 // ----------------------------------------------------------------------------
 
 void process_stage_1(SafeAppData &app_data) {
-  constexpr auto block_size = 256;
-  const auto grid_size = cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
-  constexpr auto s_mem = 0;
+  // constexpr auto block_size = 256;
+  // const auto grid_size = cub::DivideAndRoundUp(app_data.get_n_input(), block_size);
+  // constexpr auto s_mem = 0;
+
+  const auto total_iterations = app_data.get_n_input();
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
+
 
   LOG_KERNEL(LogKernelType::kCUDA, 1, &app_data);
 
-  ::cuda::kernels::k_ComputeMortonCode<<<grid_size, block_size, s_mem>>>(
+  ::cuda::kernels::k_ComputeMortonCode<<<grid_dim, block_dim, shared_mem>>>(
       app_data.u_input_points_s0.data(),
       app_data.u_morton_keys_s1_out.data(),
       app_data.get_n_input(),
@@ -355,13 +360,13 @@ void process_stage_3(SafeAppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_4(SafeAppData &app_data) {
-  constexpr auto gridDim = 16;
-  constexpr auto blockDim = 512;
-  constexpr auto sharedMem = 0;
+
+  const auto total_iterations = app_data.get_n_unique();
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
   LOG_KERNEL(LogKernelType::kCUDA, 4, &app_data);
 
-  ::cuda::kernels::k_BuildRadixTree<<<gridDim, blockDim, sharedMem>>>(
+  ::cuda::kernels::k_BuildRadixTree<<<grid_dim, block_dim, shared_mem>>>(
       app_data.get_n_unique(),
       app_data.u_morton_keys_unique_s3.data(),
       app_data.u_brt_prefix_n_s4_out.data(),
@@ -378,13 +383,17 @@ void process_stage_4(SafeAppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_5(SafeAppData &app_data) {
-  constexpr auto gridDim = 16;
-  constexpr auto blockDim = 512;
-  constexpr auto sharedMem = 0;
+  // constexpr auto gridDim = 16;
+  // constexpr auto blockDim = 512;
+  // constexpr auto sharedMem = 0;
+
+
+  const auto total_iterations =  app_data.get_n_brt_nodes();
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
   LOG_KERNEL(LogKernelType::kCUDA, 5, &app_data);
 
-  ::cuda::kernels::k_EdgeCount<<<gridDim, blockDim, sharedMem>>>(
+  ::cuda::kernels::k_EdgeCount<<<grid_dim, block_dim, shared_mem>>>(
       app_data.u_brt_prefix_n_s4.data(),
       app_data.u_brt_parents_s4.data(),
       app_data.u_edge_count_s5_out.data(),
@@ -432,14 +441,17 @@ void process_stage_6(SafeAppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_7(SafeAppData &app_data) {
-  constexpr auto gridDim = 16;
-  constexpr auto blockDim = 512;
-  constexpr auto sharedMem = 0;
+  // constexpr auto gridDim = 16;
+  // constexpr auto blockDim = 512;
+  // constexpr auto sharedMem = 0;
+
+  const auto total_iterations =  app_data.get_n_brt_nodes();
+  SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
   LOG_KERNEL(LogKernelType::kCUDA, 7, &app_data);
 
   // First kernel: Create the octree structure
-  ::cuda::kernels::k_MakeOctNodes<<<gridDim, blockDim, sharedMem>>>(
+  ::cuda::kernels::k_MakeOctNodes<<<grid_dim, block_dim, shared_mem>>>(
       reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7_out.data()),
       app_data.u_oct_corner_s7_out.data(),
       app_data.u_oct_cell_size_s7_out.data(),
@@ -456,7 +468,7 @@ void process_stage_7(SafeAppData &app_data) {
   CubDebugExit(cudaDeviceSynchronize());
 
   // Second kernel: Link leaf nodes
-  ::cuda::kernels::k_LinkLeafNodes<<<gridDim, blockDim, sharedMem>>>(
+  ::cuda::kernels::k_LinkLeafNodes<<<grid_dim, block_dim, shared_mem>>>(
       reinterpret_cast<int(*)[8]>(app_data.u_oct_children_s7_out.data()),
       app_data.u_oct_child_leaf_mask_s7_out.data(),
       app_data.u_edge_offset_s6.data(),

@@ -57,4 +57,20 @@ do
 	})
 end
 
+-- ----------------------------------------------------------------
+-- Utility Target: try determining the block size of CUDA kernels
+-- ----------------------------------------------------------------
 
+if has_config("use_cuda") then
+	target("determine-cuda-kernel-block-size")
+	do
+		add_rules("pipe_config", "common_flags")
+
+		add_files({
+			"determine_cuda_kernel_block_size.cu",
+		})
+
+		add_deps("builtin-apps", "builtin-apps-cuda")
+		add_cugencodes("native")
+	end
+end
