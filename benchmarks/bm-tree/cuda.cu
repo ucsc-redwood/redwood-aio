@@ -15,6 +15,12 @@
   CheckCuda(cudaDeviceSynchronize());
 
 // ----------------------------------------------------------------
+// Global config
+// ----------------------------------------------------------------
+
+bool g_flush_l2_cache = false;
+
+// ----------------------------------------------------------------
 // Baseline
 // ----------------------------------------------------------------
 
@@ -25,7 +31,7 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
   PREPARE_DATA;
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::process_stage_1(appdata);
     tree::cuda::process_stage_2(appdata);
     tree::cuda::process_stage_3(appdata);
@@ -33,7 +39,6 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Baseline)
     tree::cuda::process_stage_5(appdata);
     tree::cuda::process_stage_6(appdata);
     tree::cuda::process_stage_7(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -52,9 +57,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage1)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::process_stage_1(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -74,9 +78,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage2)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::run_stage<2>(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -97,9 +100,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage3)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::run_stage<3>(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -121,9 +123,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage4)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::run_stage<4>(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -146,9 +147,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage5)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::run_stage<5>(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -172,9 +172,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage6)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::run_stage<6>(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -199,9 +198,8 @@ BENCHMARK_DEFINE_F(CUDA_Tree, Stage7)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     tree::cuda::run_stage<7>(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
   }
 }
 
@@ -212,7 +210,12 @@ BENCHMARK_REGISTER_F(CUDA_Tree, Stage7)->Unit(benchmark::kMillisecond);
 // ----------------------------------------------------------------
 
 int main(int argc, char** argv) {
-  parse_args(argc, argv);
+  PARSE_ARGS_BEGIN
+
+  app.add_option("--flush-l2-cache", g_flush_l2_cache, "Flush L2 cache");
+
+  PARSE_ARGS_END
+
   spdlog::set_level(spdlog::level::off);
 
   // Where to save the results json file?

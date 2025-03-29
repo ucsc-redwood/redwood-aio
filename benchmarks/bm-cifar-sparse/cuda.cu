@@ -16,6 +16,13 @@
   CheckCuda(cudaDeviceSynchronize());
 
 // ----------------------------------------------------------------
+// Global config
+// ----------------------------------------------------------------
+
+bool g_flush_l2_cache = false;
+
+
+// ----------------------------------------------------------------
 // Baseline
 // ----------------------------------------------------------------
 
@@ -26,7 +33,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
   PREPARE_DATA;
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_1(appdata);
     cifar_sparse::cuda::process_stage_2(appdata);
     cifar_sparse::cuda::process_stage_3(appdata);
@@ -36,7 +43,7 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
     cifar_sparse::cuda::process_stage_7(appdata);
     cifar_sparse::cuda::process_stage_8(appdata);
     cifar_sparse::cuda::process_stage_9(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -55,9 +62,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage1)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_1(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -76,9 +83,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage2)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_2(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -98,9 +105,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage3)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_3(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -121,9 +128,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage4)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_4(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -145,9 +152,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage5)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_5(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -170,9 +177,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage6)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_6(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -196,9 +203,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage7)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_7(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -223,9 +230,9 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage8)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_8(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
@@ -251,16 +258,21 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage9)
   CheckCuda(cudaDeviceSynchronize());
 
   for (auto _ : state) {
-    CudaEventTimer timer(state, true);
+    CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_9(appdata);
-    // CheckCuda(cudaStreamSynchronize(mgr.get_stream()));
+    
   }
 }
 
 BENCHMARK_REGISTER_F(CUDA_CifarSparse, Stage9)->Unit(benchmark::kMillisecond);
 
 int main(int argc, char** argv) {
-  parse_args(argc, argv);
+  PARSE_ARGS_BEGIN
+
+  app.add_option("--flush-l2-cache", g_flush_l2_cache, "Flush L2 cache");
+
+  PARSE_ARGS_END
+
   spdlog::set_level(spdlog::level::off);
 
   // Where to save the results json file?

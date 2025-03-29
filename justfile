@@ -109,45 +109,45 @@ run-android-bm:
 #  ----------------------------------------------------------------------------
 
 db-to-schedules:
-    python3 scripts/gen_schedules.py -d jetson -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d jetson -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d jetson -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d jetsonlowpower -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d jetsonlowpower -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d jetsonlowpower -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarDense -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d 9b034f1b -a CifarSparse -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
-    python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable_bm_out_v2/ -o ./data/schedule_files_v2 --top 50
+    python3 scripts/gen_schedules.py -d jetson -a CifarDense -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    python3 scripts/gen_schedules.py -d jetson -a CifarSparse -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    python3 scripts/gen_schedules.py -d jetson -a Tree -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d jetsonlowpower -a CifarDense -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d jetsonlowpower -a CifarSparse -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d jetsonlowpower -a Tree -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarDense -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a CifarSparse -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d 3A021JEHN02756 -a Tree -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d 9b034f1b -a CifarDense -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d 9b034f1b -a CifarSparse -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
+    # python3 scripts/gen_schedules.py -d 9b034f1b -a Tree -b ./data/stable_bm_out_v3/ -o ./data/schedule_files_v3 --top 50
 
 schedules-to-code-new:
-    python3 scripts/codegen/new_vk.py data/schedule_files_v2/ CifarDense pipe/new-cifar-dense-vk/generated_code.hpp
-    python3 scripts/codegen/new_vk.py data/schedule_files_v2/ CifarSparse pipe/new-cifar-sparse-vk/generated_code.hpp
-    python3 scripts/codegen/new_vk.py data/schedule_files_v2/ Tree pipe/new-tree-vk/generated_code.hpp
+    # python3 scripts/codegen/new_vk.py data/schedule_files_v3/ CifarDense pipe/new-cifar-dense-vk/generated_code.hpp
+    # python3 scripts/codegen/new_vk.py data/schedule_files_v3/ CifarSparse pipe/new-cifar-sparse-vk/generated_code.hpp
+    # python3 scripts/codegen/new_vk.py data/schedule_files_v3/ Tree pipe/new-tree-vk/generated_code.hpp
 
-    python3 scripts/codegen/new_cu.py data/schedule_files_v2/ CifarDense pipe/new-cifar-dense-cu/generated_code.cuh
-    python3 scripts/codegen/new_cu.py data/schedule_files_v2/ CifarSparse pipe/new-cifar-sparse-cu/generated_code.cuh
-    python3 scripts/codegen/new_cu.py data/schedule_files_v2/ Tree pipe/new-tree-cu/generated_code.cuh
+    python3 scripts/codegen/new_cu.py data/schedule_files_v3/ CifarDense pipe/new-cifar-dense-cu/generated_code.cuh
+    python3 scripts/codegen/new_cu.py data/schedule_files_v3/ CifarSparse pipe/new-cifar-sparse-cu/generated_code.cuh
+    python3 scripts/codegen/new_cu.py data/schedule_files_v3/ Tree pipe/new-tree-cu/generated_code.cuh
 
-    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v2/ CifarDense pipe/new-cifar-dense-cu/generated_code_non_bm.cuh
-    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v2/ CifarSparse pipe/new-cifar-sparse-cu/generated_code_non_bm.cuh
-    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v2/ Tree pipe/new-tree-cu/generated_code_non_bm.cuh
+    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v3/ CifarDense pipe/new-cifar-dense-cu/generated_code_non_bm.cuh
+    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v3/ CifarSparse pipe/new-cifar-sparse-cu/generated_code_non_bm.cuh
+    python3 scripts/codegen/new_cu_non_bm.py data/schedule_files_v3/ Tree pipe/new-tree-cu/generated_code_non_bm.cuh
 
     xmake format
 
 analysis:
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarDense.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_CifarSparse.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/3A021JEHN02756_Tree.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarDense.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_CifarSparse.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/9b034f1b_Tree.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarDense.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_CifarSparse.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetson_Tree.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetsonlowpower_CifarDense.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetsonlowpower_CifarSparse.txt --sort-by avg_time
-     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v2/ data/pipe_out/jetsonlowpower_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/3A021JEHN02756_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/3A021JEHN02756_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/3A021JEHN02756_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/9b034f1b_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/9b034f1b_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/9b034f1b_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/jetson_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/jetson_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/jetson_Tree.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/jetsonlowpower_CifarDense.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/jetsonlowpower_CifarSparse.txt --sort-by avg_time
+     python3 scripts/analysis/parse_benchmark.py --schedule-root data/schedule_files_v3/ data/pipe_out/jetsonlowpower_Tree.txt --sort-by avg_time
 
