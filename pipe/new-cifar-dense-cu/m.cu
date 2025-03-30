@@ -162,24 +162,6 @@ static void schedule_jetson_CifarDense(const std::vector<ChunkConfig> &chunk_con
   std::vector<moodycamel::ConcurrentQueue<Task *>> concur_qs(chunk_configs.size() + 1);
   concur_qs[0] = std::move(q_input);
 
-  //   spdlog::info("Number of chunks: {}", num_chunks);
-
-  //   // Example chunk configurations.
-  //   std::vector chunk_configs = {
-  //       ChunkConfig{
-  //           .exec_model = ExecutionModel::kOMP,
-  //           .start_stage = 1,
-  //           .end_stage = 3,
-  //           .proc_type = ProcessorType::kLittleCore,
-  //           .num_threads = 6,
-  //       },
-  //       ChunkConfig{
-  //           .exec_model = ExecutionModel::kGPU,
-  //           .start_stage = 4,
-  //           .end_stage = 9,
-  //       },
-  //   };
-
   std::vector<std::thread> threads;
 
   cudaEvent_t start, stop;
@@ -232,10 +214,6 @@ void warmup() {
 
 int main(int argc, char **argv) {
   PARSE_ARGS_BEGIN;
-
-  //   int schedule_index = 0;  // Default to first schedule
-  //   app.add_option("-i,--index", schedule_index, "Schedule index (0-9, or -1 for all schedules)")
-  //       ->required();
 
   // take a path to the schedule file
   std::string schedule_file_path;
