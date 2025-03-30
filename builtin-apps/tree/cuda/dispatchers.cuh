@@ -42,7 +42,8 @@ void process_stage_6(SafeAppData &app_data);
 void process_stage_7(SafeAppData &app_data);
 
 template <int Stage>
-requires(Stage >= 1 && Stage <= 7) void run_stage(SafeAppData &appdata) {
+  requires(Stage >= 1 && Stage <= 7)
+void run_stage(SafeAppData &appdata) {
   if constexpr (Stage == 1) {
     process_stage_1(appdata);
   } else if constexpr (Stage == 2) {

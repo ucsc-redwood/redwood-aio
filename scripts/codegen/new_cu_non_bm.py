@@ -51,7 +51,9 @@ def generate_non_benchmark_code_cuda(schedule_json, application):
         f"  auto preallocated_data = init_appdata<{app_ns}::AppData>(mr, num_tasks);"
     )
     lines.append("")
-    lines.append("  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);")
+    lines.append(
+        "  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);"
+    )
     lines.append("")
     lines.append("  cudaEvent_t start, stop;")
     lines.append("  float milliseconds = 0;")
@@ -65,7 +67,7 @@ def generate_non_benchmark_code_cuda(schedule_json, application):
     lines.append("  // Automatically generated from schedule JSON")
     lines.append("")
 
-    lines.append("  nvtxRangePushA(\"Compute\");")
+    lines.append('  nvtxRangePushA("Compute");')
 
     n = len(chunks)
     # Define the intermediate queues
@@ -114,7 +116,7 @@ def generate_non_benchmark_code_cuda(schedule_json, application):
     lines.append("")
     for i in range(n):
         lines.append(f"  t{i+1}.join();")
-    
+
     lines.append("  nvtxRangePop();")
 
     lines.append("")
@@ -129,7 +131,9 @@ def generate_non_benchmark_code_cuda(schedule_json, application):
     lines.append("  cudaEventDestroy(stop);")
     lines.append("")
     lines.append("  double avg_task_time = milliseconds / num_tasks;")
-    lines.append(f'  std::cout << "Average time per task for {schedule_id}: " << avg_task_time << " ms" << std::endl;')
+    lines.append(
+        f'  std::cout << "Average time per task for {schedule_id}: " << avg_task_time << " ms" << std::endl;'
+    )
     lines.append("}")
     lines.append("")
 
@@ -166,7 +170,9 @@ def generate_non_benchmark_code_cuda_tree(schedule_json):
         f"  auto preallocated_data = init_appdata<tree::SafeAppData>(mr, num_tasks);"
     )
     lines.append("")
-    lines.append("  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);")
+    lines.append(
+        "  moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);"
+    )
     lines.append("")
     lines.append("  cudaEvent_t start, stop;")
     lines.append("  float milliseconds = 0;")
@@ -179,8 +185,8 @@ def generate_non_benchmark_code_cuda_tree(schedule_json):
     )
     lines.append("  // Automatically generated from schedule JSON")
     lines.append("")
-    
-    lines.append("  nvtxRangePushA(\"Compute\");")
+
+    lines.append('  nvtxRangePushA("Compute");')
 
     n = len(chunks)
     # Define the intermediate queues
@@ -229,7 +235,7 @@ def generate_non_benchmark_code_cuda_tree(schedule_json):
     lines.append("")
     for i in range(n):
         lines.append(f"  t{i+1}.join();")
-    
+
     lines.append("  nvtxRangePop();")
 
     lines.append("")
@@ -244,7 +250,9 @@ def generate_non_benchmark_code_cuda_tree(schedule_json):
     lines.append("  cudaEventDestroy(stop);")
     lines.append("")
     lines.append("  double avg_task_time = milliseconds / num_tasks;")
-    lines.append(f'  std::cout << "Average time per task for {schedule_id}: " << avg_task_time << " ms" << std::endl;')
+    lines.append(
+        f'  std::cout << "Average time per task for {schedule_id}: " << avg_task_time << " ms" << std::endl;'
+    )
     lines.append("}")
     lines.append("")
 
@@ -256,9 +264,13 @@ def generate_non_benchmark_code_cuda_tree(schedule_json):
 ###############################################################################
 def main():
     if len(sys.argv) < 4:
-        print("Usage: python new_cu_non_bm.py <root_dir> <application> <output_file.cuh>")
+        print(
+            "Usage: python new_cu_non_bm.py <root_dir> <application> <output_file.cuh>"
+        )
         print("Example:")
-        print("  python new_cu_non_bm.py data/schedule_files/ CifarDense generated_code_non_bm.cuh")
+        print(
+            "  python new_cu_non_bm.py data/schedule_files/ CifarDense generated_code_non_bm.cuh"
+        )
         sys.exit(1)
 
     root_dir = Path(sys.argv[1])
@@ -342,7 +354,9 @@ def main():
 
             # Now generate code with the correct function, depending on 'application'
             if application == "Tree":
-                func_lines, func_name = generate_non_benchmark_code_cuda_tree(schedule_json)
+                func_lines, func_name = generate_non_benchmark_code_cuda_tree(
+                    schedule_json
+                )
             else:
                 func_lines, func_name = generate_non_benchmark_code_cuda(
                     schedule_json, application

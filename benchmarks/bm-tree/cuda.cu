@@ -2,9 +2,9 @@
 
 #include "../argc_argv_sanitizer.hpp"
 #include "builtin-apps/app.hpp"
+#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/common/cuda/manager.cuh"
-#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/resources_path.hpp"
 #include "builtin-apps/tree/cuda/dispatchers.cuh"
 

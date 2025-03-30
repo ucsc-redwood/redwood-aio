@@ -4,9 +4,9 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-sparse/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-sparse/sparse_appdata.hpp"
+#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/common/cuda/manager.cuh"
-#include "builtin-apps/common/cuda/cu_bench_helper.cuh"
 #include "builtin-apps/resources_path.hpp"
 
 #define PREPARE_DATA                 \
@@ -20,7 +20,6 @@
 // ----------------------------------------------------------------
 
 bool g_flush_l2_cache = false;
-
 
 // ----------------------------------------------------------------
 // Baseline
@@ -43,7 +42,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Baseline)
     cifar_sparse::cuda::process_stage_7(appdata);
     cifar_sparse::cuda::process_stage_8(appdata);
     cifar_sparse::cuda::process_stage_9(appdata);
-    
   }
 }
 
@@ -64,7 +62,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage1)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_1(appdata);
-    
   }
 }
 
@@ -85,7 +82,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage2)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_2(appdata);
-    
   }
 }
 
@@ -107,7 +103,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage3)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_3(appdata);
-    
   }
 }
 
@@ -130,7 +125,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage4)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_4(appdata);
-    
   }
 }
 
@@ -154,7 +148,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage5)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_5(appdata);
-    
   }
 }
 
@@ -179,7 +172,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage6)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_6(appdata);
-    
   }
 }
 
@@ -205,7 +197,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage7)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_7(appdata);
-    
   }
 }
 
@@ -232,7 +223,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage8)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_8(appdata);
-    
   }
 }
 
@@ -260,7 +250,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarSparse, Stage9)
   for (auto _ : state) {
     CudaEventTimer timer(state, g_flush_l2_cache);
     cifar_sparse::cuda::process_stage_9(appdata);
-    
   }
 }
 

@@ -4,8 +4,8 @@
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
 #include "builtin-apps/cifar-dense/dense_appdata.hpp"
-#include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/common/cuda/cu_bench_helper.cuh"
+#include "builtin-apps/common/cuda/helpers.cuh"
 #include "builtin-apps/common/cuda/manager.cuh"
 #include "builtin-apps/resources_path.hpp"
 
@@ -43,7 +43,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Baseline)
     cifar_dense::cuda::process_stage_7(appdata);
     cifar_dense::cuda::process_stage_8(appdata);
     cifar_dense::cuda::process_stage_9(appdata);
-    
   }
 }
 
@@ -65,7 +64,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage1)
     CudaEventTimer timer(state, true);
 
     cifar_dense::cuda::process_stage_1(appdata);
-    
   }
 }
 
@@ -87,7 +85,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage2)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_2(appdata);
-    
   }
 }
 
@@ -110,7 +107,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage3)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_3(appdata);
-    
   }
 }
 
@@ -134,7 +130,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage4)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_4(appdata);
-    
   }
 }
 
@@ -159,7 +154,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage5)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_5(appdata);
-    
   }
 }
 
@@ -185,7 +179,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage6)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_6(appdata);
-    
   }
 }
 
@@ -212,7 +205,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage7)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_7(appdata);
-    
   }
 }
 
@@ -240,7 +232,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage8)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_8(appdata);
-    
   }
 }
 
@@ -269,7 +260,6 @@ BENCHMARK_DEFINE_F(CUDA_CifarDense, Stage9)
     CudaEventTimer timer(state, g_flush_l2_cache);
 
     cifar_dense::cuda::process_stage_9(appdata);
-    
   }
 }
 

@@ -262,7 +262,6 @@ void process_stage_1(SafeAppData &app_data) {
   const auto total_iterations = app_data.get_n_input();
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
-
   LOG_KERNEL(LogKernelType::kCUDA, 1, &app_data);
 
   ::cuda::kernels::k_ComputeMortonCode<<<grid_dim, block_dim, shared_mem>>>(
@@ -360,7 +359,6 @@ void process_stage_3(SafeAppData &app_data) {
 // ----------------------------------------------------------------------------
 
 void process_stage_4(SafeAppData &app_data) {
-
   const auto total_iterations = app_data.get_n_unique();
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
@@ -387,8 +385,7 @@ void process_stage_5(SafeAppData &app_data) {
   // constexpr auto blockDim = 512;
   // constexpr auto sharedMem = 0;
 
-
-  const auto total_iterations =  app_data.get_n_brt_nodes();
+  const auto total_iterations = app_data.get_n_brt_nodes();
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
   LOG_KERNEL(LogKernelType::kCUDA, 5, &app_data);
@@ -445,7 +442,7 @@ void process_stage_7(SafeAppData &app_data) {
   // constexpr auto blockDim = 512;
   // constexpr auto sharedMem = 0;
 
-  const auto total_iterations =  app_data.get_n_brt_nodes();
+  const auto total_iterations = app_data.get_n_brt_nodes();
   SETUP_DEFAULT_LAUNCH_PARAMS(total_iterations, 768);
 
   LOG_KERNEL(LogKernelType::kCUDA, 7, &app_data);
