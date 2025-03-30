@@ -49,3 +49,27 @@ do
 
 	add_links("nvToolsExt")
 end
+
+
+target("new-pipe-cifar-dense-cu")
+do
+	add_rules("pipe_config", "common_flags")
+
+	add_headerfiles({
+		"task.hpp",
+		"run_stages.hpp",
+		"../templates.hpp",
+		"../templates_cu.hpp",
+		"generated_code_non_bm.cuh",
+	})
+
+	add_files({
+		"m.cu",
+		"task.cpp",
+	})
+
+	add_deps("builtin-apps", "builtin-apps-cuda")
+	add_cugencodes("native")
+
+	add_links("nvToolsExt")
+end
