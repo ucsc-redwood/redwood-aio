@@ -51,6 +51,7 @@ do
 end
 
 
+
 target("new-pipe-cifar-dense-cu")
 do
 	add_rules("pipe_config", "common_flags")
@@ -72,4 +73,6 @@ do
 	add_cugencodes("native")
 
 	add_links("nvToolsExt")
+
+	add_packages("nlohmann_json")
 end

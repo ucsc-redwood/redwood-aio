@@ -1,7 +1,6 @@
 #include <concurrentqueue.h>
 #include <spdlog/spdlog.h>
 
-#include <optional>
 #include <thread>
 
 #include "../templates.hpp"
@@ -17,6 +16,7 @@
 
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/common/cuda/helpers.cuh"
+#include "config_reader.hpp"
 
 // ---------------------------------------------------------------------
 // OMP
@@ -90,21 +90,6 @@ void run_multiple_stages(const int start_stage,
 }
 }  // namespace cuda
 
-// ---------------------------------------------------------------------
-// Execution model
-// ---------------------------------------------------------------------
-
-enum class ExecutionModel { kOMP, kGPU, kVulkan };
-
-// Define the configuration and execution model.
-struct ChunkConfig {
-  const ExecutionModel exec_model;  // e.g., kOMP, kGPU, kVulkan
-  const int start_stage;
-  const int end_stage;
-  const std::optional<ProcessorType> proc_type;  // e.g., kLittleCore, kMediumCore, kBigCore
-  const std::optional<int> num_threads;
-};
-
 // template <typename TaskType, typename AppDataType>
 void process_chunk_detail(moodycamel::ConcurrentQueue<Task *> &q_in,
                           moodycamel::ConcurrentQueue<Task *> &q_out,
@@ -134,7 +119,7 @@ void process_chunk_detail(moodycamel::ConcurrentQueue<Task *> &q_in,
 // Schedule
 // ---------------------------------------------------------------------
 
-void process_chunk(ChunkConfig &config,
+void process_chunk(const ChunkConfig &config,
                    moodycamel::ConcurrentQueue<Task *> &in_queue,
                    moodycamel::ConcurrentQueue<Task *> &out_queue,
                    cuda::CudaManager &mgr) {
@@ -161,7 +146,7 @@ void process_chunk(ChunkConfig &config,
 // Schedule
 // ---------------------------------------------------------------------
 
-static void schedule_jetson_CifarDense() {
+static void schedule_jetson_CifarDense(const std::vector<ChunkConfig> &chunk_configs) {
   cuda::CudaManager mgr;
 
   // Preallocate data for all tasks
@@ -172,28 +157,28 @@ static void schedule_jetson_CifarDense() {
 
   // ---------------------------------------------------------------------
 
-  int num_chunks = 2;
+  //   int num_chunks = 2;
 
-  std::vector<moodycamel::ConcurrentQueue<Task *>> concur_qs(num_chunks + 1);
+  std::vector<moodycamel::ConcurrentQueue<Task *>> concur_qs(chunk_configs.size() + 1);
   concur_qs[0] = std::move(q_input);
 
-  spdlog::info("Number of chunks: {}", num_chunks);
+  //   spdlog::info("Number of chunks: {}", num_chunks);
 
-  // Example chunk configurations.
-  std::vector chunk_configs = {
-      ChunkConfig{
-          .exec_model = ExecutionModel::kOMP,
-          .start_stage = 1,
-          .end_stage = 3,
-          .proc_type = ProcessorType::kLittleCore,
-          .num_threads = 6,
-      },
-      ChunkConfig{
-          .exec_model = ExecutionModel::kGPU,
-          .start_stage = 4,
-          .end_stage = 9,
-      },
-  };
+  //   // Example chunk configurations.
+  //   std::vector chunk_configs = {
+  //       ChunkConfig{
+  //           .exec_model = ExecutionModel::kOMP,
+  //           .start_stage = 1,
+  //           .end_stage = 3,
+  //           .proc_type = ProcessorType::kLittleCore,
+  //           .num_threads = 6,
+  //       },
+  //       ChunkConfig{
+  //           .exec_model = ExecutionModel::kGPU,
+  //           .start_stage = 4,
+  //           .end_stage = 9,
+  //       },
+  //   };
 
   std::vector<std::thread> threads;
 
@@ -205,7 +190,7 @@ static void schedule_jetson_CifarDense() {
 
   // ---------------------------------------------------------------------
 
-  for (int i = 0; i < num_chunks; ++i) {
+  for (int i = 0; i < chunk_configs.size(); ++i) {
     threads.emplace_back(
         [&, i]() { process_chunk(chunk_configs[i], concur_qs[i], concur_qs[i + 1], mgr); });
   }
@@ -252,13 +237,19 @@ int main(int argc, char **argv) {
   //   app.add_option("-i,--index", schedule_index, "Schedule index (0-9, or -1 for all schedules)")
   //       ->required();
 
+  // take a path to the schedule file
+  std::string schedule_file_path;
+  app.add_option("-f,--file", schedule_file_path, "Schedule file path")->required();
+
   PARSE_ARGS_END;
 
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
+  auto chunks = readChunksFromJson(fs::path(schedule_file_path));
+
   warmup();
 
-  schedule_jetson_CifarDense();
+  schedule_jetson_CifarDense(chunks);
 
   return 0;
 }

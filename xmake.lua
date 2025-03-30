@@ -28,6 +28,9 @@ add_requires("spdlog") -- everything
 add_requires("cli11") -- all binaries
 add_requires("glm") -- tree applications
 
+add_requires("nlohmann_json")
+
+
 -- OpenMP is handled differently on Android
 if not is_plat("android") then
 	add_requires("openmp")
