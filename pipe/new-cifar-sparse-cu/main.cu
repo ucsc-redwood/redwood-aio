@@ -10,8 +10,8 @@
 // ---------------------------------------------------------------------
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
-#include "builtin-apps/cifar-dense/omp/dispatchers.hpp"
+#include "builtin-apps/cifar-sparse/cuda/dispatchers.cuh"
+#include "builtin-apps/cifar-sparse/omp/dispatchers.hpp"
 #include "builtin-apps/common/cuda/manager.cuh"
 // ---------------------------------------------------------------------
 
@@ -25,23 +25,23 @@
 
 namespace omp {
 
-constexpr std::array<void (*)(cifar_dense::AppData &), 9> cpu_stages = {
-    cifar_dense::omp::process_stage_1,
-    cifar_dense::omp::process_stage_2,
-    cifar_dense::omp::process_stage_3,
-    cifar_dense::omp::process_stage_4,
-    cifar_dense::omp::process_stage_5,
-    cifar_dense::omp::process_stage_6,
-    cifar_dense::omp::process_stage_7,
-    cifar_dense::omp::process_stage_8,
-    cifar_dense::omp::process_stage_9,
+constexpr std::array<void (*)(cifar_sparse::AppData &), 9> cpu_stages = {
+    cifar_sparse::omp::process_stage_1,
+    cifar_sparse::omp::process_stage_2,
+    cifar_sparse::omp::process_stage_3,
+    cifar_sparse::omp::process_stage_4,
+    cifar_sparse::omp::process_stage_5,
+    cifar_sparse::omp::process_stage_6,
+    cifar_sparse::omp::process_stage_7,
+    cifar_sparse::omp::process_stage_8,
+    cifar_sparse::omp::process_stage_9,
 };
 
 void run_multiple_stages(const int start_stage,
                          const int end_stage,
                          const ProcessorType pt,
                          const int num_threads,
-                         cifar_dense::AppData &data) {
+                         cifar_sparse::AppData &data) {
 #pragma omp parallel num_threads(num_threads)
   {
     // Bind to core
@@ -67,21 +67,21 @@ void run_multiple_stages(const int start_stage,
 
 namespace cuda {
 
-constexpr std::array<void (*)(cifar_dense::AppData &), 9> gpu_stages = {
-    cifar_dense::cuda::process_stage_1,
-    cifar_dense::cuda::process_stage_2,
-    cifar_dense::cuda::process_stage_3,
-    cifar_dense::cuda::process_stage_4,
-    cifar_dense::cuda::process_stage_5,
-    cifar_dense::cuda::process_stage_6,
-    cifar_dense::cuda::process_stage_7,
-    cifar_dense::cuda::process_stage_8,
-    cifar_dense::cuda::process_stage_9,
+constexpr std::array<void (*)(cifar_sparse::AppData &), 9> gpu_stages = {
+    cifar_sparse::cuda::process_stage_1,
+    cifar_sparse::cuda::process_stage_2,
+    cifar_sparse::cuda::process_stage_3,
+    cifar_sparse::cuda::process_stage_4,
+    cifar_sparse::cuda::process_stage_5,
+    cifar_sparse::cuda::process_stage_6,
+    cifar_sparse::cuda::process_stage_7,
+    cifar_sparse::cuda::process_stage_8,
+    cifar_sparse::cuda::process_stage_9,
 };
 
 void run_multiple_stages(const int start_stage,
                          const int end_stage,
-                         cifar_dense::AppData &data,
+                         cifar_sparse::AppData &data,
                          cuda::CudaManager &mgr) {
   for (int s = start_stage; s <= end_stage; ++s) {
     gpu_stages[s - 1](data);
@@ -94,7 +94,7 @@ void run_multiple_stages(const int start_stage,
 // template <typename TaskType, typename AppDataType>
 void process_chunk_detail(moodycamel::ConcurrentQueue<Task *> &q_in,
                           moodycamel::ConcurrentQueue<Task *> &q_out,
-                          std::function<void(cifar_dense::AppData &)> func) {
+                          std::function<void(cifar_sparse::AppData &)> func) {
   while (true) {
     Task *task = nullptr;
     if (q_in.try_dequeue(task)) {
@@ -125,7 +125,7 @@ void process_chunk(const ChunkConfig &config,
                    moodycamel::ConcurrentQueue<Task *> &out_queue,
                    cuda::CudaManager &mgr) {
   if (config.exec_model == ExecutionModel::kOMP) {
-    process_chunk_detail(in_queue, out_queue, [&config](cifar_dense::AppData &data) {
+    process_chunk_detail(in_queue, out_queue, [&config](cifar_sparse::AppData &data) {
       omp::run_multiple_stages(config.start_stage,
                                config.end_stage,
                                config.proc_type.value(),
@@ -134,7 +134,7 @@ void process_chunk(const ChunkConfig &config,
     });
 
   } else if (config.exec_model == ExecutionModel::kGPU) {
-    process_chunk_detail(in_queue, out_queue, [&config, &mgr](cifar_dense::AppData &data) {
+    process_chunk_detail(in_queue, out_queue, [&config, &mgr](cifar_sparse::AppData &data) {
       cuda::run_multiple_stages(config.start_stage, config.end_stage, data, mgr);
     });
 
@@ -147,12 +147,12 @@ void process_chunk(const ChunkConfig &config,
 // Schedule
 // ---------------------------------------------------------------------
 
-static void schedule_jetson_CifarDense(const std::vector<ChunkConfig> &chunk_configs) {
+static void schedule_jetson_CifarSparse(const std::vector<ChunkConfig> &chunk_configs) {
   cuda::CudaManager mgr;
 
   // Preallocate data for all tasks
   constexpr size_t num_tasks = 100;
-  auto preallocated_data = init_appdata<cifar_dense::AppData>(&mgr.get_mr(), num_tasks);
+  auto preallocated_data = init_appdata<cifar_sparse::AppData>(&mgr.get_mr(), num_tasks);
 
   moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
 
@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
 
   warmup();
 
-  schedule_jetson_CifarDense(chunks);
+  schedule_jetson_CifarSparse(chunks);
 
   return 0;
 }

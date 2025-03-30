@@ -16,4 +16,4 @@ struct Task {
 };
 
 [[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(
-    std::vector<cifar_dense::AppData> &data, size_t initial_capacity = 32);
+    std::vector<cifar_dense::AppData> &data);

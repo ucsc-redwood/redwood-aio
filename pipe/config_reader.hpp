@@ -78,9 +78,9 @@ inline std::vector<ChunkConfig> readChunksFromJson(const fs::path &filepath) {
     chunks.push_back(config);
 
     // print out for debugging
-    spdlog::debug("Chunk config: {}", jchunk.at("name").get<std::string>());
-    spdlog::debug("\tStart stage: {}", config.start_stage);
-    spdlog::debug("\tEnd stage: {}", config.end_stage);
+    spdlog::info("Chunk config: {}", jchunk.at("name").get<std::string>());
+    spdlog::info("\tStart stage: {}", config.start_stage);
+    spdlog::info("\tEnd stage: {}", config.end_stage);
 
     // Convert enum to string
     std::string exec_model_str;
@@ -91,7 +91,7 @@ inline std::vector<ChunkConfig> readChunksFromJson(const fs::path &filepath) {
     } else if (config.exec_model == ExecutionModel::kVulkan) {
       exec_model_str = "Vulkan";
     }
-    spdlog::debug("\tExecution model: {}", exec_model_str);
+    spdlog::info("\tExecution model: {}", exec_model_str);
 
     // Only log processor type if it's available
     if (config.proc_type.has_value()) {
@@ -103,12 +103,12 @@ inline std::vector<ChunkConfig> readChunksFromJson(const fs::path &filepath) {
       } else if (config.proc_type.value() == ProcessorType::kBigCore) {
         proc_type_str = "Big Core";
       }
-      spdlog::debug("\tProcessor type: {}", proc_type_str);
+      spdlog::info("\tProcessor type: {}", proc_type_str);
     }
 
     // Only log thread count if it's available
     if (config.num_threads.has_value()) {
-      spdlog::debug("\tNumber of threads: {}", config.num_threads.value());
+      spdlog::info("\tNumber of threads: {}", config.num_threads.value());
     }
   }
 

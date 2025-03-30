@@ -4,19 +4,20 @@
 #include <thread>
 
 #include "../templates.hpp"
+#include "../templates_cu.cuh"
 #include "task.hpp"
 
 // ---------------------------------------------------------------------
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
-#include "builtin-apps/cifar-dense/cuda/dispatchers.cuh"
-#include "builtin-apps/cifar-dense/omp/dispatchers.hpp"
 #include "builtin-apps/common/cuda/manager.cuh"
+#include "builtin-apps/tree/cuda/dispatchers.cuh"
+#include "builtin-apps/tree/omp/dispatchers.hpp"
 // ---------------------------------------------------------------------
 
+#include "../config_reader.hpp"
 #include "builtin-apps/app.hpp"
 #include "builtin-apps/common/cuda/helpers.cuh"
-#include "config_reader.hpp"
 
 // ---------------------------------------------------------------------
 // OMP
@@ -24,23 +25,21 @@
 
 namespace omp {
 
-constexpr std::array<void (*)(cifar_dense::AppData &), 9> cpu_stages = {
-    cifar_dense::omp::process_stage_1,
-    cifar_dense::omp::process_stage_2,
-    cifar_dense::omp::process_stage_3,
-    cifar_dense::omp::process_stage_4,
-    cifar_dense::omp::process_stage_5,
-    cifar_dense::omp::process_stage_6,
-    cifar_dense::omp::process_stage_7,
-    cifar_dense::omp::process_stage_8,
-    cifar_dense::omp::process_stage_9,
+constexpr std::array<void (*)(tree::SafeAppData &), 7> cpu_stages = {
+    tree::omp::process_stage_1,
+    tree::omp::process_stage_2,
+    tree::omp::process_stage_3,
+    tree::omp::process_stage_4,
+    tree::omp::process_stage_5,
+    tree::omp::process_stage_6,
+    tree::omp::process_stage_7,
 };
 
 void run_multiple_stages(const int start_stage,
                          const int end_stage,
                          const ProcessorType pt,
                          const int num_threads,
-                         cifar_dense::AppData &data) {
+                         tree::SafeAppData &data) {
 #pragma omp parallel num_threads(num_threads)
   {
     // Bind to core
@@ -66,21 +65,19 @@ void run_multiple_stages(const int start_stage,
 
 namespace cuda {
 
-constexpr std::array<void (*)(cifar_dense::AppData &), 9> gpu_stages = {
-    cifar_dense::cuda::process_stage_1,
-    cifar_dense::cuda::process_stage_2,
-    cifar_dense::cuda::process_stage_3,
-    cifar_dense::cuda::process_stage_4,
-    cifar_dense::cuda::process_stage_5,
-    cifar_dense::cuda::process_stage_6,
-    cifar_dense::cuda::process_stage_7,
-    cifar_dense::cuda::process_stage_8,
-    cifar_dense::cuda::process_stage_9,
+constexpr std::array<void (*)(tree::SafeAppData &), 7> gpu_stages = {
+    tree::cuda::process_stage_1,
+    tree::cuda::process_stage_2,
+    tree::cuda::process_stage_3,
+    tree::cuda::process_stage_4,
+    tree::cuda::process_stage_5,
+    tree::cuda::process_stage_6,
+    tree::cuda::process_stage_7,
 };
 
 void run_multiple_stages(const int start_stage,
                          const int end_stage,
-                         cifar_dense::AppData &data,
+                         tree::SafeAppData &data,
                          cuda::CudaManager &mgr) {
   for (int s = start_stage; s <= end_stage; ++s) {
     gpu_stages[s - 1](data);
@@ -93,7 +90,7 @@ void run_multiple_stages(const int start_stage,
 // template <typename TaskType, typename AppDataType>
 void process_chunk_detail(moodycamel::ConcurrentQueue<Task *> &q_in,
                           moodycamel::ConcurrentQueue<Task *> &q_out,
-                          std::function<void(cifar_dense::AppData &)> func) {
+                          std::function<void(tree::SafeAppData &)> func) {
   while (true) {
     Task *task = nullptr;
     if (q_in.try_dequeue(task)) {
@@ -124,7 +121,7 @@ void process_chunk(const ChunkConfig &config,
                    moodycamel::ConcurrentQueue<Task *> &out_queue,
                    cuda::CudaManager &mgr) {
   if (config.exec_model == ExecutionModel::kOMP) {
-    process_chunk_detail(in_queue, out_queue, [&config](cifar_dense::AppData &data) {
+    process_chunk_detail(in_queue, out_queue, [&config](tree::SafeAppData &data) {
       omp::run_multiple_stages(config.start_stage,
                                config.end_stage,
                                config.proc_type.value(),
@@ -133,7 +130,7 @@ void process_chunk(const ChunkConfig &config,
     });
 
   } else if (config.exec_model == ExecutionModel::kGPU) {
-    process_chunk_detail(in_queue, out_queue, [&config, &mgr](cifar_dense::AppData &data) {
+    process_chunk_detail(in_queue, out_queue, [&config, &mgr](tree::SafeAppData &data) {
       cuda::run_multiple_stages(config.start_stage, config.end_stage, data, mgr);
     });
 
@@ -146,18 +143,16 @@ void process_chunk(const ChunkConfig &config,
 // Schedule
 // ---------------------------------------------------------------------
 
-static void schedule_jetson_CifarDense(const std::vector<ChunkConfig> &chunk_configs) {
+static void schedule_jetson_CifarSparse(const std::vector<ChunkConfig> &chunk_configs) {
   cuda::CudaManager mgr;
 
   // Preallocate data for all tasks
   constexpr size_t num_tasks = 100;
-  auto preallocated_data = init_appdata<cifar_dense::AppData>(&mgr.get_mr(), num_tasks);
+  auto preallocated_data = init_appdata<tree::SafeAppData>(&mgr.get_mr(), num_tasks);
 
   moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
 
   // ---------------------------------------------------------------------
-
-  //   int num_chunks = 2;
 
   std::vector<moodycamel::ConcurrentQueue<Task *>> concur_qs(chunk_configs.size() + 1);
   concur_qs[0] = std::move(q_input);
@@ -196,22 +191,6 @@ static void schedule_jetson_CifarDense(const std::vector<ChunkConfig> &chunk_con
 // Main
 // ---------------------------------------------------------------------
 
-__global__ void warmup_kernel() {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  // Only one thread performs a dummy loop to generate some work.
-  if (tid == 0) {
-    volatile int dummy = 0;
-    for (int i = 0; i < 1000; ++i) {
-      dummy += i;
-    }
-  }
-}
-
-void warmup() {
-  warmup_kernel<<<1, 1>>>();
-  CheckCuda(cudaDeviceSynchronize());
-}
-
 int main(int argc, char **argv) {
   PARSE_ARGS_BEGIN;
 
@@ -221,13 +200,13 @@ int main(int argc, char **argv) {
 
   PARSE_ARGS_END;
 
-  spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
-
   auto chunks = readChunksFromJson(fs::path(schedule_file_path));
+
+  spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
   warmup();
 
-  schedule_jetson_CifarDense(chunks);
+  schedule_jetson_CifarSparse(chunks);
 
   return 0;
 }

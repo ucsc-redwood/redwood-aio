@@ -15,5 +15,4 @@ struct Task {
   explicit Task(tree::SafeAppData *data) : data(data) {}
 };
 
-[[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(std::vector<tree::SafeAppData> &data,
-                                                             size_t initial_capacity = 32);
+[[nodiscard]] moodycamel::ConcurrentQueue<Task *> init_tasks(std::vector<tree::SafeAppData> &data);
