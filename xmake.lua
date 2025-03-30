@@ -28,6 +28,9 @@ add_requires("spdlog") -- everything
 add_requires("cli11") -- all binaries
 add_requires("glm") -- tree applications
 
+add_requires("nlohmann_json")
+add_requires("libcurl")
+
 -- OpenMP is handled differently on Android
 if not is_plat("android") then
 	add_requires("openmp")
@@ -49,7 +52,7 @@ on_load(function(target)
 	target:add("packages", "spdlog")
 	target:add("packages", "glm")
 
-	-- if has cuda
+	-- if has cuda 
 	if has_config("cuda") then
 	    target:add("cuflags", "-Xcompiler", "-fopenmp", {force = true})
 	    target:add("ldflags", "-fopenmp", {force = true})
@@ -109,6 +112,6 @@ includes("builtin-apps") -- the three applications
 -- includes("tests")
 includes("benchmarks")
 includes("pipe")
--- includes("play")
+includes("play")
 includes("utility")
 
