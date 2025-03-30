@@ -2,10 +2,9 @@
 #include <spdlog/spdlog.h>
 
 #include <optional>
+#include <thread>
 
 #include "../templates.hpp"
-// #include "../templates_cu.hpp"
-// #include "run_stages.hpp"
 #include "task.hpp"
 
 // ---------------------------------------------------------------------
@@ -99,41 +98,12 @@ enum class ExecutionModel { kOMP, kGPU, kVulkan };
 
 // Define the configuration and execution model.
 struct ChunkConfig {
-  ExecutionModel exec_model;  // e.g., kOMP, kGPU, kVulkan
-  int start_stage;
-  int end_stage;
-  std::optional<ProcessorType> proc_type;  // e.g., kLittleCore, kMediumCore, kBigCore
-  std::optional<int> num_threads;
+  const ExecutionModel exec_model;  // e.g., kOMP, kGPU, kVulkan
+  const int start_stage;
+  const int end_stage;
+  const std::optional<ProcessorType> proc_type;  // e.g., kLittleCore, kMediumCore, kBigCore
+  const std::optional<int> num_threads;
 };
-
-// // template <typename TaskType, typename AppDataType>
-// void process_chunk_detail(moodycamel::ConcurrentQueue<Task *> &q_cur,
-//                           moodycamel::ConcurrentQueue<Task *> *q_next,
-//                           std::function<void(cifar_dense::AppData &)> func) {
-//   while (true) {
-//     Task *task = nullptr;
-//     if (q_cur.try_dequeue(task)) {
-//       if (task == nullptr) {
-//         // Sentinel => pass it on if there's a next queue and stop
-//         if (q_next != nullptr) {
-//           q_next->enqueue(nullptr);
-//         }
-//         break;
-//       }
-
-//       // -----------------------------------
-//       func(*task->data);
-//       // -----------------------------------
-
-//       // If there's a next queue, pass the task along
-//       if (q_next != nullptr) {
-//         q_next->enqueue(task);
-//       }
-//     } else {
-//       std::this_thread::yield();
-//     }
-//   }
-// }
 
 // template <typename TaskType, typename AppDataType>
 void process_chunk_detail(moodycamel::ConcurrentQueue<Task *> &q_in,
@@ -194,22 +164,11 @@ void process_chunk(ChunkConfig &config,
 static void schedule_jetson_CifarDense() {
   cuda::CudaManager mgr;
 
-  constexpr size_t num_tasks = 100;
-
-  auto mr = &mgr.get_mr();
-
   // Preallocate data for all tasks
-  auto preallocated_data = init_appdata<cifar_dense::AppData>(mr, num_tasks);
+  constexpr size_t num_tasks = 100;
+  auto preallocated_data = init_appdata<cifar_dense::AppData>(&mgr.get_mr(), num_tasks);
 
   moodycamel::ConcurrentQueue<Task *> q_input = init_tasks(preallocated_data);
-
-  //   auto start_time = std::chrono::high_resolution_clock::now();
-
-  cudaEvent_t start, stop;
-  float milliseconds = 0;
-  cudaEventCreate(&start);
-  cudaEventCreate(&stop);
-  cudaEventRecord(start, 0);
 
   // ---------------------------------------------------------------------
 
@@ -219,8 +178,6 @@ static void schedule_jetson_CifarDense() {
   concur_qs[0] = std::move(q_input);
 
   spdlog::info("Number of chunks: {}", num_chunks);
-
-  std::vector<std::thread> threads;
 
   // Example chunk configurations.
   std::vector chunk_configs = {
@@ -238,17 +195,24 @@ static void schedule_jetson_CifarDense() {
       },
   };
 
+  std::vector<std::thread> threads;
+
+  cudaEvent_t start, stop;
+  float milliseconds = 0;
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+  cudaEventRecord(start, 0);
+
+  // ---------------------------------------------------------------------
+
   for (int i = 0; i < num_chunks; ++i) {
-    spdlog::info("Launching thread {}", i);
     threads.emplace_back(
         [&, i]() { process_chunk(chunk_configs[i], concur_qs[i], concur_qs[i + 1], mgr); });
   }
 
   for (auto &t : threads) {
-    spdlog::info("Joining thread");
     t.join();
   }
-
   // ---------------------------------------------------------------------
 
   cudaEventRecord(stop, 0);
@@ -258,7 +222,7 @@ static void schedule_jetson_CifarDense() {
   cudaEventDestroy(stop);
 
   double avg_task_time = milliseconds / num_tasks;
-  std::cout << "GPU baseline time per task: " << avg_task_time << " ms" << std::endl;
+  std::cout << "Time per task: " << avg_task_time << " ms" << std::endl;
 }
 
 // ---------------------------------------------------------------------
@@ -292,7 +256,7 @@ int main(int argc, char **argv) {
 
   spdlog::set_level(spdlog::level::from_str(g_spdlog_log_level));
 
-  //   warmup();
+  warmup();
 
   schedule_jetson_CifarDense();
 
