@@ -33,6 +33,17 @@ do
 	add_deps("builtin-apps")
 end
 
+target("bm_kernels")
+do
+	add_rules("lpipe_config", "common_flags", "run_on_android")
+
+	add_files({
+		"bm_kernels.cpp",
+	})
+
+	add_deps("builtin-apps")
+	add_packages("benchmark")
+end
 
 -- if has_config("use_vulkan") then
 -- 	includes("new-cifar-dense-vk")
