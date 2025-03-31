@@ -11,7 +11,7 @@
 #include "spsc_queue.hpp"
 #include "task.hpp"
 
-constexpr size_t kNumTasks = 10;
+constexpr size_t kNumTasks = 100;
 
 template <ProcessorType PT>
 void debug_print(const Task& task) {
@@ -20,14 +20,14 @@ void debug_print(const Task& task) {
     auto num_threads = omp_get_num_threads();
 
     if constexpr (PT == ProcessorType::kLittleCore) {
-      std::cout << "Little core processed task " << task.uid << " [" << num_threads
-                << "] with core " << sched_getcpu() << std::endl;
+      spdlog::debug(
+          "[L{:d}] core processed task {} on core {:d}", num_threads, task.uid, sched_getcpu());
     } else if constexpr (PT == ProcessorType::kMediumCore) {
-      std::cout << "Medium core processed task " << task.uid << " [" << num_threads
-                << "] with core " << sched_getcpu() << std::endl;
+      spdlog::debug(
+          "[M{:d}] core processed task {} on core {:d}", num_threads, task.uid, sched_getcpu());
     } else if constexpr (PT == ProcessorType::kBigCore) {
-      std::cout << "Big core processed task " << task.uid << " [" << num_threads << "] with core "
-                << sched_getcpu() << std::endl;
+      spdlog::debug(
+          "[B{:d}] core processed task {} on core {:d}", num_threads, task.uid, sched_getcpu());
     }
   }
 }
@@ -54,7 +54,7 @@ static void worker_thread(const size_t num_threads,
       }
 
       // ----------------------------------
-      debug_print<PT>(task);
+      //   debug_print<PT>(task);
       process_function(task);
       // ----------------------------------
     }
