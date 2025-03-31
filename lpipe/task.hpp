@@ -1,0 +1,25 @@
+#pragma once
+
+#include <numeric>
+#include <vector>
+
+struct Task {
+  uint32_t uid;
+  std::vector<float> data;
+  bool is_sentinel = false;
+};
+
+[[nodiscard]] inline Task new_task(const size_t size) {
+  Task task;
+  static uint32_t uid_counter = 0;
+  task.uid = uid_counter++;
+  task.data.resize(size);
+  std::iota(task.data.begin(), task.data.end(), 0.0f);
+  return task;
+}
+
+[[nodiscard]] inline Task new_sentinel() {
+  Task task;
+  task.is_sentinel = true;
+  return task;
+}

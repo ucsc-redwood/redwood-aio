@@ -1,35 +1,16 @@
 #include <omp.h>
 
-#include <algorithm>
-#include <atomic>
 #include <cassert>
 #include <cstddef>
 
 #include "builtin-apps/affinity.hpp"
 #include "builtin-apps/app.hpp"
 
-struct Task {
-  uint32_t uid;
-  std::vector<float> data;
-  bool is_sentinel = false;
+// ------------------------------------------------------------------------------------------------
+#include "spsc_queue.hpp"
+#include "task.hpp"
 
-  // debugging
-};
-
-Task new_task(const size_t size) {
-  Task task;
-  static uint32_t uid_counter = 0;
-  task.uid = uid_counter++;
-  task.data.resize(size);
-  std::iota(task.data.begin(), task.data.end(), 0.0f);
-  return task;
-}
-
-Task new_sentinel() {
-  Task task;
-  task.is_sentinel = true;
-  return task;
-}
+// constexpr size_t kNumTasks = 100;
 
 void process_task_stage_A(Task& task) {
 #pragma omp for
@@ -52,103 +33,58 @@ void process_task_stage_C(Task& task) {
   }
 }
 
-template <typename T, size_t Size>
-class SPSCQueue {
-  static_assert((Size & (Size - 1)) == 0, "Size must be a power of 2");
-
- public:
-  SPSCQueue() = default;
-  ~SPSCQueue() = default;
-
-  // Add a move version of enqueue
-  bool enqueue(T&& item) {
-    const size_t head = head_.load(std::memory_order_relaxed);
-    const size_t next_head = (head + 1) & mask_;
-
-    if (next_head == tail_.load(std::memory_order_acquire)) {
-      return false;  // full
-    }
-
-    buffer_[head] = std::move(item);
-    head_.store(next_head, std::memory_order_release);
-    return true;
-  }
-
-  //   // Keep the copy version for backward compatibility
-  //   bool enqueue(const T& item) {
-  //     const size_t head = head_.load(std::memory_order_relaxed);
-  //     const size_t next_head = (head + 1) & mask_;
-
-  //     if (next_head == tail_.load(std::memory_order_acquire)) {
-  //       return false;  // full
-  //     }
-
-  //     buffer_[head] = item;
-  //     head_.store(next_head, std::memory_order_release);
-  //     return true;
-  //   }
-
-  bool dequeue(T& item) {
-    const size_t tail = tail_.load(std::memory_order_relaxed);
-
-    if (tail == head_.load(std::memory_order_acquire)) {
-      return false;  // empty
-    }
-
-    item = std::move(buffer_[tail]);
-    tail_.store((tail + 1) & mask_, std::memory_order_release);
-    return true;
-  }
-
-  bool empty() const {
-    return head_.load(std::memory_order_acquire) == tail_.load(std::memory_order_acquire);
-  }
-
-  bool full() const {
-    const size_t next_head = (head_.load(std::memory_order_relaxed) + 1) & mask_;
-    return next_head == tail_.load(std::memory_order_acquire);
-  }
-
- private:
-  static constexpr size_t mask_ = Size - 1;
-  T buffer_[Size];
-
-  alignas(64) std::atomic<size_t> head_{0};
-  alignas(64) std::atomic<size_t> tail_{0};
-};
-
-std::atomic<bool> running(true);
-
-static void persistent_thread_worker(std::vector<int>& cores,
-                                     SPSCQueue<Task, 1024>& in_q,
-                                     SPSCQueue<Task, 1024>* out_q,
-                                     std::function<void(Task&)> process_task) {
-#pragma omp parallel num_threads(cores.size())
-  {
-    bind_thread_to_cores(cores);
-
-    // process the task
-    while (true) {
-      Task task;
-      if (in_q.dequeue(task)) {
-        if (task.is_sentinel) {
-          // Pass the sentinel to the next stage before breaking
-          if (out_q) {
-            out_q->enqueue(std::move(task));
-          }
-          break;
+template <ProcessorType PT>
+static void worker_thread(const size_t num_threads,
+                          SPSCQueue<Task, 1024>& in_queue,
+                          SPSCQueue<Task, 1024>* out_queue,
+                          std::function<void(Task&)> process_function) {
+  while (true) {
+    Task task;
+    if (in_queue.dequeue(task)) {
+      if (task.is_sentinel) {
+        if (out_queue) {
+          out_queue->enqueue(std::move(task));
         }
-
-        process_task(task);
-
-        // After processing, we should push the task to the next queue
-        if (out_q) {
-          out_q->enqueue(std::move(task));
-        }
-
-      } else {
-        std::this_thread::yield();
+        break;
       }
+
+#pragma omp parallel num_threads(num_threads)
+      {
+        if constexpr (PT == ProcessorType::kLittleCore) {
+          bind_thread_to_cores(g_little_cores);
+        } else if constexpr (PT == ProcessorType::kMediumCore) {
+          bind_thread_to_cores(g_medium_cores);
+        } else if constexpr (PT == ProcessorType::kBigCore) {
+          bind_thread_to_cores(g_big_cores);
+        }
+
+        // Process the task
+#pragma omp critical
+        {
+          auto num_threads = omp_get_num_threads();
+
+          if constexpr (PT == ProcessorType::kLittleCore) {
+            std::cout << "Little core processed task " << task.uid << " [" << num_threads
+                      << "] with core " << sched_getcpu() << std::endl;
+          } else if constexpr (PT == ProcessorType::kMediumCore) {
+            std::cout << "Medium core processed task " << task.uid << " [" << num_threads
+                      << "] with core " << sched_getcpu() << std::endl;
+          } else if constexpr (PT == ProcessorType::kBigCore) {
+            std::cout << "Big core processed task " << task.uid << " [" << num_threads
+                      << "] with core " << sched_getcpu() << std::endl;
+          }
+        }
+
+        process_function(task);
+      }
+
+      // Forward processed task
+      if (out_queue) {
+        out_queue->enqueue(std::move(task));
+      }
+
+    } else {
+      std::this_thread::yield();
     }
   }
 }
@@ -156,30 +92,42 @@ static void persistent_thread_worker(std::vector<int>& cores,
 int main(int argc, char** argv) {
   parse_args(argc, argv);
 
-  SPSCQueue<Task, 1024> little_queue;
-  SPSCQueue<Task, 1024> medium_queue;
-  SPSCQueue<Task, 1024> big_queue;
+  SPSCQueue<Task> q_0_1;
+  SPSCQueue<Task> q_1_2;
+  SPSCQueue<Task> q_2_3;
 
-  // Master thread pushing tasks:
+  // Master thread pushing tasks
   for (size_t i = 0; i < 100; ++i) {
-    little_queue.enqueue(new_task(1024));
+    q_0_1.enqueue(new_task(1024));
   }
+  q_0_1.enqueue(new_sentinel());
 
-  little_queue.enqueue(new_sentinel());
+  // ------------------------------------------------------------------------------------------------
 
-#pragma omp parallel sections
   {
-#pragma omp section
-    persistent_thread_worker(g_little_cores, little_queue, &medium_queue, process_task_stage_A);
+    std::thread t1(worker_thread<ProcessorType::kLittleCore>,
+                   g_little_cores.size(),
+                   std::ref(q_0_1),
+                   &q_1_2,
+                   process_task_stage_A);
+    std::thread t2(worker_thread<ProcessorType::kMediumCore>,
+                   g_medium_cores.size(),
+                   std::ref(q_1_2),
+                   &q_2_3,
+                   process_task_stage_B);
+    std::thread t3(worker_thread<ProcessorType::kBigCore>,
+                   g_big_cores.size(),
+                   std::ref(q_2_3),
+                   nullptr,
+                   process_task_stage_C);
 
-#pragma omp section
-    persistent_thread_worker(g_medium_cores, medium_queue, &big_queue, process_task_stage_B);
-
-#pragma omp section
-    persistent_thread_worker(g_big_cores, big_queue, nullptr, process_task_stage_C);
+    t1.join();
+    t2.join();
+    t3.join();
   }
 
-  // Wait for all threads to finish
+  // ------------------------------------------------------------------------------------------------
+
   spdlog::info("Done");
   return 0;
 }

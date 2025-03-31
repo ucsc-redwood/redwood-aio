@@ -14,6 +14,21 @@ do
 end
 
 
+-- ----------------------------------------------------------------
+-- Queue
+-- ----------------------------------------------------------------
+
+
+target("bm-queue")
+do
+	add_rules("benchmark_config", "common_flags", "run_on_android")
+	add_files({
+		"bm_queue.cpp",
+	})
+
+	add_packages("concurrentqueue")
+end
+
 
 
 
