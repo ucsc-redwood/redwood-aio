@@ -112,6 +112,7 @@ includes("builtin-apps") -- the three applications
 -- includes("tests")
 includes("benchmarks")
 includes("pipe")
+includes("lpipe")
 includes("play")
 includes("utility")
 
