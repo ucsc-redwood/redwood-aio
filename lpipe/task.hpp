@@ -6,7 +6,6 @@
 struct Task {
   uint32_t uid;
   std::vector<float> data;
-  bool is_sentinel = false;
 };
 
 [[nodiscard]] inline Task new_task(const size_t size) {
@@ -18,8 +17,10 @@ struct Task {
   return task;
 }
 
-[[nodiscard]] inline Task new_sentinel() {
-  Task task;
-  task.is_sentinel = true;
-  return task;
-}
+// [[nodiscard]] inline Task new_sentinel() {
+//   Task task;
+//   task.is_sentinel = true;
+//   return task;
+// }
+
+static_assert(std::is_move_constructible_v<Task>, "Task must be moveable");

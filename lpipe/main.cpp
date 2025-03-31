@@ -10,26 +10,57 @@
 #include "spsc_queue.hpp"
 #include "task.hpp"
 
-// constexpr size_t kNumTasks = 100;
+constexpr size_t kNumTasks = 10;
 
 void process_task_stage_A(Task& task) {
 #pragma omp for
   for (size_t i = 0; i < task.data.size(); ++i) {
-    task.data[i] += 9;
+    float x = task.data[i];
+    for (int j = 0; j < 100; j++) {
+      x = std::sin(x) * std::cos(x) + std::sqrt(std::abs(x));
+    }
+    task.data[i] = x;
   }
 }
 
 void process_task_stage_B(Task& task) {
 #pragma omp for
   for (size_t i = 0; i < task.data.size(); ++i) {
-    task.data[i] += 1000000;
+    float x = task.data[i];
+    for (int j = 0; j < 100; j++) {
+      x = std::exp(std::sin(x)) + std::log(std::abs(x) + 1.0f);
+    }
+    task.data[i] = x;
   }
 }
 
 void process_task_stage_C(Task& task) {
 #pragma omp for
   for (size_t i = 0; i < task.data.size(); ++i) {
-    task.data[i] += 40000000;
+    float x = task.data[i];
+    for (int j = 0; j < 100; j++) {
+      x = std::pow(std::abs(std::sin(x)), 0.5f) + std::tan(x / 10.0f);
+    }
+    task.data[i] = x;
+  }
+}
+
+template <ProcessorType PT>
+void debug_print(const Task& task) {
+#pragma omp critical
+  {
+    auto num_threads = omp_get_num_threads();
+
+    if constexpr (PT == ProcessorType::kLittleCore) {
+      std::cout << "Little core processed task " << task.uid << " [" << num_threads
+                << "] with core " << sched_getcpu() << std::endl;
+    } else if constexpr (PT == ProcessorType::kMediumCore) {
+      std::cout << "Medium core processed task " << task.uid << " [" << num_threads
+                << "] with core " << sched_getcpu() << std::endl;
+    } else if constexpr (PT == ProcessorType::kBigCore) {
+      std::cout << "Big core processed task " << task.uid << " [" << num_threads << "] with core "
+                << sched_getcpu() << std::endl;
+    }
   }
 }
 
@@ -38,53 +69,31 @@ static void worker_thread(const size_t num_threads,
                           SPSCQueue<Task, 1024>& in_queue,
                           SPSCQueue<Task, 1024>* out_queue,
                           std::function<void(Task&)> process_function) {
-  while (true) {
+  for (size_t i = 0; i < kNumTasks; ++i) {
     Task task;
-    if (in_queue.dequeue(task)) {
-      if (task.is_sentinel) {
-        if (out_queue) {
-          out_queue->enqueue(std::move(task));
-        }
-        break;
-      }
+    while (!in_queue.dequeue(task)) {
+      std::this_thread::yield();
+    }
 
 #pragma omp parallel num_threads(num_threads)
-      {
-        if constexpr (PT == ProcessorType::kLittleCore) {
-          bind_thread_to_cores(g_little_cores);
-        } else if constexpr (PT == ProcessorType::kMediumCore) {
-          bind_thread_to_cores(g_medium_cores);
-        } else if constexpr (PT == ProcessorType::kBigCore) {
-          bind_thread_to_cores(g_big_cores);
-        }
-
-        // Process the task
-#pragma omp critical
-        {
-          auto num_threads = omp_get_num_threads();
-
-          if constexpr (PT == ProcessorType::kLittleCore) {
-            std::cout << "Little core processed task " << task.uid << " [" << num_threads
-                      << "] with core " << sched_getcpu() << std::endl;
-          } else if constexpr (PT == ProcessorType::kMediumCore) {
-            std::cout << "Medium core processed task " << task.uid << " [" << num_threads
-                      << "] with core " << sched_getcpu() << std::endl;
-          } else if constexpr (PT == ProcessorType::kBigCore) {
-            std::cout << "Big core processed task " << task.uid << " [" << num_threads
-                      << "] with core " << sched_getcpu() << std::endl;
-          }
-        }
-
-        process_function(task);
+    {
+      if constexpr (PT == ProcessorType::kLittleCore) {
+        bind_thread_to_cores(g_little_cores);
+      } else if constexpr (PT == ProcessorType::kMediumCore) {
+        bind_thread_to_cores(g_medium_cores);
+      } else if constexpr (PT == ProcessorType::kBigCore) {
+        bind_thread_to_cores(g_big_cores);
       }
 
-      // Forward processed task
-      if (out_queue) {
-        out_queue->enqueue(std::move(task));
-      }
+      // ----------------------------------
+      debug_print<PT>(task);
+      process_function(task);
+      // ----------------------------------
+    }
 
-    } else {
-      std::this_thread::yield();
+    // Forward processed task
+    if (out_queue) {
+      out_queue->enqueue(std::move(task));
     }
   }
 }
@@ -97,14 +106,15 @@ int main(int argc, char** argv) {
   SPSCQueue<Task> q_2_3;
 
   // Master thread pushing tasks
-  for (size_t i = 0; i < 100; ++i) {
-    q_0_1.enqueue(new_task(1024));
+  for (size_t i = 0; i < kNumTasks; ++i) {
+    q_0_1.enqueue(new_task(640 * 480));
   }
-  q_0_1.enqueue(new_sentinel());
 
   // ------------------------------------------------------------------------------------------------
 
   {
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::thread t1(worker_thread<ProcessorType::kLittleCore>,
                    g_little_cores.size(),
                    std::ref(q_0_1),
@@ -124,6 +134,11 @@ int main(int argc, char** argv) {
     t1.join();
     t2.join();
     t3.join();
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    spdlog::info(
+        "Time taken by tasks: {} ms, average: {} ", duration.count(), duration.count() / kNumTasks);
   }
 
   // ------------------------------------------------------------------------------------------------
