@@ -40,7 +40,11 @@ class NDArray {
       std::cout << shape_[i];
       if (i < ND - 1) std::cout << " × ";
     }
-    std::cout << ")\n";
+    std::cout << ")";
+
+    std::cout << " = " << total_size_ << " elements";
+
+    std::cout << "\n";
   }
 
  private:
