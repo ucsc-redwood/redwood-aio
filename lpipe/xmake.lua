@@ -21,6 +21,19 @@ rule_end()
 -- -- Pipeline Targets
 -- -- ----------------------------------------------------------------
 
+
+target("lpipe")
+do
+	add_rules("lpipe_config", "common_flags", "run_on_android")
+
+	add_files({
+		"main.cpp",
+	})
+
+	add_deps("builtin-apps")
+end
+
+
 -- if has_config("use_vulkan") then
 -- 	includes("new-cifar-dense-vk")
 -- 	includes("new-cifar-sparse-vk")
