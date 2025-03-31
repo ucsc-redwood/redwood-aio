@@ -30,6 +30,8 @@ add_requires("glm") -- tree applications
 
 add_requires("nlohmann_json")
 add_requires("libcurl")
+add_requires("cnpy")
+
 
 -- OpenMP is handled differently on Android
 if not is_plat("android") then
